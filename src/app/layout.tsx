@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
+import Navbar from "@/components/layout/navigation/navbar";
+import { ThemeProvider } from "@/context/theme-provider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -30,7 +32,15 @@ const RootLayout: React.FC<Props> = ({ children }) => {
         <body
           className={`${inter.variable} ${esbuild.variable} antialiased custom-scrollbar`}
         >
-          {children}
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            enableColorScheme
+          >
+            <Navbar />
+            {children}
+          </ThemeProvider>
         </body>
       </html>
     </>
