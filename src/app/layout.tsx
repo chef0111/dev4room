@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
-import Navbar from "@/components/layout/navigation/navbar";
 import { ThemeProvider } from "@/context/theme-provider";
 
 const inter = Inter({
@@ -38,7 +37,6 @@ const RootLayout: React.FC<Props> = ({ children }) => {
             enableSystem
             enableColorScheme
           >
-            <Navbar />
             {children}
           </ThemeProvider>
         </body>

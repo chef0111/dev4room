@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import ThemeToggle from "./theme-toggle";
+import ThemeToggle from "./ThemeToggle";
 
 const Navbar = () => {
   return (
