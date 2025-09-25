@@ -8,12 +8,15 @@ interface Props {
 
 const AuthLayout: React.FC<Props> = ({ children }) => {
   return (
-    <main className="flex-center flex-col min-h-screen bg-auth-light bg-cover bg-center bg-no-repeat bg-fixed px-4 py-10 dark:bg-auth-dark">
+    <main
+      className="flex-center flex-col min-h-screen bg-auth-light bg-cover bg-center bg-no-repeat bg-fixed px-4 py-10 dark:bg-auth-dark"
+      no-scrollbar="true"
+    >
       <Link href="/" className="flex-center pb-4 gap-3">
         <Image
           src="/images/brand.svg"
-          width={50}
-          height={50}
+          width={48}
+          height={48}
           alt="DevFlow logo"
           className="max-sm:w-10 max-sm:h-10"
         />
@@ -21,7 +24,7 @@ const AuthLayout: React.FC<Props> = ({ children }) => {
           Dev<span className="text-primary-500">4Room</span>
         </p>
       </Link>
-      <Card className="light-border bg-light800_dark200 shadow-light100_dark100 min-w-full rounded-xl border px-2 sm:px-4 py-10 shadow-md sm:min-w-[520px]">
+      <Card className=" gap-4 light-border bg-light900_dark200 shadow-light100_dark100 min-w-full rounded-xl border px-2 sm:px-4 py-10 shadow-md sm:min-w-[520px]">
         <CardHeader className="flex-center text-center">
           <div className="space-y-1">
             <h1 className="md:h2-bold h3-bold text-dark100_light900">
