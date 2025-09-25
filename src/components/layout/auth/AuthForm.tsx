@@ -61,13 +61,18 @@ const AuthForm = <T extends FieldValues>({
             render={({ field }) => (
               <FormItem className="flex flex-col w-full gap-2.5">
                 <FormLabel className="pg-medium text-dark400_light700">
-                  {field.name === "email"
-                    ? "Email Address"
+                  {field.name === "confirmPassword"
+                    ? "Confirm Password"
                     : field.name.charAt(0).toUpperCase() + field.name.slice(1)}
                 </FormLabel>
                 <FormControl>
                   <Input
-                    type={field.name === "password" ? "password" : "text"}
+                    type={
+                      field.name === "password" ||
+                      field.name === "confirmPassword"
+                        ? "password"
+                        : "text"
+                    }
                     className="pg-regular bg-light900_dark300 text-dark300_light700 min-h-10 border"
                     {...field}
                   />

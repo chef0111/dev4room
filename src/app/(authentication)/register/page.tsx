@@ -12,13 +12,19 @@ const Register = () => {
     <div className="flex flex-col gap-6">
       <AuthForm
         schema={RegisterSchema}
-        defaultValues={{ name: "", username: "", email: "", password: "" }}
+        defaultValues={{
+          name: "",
+          username: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+        }}
         formType="REGISTER"
         onSubmit={(data) => Promise.resolve({ success: true, data })}
       />
 
       <div className="flex-center after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:border-t after:mx-6">
-        <span className="bg-light800_dark200 text-dark500_light400 relative z-10 px-2">
+        <span className="bg-light900_dark200 text-dark500_light400 relative z-10 px-2">
           Or continue with
         </span>
       </div>
