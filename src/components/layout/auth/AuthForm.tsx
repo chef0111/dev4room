@@ -1,0 +1,100 @@
+"use client";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  DefaultValues,
+  FieldValues,
+  Path,
+  Resolver,
+  SubmitHandler,
+  useForm,
+} from "react-hook-form";
+import { z, ZodType } from "zod";
+
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Loader2Icon } from "lucide-react";
+
+interface AuthFormProps<T extends FieldValues> {
+  schema: ZodType<T, FieldValues>;
+  defaultValues: T;
+  onSubmit: (data: T) => Promise<{ success: boolean }>;
+  formType: "LOGIN" | "REGISTER";
+}
+
+const AuthForm = <T extends FieldValues>({
+  schema,
+  defaultValues,
+  formType,
+  onSubmit,
+}: AuthFormProps<T>) => {
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema) as Resolver<T>,
+    defaultValues: defaultValues as DefaultValues<T>,
+  });
+
+  const handleSubmit: SubmitHandler<T> = async () => {
+    // TODO: Authentication logic
+  };
+
+  const buttonLabel = formType === "LOGIN" ? "Log in" : "Register";
+
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(handleSubmit)}
+        className="space-y-6 mt-6"
+      >
+        {Object.keys(defaultValues).map((field) => (
+          <FormField
+            key={field}
+            control={form.control}
+            name={field as Path<T>}
+            render={({ field }) => (
+              <FormItem className="flex flex-col w-full gap-2.5">
+                <FormLabel className="pg-medium text-dark400_light700">
+                  {field.name === "email"
+                    ? "Email Address"
+                    : field.name.charAt(0).toUpperCase() + field.name.slice(1)}
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    type={field.name === "password" ? "password" : "text"}
+                    className="pg-regular bg-light900_dark300 text-dark300_light700 min-h-10 border"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        ))}
+
+        <Button
+          type="submit"
+          disabled={form.formState.isSubmitting}
+          className="primary-gradient pg-semibold min-h-12 w-full mt-4 text-light-900 hover:primary-gradient-hover transition-all cursor-pointer"
+        >
+          {form.formState.isSubmitting && (
+            <Loader2Icon className="animate-spin" />
+          )}
+          {form.formState.isSubmitting
+            ? buttonLabel === "Log in"
+              ? "Loging in..."
+              : "Registering..."
+            : buttonLabel}
+        </Button>
+      </form>
+    </Form>
+  );
+};
+
+export default AuthForm;
