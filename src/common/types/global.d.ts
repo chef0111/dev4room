@@ -13,15 +13,3 @@ type ErrorResponse = ActionResponse<undefined> & { success: false };
 
 type ApiErrorResponse = NextResponse<ErrorResponse>;
 type ApiResponse<T = null> = NextResponse<SuccessResponse<T> | ErrorResponse>;
-
-interface User {
-  id: string;
-  email: string;
-  name: string;
-  username: string;
-  image: string | null | undefined;
-  role: string;
-  emailVerified: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-}

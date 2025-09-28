@@ -32,12 +32,7 @@ const RootLayout: React.FC<Props> = ({ children }) => {
         <body
           className={`${inter.variable} ${esbuild.variable} antialiased custom-scrollbar`}
         >
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            enableColorScheme
-          >
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             {children}
             <Toaster richColors />
           </ThemeProvider>

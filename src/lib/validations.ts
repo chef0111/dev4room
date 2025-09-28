@@ -4,7 +4,7 @@ const NAME_REGEX = /^[^\d!@#$%^&*()_+=\[\]{};':"\\|,.<>?/`~]+$/;
 
 export const PasswordSchema = z
   .string()
-  .min(6, { message: "Password must be at least 6 characters long." })
+  .min(8, { message: "Password must be at least 8 characters long." })
   .max(100, { message: "Password cannot exceed 100 characters." })
   .regex(/[A-Z]/, {
     message: "Password must contain at least one uppercase letter.",
@@ -54,6 +54,16 @@ export const RegisterSchema = z
 
     password: PasswordSchema,
 
+    confirmPassword: z.string().min(1, { message: "Please confirm password." }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
+export const ResetPasswordSchema = z
+  .object({
+    password: PasswordSchema,
     confirmPassword: z.string().min(1, { message: "Please confirm password." }),
   })
   .refine((data) => data.password === data.confirmPassword, {
