@@ -1,5 +1,7 @@
 import z from "zod";
 
+const NAME_REGEX = /^[^\d!@#$%^&*()_+=\[\]{};':"\\|,.<>?/`~]+$/;
+
 export const PasswordSchema = z
   .string()
   .min(6, { message: "Password must be at least 6 characters long." })
@@ -34,7 +36,7 @@ export const RegisterSchema = z
       .string()
       .min(1, { message: "Name is required." })
       .max(50, { message: "Name cannot exceed 50 characters." })
-      .regex(/^[a-zA-Z\s]+$/, {
+      .regex(NAME_REGEX, {
         message: "Name can only contain letters and spaces.",
       }),
 

@@ -27,6 +27,8 @@ import TextShimmer from "@/components/ui/text-shimmer";
 import { Loader2Icon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import routes from "@/common/constants/routes";
 
 interface AuthFormProps<T extends FieldValues> {
   schema: ZodType<T, FieldValues>;
@@ -49,8 +51,23 @@ const AuthForm = <T extends FieldValues>({
     defaultValues: defaultValues as DefaultValues<T>,
   });
 
-  const handleSubmit: SubmitHandler<T> = async () => {
-    // TODO: Authentication logic
+  const handleSubmit: SubmitHandler<T> = async (data) => {
+    const response = (await onSubmit(data)) as ActionResponse;
+
+    if (response?.success) {
+      toast.success("Success", {
+        description:
+          formType === "LOGIN"
+            ? "Logged in successfully!"
+            : "Registered successfully!",
+      });
+
+      router.push(routes.home);
+    } else {
+      toast.error(`Error`, {
+        description: response?.error?.message,
+      });
+    }
   };
 
   const buttonLabel = formType === "LOGIN" ? "Log in" : "Register";

@@ -1,20 +1,54 @@
 "use client";
 
-import React from "react";
-import AuthForm from "@/components/layout/auth/AuthForm";
+import { useState } from "react";
+import z from "zod";
 import { LoginSchema } from "@/lib/validations";
+import { authClient } from "@/lib/auth-client";
+
+import AuthForm from "@/components/layout/auth/AuthForm";
 import SocialAuthForm from "@/components/layout/auth/SocialAuthForm";
 import routes from "@/common/constants/routes";
 import Link from "next/link";
 
+type LoginValues = z.infer<typeof LoginSchema>;
+
+interface LoginProps {
+  email: string;
+  password: string;
+  rememberMe?: boolean;
+}
+
 const Login = () => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleLogin = async ({
+    email,
+    password,
+    rememberMe,
+  }: LoginValues): Promise<ActionResponse<LoginProps>> => {
+    setIsLoading(true);
+
+    const { data } = await authClient.signIn.email({
+      email,
+      password,
+      rememberMe,
+    });
+
+    setIsLoading(false);
+
+    return {
+      success: !!data?.user,
+      data: { email, password, rememberMe },
+    };
+  };
+
   return (
     <div className="flex flex-col gap-6">
       <AuthForm
         schema={LoginSchema}
         defaultValues={{ email: "", password: "", rememberMe: false }}
         formType="LOGIN"
-        onSubmit={(data) => Promise.resolve({ success: true, data })}
+        onSubmit={handleLogin}
       />
 
       <div className="flex-center after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:border-t after:mx-6">
@@ -24,7 +58,7 @@ const Login = () => {
       </div>
 
       <div className="flex flex-col">
-        <SocialAuthForm />
+        <SocialAuthForm disabled={isLoading} />
 
         <div className="flex-center mt-4">
           <p>

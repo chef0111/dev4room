@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import { ThemeProvider } from "@/context/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -38,6 +39,7 @@ const RootLayout: React.FC<Props> = ({ children }) => {
             enableColorScheme
           >
             {children}
+            <Toaster richColors />
           </ThemeProvider>
         </body>
       </html>
