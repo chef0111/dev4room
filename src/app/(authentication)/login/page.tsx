@@ -12,7 +12,7 @@ const Login = () => {
     <div className="flex flex-col gap-6">
       <AuthForm
         schema={LoginSchema}
-        defaultValues={{ email: "", password: "" }}
+        defaultValues={{ email: "", password: "", rememberMe: false }}
         formType="LOGIN"
         onSubmit={(data) => Promise.resolve({ success: true, data })}
       />

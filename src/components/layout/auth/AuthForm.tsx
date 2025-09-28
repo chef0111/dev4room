@@ -21,7 +21,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import TextShimmer from "@/components/ui/text-shimmer";
 import { Loader2Icon } from "lucide-react";
+import Link from "next/link";
 
 interface AuthFormProps<T extends FieldValues> {
   schema: ZodType<T, FieldValues>;
@@ -53,49 +56,88 @@ const AuthForm = <T extends FieldValues>({
         onSubmit={form.handleSubmit(handleSubmit)}
         className="space-y-6 mt-6"
       >
-        {Object.keys(defaultValues).map((field) => (
+        {Object.keys(defaultValues)
+          .filter((field) => field !== "rememberMe")
+          .map((field) => (
+            <FormField
+              key={field}
+              control={form.control}
+              name={field as Path<T>}
+              render={({ field }) => (
+                <FormItem className="flex flex-col w-full gap-2.5">
+                  <div className="flex-between w-full">
+                    <FormLabel className="flex-grow pg-medium text-dark400_light700">
+                      {field.name === "confirmPassword"
+                        ? "Confirm Password"
+                        : field.name.charAt(0).toUpperCase() +
+                          field.name.slice(1)}
+                    </FormLabel>
+
+                    {field.name === "password" && formType === "LOGIN" && (
+                      <Link
+                        href="#"
+                        className="ml-auto inline-block text-sm text-primary underline"
+                      >
+                        Forgot your password?
+                      </Link>
+                    )}
+                  </div>
+                  <FormControl>
+                    <Input
+                      type={
+                        field.name === "password" ||
+                        field.name === "confirmPassword"
+                          ? "password"
+                          : "text"
+                      }
+                      placeholder={
+                        field.name === "confirmPassword"
+                          ? "Confirm your password"
+                          : `Enter your ${field.name}`
+                      }
+                      className="pg-regular bg-light900_dark300 text-dark300_light700 min-h-10 border"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          ))}
+
+        {formType === "LOGIN" && (
           <FormField
-            key={field}
             control={form.control}
-            name={field as Path<T>}
+            name={"rememberMe" as Path<T>}
             render={({ field }) => (
-              <FormItem className="flex flex-col w-full gap-2.5">
-                <FormLabel className="pg-medium text-dark400_light700">
-                  {field.name === "confirmPassword"
-                    ? "Confirm Password"
-                    : field.name.charAt(0).toUpperCase() + field.name.slice(1)}
-                </FormLabel>
+              <FormItem className="flex items-center gap-2">
                 <FormControl>
-                  <Input
-                    type={
-                      field.name === "password" ||
-                      field.name === "confirmPassword"
-                        ? "password"
-                        : "text"
-                    }
-                    className="pg-regular bg-light900_dark300 text-dark300_light700 min-h-10 border"
-                    {...field}
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
                   />
                 </FormControl>
-                <FormMessage />
+                <FormLabel>Remember me</FormLabel>
               </FormItem>
             )}
           />
-        ))}
+        )}
 
         <Button
           type="submit"
           disabled={form.formState.isSubmitting}
-          className="primary-gradient pg-semibold min-h-12 w-full mt-4 text-light-900 hover:primary-gradient-hover transition-all cursor-pointer"
+          className="primary-gradient pg-semibold min-h-12 w-full text-light-900 hover:primary-gradient-hover transition-all cursor-pointer"
         >
           {form.formState.isSubmitting && (
             <Loader2Icon className="animate-spin" />
           )}
-          {form.formState.isSubmitting
-            ? buttonLabel === "Log in"
-              ? "Loging in..."
-              : "Registering..."
-            : buttonLabel}
+          {form.formState.isSubmitting ? (
+            <TextShimmer duration={1} className="text-loading!">
+              {buttonLabel === "Log in" ? "Logging in..." : "Registering..."}
+            </TextShimmer>
+          ) : (
+            buttonLabel
+          )}
         </Button>
       </form>
     </Form>

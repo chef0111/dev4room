@@ -39,7 +39,7 @@ const Register = () => {
               href={routes.login}
               className="pg-semibold primary-text-gradient hover:primary-text-gradient-hover transition-all cursor-pointer"
             >
-              Login
+              Log in
             </Link>
           </p>
         </div>

@@ -191,6 +191,10 @@
   @apply text-dark-400! dark:text-light-900!;
 }
 
+@utility text-loading {
+  @apply [--base-color:#fff] [--base-gradient-color:#98aed4];
+}
+
 @utility light-border {
   @apply border-light-800 dark:border-dark-300;
 }
