@@ -1,8 +1,10 @@
 import z from "zod";
 
+const NAME_REGEX = /^[^\d!@#$%^&*()_+=\[\]{};':"\\|,.<>?/`~]+$/;
+
 export const PasswordSchema = z
   .string()
-  .min(6, { message: "Password must be at least 6 characters long." })
+  .min(8, { message: "Password must be at least 8 characters long." })
   .max(100, { message: "Password cannot exceed 100 characters." })
   .regex(/[A-Z]/, {
     message: "Password must contain at least one uppercase letter.",
@@ -24,6 +26,8 @@ export const LoginSchema = z.object({
     .string()
     .min(8, { message: "Password must be at least 8 characters long." })
     .max(100, { message: "Password must not exceed 100 characters." }),
+
+  rememberMe: z.boolean().optional(),
 });
 
 export const RegisterSchema = z
@@ -32,7 +36,7 @@ export const RegisterSchema = z
       .string()
       .min(1, { message: "Name is required." })
       .max(50, { message: "Name cannot exceed 50 characters." })
-      .regex(/^[a-zA-Z\s]+$/, {
+      .regex(NAME_REGEX, {
         message: "Name can only contain letters and spaces.",
       }),
 
@@ -50,6 +54,16 @@ export const RegisterSchema = z
 
     password: PasswordSchema,
 
+    confirmPassword: z.string().min(1, { message: "Please confirm password." }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
+export const ResetPasswordSchema = z
+  .object({
+    password: PasswordSchema,
     confirmPassword: z.string().min(1, { message: "Please confirm password." }),
   })
   .refine((data) => data.password === data.confirmPassword, {
