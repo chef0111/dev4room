@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   DefaultValues,
@@ -25,6 +26,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import TextShimmer from "@/components/ui/text-shimmer";
 import { Loader2Icon } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface AuthFormProps<T extends FieldValues> {
   schema: ZodType<T, FieldValues>;
@@ -39,6 +41,9 @@ const AuthForm = <T extends FieldValues>({
   formType,
   onSubmit,
 }: AuthFormProps<T>) => {
+  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
+
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema) as Resolver<T>,
     defaultValues: defaultValues as DefaultValues<T>,
