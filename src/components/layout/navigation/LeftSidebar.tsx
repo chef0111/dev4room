@@ -5,7 +5,6 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { UserNav } from "../profile/UserNav";
-import { Sidebar } from "@/components/ui/sidebar";
 
 const LeftSidebar = async () => {
   const session = await getServerSession();
@@ -13,14 +12,14 @@ const LeftSidebar = async () => {
   const isAdmin = user?.role === "admin";
 
   return (
-    <Sidebar>
+    <div>
       <section
         role="navigation"
         aria-label="Primary"
         className="no-scrollbar bg-light900_dark200 light-border sticky left-0 top-0 h-screen lg:w-65 flex flex-col justify-between border-r p-6 pt-32 shadow-light-300 dark:shadow-none overflow-y-auto max-sm:hidden transition-all duration-200"
       >
         <div>
-          <NavTabs userId={user?.id} isMobileNav={false} />
+          <NavTabs userId={user?.id} isMobile={false} />
         </div>
 
         <div className="flex flex-col gap-3">
@@ -67,7 +66,7 @@ const LeftSidebar = async () => {
           )}
         </div>
       </section>
-    </Sidebar>
+    </div>
   );
 };
 

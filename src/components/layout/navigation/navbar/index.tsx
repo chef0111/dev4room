@@ -4,6 +4,7 @@ import Link from "next/link";
 import ThemeToggle from "./ThemeToggle";
 import { getServerSession } from "@/lib/session";
 import UserAvatar from "../../profile/UserAvatar";
+import MobileNav from "./MobileNav";
 
 const Navbar = async () => {
   const session = await getServerSession();
@@ -36,6 +37,8 @@ const Navbar = async () => {
             className="w-9 h-9 rounded-full"
           />
         )}
+
+        <MobileNav />
       </div>
     </nav>
   );
