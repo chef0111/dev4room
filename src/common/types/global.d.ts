@@ -2,7 +2,7 @@ type ActionResponse<T = null> = {
   success: boolean;
   data?: T;
   error?: {
-    message: string;
+    message: string | undefined;
     details?: Record<string, string[]>;
   };
   status?: number;
@@ -13,3 +13,12 @@ type ErrorResponse = ActionResponse<undefined> & { success: false };
 
 type ApiErrorResponse = NextResponse<ErrorResponse>;
 type ApiResponse<T = null> = NextResponse<SuccessResponse<T> | ErrorResponse>;
+
+interface CredentialsAuth {
+  name: string;
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  rememberMe?: boolean;
+}

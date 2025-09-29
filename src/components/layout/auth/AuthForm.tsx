@@ -65,7 +65,8 @@ const AuthForm = <T extends FieldValues>({
       router.refresh();
     } else {
       toast.error(`Error`, {
-        description: response?.error?.message,
+        description:
+          response?.error?.message || "Something went wrong. Please try again.",
       });
     }
   };

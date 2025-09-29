@@ -46,7 +46,9 @@ const MobileNav = async () => {
 
           <div className="flex flex-col gap-3">
             {user ? (
-              <UserNav user={user} isAdmin={isAdmin} />
+              <SheetClose className="w-full">
+                <UserNav user={user} isAdmin={isAdmin} />
+              </SheetClose>
             ) : (
               <>
                 <SheetClose asChild>
