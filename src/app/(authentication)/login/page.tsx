@@ -4,6 +4,7 @@ import { useState } from "react";
 import z from "zod";
 import { LoginSchema } from "@/lib/validations";
 import { authClient } from "@/lib/auth-client";
+import handleError from "@/lib/handlers/error";
 
 import AuthForm from "@/components/layout/auth/AuthForm";
 import SocialAuthForm from "@/components/layout/auth/SocialAuthForm";
@@ -28,18 +29,21 @@ const Login = () => {
   }: LoginValues): Promise<ActionResponse<LoginProps>> => {
     setIsLoading(true);
 
-    const { data } = await authClient.signIn.email({
-      email,
-      password,
-      rememberMe,
-    });
+    try {
+      const { data } = await authClient.signIn.email({
+        email,
+        password,
+        rememberMe,
+      });
+      setIsLoading(false);
 
-    setIsLoading(false);
-
-    return {
-      success: !!data?.user,
-      data: { email, password, rememberMe },
-    };
+      return {
+        success: !!data?.user,
+        data: { email, password, rememberMe },
+      };
+    } catch (error) {
+      return handleError(error) as ErrorResponse;
+    }
   };
 
   return (
