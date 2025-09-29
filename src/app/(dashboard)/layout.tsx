@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import TopProgress from "@/components/ui/top-progress";
 
 interface Props {
@@ -7,7 +8,9 @@ interface Props {
 const DashboardLayout: React.FC<Props> = ({ children }) => {
   return (
     <div>
-      <TopProgress />
+      <Suspense fallback={null}>
+        <TopProgress />
+      </Suspense>
       {children}
     </div>
   );
