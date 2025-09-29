@@ -3,6 +3,7 @@
 import { useState } from "react";
 import z from "zod";
 import { RegisterSchema } from "@/lib/validations";
+import handleError from "@/lib/handlers/error";
 
 import AuthForm from "@/components/layout/auth/AuthForm";
 import SocialAuthForm from "@/components/layout/auth/SocialAuthForm";
@@ -30,20 +31,24 @@ const Register = () => {
   }: RegisterValues): Promise<ActionResponse<RegisterProps>> => {
     setIsLoading(true);
 
-    const { data } = await authClient.signUp.email({
-      name,
-      username,
-      email,
-      password,
-      callbackURL: "/email-verified",
-    });
+    try {
+      const { data } = await authClient.signUp.email({
+        name,
+        username,
+        email,
+        password,
+        callbackURL: "/email-verified",
+      });
 
-    setIsLoading(false);
+      setIsLoading(false);
 
-    return {
-      success: !!data?.user,
-      data: { name, username, email, password },
-    };
+      return {
+        success: !!data?.user,
+        data: { name, username, email, password },
+      };
+    } catch (error) {
+      return handleError(error) as ErrorResponse;
+    }
   };
 
   return (
