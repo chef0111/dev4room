@@ -13,12 +13,10 @@ import { authClient } from "@/lib/auth-client";
 
 type RegisterValues = z.infer<typeof RegisterSchema>;
 
-interface RegisterProps {
-  name: string;
-  username: string;
-  email: string;
-  password: string;
-}
+type RegisterParams = Pick<
+  CredentialsAuth,
+  "name" | "username" | "email" | "password"
+>;
 
 const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -28,11 +26,11 @@ const Register = () => {
     username,
     email,
     password,
-  }: RegisterValues): Promise<ActionResponse<RegisterProps>> => {
+  }: RegisterValues): Promise<ActionResponse<RegisterParams>> => {
     setIsLoading(true);
 
     try {
-      const { data } = await authClient.signUp.email({
+      const { data, error } = await authClient.signUp.email({
         name,
         username,
         email,
@@ -45,6 +43,9 @@ const Register = () => {
       return {
         success: !!data?.user,
         data: { name, username, email, password },
+        error: {
+          message: error?.message,
+        },
       };
     } catch (error) {
       return handleError(error) as ErrorResponse;
