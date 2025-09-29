@@ -10,10 +10,10 @@ import { cn } from "@/lib/utils";
 
 interface NavTabsProps {
   userId?: string;
-  isMobileNav?: boolean;
+  isMobile?: boolean;
 }
 
-const NavTabs = ({ userId, isMobileNav = false }: NavTabsProps) => {
+const NavTabs = ({ userId, isMobile = false }: NavTabsProps) => {
   const pathname = usePathname();
 
   return (
@@ -57,7 +57,7 @@ const NavTabs = ({ userId, isMobileNav = false }: NavTabsProps) => {
             <p
               className={cn(
                 isActive ? "base-bold" : "base-medium",
-                !isMobileNav && "max-lg:hidden"
+                !isMobile && "max-lg:hidden"
               )}
             >
               {item.label}
@@ -65,7 +65,7 @@ const NavTabs = ({ userId, isMobileNav = false }: NavTabsProps) => {
           </Link>
         );
 
-        return isMobileNav ? (
+        return isMobile ? (
           <SheetClose asChild key={item.route}>
             {LinkComponent}
           </SheetClose>
