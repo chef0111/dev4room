@@ -19,7 +19,6 @@ import { useRouter } from "next/navigation";
 import routes from "@/common/constants/routes";
 import { User } from "@/lib/auth";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Button } from "@/components/ui/button";
 
 interface UserNavProps {
   user: User;
@@ -31,25 +30,24 @@ export function UserNav({ user, isAdmin = false }: UserNavProps) {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="hover:bg-light800_dark300" asChild>
-        <Button
-          size="lg"
-          variant="ghost"
-          className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground focus:ring-0! focus:border-none! py-6 px-2!"
-        >
+      <DropdownMenuTrigger
+        className="hover:bg-light800_dark300 transition-all duration-150"
+        asChild
+      >
+        <div className="w-full flex-between gap-2 rounded-lg data-[state=open]:bg-accent data-[state=open]:text-sidebar-accent-foreground focus:ring-0! focus:border-none! max-sm:p-2 p-0 lg:p-2">
           <UserAvatar
             id={user.id}
             name={user.name}
             image={user.image}
-            className="size-8 rounded-lg"
-            fallbackClassName="rounded-lg"
+            className="max-sm:size-8 size-12 lg:size-8 rounded-lg"
+            fallbackClassName="rounded-lg max-sm:text-sm text-xl lg:text-sm"
           />
-          <div className="grid flex-1 text-left text-sm leading-tight">
+          <div className="max-sm:grid hidden lg:grid flex-1 text-left text-sm leading-tight">
             <span className="truncate font-medium">{user.name}</span>
             <span className="truncate text-xs">{user.email}</span>
           </div>
-          <ChevronsUpDown className="ml-auto size-4" />
-        </Button>
+          <ChevronsUpDown className="ml-auto size-4 max-sm:block hidden lg:block" />
+        </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent
         className="bg-light900_dark200 w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"

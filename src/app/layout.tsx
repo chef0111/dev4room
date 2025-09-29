@@ -30,7 +30,7 @@ const RootLayout: React.FC<Props> = ({ children }) => {
     <>
       <html lang="en" suppressHydrationWarning>
         <body
-          className={`${inter.variable} ${esbuild.variable} antialiased custom-scrollbar`}
+          className={`${inter.variable} ${esbuild.variable} antialiased bg-light850_dark100 custom-scrollbar`}
         >
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             {children}
