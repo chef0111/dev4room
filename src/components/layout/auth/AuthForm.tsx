@@ -62,6 +62,7 @@ const AuthForm = <T extends FieldValues>({
       });
 
       router.push(routes.home);
+      router.refresh();
     } else {
       toast.error(`Error`, {
         description: response?.error?.message,
