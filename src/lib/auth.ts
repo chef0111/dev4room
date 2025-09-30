@@ -33,6 +33,12 @@ export const auth = betterAuth({
       }
     }),
   },
+  session: {
+    cookieCache: {
+      enabled: true,
+      maxAge: 300,
+    },
+  },
   trustedOrigins: ["http://localhost:3000"],
   plugins: [username(), admin(), nextCookies()],
 });
