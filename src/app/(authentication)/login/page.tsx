@@ -13,8 +13,6 @@ import Link from "next/link";
 
 type LoginValues = z.infer<typeof LoginSchema>;
 
-type LoginParams = Pick<CredentialsAuth, "email" | "password" | "rememberMe">;
-
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -22,24 +20,18 @@ const Login = () => {
     email,
     password,
     rememberMe,
-  }: LoginValues): Promise<ActionResponse<LoginParams>> => {
+  }: LoginValues): Promise<ActionResponse> => {
     setIsLoading(true);
 
     try {
-      const { data, error } = await authClient.signIn.email({
+      await authClient.signIn.email({
         email,
         password,
         rememberMe,
       });
       setIsLoading(false);
 
-      return {
-        success: !!data?.user,
-        data: { email, password, rememberMe },
-        error: {
-          message: error?.message,
-        },
-      };
+      return { success: true };
     } catch (error) {
       return handleError(error) as ErrorResponse;
     }
