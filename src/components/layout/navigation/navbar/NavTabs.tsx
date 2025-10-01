@@ -1,12 +1,14 @@
 "use client";
 
 import React from "react";
-import { SheetClose } from "@/components/ui/sheet";
-import { sidebarTabs } from "@/common/constants";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+
 import { cn } from "@/lib/utils";
+import { SheetClose } from "@/components/ui/sheet";
+import { sidebarTabs } from "@/common/constants";
+import routes from "@/common/constants/routes";
 
 interface NavTabsProps {
   userId?: string;
@@ -25,8 +27,8 @@ const NavTabs = ({ userId, isMobile = false }: NavTabsProps) => {
         }
 
         const appRoute =
-          item.route === "/profile" && userId
-            ? `/profile/${userId}`
+          item.route === routes.profiles && userId
+            ? routes.profile(userId)
             : item.route;
 
         const isActive =

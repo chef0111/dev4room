@@ -5,6 +5,7 @@ import ThemeToggle from "./ThemeToggle";
 import { getServerSession } from "@/lib/session";
 import UserAvatar from "../../profile/UserAvatar";
 import MobileNav from "./MobileNav";
+import GlobalSearch from "../../main/GlobalSearch";
 
 const Navbar = async () => {
   const session = await getServerSession();
@@ -24,7 +25,11 @@ const Navbar = async () => {
         </p>
       </Link>
 
-      <p>Global search</p>
+      <GlobalSearch
+        route="/"
+        placeholder="Search anything globally..."
+        className="flex-1"
+      />
 
       <div className="flex-between gap-5">
         <ThemeToggle />
