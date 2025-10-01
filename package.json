@@ -40,6 +40,7 @@
     "pino": "^9.11.0",
     "pino-pretty": "^13.1.1",
     "prettier": "^3.6.2",
+    "query-string": "^9.3.1",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-hook-form": "^7.63.0",

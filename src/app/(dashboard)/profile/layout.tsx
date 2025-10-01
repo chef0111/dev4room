@@ -18,7 +18,7 @@ const ProfileLayout = ({ children }: Props) => {
 
       <div className="flex">
         <LeftSidebar />
-        <section className="flex min-h-screen flex-1 flex-col pax-6 pb-6 pt-32 max-md:pb-14 sm:px-14">
+        <section className="flex min-h-screen flex-1 flex-col w-full px-6 pb-6 pt-32 max-md:pb-14 sm:px-14 2xl:px-0">
           <div className="mx-auto w-full max-w-5xl">{children}</div>
         </section>
       </div>
