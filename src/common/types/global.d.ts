@@ -33,3 +33,44 @@ interface CredentialsAuth {
   confirmPassword: string;
   rememberMe?: boolean;
 }
+
+interface Tag {
+  id: string;
+  name: string;
+  questions?: number;
+}
+
+interface Author {
+  id: string;
+  name: string;
+  image: string;
+}
+
+interface Question {
+  id: string;
+  title: string;
+  content: string;
+  tags: Tag[];
+  author: Author;
+  createdAt: Date;
+  upvotes: number;
+  downvotes: number;
+  answers: number;
+  views: number;
+}
+
+interface Answer {
+  id: string;
+  author: Author;
+  content: string;
+  createdAte: Date;
+  upvotes: number;
+  downvotes: number;
+  questionId: string;
+}
+
+interface Collection {
+  id: string;
+  author: string | Author;
+  question: Question;
+}

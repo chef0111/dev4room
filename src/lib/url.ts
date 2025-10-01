@@ -13,10 +13,22 @@ export const formUrlQuery = ({ params, key, value }: UrlQueryParams) => {
     queryString.page = "1";
   }
 
-  return qs.stringifyUrl({
-    url: window.location.pathname,
-    query: queryString,
-  });
+  return qs.stringifyUrl(
+    {
+      url: window.location.pathname,
+      query: queryString,
+    },
+    {
+      // Ensure `query` is first and `page` is last among present params
+      sort: (a, b) => {
+        if (a === "query" && b !== "query") return -1;
+        if (b === "query" && a !== "query") return 1;
+        if (a === "page" && b !== "page") return 1;
+        if (b === "page" && a !== "page") return -1;
+        return 0;
+      },
+    }
+  );
 };
 
 export const removeKeysFromUrlQuery = ({
