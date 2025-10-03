@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { z, ZodType } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import {
   DefaultValues,
   FieldValues,
@@ -10,8 +12,10 @@ import {
   SubmitHandler,
   useForm,
 } from "react-hook-form";
-import { z, ZodType } from "zod";
+import Link from "next/link";
 
+import routes from "@/common/constants/routes";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -24,11 +28,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import TextShimmer from "@/components/ui/text-shimmer";
-import { Loader2Icon } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import routes from "@/common/constants/routes";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircleIcon, Loader2Icon } from "lucide-react";
 
 interface AuthFormProps<T extends FieldValues> {
   schema: ZodType<T, FieldValues>;
@@ -44,6 +45,7 @@ const AuthForm = <T extends FieldValues>({
   onSubmit,
 }: AuthFormProps<T>) => {
   const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema) as Resolver<T>,
@@ -51,6 +53,7 @@ const AuthForm = <T extends FieldValues>({
   });
 
   const handleSubmit: SubmitHandler<T> = async (data) => {
+    setError(null);
     const response = (await onSubmit(data)) as ActionResponse;
 
     if (response?.success) {
@@ -64,10 +67,7 @@ const AuthForm = <T extends FieldValues>({
       router.push(routes.home);
       router.refresh();
     } else {
-      toast.error(`Error`, {
-        description:
-          response?.error?.message || "Something went wrong. Please try again.",
-      });
+      setError(response?.error?.message || "Something went wrong.");
     }
   };
 
@@ -144,6 +144,17 @@ const AuthForm = <T extends FieldValues>({
               </FormItem>
             )}
           />
+        )}
+
+        {!!error && (
+          <Alert
+            variant="destructive"
+            className="bg-destructive/10 border border-destructive/50"
+          >
+            <AlertCircleIcon />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
         )}
 
         <Button

@@ -24,14 +24,14 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      await authClient.signIn.email({
+      const { data, error } = await authClient.signIn.email({
         email,
         password,
         rememberMe,
       });
       setIsLoading(false);
 
-      return { success: true };
+      return { success: !!data?.user, error: { message: error?.message } };
     } catch (error) {
       return handleError(error) as ErrorResponse;
     }
