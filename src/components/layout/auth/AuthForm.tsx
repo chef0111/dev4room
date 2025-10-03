@@ -67,7 +67,7 @@ const AuthForm = <T extends FieldValues>({
       router.push(routes.home);
       router.refresh();
     } else {
-      setError(response?.error?.message || "Something went wrong.");
+      setError(response?.error?.message || "Something went wrong");
     }
   };
 
@@ -79,81 +79,61 @@ const AuthForm = <T extends FieldValues>({
         onSubmit={form.handleSubmit(handleSubmit)}
         className="space-y-6 mt-6"
       >
-        {Object.keys(defaultValues)
-          .filter((field) => field !== "rememberMe")
-          .map((field) => (
-            <FormField
-              key={field}
-              control={form.control}
-              name={field as Path<T>}
-              render={({ field }) => (
-                <FormItem className="flex flex-col w-full gap-2.5">
-                  <div className="flex-between w-full">
-                    <FormLabel className="flex-grow pg-medium text-dark400_light700">
-                      {field.name === "confirmPassword"
-                        ? "Confirm Password"
-                        : field.name.charAt(0).toUpperCase() +
-                          field.name.slice(1)}
-                    </FormLabel>
-
-                    {field.name === "password" && formType === "LOGIN" && (
-                      <Link
-                        href="#"
-                        className="ml-auto inline-block text-sm text-primary underline"
-                      >
-                        Forgot your password?
-                      </Link>
-                    )}
-                  </div>
-                  <FormControl>
-                    <Input
-                      type={
-                        field.name === "password" ||
-                        field.name === "confirmPassword"
-                          ? "password"
-                          : "text"
-                      }
-                      placeholder={
-                        field.name === "confirmPassword"
-                          ? "Confirm your password"
-                          : `Enter your ${field.name}`
-                      }
-                      className="pg-regular bg-light900_dark300 text-dark300_light700 min-h-10 border"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          ))}
-
-        {formType === "LOGIN" && (
+        {Object.keys(defaultValues).map((field) => (
           <FormField
+            key={field}
             control={form.control}
-            name={"rememberMe" as Path<T>}
+            name={field as Path<T>}
             render={({ field }) => (
-              <FormItem className="flex items-center gap-2">
+              <FormItem className="flex flex-col w-full gap-2.5">
+                <div className="flex-between w-full">
+                  <FormLabel className="flex-grow pg-medium text-dark400_light700">
+                    {field.name === "confirmPassword"
+                      ? "Confirm Password"
+                      : field.name.charAt(0).toUpperCase() +
+                        field.name.slice(1)}
+                  </FormLabel>
+
+                  {field.name === "password" && formType === "LOGIN" && (
+                    <Link
+                      href="#"
+                      className="ml-auto inline-block text-sm text-primary underline"
+                    >
+                      Forgot your password?
+                    </Link>
+                  )}
+                </div>
                 <FormControl>
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
+                  <Input
+                    type={
+                      field.name === "password" ||
+                      field.name === "confirmPassword"
+                        ? "password"
+                        : "text"
+                    }
+                    placeholder={
+                      field.name === "confirmPassword"
+                        ? "Confirm your password"
+                        : `Enter your ${field.name}`
+                    }
+                    className="pg-regular bg-light900_dark300 text-dark300_light700 min-h-10 border"
+                    {...field}
                   />
                 </FormControl>
-                <FormLabel>Remember me</FormLabel>
+                <FormMessage />
               </FormItem>
             )}
           />
-        )}
+        ))}
 
         {!!error && (
           <Alert
             variant="destructive"
-            className="bg-destructive/10 border border-destructive/50"
+            className="bg-destructive/10 border border-destructive/20"
           >
             <AlertCircleIcon />
             <AlertTitle>Error</AlertTitle>
-            <AlertDescription>{error}</AlertDescription>
+            <AlertDescription>{error}. Please try again.</AlertDescription>
           </Alert>
         )}
 

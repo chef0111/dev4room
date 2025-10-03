@@ -15,6 +15,26 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
+  user: {
+    additionalFields: {
+      bio: {
+        type: "string",
+        input: false,
+      },
+      location: {
+        type: "string",
+        input: false,
+      },
+      reputation: {
+        type: "number",
+        input: false,
+      },
+      portfolio: {
+        type: "string",
+        input: false,
+      },
+    },
+  },
   hooks: {
     before: createAuthMiddleware(async (context) => {
       if (
