@@ -3,6 +3,6 @@ import { usernameClient, adminClient } from "better-auth/client/plugins";
 import { nextCookies } from "better-auth/next-js";
 
 export const authClient = createAuthClient({
-  baseURL: "http://localhost:3000",
+  baseURL: process.env.BETTER_AUTH_URL,
   plugins: [usernameClient(), adminClient(), nextCookies()],
 });

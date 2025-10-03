@@ -39,7 +39,9 @@ export const auth = betterAuth({
       maxAge: 300,
     },
   },
-  trustedOrigins: ["http://localhost:3000"],
+  trustedOrigins: process.env.TRUSTED_ORIGINS
+    ? process.env.TRUSTED_ORIGINS.split(",").map((origin) => origin.trim())
+    : ["http://localhost:3000"],
   plugins: [username(), admin(), nextCookies()],
 });
 
