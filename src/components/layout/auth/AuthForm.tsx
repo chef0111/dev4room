@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { z, ZodType } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import {
   DefaultValues,
   FieldValues,
@@ -10,8 +12,10 @@ import {
   SubmitHandler,
   useForm,
 } from "react-hook-form";
-import { z, ZodType } from "zod";
+import Link from "next/link";
 
+import routes from "@/common/constants/routes";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -24,11 +28,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import TextShimmer from "@/components/ui/text-shimmer";
-import { Loader2Icon } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import routes from "@/common/constants/routes";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircleIcon, Loader2Icon } from "lucide-react";
 
 interface AuthFormProps<T extends FieldValues> {
   schema: ZodType<T, FieldValues>;
@@ -44,6 +45,7 @@ const AuthForm = <T extends FieldValues>({
   onSubmit,
 }: AuthFormProps<T>) => {
   const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema) as Resolver<T>,
@@ -51,6 +53,7 @@ const AuthForm = <T extends FieldValues>({
   });
 
   const handleSubmit: SubmitHandler<T> = async (data) => {
+    setError(null);
     const response = (await onSubmit(data)) as ActionResponse;
 
     if (response?.success) {
@@ -64,10 +67,7 @@ const AuthForm = <T extends FieldValues>({
       router.push(routes.home);
       router.refresh();
     } else {
-      toast.error(`Error`, {
-        description:
-          response?.error?.message || "Something went wrong. Please try again.",
-      });
+      setError(response?.error?.message || "Something went wrong");
     }
   };
 
@@ -79,71 +79,62 @@ const AuthForm = <T extends FieldValues>({
         onSubmit={form.handleSubmit(handleSubmit)}
         className="space-y-6 mt-6"
       >
-        {Object.keys(defaultValues)
-          .filter((field) => field !== "rememberMe")
-          .map((field) => (
-            <FormField
-              key={field}
-              control={form.control}
-              name={field as Path<T>}
-              render={({ field }) => (
-                <FormItem className="flex flex-col w-full gap-2.5">
-                  <div className="flex-between w-full">
-                    <FormLabel className="flex-grow pg-medium text-dark400_light700">
-                      {field.name === "confirmPassword"
-                        ? "Confirm Password"
-                        : field.name.charAt(0).toUpperCase() +
-                          field.name.slice(1)}
-                    </FormLabel>
-
-                    {field.name === "password" && formType === "LOGIN" && (
-                      <Link
-                        href="#"
-                        className="ml-auto inline-block text-sm text-primary underline"
-                      >
-                        Forgot your password?
-                      </Link>
-                    )}
-                  </div>
-                  <FormControl>
-                    <Input
-                      type={
-                        field.name === "password" ||
-                        field.name === "confirmPassword"
-                          ? "password"
-                          : "text"
-                      }
-                      placeholder={
-                        field.name === "confirmPassword"
-                          ? "Confirm your password"
-                          : `Enter your ${field.name}`
-                      }
-                      className="pg-regular bg-light900_dark300 text-dark300_light700 min-h-10 border"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          ))}
-
-        {formType === "LOGIN" && (
+        {Object.keys(defaultValues).map((field) => (
           <FormField
+            key={field}
             control={form.control}
-            name={"rememberMe" as Path<T>}
+            name={field as Path<T>}
             render={({ field }) => (
-              <FormItem className="flex items-center gap-2">
+              <FormItem className="flex flex-col w-full gap-2.5">
+                <div className="flex-between w-full">
+                  <FormLabel className="flex-grow pg-medium text-dark400_light700">
+                    {field.name === "confirmPassword"
+                      ? "Confirm Password"
+                      : field.name.charAt(0).toUpperCase() +
+                        field.name.slice(1)}
+                  </FormLabel>
+
+                  {field.name === "password" && formType === "LOGIN" && (
+                    <Link
+                      href="#"
+                      className="ml-auto inline-block text-sm text-primary underline"
+                    >
+                      Forgot your password?
+                    </Link>
+                  )}
+                </div>
                 <FormControl>
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
+                  <Input
+                    type={
+                      field.name === "password" ||
+                      field.name === "confirmPassword"
+                        ? "password"
+                        : "text"
+                    }
+                    placeholder={
+                      field.name === "confirmPassword"
+                        ? "Confirm your password"
+                        : `Enter your ${field.name}`
+                    }
+                    className="pg-regular bg-light900_dark300 text-dark300_light700 min-h-10 border"
+                    {...field}
                   />
                 </FormControl>
-                <FormLabel>Remember me</FormLabel>
+                <FormMessage />
               </FormItem>
             )}
           />
+        ))}
+
+        {!!error && (
+          <Alert
+            variant="destructive"
+            className="bg-destructive/10 border border-destructive/20"
+          >
+            <AlertCircleIcon />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{error}. Please try again.</AlertDescription>
+          </Alert>
         )}
 
         <Button

@@ -39,7 +39,7 @@ export function UserNav({ user, isAdmin = false }: UserNavProps) {
             <UserAvatar
               id={user.id}
               name={user.name}
-              image={user.image}
+              image={user.image ?? ""}
               className="max-sm:size-8 size-12 lg:size-8 rounded-lg"
               fallbackClassName="rounded-lg max-sm:text-sm text-xl lg:text-sm"
             />
@@ -62,7 +62,7 @@ export function UserNav({ user, isAdmin = false }: UserNavProps) {
             <UserAvatar
               id={user.id}
               name={user.name}
-              image={user.image}
+              image={user.image ?? ""}
               className="size-8 rounded-lg"
               fallbackClassName="rounded-lg"
             />

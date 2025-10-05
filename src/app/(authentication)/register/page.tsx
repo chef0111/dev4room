@@ -25,7 +25,7 @@ const Register = () => {
     setIsLoading(true);
 
     try {
-      await authClient.signUp.email({
+      const { data, error } = await authClient.signUp.email({
         name,
         username,
         email,
@@ -35,7 +35,10 @@ const Register = () => {
 
       setIsLoading(false);
 
-      return { success: true };
+      return {
+        success: !!data?.user,
+        error: { message: error?.message },
+      };
     } catch (error) {
       return handleError(error) as ErrorResponse;
     }
