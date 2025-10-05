@@ -1,13 +1,12 @@
 import routes from "@/common/constants/routes";
 import Link from "next/link";
-import { Avatar, AvatarFallback } from "../../ui/avatar";
-import Image from "next/image";
+import { Avatar, AvatarImage, AvatarFallback } from "../../ui/avatar";
 import { cn } from "@/lib/utils";
 
 interface UserAvatarProps {
   id: string;
   name: string;
-  image?: string | null;
+  image?: string;
   className?: string;
   fallbackClassName?: string;
 }
@@ -27,26 +26,17 @@ const UserAvatar = ({
     .slice(0, 2);
 
   return (
-    <Link href={routes.profile(id)}>
+    <Link href={routes.profile(id)} className="cursor-pointer">
       <Avatar className={cn("relative", className)}>
-        {image ? (
-          <Image
-            src={image}
-            alt={name}
-            fill
-            quality={100}
-            className="rounded-full object-cover"
-          />
-        ) : (
-          <AvatarFallback
-            className={cn(
-              "primary-gradient font-esbuild font-bold tracking-wider text-white",
-              fallbackClassName
-            )}
-          >
-            {initials}
-          </AvatarFallback>
-        )}
+        <AvatarImage src={image} alt={name} className="object-cover" />
+        <AvatarFallback
+          className={cn(
+            "primary-gradient font-esbuild font-bold tracking-wider text-white",
+            fallbackClassName
+          )}
+        >
+          {initials}
+        </AvatarFallback>
       </Avatar>
     </Link>
   );

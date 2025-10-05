@@ -1,12 +1,21 @@
 "use client";
 
-import React from "react";
-import Image from "next/image";
+import { authClient } from "@/lib/auth-client";
+import routes from "@/common/constants/routes";
+import handleError from "@/lib/handlers/error";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 const SocialAuthForm = ({ disabled }: { disabled?: boolean }) => {
-  const handleLogIn = async (provider: "google" | "github") => {
-    console.log(`Logging in with ${provider}`);
+  const handleSocialLogin = async (provider: "google" | "github") => {
+    try {
+      await authClient.signIn.social({
+        provider,
+        callbackURL: routes.home,
+      });
+    } catch (error) {
+      return handleError(error) as ErrorResponse;
+    }
   };
 
   return (
@@ -14,7 +23,7 @@ const SocialAuthForm = ({ disabled }: { disabled?: boolean }) => {
       <Button
         className="btn-social"
         disabled={disabled}
-        onClick={() => handleLogIn("google")}
+        onClick={() => handleSocialLogin("google")}
       >
         <Image
           src="/icons/google.svg"
@@ -29,7 +38,7 @@ const SocialAuthForm = ({ disabled }: { disabled?: boolean }) => {
       <Button
         className="btn-social"
         disabled={disabled}
-        onClick={() => handleLogIn("github")}
+        onClick={() => handleSocialLogin("github")}
       >
         <Image
           src="/icons/github.svg"
