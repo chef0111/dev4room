@@ -35,7 +35,10 @@ const Register = () => {
 
       setIsLoading(false);
 
-      return { success: !!data?.user, error: { message: error?.message } };
+      return {
+        success: !!data?.user,
+        error: { message: error?.message },
+      };
     } catch (error) {
       return handleError(error) as ErrorResponse;
     }

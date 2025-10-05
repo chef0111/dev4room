@@ -12,17 +12,47 @@ export const auth = betterAuth({
     provider: "pg",
     schema,
   }),
+  socialProviders: {
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    },
+    github: {
+      clientId: process.env.GITHUB_CLIENT_ID as string,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+    },
+  },
   emailAndPassword: {
     enabled: true,
   },
+  user: {
+    additionalFields: {
+      bio: {
+        type: "string",
+        input: false,
+      },
+      location: {
+        type: "string",
+        input: false,
+      },
+      reputation: {
+        type: "number",
+        input: false,
+      },
+      portfolio: {
+        type: "string",
+        input: false,
+      },
+    },
+  },
   hooks: {
-    before: createAuthMiddleware(async (context) => {
+    before: createAuthMiddleware(async (ctx) => {
       if (
-        context.path === "/sign-up/email" ||
-        context.path === "/reset-password" ||
-        context.path === "/change-password"
+        ctx.path === "/sign-up/email" ||
+        ctx.path === "/reset-password" ||
+        ctx.path === "/change-password"
       ) {
-        const password = context.body.password || context.body.newPassword;
+        const password = ctx.body.password || ctx.body.newPassword;
         const { error } = PasswordSchema.safeParse(password);
 
         if (error) {
@@ -39,8 +69,8 @@ export const auth = betterAuth({
       maxAge: 300,
     },
   },
-  trustedOrigins: process.env.TRUSTED_ORIGINS
-    ? process.env.TRUSTED_ORIGINS.split(",").map((origin) => origin.trim())
+  trustedOrigins: process.env.BETTER_AUTH_URL
+    ? process.env.BETTER_AUTH_URL.split(",").map((origin) => origin.trim())
     : ["http://localhost:3000"],
   plugins: [username(), admin(), nextCookies()],
 });
