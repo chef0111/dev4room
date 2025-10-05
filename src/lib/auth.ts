@@ -30,18 +30,23 @@ export const auth = betterAuth({
       bio: {
         type: "string",
         input: false,
+        required: false,
       },
       location: {
         type: "string",
         input: false,
+        required: false,
       },
       reputation: {
         type: "number",
         input: false,
+        defaultValue: 0,
+        required: false,
       },
       portfolio: {
         type: "string",
         input: false,
+        required: false,
       },
     },
   },
