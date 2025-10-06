@@ -7,6 +7,11 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { formUrlQuery, removeKeysFromUrlQuery } from "@/lib/url";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 
 interface LocalSearchProps {
   route: string;
@@ -57,19 +62,7 @@ const LocalSearch = ({ route, placeholder, className }: LocalSearchProps) => {
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(handleSubmit)}
-        className={cn(
-          "bg-light800_darkgradient! flex items-center min-h-12 grow gap-2 rounded-lg px-4 transition-all duration-200",
-          className
-        )}
-      >
-        {/* Search Icon */}
-        <Search
-          className="text-light400_light500 w-6 h-6 cursor-pointer"
-          onClick={handleSearchSubmit}
-        />
-
+      <form onSubmit={form.handleSubmit(handleSubmit)}>
         {/* Search Input using FormField */}
         <FormField
           control={form.control}
@@ -77,12 +70,24 @@ const LocalSearch = ({ route, placeholder, className }: LocalSearchProps) => {
           render={({ field }) => (
             <FormItem className="flex-1">
               <FormControl>
-                <Input
-                  type="text"
-                  placeholder={placeholder}
-                  className="pg-regular no-focus placeholder placeholder:pg-regular border-none bg-transparent! shadow-none outline-none"
-                  {...field}
-                />
+                <InputGroup
+                  className={cn(
+                    "bg-light800_darkgradient! flex items-center min-h-12 gap-2 border-none ring-0! grow rounded-lg px-2 transition-all duration-200",
+                    className
+                  )}
+                >
+                  <InputGroupInput
+                    type="text"
+                    placeholder={placeholder}
+                    {...field}
+                  />
+                  <InputGroupAddon>
+                    <Search
+                      className="text-light400_light500 size-6! cursor-pointer"
+                      onClick={handleSearchSubmit}
+                    />
+                  </InputGroupAddon>
+                </InputGroup>
               </FormControl>
             </FormItem>
           )}
