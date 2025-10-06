@@ -3,8 +3,30 @@ import { getSessionCookie } from "better-auth/cookies";
 
 export async function middleware(request: NextRequest) {
   const sessionCookie = getSessionCookie(request);
+  const pathname = request.nextUrl.pathname;
 
-  if (!sessionCookie) {
+  // Protected routes
+  const protectedRoutes = ["/", "/admin", "/profile", "/ask-question"];
+  const isProtectedRoute = protectedRoutes.some((route) =>
+    pathname.startsWith(route)
+  );
+
+  // Auth routes (redirect to home if already logged in)
+  const authRoutes = [
+    "/login",
+    "/register",
+    "/reset-password",
+    "/forgot-password",
+  ];
+  const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
+
+  if (isProtectedRoute && !sessionCookie) {
+    const url = new URL("/login", request.url);
+    url.searchParams.set("from", pathname);
+    return NextResponse.redirect(url);
+  }
+
+  if (isAuthRoute && sessionCookie) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
@@ -12,5 +34,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin"], // Specify the routes the middleware applies to
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };

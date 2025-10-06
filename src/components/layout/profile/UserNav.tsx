@@ -51,6 +51,7 @@ export function UserNav({ user, isAdmin = false }: UserNavProps) {
           <ChevronsUpDown className="ml-auto size-4 max-sm:block hidden lg:block" />
         </div>
       </DropdownMenuTrigger>
+
       <DropdownMenuContent
         className="bg-light900_dark200 w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
         side={isMobile ? "bottom" : "right"}
