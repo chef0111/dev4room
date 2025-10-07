@@ -38,7 +38,7 @@ const Navbar = async () => {
           <UserAvatar
             id={user.id}
             name={user.name!}
-            image={user.image}
+            image={user.image ?? ""}
             className="w-9 h-9 rounded-full"
           />
         )}
