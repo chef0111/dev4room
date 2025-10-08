@@ -32,7 +32,7 @@ const SocialAuthForm = ({ disabled }: { disabled?: boolean }) => {
           height={20}
           className="mr-1 object-contain"
         />
-        <span>Log in with Google</span>
+        <span>Continue with Google</span>
       </Button>
 
       <Button
@@ -47,7 +47,7 @@ const SocialAuthForm = ({ disabled }: { disabled?: boolean }) => {
           height={20}
           className="invert-colors mr-1 object-contain"
         />
-        <span>Log in with Github</span>
+        <span>Continue with Github</span>
       </Button>
     </div>
   );

@@ -30,3 +30,26 @@ export const sidebarTabs = [
     label: "Profile",
   },
 ];
+
+export const AUTH_FORM_TYPES = {
+  LOGIN: {
+    buttonLabel: "Log in",
+    loadingLabel: "Logging in...",
+    successMessage: "Logged in successfully!",
+  },
+  REGISTER: {
+    buttonLabel: "Register",
+    loadingLabel: "Registering...",
+    successMessage: "Registered successfully!",
+  },
+  RESET_PASSWORD: {
+    buttonLabel: "Reset Password",
+    loadingLabel: "Resetting password...",
+    successMessage: "Reset password successfully!",
+  },
+  FORGOT_PASSWORD: {
+    buttonLabel: "Continue",
+    loadingLabel: "Sending email...",
+    successMessage: "Password reset request sent! Please check your email.",
+  },
+} as const;
