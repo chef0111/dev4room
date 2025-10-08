@@ -20,8 +20,8 @@ export async function middleware(request: NextRequest) {
   ];
   const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
 
-  // Don't redirect if user is already on an auth route and not logged in
-  if (isProtectedRoute && !sessionCookie && !isAuthRoute) {
+  // Redirect unauthenticated users from protected routes to login
+  if (isProtectedRoute && !sessionCookie) {
     const url = new URL("/login", request.url);
     url.searchParams.set("from", pathname);
     return NextResponse.redirect(url);

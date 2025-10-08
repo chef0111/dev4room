@@ -6,6 +6,10 @@ import { username, admin } from "better-auth/plugins";
 import { createAuthMiddleware, APIError } from "better-auth/api";
 import { nextCookies } from "better-auth/next-js";
 import { PasswordSchema } from "./validations";
+import { Resend } from "resend";
+import ForgotPasswordEmail from "@/components/layout/email/ResetPassword";
+
+const resend = new Resend(process.env.RESEND_API_KEY as string);
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -24,6 +28,18 @@ export const auth = betterAuth({
   },
   emailAndPassword: {
     enabled: true,
+    sendResetPassword: async ({ user, url }) => {
+      resend.emails.send({
+        from: "admin@dev4room.pro",
+        to: user.email,
+        subject: "Reset your password",
+        react: ForgotPasswordEmail({
+          username: user.name,
+          userEmail: user.email,
+          resetUrl: url,
+        }),
+      });
+    },
   },
   user: {
     additionalFields: {
@@ -62,7 +78,7 @@ export const auth = betterAuth({
 
         if (error) {
           throw new APIError("BAD_REQUEST", {
-            message: "Password not strong enough",
+            message: "Password not strong enough.",
           });
         }
       }

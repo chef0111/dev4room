@@ -15,6 +15,7 @@ import {
 import Link from "next/link";
 
 import routes from "@/common/constants/routes";
+import { AUTH_FORM_TYPES } from "@/common/constants";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,16 +27,17 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
 import TextShimmer from "@/components/ui/text-shimmer";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircleIcon, Loader2Icon } from "lucide-react";
+
+type AuthFormType = keyof typeof AUTH_FORM_TYPES;
 
 interface AuthFormProps<T extends FieldValues> {
   schema: ZodType<T, FieldValues>;
   defaultValues: T;
   onSubmit: (data: T) => Promise<ActionResponse>;
-  formType: "LOGIN" | "REGISTER";
+  formType: AuthFormType;
 }
 
 const AuthForm = <T extends FieldValues>({
@@ -57,21 +59,26 @@ const AuthForm = <T extends FieldValues>({
     const response = (await onSubmit(data)) as ActionResponse;
 
     if (response?.success) {
-      toast.success("Success", {
-        description:
-          formType === "LOGIN"
-            ? "Logged in successfully!"
-            : "Registered successfully!",
-      });
+      const successMessage = AUTH_FORM_TYPES[formType].successMessage;
 
-      router.push(routes.home);
+      if (successMessage !== null) {
+        toast.success("Success", {
+          description: successMessage,
+        });
+      }
+
+      if (formType === "LOGIN" || formType === "REGISTER") {
+        router.push(routes.home);
+      } else if (formType === "RESET_PASSWORD") {
+        router.push(routes.login);
+      }
       router.refresh();
     } else {
       setError(response?.error?.message || "Something went wrong");
     }
   };
 
-  const buttonLabel = formType === "LOGIN" ? "Log in" : "Register";
+  const formConfig = AUTH_FORM_TYPES[formType];
 
   return (
     <Form {...form}>
@@ -96,8 +103,8 @@ const AuthForm = <T extends FieldValues>({
 
                   {field.name === "password" && formType === "LOGIN" && (
                     <Link
-                      href="#"
-                      className="ml-auto inline-block text-sm text-primary underline"
+                      href={routes.forgotPassword}
+                      className="ml-auto inline-block text-sm text-link-100 hover:underline"
                     >
                       Forgot your password?
                     </Link>
@@ -133,24 +140,26 @@ const AuthForm = <T extends FieldValues>({
           >
             <AlertCircleIcon />
             <AlertTitle>Error</AlertTitle>
-            <AlertDescription>{error}. Please try again.</AlertDescription>
+            <AlertDescription>
+              {error}. {formType === "LOGIN" && "Please try again."}
+            </AlertDescription>
           </Alert>
         )}
 
         <Button
           type="submit"
           disabled={form.formState.isSubmitting}
-          className="primary-gradient pg-semibold min-h-12 w-full text-light-900 hover:primary-gradient-hover transition-all cursor-pointer"
+          className="primary-gradient pg-semibold min-h-10 w-full text-light-900 hover:primary-gradient-hover transition-all cursor-pointer"
         >
           {form.formState.isSubmitting && (
             <Loader2Icon className="animate-spin" />
           )}
           {form.formState.isSubmitting ? (
             <TextShimmer duration={1} className="text-loading!">
-              {buttonLabel === "Log in" ? "Logging in..." : "Registering..."}
+              {formConfig.loadingLabel}
             </TextShimmer>
           ) : (
-            buttonLabel
+            formConfig.buttonLabel
           )}
         </Button>
       </form>
