@@ -1,7 +1,7 @@
 "use client";
 
 import z from "zod";
-import { ForgotPasswordSchema, ResetPasswordSchema } from "@/lib/validations";
+import { ResetPasswordSchema } from "@/lib/validations";
 import { authClient } from "@/lib/auth-client";
 import handleError from "@/lib/handlers/error";
 
@@ -9,12 +9,52 @@ import AuthForm from "@/components/layout/auth/AuthForm";
 import routes from "@/common/constants/routes";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
+import { title } from "process";
 
 type ResetPasswordValues = z.infer<typeof ResetPasswordSchema>;
 
 const ResetPassword = () => {
   const searchParams = useSearchParams();
   const token = searchParams.get("token") as string;
+
+  if (!token) {
+    return (
+      <div className="flex flex-col gap-2 text-center">
+        <div className="w-full flex-center">
+          <Image
+            src="/images/error-dark.png"
+            alt="Invalid Link"
+            width={270}
+            height={200}
+            className="hidden object-contain dark:block"
+          />
+          <Image
+            src="/images/error-light.png"
+            alt="Invalid Link"
+            width={270}
+            height={200}
+            className="block object-contain dark:hidden"
+          />
+        </div>
+
+        <h1 className="md:h2-bold h3-bold mt-2 text-dark100_light900">
+          Invalid Reset Link
+        </h1>
+        <p className="body-regular mb-4 text-dark500_light500 text-center">
+          This password reset link is invalid or has expired. Please request a
+          new one.
+        </p>
+
+        <Link
+          href={routes.forgotPassword}
+          className="pg-semibold text-link-100 hover:underline"
+        >
+          Request New Link
+        </Link>
+      </div>
+    );
+  }
 
   const handleResetPassword = async ({
     password,

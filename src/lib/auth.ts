@@ -8,7 +8,11 @@ import { nextCookies } from "better-auth/next-js";
 import { PasswordSchema } from "./validations";
 import { Resend } from "resend";
 import ForgotPasswordEmail from "@/components/layout/email/ResetPassword";
+import logger from "./handlers/logger";
 
+if (!process.env.RESEND_API_KEY) {
+  throw new Error("RESEND_API_KEY environment variable is required");
+}
 const resend = new Resend(process.env.RESEND_API_KEY as string);
 
 export const auth = betterAuth({
@@ -29,16 +33,29 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     sendResetPassword: async ({ user, url }) => {
-      resend.emails.send({
-        from: "admin@dev4room.pro",
-        to: user.email,
-        subject: "Reset your password",
-        react: ForgotPasswordEmail({
-          username: user.name,
-          userEmail: user.email,
-          resetUrl: url,
-        }),
-      });
+      try {
+        const result = await resend.emails.send({
+          from: process.env.RESEND_FROM_EMAIL || "admin@dev4room.pro",
+          to: user.email,
+          subject: "Reset your password",
+          react: ForgotPasswordEmail({
+            username: user.name,
+            userEmail: user.email,
+            resetUrl: url,
+          }),
+        });
+
+        if (result.error) {
+          logger.error(
+            { err: result.error },
+            "Error sending reset password email"
+          );
+          throw new Error("Failed to send reset password email");
+        }
+      } catch (error) {
+        logger.error({ err: error }, "Error sending reset password email");
+        throw new Error("Failed to send reset password email");
+      }
     },
   },
   user: {
