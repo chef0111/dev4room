@@ -6,7 +6,7 @@ export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   // Protected routes
-  const protectedRoutes = ["/", "/admin", "/profile", "/ask-question"];
+  const protectedRoutes = ["/admin", "/profile", "/ask-question"];
   const isProtectedRoute = protectedRoutes.some((route) =>
     pathname.startsWith(route)
   );
@@ -20,12 +20,14 @@ export async function middleware(request: NextRequest) {
   ];
   const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
 
+  // Redirect unauthenticated users from protected routes to login
   if (isProtectedRoute && !sessionCookie) {
     const url = new URL("/login", request.url);
     url.searchParams.set("from", pathname);
     return NextResponse.redirect(url);
   }
 
+  // Redirect logged-in users away from auth pages
   if (isAuthRoute && sessionCookie) {
     return NextResponse.redirect(new URL("/", request.url));
   }

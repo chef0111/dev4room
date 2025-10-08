@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface Props {
   children: React.ReactNode;
@@ -24,17 +24,7 @@ const AuthLayout: React.FC<Props> = ({ children }) => {
           Dev<span className="text-primary-500">4Room</span>
         </p>
       </Link>
-      <Card className=" gap-4 light-border bg-light900_dark200 shadow-light100_dark100 min-w-full rounded-xl border px-2 sm:px-4 py-10 shadow-md sm:min-w-[520px]">
-        <CardHeader className="flex-center text-center">
-          <div className="space-y-1">
-            <h1 className="md:h2-bold h3-bold text-dark100_light900">
-              Join Dev4Room
-            </h1>
-            <p className="md:paragraph-regular body-regular text-dark500_light400">
-              To connect with developers around the world
-            </p>
-          </div>
-        </CardHeader>
+      <Card className="bg-light900_dark200 light-border shadow-light100_dark100 min-w-full rounded-xl border px-2 sm:px-4 shadow-md sm:min-w-130">
         <CardContent>{children}</CardContent>
       </Card>
     </main>

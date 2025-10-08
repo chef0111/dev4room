@@ -69,7 +69,7 @@ const HomePage = async ({ searchParams }: SearchParams) => {
           className="primary-gradient min-h-10 px-4 py-3 text-light-900! hover:primary-gradient-hover cursor-pointer"
           asChild
         >
-          <Link href={routes.ask_question}>Ask Question</Link>
+          <Link href={routes.askQuestion}>Ask Question</Link>
         </Button>
       </section>
       <section className="mt-10">
