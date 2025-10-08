@@ -61,11 +61,9 @@ const AuthForm = <T extends FieldValues>({
     if (response?.success) {
       const successMessage = AUTH_FORM_TYPES[formType].successMessage;
 
-      if (successMessage !== null) {
-        toast.success("Success", {
-          description: successMessage,
-        });
-      }
+      toast.success("Success", {
+        description: successMessage,
+      });
 
       if (formType === "LOGIN" || formType === "REGISTER") {
         router.push(routes.home);
