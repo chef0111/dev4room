@@ -4,6 +4,7 @@ const routes = {
   register: "/register",
   forgotPassword: "/forgot-password",
   resetPassword: "/reset-password",
+  verifyEmail: "/verify-email",
   collection: "/collection",
   community: "/community",
   tags: "/tags",

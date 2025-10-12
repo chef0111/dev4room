@@ -24,7 +24,7 @@ const AuthLayout: React.FC<Props> = ({ children }) => {
           Dev<span className="text-primary-500">4Room</span>
         </p>
       </Link>
-      <Card className="bg-light900_dark200 light-border shadow-light100_dark100 min-w-full rounded-xl border px-2 sm:px-4 shadow-md sm:min-w-130">
+      <Card className="bg-light900_dark200 light-border shadow-light100_dark100 min-w-full rounded-xl border px-2 sm:px-4 shadow-md sm:min-w-fit">
         <CardContent>{children}</CardContent>
       </Card>
     </main>

@@ -17,6 +17,7 @@ export async function middleware(request: NextRequest) {
     "/register",
     "/reset-password",
     "/forgot-password",
+    "/verify-email",
   ];
   const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
 

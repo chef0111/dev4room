@@ -2,18 +2,20 @@
 
 import { useState } from "react";
 import z from "zod";
-import { RegisterSchema } from "@/lib/validations";
-import handleError from "@/lib/handlers/error";
+import { useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
 
+import { RegisterSchema } from "@/lib/validations";
 import AuthForm from "@/components/layout/auth/AuthForm";
 import SocialAuthForm from "@/components/layout/auth/SocialAuthForm";
 import Link from "next/link";
 import routes from "@/common/constants/routes";
-import { authClient } from "@/lib/auth-client";
+import handleError from "@/lib/handlers/error";
 
 type RegisterValues = z.infer<typeof RegisterSchema>;
 
 const Register = () => {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleRegister = async ({
@@ -30,10 +32,19 @@ const Register = () => {
         username,
         email,
         password,
-        callbackURL: "/email-verified",
+        callbackURL: "/verify-email",
       });
 
       setIsLoading(false);
+
+      if (data?.user) {
+        router.push(
+          `${routes.verifyEmail}?type=email-verification&email=${encodeURIComponent(
+            email
+          )}`
+        );
+        router.refresh();
+      }
 
       return {
         success: !!data?.user,

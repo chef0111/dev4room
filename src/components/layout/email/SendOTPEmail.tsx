@@ -13,20 +13,20 @@ import {
   Tailwind,
 } from "@react-email/components";
 
-interface ForgotPasswordEmailProps {
-  username: string;
+interface SendOTPEmailProps {
   userEmail: string;
-  resetUrl: string;
+  otp: string;
+  expiryMinutes: string;
 }
 
-const ForgotPasswordEmail = (props: ForgotPasswordEmailProps) => {
-  const { username, userEmail, resetUrl } = props;
+const SendOTPEmail = (props: SendOTPEmailProps) => {
+  const { userEmail, otp, expiryMinutes } = props;
 
   return (
     <Html lang="en" dir="ltr">
       <Tailwind>
         <Head />
-        <Preview>Reset your password - Action required</Preview>
+        <Preview>Your verification code - {otp}</Preview>
         <Body className="bg-gray-100 font-sans py-[40px]">
           <Container className="bg-white rounded-[8px] shadow-sm max-w-[580px] mx-auto">
             {/* Logo Header */}
@@ -54,7 +54,12 @@ const ForgotPasswordEmail = (props: ForgotPasswordEmailProps) => {
                             src="https://res.cloudinary.com/dpuqj2n2q/image/upload/v1759942491/brand_drlnde.png"
                             width={48}
                             height={48}
-                            alt="DevFlow logo"
+                            alt="Dev4Room logo"
+                            style={{
+                              display: "block",
+                              border: "none",
+                              outline: "none",
+                            }}
                           />
                         </td>
                         <td style={{ verticalAlign: "middle" }}>
@@ -81,57 +86,82 @@ const ForgotPasswordEmail = (props: ForgotPasswordEmailProps) => {
             {/* Title Section */}
             <Section className="px-[48px] py-[32px] text-center">
               <Heading className="text-black text-[28px] font-bold m-0">
-                Password Reset Request
+                Verify Your Account
               </Heading>
             </Section>
 
             {/* Main Content */}
-            <Section className="px-[48px] py-[20px]">
-              <Text className="text-gray-800 text-[16px] leading-[24px] mb-[24px]">
-                Hello, {username}
+            <Section className="px-[48px] pt-[20px] pb-[40px]">
+              <Text className="text-gray-800 text-[16px] leading-[24px]">
+                Hello,
               </Text>
 
               <Text className="text-gray-800 text-[16px] leading-[24px] mb-[24px]">
-                We received a request to reset the password for your account
-                associated with <strong>{userEmail}</strong>.
+                We received a request to verify your account for{" "}
+                <strong>{userEmail}</strong>.
               </Text>
 
               <Text className="text-gray-800 text-[16px] leading-[24px] mb-[32px]">
-                Click the button below to create a new password. This link will
-                expire in 24 hours for security reasons.
+                Please use the verification code below to complete your account
+                setup. This code will expire in {expiryMinutes} minutes.
               </Text>
 
-              {/* Reset Button */}
+              {/* OTP Code Display with Integrated Copy Button */}
               <Section className="text-center mb-[32px]">
-                <Button
-                  href={resetUrl}
-                  className="text-white px-[32px] py-[16px] rounded-[8px] text-[16px] font-semibold no-underline box-border inline-block"
+                <div
                   style={{
+                    display: "inline-block",
                     background:
                       "linear-gradient(129deg, #0091ff 0%, #5faee2 100%)",
+                    padding: "24px",
+                    borderRadius: "12px",
+                    border: "2px solid #e5e7eb",
+                    position: "relative",
                   }}
                 >
-                  Reset Password
-                </Button>
+                  <table style={{ width: "100%" }}>
+                    <tr>
+                      <td
+                        style={{ textAlign: "center", verticalAlign: "middle" }}
+                      >
+                        <Text
+                          className="text-white text-[32px] font-bold m-0 tracking-[8px]"
+                          style={{
+                            fontSize: "32px",
+                            fontWeight: "bold",
+                            color: "white",
+                            margin: 0,
+                            letterSpacing: "8px",
+                            fontFamily: "monospace",
+                          }}
+                        >
+                          {otp}
+                        </Text>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
               </Section>
 
-              <Text className="text-gray-600 text-[14px] leading-[20px] mb-[24px]">
-                If the button above doesn&apos;t work, copy and paste this link
-                into your browser:
-              </Text>
-
-              <Text className="text-blue-600 text-[14px] leading-[20px] mb-[32px] break-all">
-                {resetUrl}
+              <Text className="text-gray-600 text-[14px] leading-[20px] mb-[24px] text-center">
+                Enter this code in the verification field to continue, or click
+                the copy icon above.
               </Text>
 
               <Text className="text-gray-600 text-[14px] leading-[20px] mb-[16px]">
-                <strong>Didn&apos;t request this?</strong> If you didn&apos;t
-                request a password reset, you can safely ignore this email. Your
-                password will remain unchanged.
+                <strong>Security Notice:</strong> This verification code is
+                valid for {expiryMinutes} minutes only. If you didn&apos;t
+                request this verification, please ignore this email.
+              </Text>
+
+              <Text className="text-gray-600 text-[14px] leading-[20px] mb-[24px]">
+                For your security, never share this code with anyone. Our team
+                will never ask you for this code via phone or email.
               </Text>
 
               <Text className="text-gray-600 text-[14px] leading-[20px]">
-                For security reasons, this link will expire in 24 hours.
+                If you&apos;re having trouble with verification, please contact
+                our support team for assistance.
               </Text>
             </Section>
 
@@ -156,4 +186,4 @@ const ForgotPasswordEmail = (props: ForgotPasswordEmailProps) => {
   );
 };
 
-export default ForgotPasswordEmail;
+export default SendOTPEmail;

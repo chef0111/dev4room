@@ -5,6 +5,7 @@ import { z, ZodType } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import {
+  Controller,
   DefaultValues,
   FieldValues,
   Path,
@@ -16,16 +17,15 @@ import Link from "next/link";
 
 import routes from "@/common/constants/routes";
 import { AUTH_FORM_TYPES } from "@/common/constants";
+import { formatFieldName } from "@/lib/utils";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import TextShimmer from "@/components/ui/text-shimmer";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -65,12 +65,13 @@ const AuthForm = <T extends FieldValues>({
         description: successMessage,
       });
 
-      if (formType === "LOGIN" || formType === "REGISTER") {
+      if (formType === "LOGIN") {
         router.push(routes.home);
+        router.refresh();
       } else if (formType === "RESET_PASSWORD") {
         router.push(routes.login);
+        router.refresh();
       }
-      router.refresh();
     } else {
       setError(response?.error?.message || "Something went wrong");
     }
@@ -79,27 +80,28 @@ const AuthForm = <T extends FieldValues>({
   const formConfig = AUTH_FORM_TYPES[formType];
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(handleSubmit)}
-        className="space-y-6 mt-6"
-      >
-        {Object.keys(defaultValues).map((field) => (
-          <FormField
-            key={field}
+    <form
+      id="auth-form"
+      onSubmit={form.handleSubmit(handleSubmit)}
+      className="space-y-6 mt-6"
+    >
+      <FieldGroup>
+        {Object.keys(defaultValues).map((fieldName) => (
+          <Controller
+            key={fieldName}
+            name={fieldName as Path<T>}
             control={form.control}
-            name={field as Path<T>}
-            render={({ field }) => (
-              <FormItem className="flex flex-col w-full gap-2.5">
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
                 <div className="flex-between w-full">
-                  <FormLabel className="flex-grow pg-medium text-dark400_light700">
-                    {field.name === "confirmPassword"
-                      ? "Confirm Password"
-                      : field.name.charAt(0).toUpperCase() +
-                        field.name.slice(1)}
-                  </FormLabel>
+                  <FieldLabel
+                    htmlFor={`auth-form-${fieldName}`}
+                    className="flex-grow pg-medium"
+                  >
+                    {formatFieldName(fieldName)}
+                  </FieldLabel>
 
-                  {field.name === "password" && formType === "LOGIN" && (
+                  {fieldName === "password" && formType === "LOGIN" && (
                     <Link
                       href={routes.forgotPassword}
                       className="ml-auto inline-block text-sm text-link-100 hover:underline"
@@ -108,60 +110,62 @@ const AuthForm = <T extends FieldValues>({
                     </Link>
                   )}
                 </div>
-                <FormControl>
-                  <Input
-                    type={
-                      field.name === "password" ||
-                      field.name === "confirmPassword"
-                        ? "password"
-                        : "text"
-                    }
-                    placeholder={
-                      field.name === "confirmPassword"
-                        ? "Confirm your password"
-                        : `Enter your ${field.name}`
-                    }
-                    className="pg-regular bg-light900_dark300 text-dark300_light700 min-h-10 border"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+                <Input
+                  {...field}
+                  id={`auth-form-${fieldName}`}
+                  type={
+                    fieldName === "password" || fieldName === "confirmPassword"
+                      ? "password"
+                      : "text"
+                  }
+                  placeholder={
+                    fieldName === "confirmPassword"
+                      ? "Confirm your password"
+                      : `Enter your ${fieldName}`
+                  }
+                  className="pg-regular light-border-2 bg-light900_dark300 text-dark300_light700 min-h-10 border"
+                  aria-invalid={fieldState.invalid}
+                />
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
             )}
           />
         ))}
+      </FieldGroup>
 
-        {!!error && (
-          <Alert
-            variant="destructive"
-            className="bg-destructive/10 border border-destructive/20"
-          >
-            <AlertCircleIcon />
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>
-              {error}. {formType === "LOGIN" && "Please try again."}
-            </AlertDescription>
-          </Alert>
-        )}
-
-        <Button
-          type="submit"
-          disabled={form.formState.isSubmitting}
-          className="primary-gradient pg-semibold min-h-10 w-full text-light-900 hover:primary-gradient-hover transition-all cursor-pointer"
+      {!!error && (
+        <Alert
+          variant="destructive"
+          className="bg-destructive/10 border border-destructive/20"
         >
-          {form.formState.isSubmitting && (
-            <Loader2Icon className="animate-spin" />
-          )}
-          {form.formState.isSubmitting ? (
-            <TextShimmer duration={1} className="text-loading!">
-              {formConfig.loadingLabel}
-            </TextShimmer>
-          ) : (
-            formConfig.buttonLabel
-          )}
-        </Button>
-      </form>
-    </Form>
+          <AlertCircleIcon />
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>
+            {error}
+            {formType === "LOGIN" && ". Please try again."}
+          </AlertDescription>
+        </Alert>
+      )}
+
+      <Button
+        type="submit"
+        disabled={form.formState.isSubmitting}
+        className="primary-gradient pg-semibold min-h-10 w-full text-light-900 hover:primary-gradient-hover transition-all cursor-pointer"
+      >
+        {form.formState.isSubmitting && (
+          <Loader2Icon className="animate-spin" />
+        )}
+        {form.formState.isSubmitting ? (
+          <TextShimmer duration={1} className="text-loading!">
+            {formConfig.loadingLabel}
+          </TextShimmer>
+        ) : (
+          formConfig.buttonLabel
+        )}
+      </Button>
+    </form>
   );
 };
 
