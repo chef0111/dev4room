@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import z from "zod";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, redirect } from "next/navigation";
 import { OTPSchema } from "@/lib/validations";
 import { authClient } from "@/lib/auth-client";
 import handleError from "@/lib/handlers/error";
@@ -17,16 +17,20 @@ type OTPValues = z.infer<typeof OTPSchema>;
 const VerifyEmail = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const email = searchParams.get("email") || undefined;
+  const email = searchParams.get("email") as string;
   const type = searchParams.get("type") as EmailOtpType;
   const [isResending, setIsResending] = useState(false);
+
+  if (!email || !type) {
+    redirect(routes.login);
+  }
 
   const handleVerifyEmail = async ({
     otp,
   }: OTPValues): Promise<ActionResponse> => {
     try {
       const { data, error } = await authClient.emailOtp.checkVerificationOtp({
-        email: email as string,
+        email,
         type,
         otp,
       });
@@ -35,7 +39,11 @@ const VerifyEmail = () => {
       if (success && type === "email-verification") {
         router.push(routes.login);
       } else if (success && type === "forget-password") {
-        router.push(`${routes.resetPassword}?email=${email}&code=${otp}`);
+        router.push(
+          `${routes.resetPassword}?email=${encodeURIComponent(
+            email
+          )}&id=${encodeURIComponent(otp)}`
+        );
       }
 
       return {
@@ -52,7 +60,7 @@ const VerifyEmail = () => {
   ) => {
     if (!email) {
       toast.error("Error", {
-        description: "Email address not found. Please try registering again.",
+        description: "Email address not found. Please try again.",
       });
       return;
     }
@@ -60,7 +68,7 @@ const VerifyEmail = () => {
     setIsResending(true);
     try {
       const { data, error } = await authClient.emailOtp.sendVerificationOtp({
-        email: email,
+        email,
         type,
       });
 

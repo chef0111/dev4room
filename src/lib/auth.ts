@@ -7,7 +7,7 @@ import { createAuthMiddleware, APIError } from "better-auth/api";
 import { nextCookies } from "better-auth/next-js";
 import { PasswordSchema } from "./validations";
 import { resend } from "./resend";
-import VerifyEmail from "@/components/layout/email/VerifyEmail";
+import SendOTPEmail from "@/components/layout/email/SendOTPEmail";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -85,13 +85,17 @@ export const auth = betterAuth({
     admin(),
     emailOTP({
       async sendVerificationOTP({ email, otp }) {
-        const { data, error } = await resend.emails.send({
-          from:
-            `Dev4Room Admin <${process.env.RESEND_FROM_EMAIL}>` ||
-            "Dev4Room Admin <admin@dev4room.pro>",
+        const sender =
+          process.env.RESEND_FROM_EMAIL &&
+          process.env.RESEND_FROM_EMAIL.trim().length > 0
+            ? `Dev4Room Admin <${process.env.RESEND_FROM_EMAIL.trim()}>`
+            : "Dev4Room Admin <admin@dev4room.pro>";
+
+        await resend.emails.send({
+          from: sender,
           to: [email],
           subject: "Dev4Room - Verify your email",
-          react: VerifyEmail({
+          react: SendOTPEmail({
             userEmail: email,
             otp: otp,
             expiryMinutes: "5",

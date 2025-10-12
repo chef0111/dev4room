@@ -9,6 +9,7 @@ import handleError from "@/lib/handlers/error";
 import AuthForm from "@/components/layout/auth/AuthForm";
 import Link from "next/link";
 import routes from "@/common/constants/routes";
+import { error } from "console";
 
 type ForgotPasswordValues = z.infer<typeof ForgotPasswordSchema>;
 
@@ -25,8 +26,11 @@ const ForgotPassword = () => {
 
       if (data) {
         router.push(
-          `${routes.verifyEmail}?type=forget-password&email=${email}`
+          `${routes.verifyEmail}?type=forget-password&email=${encodeURIComponent(
+            email
+          )}`
         );
+        router.refresh();
       }
 
       return {

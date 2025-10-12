@@ -16,9 +16,9 @@ type ResetPasswordValues = z.infer<typeof ResetPasswordSchema>;
 const ResetPassword = () => {
   const searchParams = useSearchParams();
   const email = searchParams.get("email") as string;
-  const code = searchParams.get("code") as string;
+  const id = searchParams.get("id") as string;
 
-  if (!email) {
+  if (!email || !id) {
     return (
       <div className="flex flex-col gap-2 text-center sm:max-w-104">
         <div className="w-full flex-center">
@@ -60,15 +60,17 @@ const ResetPassword = () => {
     password,
   }: ResetPasswordValues): Promise<ActionResponse> => {
     try {
-      const { data, error } = await authClient.emailOtp.resetPassword({
+      const { data } = await authClient.emailOtp.resetPassword({
         email,
-        otp: code,
+        otp: id,
         password,
       });
 
       return {
         success: !!data,
-        error: { message: error?.message },
+        error: {
+          message: "Invalid OTP. Please try again or request a new one.",
+        },
       };
     } catch (error) {
       return handleError(error) as ErrorResponse;
@@ -76,7 +78,7 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 sm:min-w-104">
       <div className="flex-center flex-col text-center space-y-1">
         <h1 className="md:h2-bold h3-bold text-dark100_light900">
           Reset Password
