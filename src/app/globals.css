@@ -200,7 +200,7 @@
 }
 
 @utility light-border-2 {
-  @apply border-light-700! dark:border-dark-400!;
+  @apply border-light-700 dark:border-dark-400;
 }
 
 @utility h1-bold {
@@ -301,6 +301,10 @@
 
 @utility shadow-light100_dark200 {
   @apply shadow-light-100! dark:shadow-dark-200!;
+}
+
+@utility input-otp-slot {
+  @apply light-border-2 sm:size-12! xs:size-10! text-2xl! bg-light900_dark300 text-dark300_light700;
 }
 
 @utility bg-auth-light {

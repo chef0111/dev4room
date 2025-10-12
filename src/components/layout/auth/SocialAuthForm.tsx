@@ -1,28 +1,39 @@
 "use client";
 
+import { useTransition } from "react";
 import { authClient } from "@/lib/auth-client";
 import routes from "@/common/constants/routes";
-import handleError from "@/lib/handlers/error";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
 const SocialAuthForm = ({ disabled }: { disabled?: boolean }) => {
+  const [isPending, startTransition] = useTransition();
+
   const handleSocialLogin = async (provider: "google" | "github") => {
-    try {
+    const providerName = provider.charAt(0).toUpperCase() + provider.slice(1);
+
+    startTransition(async () => {
       await authClient.signIn.social({
         provider,
         callbackURL: routes.home,
+        fetchOptions: {
+          onSuccess: () => {
+            toast.success(`Signed in with ${providerName}, redirecting...`);
+          },
+          onError: () => {
+            toast.error("Internal Server Error");
+          },
+        },
       });
-    } catch (error) {
-      return handleError(error) as ErrorResponse;
-    }
+    });
   };
 
   return (
     <div className="grid grid-cols-2 max-sm:grid-cols-1 gap-2.5 w-full">
       <Button
         className="btn-social"
-        disabled={disabled}
+        disabled={disabled || isPending}
         onClick={() => handleSocialLogin("google")}
       >
         <Image
@@ -37,7 +48,7 @@ const SocialAuthForm = ({ disabled }: { disabled?: boolean }) => {
 
       <Button
         className="btn-social"
-        disabled={disabled}
+        disabled={disabled || isPending}
         onClick={() => handleSocialLogin("github")}
       >
         <Image

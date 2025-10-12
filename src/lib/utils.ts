@@ -6,6 +6,13 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export const formatFieldName = (fieldName: string): string => {
+  return fieldName
+    .replace(/([A-Z])/g, " $1")
+    .replace(/^./, (str) => str.toUpperCase())
+    .trim();
+};
+
 export const getTechIcon = (techName: string) => {
   const normalizedTechName = techName.toLowerCase().replace(/[ .]/g, "");
   const defaultIcon = "/images/brand.svg";

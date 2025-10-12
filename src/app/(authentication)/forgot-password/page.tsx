@@ -1,6 +1,7 @@
 "use client";
 
 import z from "zod";
+import { useRouter } from "next/navigation";
 import { ForgotPasswordSchema } from "@/lib/validations";
 import { authClient } from "@/lib/auth-client";
 import handleError from "@/lib/handlers/error";
@@ -8,18 +9,29 @@ import handleError from "@/lib/handlers/error";
 import AuthForm from "@/components/layout/auth/AuthForm";
 import Link from "next/link";
 import routes from "@/common/constants/routes";
+import { error } from "console";
 
 type ForgotPasswordValues = z.infer<typeof ForgotPasswordSchema>;
 
 const ForgotPassword = () => {
+  const router = useRouter();
   const handleForgotPassword = async ({
     email,
   }: ForgotPasswordValues): Promise<ActionResponse> => {
     try {
-      const { data, error } = await authClient.forgetPassword({
+      const { data, error } = await authClient.emailOtp.sendVerificationOtp({
         email,
-        redirectTo: routes.resetPassword,
+        type: "forget-password",
       });
+
+      if (data) {
+        router.push(
+          `${routes.verifyEmail}?type=forget-password&email=${encodeURIComponent(
+            email
+          )}`
+        );
+        router.refresh();
+      }
 
       return {
         success: !!data,
@@ -31,7 +43,7 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 sm:min-w-104">
       <div className="flex-center flex-col text-center space-y-1">
         <h1 className="md:h2-bold h3-bold text-dark100_light900">
           Forgot Password
