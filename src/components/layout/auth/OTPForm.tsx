@@ -10,7 +10,6 @@ import { Loader2Icon, AlertCircleIcon } from "lucide-react";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 
 import { OTPSchema } from "@/lib/validations";
-import routes from "@/common/constants/routes";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -32,13 +31,11 @@ type OTPFormValues = z.infer<typeof OTPSchema>;
 interface OTPFormProps {
   onSubmit: (data: OTPFormValues) => Promise<ActionResponse>;
   successMessage?: string;
-  redirectTo?: string;
 }
 
 const OTPForm = ({
   onSubmit,
   successMessage = "Email verified successfully!",
-  redirectTo = routes.home,
 }: OTPFormProps) => {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
@@ -59,7 +56,6 @@ const OTPForm = ({
         description: successMessage,
       });
 
-      router.push(redirectTo);
       router.refresh();
     } else {
       setError(response?.error?.message || "Invalid OTP. Please try again.");

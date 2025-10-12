@@ -1,6 +1,7 @@
 "use client";
 
 import z from "zod";
+import { useRouter } from "next/navigation";
 import { ForgotPasswordSchema } from "@/lib/validations";
 import { authClient } from "@/lib/auth-client";
 import handleError from "@/lib/handlers/error";
@@ -12,14 +13,21 @@ import routes from "@/common/constants/routes";
 type ForgotPasswordValues = z.infer<typeof ForgotPasswordSchema>;
 
 const ForgotPassword = () => {
+  const router = useRouter();
   const handleForgotPassword = async ({
     email,
   }: ForgotPasswordValues): Promise<ActionResponse> => {
     try {
-      const { data, error } = await authClient.forgetPassword({
+      const { data, error } = await authClient.emailOtp.sendVerificationOtp({
         email,
-        redirectTo: routes.resetPassword,
+        type: "forget-password",
       });
+
+      if (data) {
+        router.push(
+          `${routes.verifyEmail}?type=forget-password&email=${email}`
+        );
+      }
 
       return {
         success: !!data,

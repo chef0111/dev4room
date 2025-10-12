@@ -38,7 +38,9 @@ const Register = () => {
       setIsLoading(false);
 
       if (data?.user) {
-        router.push(`${routes.verifyEmail}?email=${email}`);
+        router.push(
+          `${routes.verifyEmail}?type=email-verification&email=${email}`
+        );
       }
 
       return {

@@ -40,7 +40,7 @@ export const AUTH_FORM_TYPES = {
   REGISTER: {
     buttonLabel: "Register",
     loadingLabel: "Registering...",
-    successMessage: "Registered successfully!",
+    successMessage: "An OTP has been sent! Please check your email.",
   },
   RESET_PASSWORD: {
     buttonLabel: "Reset Password",
@@ -50,6 +50,6 @@ export const AUTH_FORM_TYPES = {
   FORGOT_PASSWORD: {
     buttonLabel: "Continue",
     loadingLabel: "Sending email...",
-    successMessage: "Password reset request sent! Please check your email.",
+    successMessage: "An OTP has been sent! Please check your email.",
   },
 } as const;

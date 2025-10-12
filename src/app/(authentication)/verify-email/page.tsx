@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import z from "zod";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { OTPSchema } from "@/lib/validations";
 import { authClient } from "@/lib/auth-client";
 import handleError from "@/lib/handlers/error";
@@ -15,21 +15,31 @@ import { Button } from "@/components/ui/button";
 type OTPValues = z.infer<typeof OTPSchema>;
 
 const VerifyEmail = () => {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || undefined;
+  const type = searchParams.get("type") as EmailOtpType;
   const [isResending, setIsResending] = useState(false);
 
   const handleVerifyEmail = async ({
     otp,
   }: OTPValues): Promise<ActionResponse> => {
     try {
-      const { data, error } = await authClient.emailOtp.verifyEmail({
+      const { data, error } = await authClient.emailOtp.checkVerificationOtp({
         email: email as string,
+        type,
         otp,
       });
 
+      const success = !!data;
+      if (success && type === "email-verification") {
+        router.push(routes.login);
+      } else if (success && type === "forget-password") {
+        router.push(`${routes.resetPassword}?email=${email}&code=${otp}`);
+      }
+
       return {
-        success: !!data,
+        success,
         error: { message: error?.message },
       };
     } catch (error) {
@@ -37,7 +47,9 @@ const VerifyEmail = () => {
     }
   };
 
-  const handleResendOTP = async () => {
+  const handleResendOTP = async (
+    type: "email-verification" | "forget-password"
+  ) => {
     if (!email) {
       toast.error("Error", {
         description: "Email address not found. Please try registering again.",
@@ -49,7 +61,7 @@ const VerifyEmail = () => {
     try {
       const { data, error } = await authClient.emailOtp.sendVerificationOtp({
         email: email,
-        type: "email-verification",
+        type,
       });
 
       if (data) {
@@ -83,8 +95,7 @@ const VerifyEmail = () => {
 
       <OTPForm
         onSubmit={handleVerifyEmail}
-        successMessage="Email verified successfully! You can now log in."
-        redirectTo={routes.login}
+        successMessage="Email verified successfully! You can now continue."
       />
 
       <div className="flex-center w-full px-0 text-dark500_light400">
@@ -93,7 +104,7 @@ const VerifyEmail = () => {
           type="button"
           variant="link"
           disabled={isResending}
-          onClick={handleResendOTP}
+          onClick={() => handleResendOTP(type)}
           className="text-center pg-semibold text-link-100 hover:underline transition-all cursor-pointer px-1"
         >
           {isResending ? "Sending..." : "Resend"}

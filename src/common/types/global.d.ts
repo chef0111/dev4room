@@ -14,6 +14,8 @@ type ErrorResponse = ActionResponse<undefined> & { success: false };
 type ApiErrorResponse = NextResponse<ErrorResponse>;
 type ApiResponse<T = null> = NextResponse<SuccessResponse<T> | ErrorResponse>;
 
+type EmailOtpType = "email-verification" | "forget-password";
+
 interface UrlQueryParams {
   params: string;
   key: string;

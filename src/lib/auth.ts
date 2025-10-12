@@ -98,6 +98,7 @@ export const auth = betterAuth({
           }),
         });
       },
+      overrideDefaultEmailVerification: true,
       sendVerificationOnSignUp: true,
       allowedAttempts: 5,
       expiresIn: 300,

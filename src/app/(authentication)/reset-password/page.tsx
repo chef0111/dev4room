@@ -10,15 +10,15 @@ import routes from "@/common/constants/routes";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { title } from "process";
 
 type ResetPasswordValues = z.infer<typeof ResetPasswordSchema>;
 
 const ResetPassword = () => {
   const searchParams = useSearchParams();
-  const token = searchParams.get("token") as string;
+  const email = searchParams.get("email") as string;
+  const code = searchParams.get("code") as string;
 
-  if (!token) {
+  if (!email) {
     return (
       <div className="flex flex-col gap-2 text-center sm:max-w-104">
         <div className="w-full flex-center">
@@ -39,18 +39,18 @@ const ResetPassword = () => {
         </div>
 
         <h1 className="md:h2-bold h3-bold mt-2 text-dark100_light900">
-          Invalid Reset Link
+          Invalid Reset Request
         </h1>
         <p className="body-regular mb-4 text-dark500_light500 text-center">
-          This password reset link is invalid or has expired. Please request a
-          new one.
+          This password reset request is invalid or has expired. Please request
+          a new one.
         </p>
 
         <Link
           href={routes.forgotPassword}
           className="pg-semibold text-link-100 hover:underline"
         >
-          Request New Link
+          Make a new Request
         </Link>
       </div>
     );
@@ -60,15 +60,14 @@ const ResetPassword = () => {
     password,
   }: ResetPasswordValues): Promise<ActionResponse> => {
     try {
-      const { data, error } = await authClient.resetPassword({
-        newPassword: password,
-        token,
+      const { data, error } = await authClient.emailOtp.resetPassword({
+        email,
+        otp: code,
+        password,
       });
 
-      const success = !!data;
-
       return {
-        success,
+        success: !!data,
         error: { message: error?.message },
       };
     } catch (error) {
@@ -93,13 +92,6 @@ const ResetPassword = () => {
         formType="RESET_PASSWORD"
         onSubmit={handleResetPassword}
       />
-
-      <Link
-        href={routes.login}
-        className="text-center pg-semibold text-link-100 hover:underline transition-all cursor-pointer"
-      >
-        Back to Login
-      </Link>
     </div>
   );
 };

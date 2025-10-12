@@ -71,7 +71,9 @@ const Login = () => {
           description: "Verification code sent! Check your email.",
         });
         setShowVerificationDialog(false);
-        router.push(`${routes.verifyEmail}?email=${unverifiedEmail}`);
+        router.push(
+          `${routes.verifyEmail}?type=email-verification&email=${unverifiedEmail}`
+        );
       } else {
         toast.error("Error", {
           description: error?.message || "Failed to send verification code.",
