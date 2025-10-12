@@ -2,18 +2,12 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "@/database/drizzle";
 import { schema } from "@/database/schema";
-import { username, admin } from "better-auth/plugins";
+import { username, admin, emailOTP } from "better-auth/plugins";
 import { createAuthMiddleware, APIError } from "better-auth/api";
 import { nextCookies } from "better-auth/next-js";
 import { PasswordSchema } from "./validations";
-import { Resend } from "resend";
-import ForgotPasswordEmail from "@/components/layout/email/ResetPassword";
-import logger from "./handlers/logger";
-
-if (!process.env.RESEND_API_KEY) {
-  throw new Error("RESEND_API_KEY environment variable is required");
-}
-const resend = new Resend(process.env.RESEND_API_KEY as string);
+import { resend } from "./resend";
+import VerifyEmail from "@/components/layout/email/VerifyEmail";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -32,31 +26,7 @@ export const auth = betterAuth({
   },
   emailAndPassword: {
     enabled: true,
-    sendResetPassword: async ({ user, url }) => {
-      try {
-        const result = await resend.emails.send({
-          from: process.env.RESEND_FROM_EMAIL || "admin@dev4room.pro",
-          to: user.email,
-          subject: "Reset your password",
-          react: ForgotPasswordEmail({
-            username: user.name,
-            userEmail: user.email,
-            resetUrl: url,
-          }),
-        });
-
-        if (result.error) {
-          logger.error(
-            { err: result.error },
-            "Error sending reset password email"
-          );
-          throw new Error("Failed to send reset password email");
-        }
-      } catch (error) {
-        logger.error({ err: error }, "Error sending reset password email");
-        throw new Error("Failed to send reset password email");
-      }
-    },
+    requireEmailVerification: true,
   },
   user: {
     additionalFields: {
@@ -110,7 +80,30 @@ export const auth = betterAuth({
   trustedOrigins: process.env.BETTER_AUTH_URL
     ? process.env.BETTER_AUTH_URL.split(",").map((origin) => origin.trim())
     : ["http://localhost:3000"],
-  plugins: [username(), admin(), nextCookies()],
+  plugins: [
+    username(),
+    admin(),
+    emailOTP({
+      async sendVerificationOTP({ email, otp }) {
+        const { data, error } = await resend.emails.send({
+          from:
+            `Dev4Room Admin <${process.env.RESEND_FROM_EMAIL}>` ||
+            "Dev4Room Admin <admin@dev4room.pro>",
+          to: [email],
+          subject: "Dev4Room - Verify your email",
+          react: VerifyEmail({
+            userEmail: email,
+            otp: otp,
+            expiryMinutes: "5",
+          }),
+        });
+      },
+      sendVerificationOnSignUp: true,
+      allowedAttempts: 5,
+      expiresIn: 300,
+    }),
+    nextCookies(),
+  ],
 });
 
 export type Session = typeof auth.$Infer.Session;
