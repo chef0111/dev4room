@@ -98,7 +98,7 @@ export const auth = betterAuth({
           react: SendOTPEmail({
             userEmail: email,
             otp: otp,
-            expiryMinutes: "5",
+            expiryMinutes: Number(this.expiresIn) / 60,
           }),
         });
       },
