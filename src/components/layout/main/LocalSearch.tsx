@@ -1,17 +1,11 @@
 "use client";
 
-import { Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { formUrlQuery, removeKeysFromUrlQuery } from "@/lib/url";
-import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@/components/ui/input-group";
+import { Field } from "@/components/ui/field";
+import SearchInput from "./SearchInput";
 
 interface LocalSearchProps {
   route: string;
@@ -29,7 +23,7 @@ const LocalSearch = ({ route, placeholder, className }: LocalSearchProps) => {
   const query = searchParams.get("query") || "";
   const pathname = usePathname();
 
-  const form = useForm<SearchFormData>({
+  const form = useForm<{ query: string }>({
     defaultValues: { query },
   });
 
@@ -61,39 +55,25 @@ const LocalSearch = ({ route, placeholder, className }: LocalSearchProps) => {
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)}>
-        {/* Search Input using FormField */}
-        <FormField
-          control={form.control}
-          name="query"
-          render={({ field }) => (
-            <FormItem className="flex-1">
-              <FormControl>
-                <InputGroup
-                  className={cn(
-                    "bg-light800_darkgradient! flex items-center min-h-12 gap-2 border-none ring-0! grow rounded-lg px-2 transition-all duration-200",
-                    className
-                  )}
-                >
-                  <InputGroupInput
-                    type="text"
-                    placeholder={placeholder}
-                    {...field}
-                  />
-                  <InputGroupAddon>
-                    <Search
-                      className="text-light400_light500 size-6! cursor-pointer"
-                      onClick={handleSearchSubmit}
-                    />
-                  </InputGroupAddon>
-                </InputGroup>
-              </FormControl>
-            </FormItem>
-          )}
-        />
-      </form>
-    </Form>
+    <form onSubmit={form.handleSubmit(handleSubmit)}>
+      <Controller
+        name="query"
+        control={form.control}
+        render={({ field }) => (
+          <Field className="flex-1">
+            <SearchInput
+              field={field}
+              placeholder={placeholder}
+              className={cn(
+                "bg-light800_darkgradient! min-h-12 gap-2 px-2",
+                className
+              )}
+              onClick={handleSearchSubmit}
+            />
+          </Field>
+        )}
+      />
+    </form>
   );
 };
 

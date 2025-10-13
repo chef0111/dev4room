@@ -16,7 +16,7 @@ import {
 interface SendOTPEmailProps {
   userEmail: string;
   otp: string;
-  expiryMinutes: string;
+  expiryMinutes: number;
 }
 
 const SendOTPEmail = (props: SendOTPEmailProps) => {

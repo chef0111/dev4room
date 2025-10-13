@@ -1,10 +1,14 @@
+import { Suspense } from "react";
 import Link from "next/link";
 
-import { Button } from "@/components/ui/button";
 import routes from "@/common/constants/routes";
+import { Button } from "@/components/ui/button";
 import LocalSearch from "@/components/layout/main/LocalSearch";
 import HomeFilter from "@/components/filters/HomeFilter";
 import QuestionCard from "@/components/layout/questions/QuestionCard";
+import PostCardsSkeleton from "@/components/skeletons/PostCardsSkeleton";
+import { HomePageFilters } from "@/common/constants/filters";
+import SearchInput from "@/components/layout/main/SearchInput";
 
 const questions = [
   {
@@ -59,6 +63,8 @@ const HomePage = async ({ searchParams }: SearchParams) => {
     return matchesQuery;
   });
 
+  const searchPlaceholder = "Search a question here...";
+
   return (
     <>
       {/* Ask a question section */}
@@ -73,18 +79,45 @@ const HomePage = async ({ searchParams }: SearchParams) => {
         </Button>
       </section>
       <section className="mt-10">
-        <LocalSearch
-          route="/"
-          placeholder="Search a question here..."
-          className="flex-1"
-        />
-        <HomeFilter />
+        <Suspense
+          fallback={
+            <SearchInput
+              placeholder={searchPlaceholder}
+              className="bg-light800_darkgradient! flex-1 min-h-12 gap-2 px-2"
+            />
+          }
+        >
+          <LocalSearch
+            route="/"
+            placeholder={searchPlaceholder}
+            className="flex-1"
+          />
+        </Suspense>
+        <Suspense
+          fallback={
+            <div className="mt-6 hidden sm:flex flex-wrap gap-3">
+              {HomePageFilters.map((filter) => (
+                <Button
+                  key={filter.label}
+                  className="base-filter-btn bg-light800_dark300 text-light-500"
+                  disabled
+                >
+                  {filter.label}
+                </Button>
+              ))}
+            </div>
+          }
+        >
+          <HomeFilter />
+        </Suspense>
       </section>
 
       <div className="flex flex-col my-10 w-full gap-6">
-        {filteredQuestions.map((question) => (
-          <QuestionCard key={question.id} question={question} />
-        ))}
+        <Suspense fallback={<PostCardsSkeleton />}>
+          {filteredQuestions.map((question) => (
+            <QuestionCard key={question.id} question={question} />
+          ))}
+        </Suspense>
       </div>
     </>
   );

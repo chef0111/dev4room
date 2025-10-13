@@ -9,7 +9,6 @@ import handleError from "@/lib/handlers/error";
 import AuthForm from "@/components/layout/auth/AuthForm";
 import Link from "next/link";
 import routes from "@/common/constants/routes";
-import { error } from "console";
 
 type ForgotPasswordValues = z.infer<typeof ForgotPasswordSchema>;
 

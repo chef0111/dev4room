@@ -9,7 +9,7 @@ import handleError from "@/lib/handlers/error";
 import { toast } from "sonner";
 
 import routes from "@/common/constants/routes";
-import OTPForm from "@/components/layout/auth/OtpForm";
+import OTPForm from "@/components/layout/auth/OTPForm";
 import { Button } from "@/components/ui/button";
 
 type OTPValues = z.infer<typeof OTPSchema>;
@@ -74,7 +74,7 @@ const VerifyEmail = () => {
 
       if (data) {
         toast.success("Success", {
-          description: "Verification code sent! Check your email.",
+          description: "Verification code sent! Please check your email.",
         });
       } else {
         toast.error("Error", {
