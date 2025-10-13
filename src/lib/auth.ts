@@ -77,6 +77,25 @@ export const auth = betterAuth({
       maxAge: 300,
     },
   },
+  rateLimit: {
+    enabled: true,
+    window: 60,
+    max: 10,
+    customRules: {
+      "/sign-in/email": {
+        window: 60,
+        max: 5,
+      },
+      "/sign-up/email": {
+        window: 60,
+        max: 3,
+      },
+      "/email-otp/send-verification": {
+        window: 60,
+        max: 5,
+      },
+    },
+  },
   trustedOrigins: process.env.BETTER_AUTH_URL
     ? process.env.BETTER_AUTH_URL.split(",").map((origin) => origin.trim())
     : ["http://localhost:3000"],

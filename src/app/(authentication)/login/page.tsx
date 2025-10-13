@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import z from "zod";
+import z, { email } from "zod";
 import { useRouter } from "next/navigation";
 import { LoginSchema } from "@/lib/validations";
 import { authClient } from "@/lib/auth-client";
@@ -13,6 +13,8 @@ import AuthForm from "@/components/layout/auth/AuthForm";
 import SocialAuthForm from "@/components/layout/auth/SocialAuthForm";
 import routes from "@/common/constants/routes";
 import VerifyDialog from "@/components/layout/auth/VerifyDialog";
+import { error } from "console";
+import router from "next/router";
 
 type LoginValues = z.infer<typeof LoginSchema>;
 
