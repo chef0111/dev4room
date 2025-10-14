@@ -48,22 +48,25 @@ async function protect(req: NextRequest): Promise<ArcjetDecision> {
     userId = ip(req) || "127.0.0.1"; // Fall back to local IP if none
   }
 
-  if (req.nextUrl.pathname.startsWith("/api/auth/sign-up")) {
-    const body = await req.clone().json();
+  const pathname = req.nextUrl.pathname;
+
+  if (
+    pathname.startsWith("/api/auth/sign-up/email") ||
+    pathname.startsWith("/api/auth/email-otp/send-verification-otp")
+  ) {
+    const body = await req.json();
 
     if (typeof body.email === "string") {
       return arcjet
         .withRule(protectSignup(signupOptions))
         .protect(req, { email: body.email, fingerprint: userId });
     } else {
-      // Otherwise use rate limit and detect bot
       return arcjet
         .withRule(detectBot(botOptions))
         .withRule(slidingWindow(rateLimitOptions))
         .protect(req, { fingerprint: userId });
     }
   } else {
-    // For all other auth requests
     return arcjet
       .withRule(detectBot(botOptions))
       .protect(req, { fingerprint: userId });
@@ -75,32 +78,59 @@ const authHandlers = toNextJsHandler(auth.handler);
 export const { GET } = authHandlers;
 
 export const POST = async (req: NextRequest) => {
-  const decision = await protect(req);
+  try {
+    // Buffer the body first to allow multiple reads
+    const bodyText = await req.text();
 
-  console.log("Arcjet Decision:", decision);
+    // Create a new request with the buffered body for Arcjet
+    const reqForArcjet = new NextRequest(req.url, {
+      method: req.method,
+      headers: req.headers,
+      body: bodyText,
+    });
 
-  if (decision.isDenied()) {
-    if (decision.reason.isRateLimit()) {
-      return new Response(null, { status: 429 });
-    } else if (decision.reason.isEmail()) {
-      let message: string;
+    // Create a new request with the buffered body for Better Auth
+    const reqForBetterAuth = new NextRequest(req.url, {
+      method: req.method,
+      headers: req.headers,
+      body: bodyText,
+    });
 
-      if (decision.reason.emailTypes.includes("INVALID")) {
-        message = "Email address format is invalid. Is there a typo?";
-      } else if (decision.reason.emailTypes.includes("DISPOSABLE")) {
-        message = "We do not allow disposable email addresses.";
-      } else if (decision.reason.emailTypes.includes("NO_MX_RECORDS")) {
-        message =
-          "Your email domain does not have an MX record. Is there a typo?";
+    const decision = await protect(reqForArcjet);
+
+    console.log("Arcjet Decision:", {
+      conclusion: decision.conclusion,
+      isDenied: decision.isDenied(),
+      reason: decision.reason,
+    });
+
+    if (decision.isDenied()) {
+      if (decision.reason.isRateLimit()) {
+        console.log("⏱️ Rate limit exceeded");
+        return new Response(null, { status: 429 });
+      } else if (decision.reason.isEmail()) {
+        let message: string;
+
+        if (decision.reason.emailTypes.includes("INVALID")) {
+          message = "Email address format is invalid. Is there a typo?";
+        } else if (decision.reason.emailTypes.includes("DISPOSABLE")) {
+          message = "We do not allow disposable email addresses.";
+        } else if (decision.reason.emailTypes.includes("NO_MX_RECORDS")) {
+          message =
+            "Your email domain does not have an MX record. Is there a typo?";
+        } else {
+          message = "Invalid email.";
+        }
+
+        return Response.json({ message }, { status: 400 });
       } else {
-        message = "Invalid email.";
+        return new Response(null, { status: 403 });
       }
-
-      return Response.json({ message }, { status: 400 });
-    } else {
-      return new Response(null, { status: 403 });
     }
-  }
 
-  return authHandlers.POST(req);
+    const response = await authHandlers.POST(reqForBetterAuth);
+    return response;
+  } catch (error) {
+    throw error;
+  }
 };
