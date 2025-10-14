@@ -48,12 +48,7 @@ async function protect(req: NextRequest): Promise<ArcjetDecision> {
     userId = ip(req) || "127.0.0.1"; // Fall back to local IP if none
   }
 
-  const pathname = req.nextUrl.pathname;
-
-  if (
-    pathname.startsWith("/api/auth/sign-up") ||
-    pathname.startsWith("/api/auth/email-otp/send-verification-otp")
-  ) {
+  if (req.nextUrl.pathname.startsWith("/api/auth/sign-up")) {
     const body = await req.clone().json();
 
     if (typeof body.email === "string") {
