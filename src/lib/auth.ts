@@ -105,6 +105,20 @@ export const auth = betterAuth({
         }
       }
     }),
+    after: createAuthMiddleware(async (ctx) => {
+      if (
+        ctx.path === "/email-otp/check-verification-otp" &&
+        ctx.body.type === "email-verification"
+      ) {
+        const email = ctx.body.email;
+
+        const { eq } = await import("drizzle-orm");
+        await db
+          .update(schema.user)
+          .set({ emailVerified: true })
+          .where(eq(schema.user.email, email));
+      }
+    }),
   },
   session: {
     cookieCache: {
@@ -152,7 +166,6 @@ export const auth = betterAuth({
           }),
         });
       },
-      overrideDefaultEmailVerification: true,
       sendVerificationOnSignUp: true,
       allowedAttempts: 5,
       expiresIn: 300,
