@@ -1,6 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
+import { Suspense } from "react";
+import TextShimmer from "@/components/ui/text-shimmer";
 
 interface Props {
   children: React.ReactNode;
@@ -25,7 +27,13 @@ const AuthLayout: React.FC<Props> = ({ children }) => {
         </p>
       </Link>
       <Card className="bg-light900_dark200 light-border shadow-light100_dark100 min-w-full rounded-xl border px-2 sm:px-4 shadow-md sm:min-w-fit">
-        <CardContent>{children}</CardContent>
+        <CardContent>
+          <Suspense
+            fallback={<TextShimmer duration={1}>Loading...</TextShimmer>}
+          >
+            {children}
+          </Suspense>
+        </CardContent>
       </Card>
     </main>
   );

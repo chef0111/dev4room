@@ -142,9 +142,9 @@ const AuthForm = <T extends FieldValues>({
         >
           <AlertCircleIcon />
           <AlertTitle>Error</AlertTitle>
-          <AlertDescription>
+          <AlertDescription className="text-wrap">
             {error}
-            {formType === "LOGIN" && ". Please try again."}
+            {error === "Invalid email or password" && ". Please try again."}
           </AlertDescription>
         </Alert>
       )}

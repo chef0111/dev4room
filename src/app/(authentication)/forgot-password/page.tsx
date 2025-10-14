@@ -9,7 +9,6 @@ import handleError from "@/lib/handlers/error";
 import AuthForm from "@/components/layout/auth/AuthForm";
 import Link from "next/link";
 import routes from "@/common/constants/routes";
-import { error } from "console";
 
 type ForgotPasswordValues = z.infer<typeof ForgotPasswordSchema>;
 
@@ -24,6 +23,13 @@ const ForgotPassword = () => {
         type: "forget-password",
       });
 
+      if (error) {
+        return {
+          success: false,
+          error: { message: error.message },
+        };
+      }
+
       if (data) {
         router.push(
           `${routes.verifyEmail}?type=forget-password&email=${encodeURIComponent(
@@ -31,11 +37,15 @@ const ForgotPassword = () => {
           )}`
         );
         router.refresh();
+
+        return {
+          success: true,
+        };
       }
 
       return {
-        success: !!data,
-        error: { message: error?.message },
+        success: false,
+        error: { message: "Something went wrong. Please try again." },
       };
     } catch (error) {
       return handleError(error) as ErrorResponse;
@@ -43,7 +53,7 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="flex flex-col gap-4 sm:min-w-104">
+    <div className="flex flex-col gap-4 sm:w-104">
       <div className="flex-center flex-col text-center space-y-1">
         <h1 className="md:h2-bold h3-bold text-dark100_light900">
           Forgot Password
