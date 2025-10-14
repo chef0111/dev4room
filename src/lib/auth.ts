@@ -69,12 +69,66 @@ export const auth = betterAuth({
           });
         }
       }
+
+      // Check if email exists for forgot password flow
+      if (
+        ctx.path === "/email-otp/send-verification-otp" &&
+        ctx.body.type === "forget-password"
+      ) {
+        const email = ctx.body.email;
+
+        // Check if user exists
+        const existingUser = await db.query.user.findFirst({
+          where: (users, { eq }) => eq(users.email, email),
+        });
+
+        if (!existingUser) {
+          throw new APIError("BAD_REQUEST", {
+            message: "This email is not registered.",
+          });
+        }
+
+        // Check if user has password (credentials provider)
+        const userAccount = await db.query.account.findFirst({
+          where: (accounts, { and, eq }) =>
+            and(
+              eq(accounts.userId, existingUser.id),
+              eq(accounts.providerId, "credential")
+            ),
+        });
+
+        if (!userAccount) {
+          throw new APIError("BAD_REQUEST", {
+            message:
+              "This email is registered with social provider. Please use social login.",
+          });
+        }
+      }
     }),
   },
   session: {
     cookieCache: {
       enabled: true,
       maxAge: 300,
+    },
+  },
+  rateLimit: {
+    enabled: true,
+    window: 60,
+    max: 10,
+    customRules: {
+      "/sign-in/email": {
+        window: 60,
+        max: 5,
+      },
+      "/sign-up/email": {
+        window: 60,
+        max: 3,
+      },
+      "/email-otp/send-verification": {
+        window: 60,
+        max: 5,
+      },
     },
   },
   trustedOrigins: process.env.BETTER_AUTH_URL
