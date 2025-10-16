@@ -28,7 +28,7 @@ const Navbar = async () => {
       <GlobalSearch
         route="/"
         placeholder="Search anything globally..."
-        className="flex-1"
+        className="flex-1 mx-4"
       />
 
       <div className="flex-between gap-5">
