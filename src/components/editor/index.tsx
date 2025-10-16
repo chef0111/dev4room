@@ -36,12 +36,14 @@ import { basicDark } from "cm6-theme-basic-dark";
 import { programmingLanguages } from "@/common/constants";
 
 interface EditorRefProps {
+  id?: string;
   editorRef: ForwardedRef<MDXEditorMethods> | null;
   markdown?: string;
   fieldChange?: (value: string) => void;
 }
 
 const Editor = ({
+  id,
   editorRef,
   markdown,
   fieldChange,

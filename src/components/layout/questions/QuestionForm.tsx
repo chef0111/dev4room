@@ -19,6 +19,8 @@ import { Loader2Icon } from "lucide-react";
 import MarkdownEditor from "@/components/editor/MarkdownEditor";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import TextShimmer from "@/components/ui/text-shimmer";
+import TagCard from "../tags/TagCard";
+import { getTechDisplayName } from "@/lib/utils";
 
 interface QuestionFormProps {
   question?: Question;
@@ -41,6 +43,63 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
     console.log(data);
   };
 
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    field: { value: string[] }
+  ) => {
+    const tagInput = e.currentTarget.value.trim();
+
+    if (
+      tagInput === "" &&
+      field.value.length > 0 &&
+      form.formState.errors.tags
+    ) {
+      e.currentTarget.value = "";
+      form.clearErrors("tags");
+    }
+
+    if (e.key === "Enter") {
+      e.preventDefault();
+
+      const normalizedTag = getTechDisplayName(tagInput);
+      const existingTags = field.value.map((tag) => getTechDisplayName(tag));
+      const existedTag = existingTags.includes(normalizedTag);
+
+      if (tagInput.length > 20) {
+        form.setError("tags", {
+          type: "manual",
+          message: "Tag must be less than 20 characters.",
+        });
+      } else if (existedTag) {
+        form.setError("tags", {
+          type: "manual",
+          message: "Tag already exists.",
+        });
+      } else if (field.value.length >= 5) {
+        form.setError("tags", {
+          type: "manual",
+          message: "You can only add up to 5 tags.",
+        });
+      } else if (tagInput && tagInput.length <= 20 && !existedTag) {
+        form.setValue("tags", [...field.value, normalizedTag]);
+        e.currentTarget.value = "";
+        form.clearErrors("tags");
+      }
+    }
+  };
+
+  const handleRemoveTag = (tag: string, field: { value: string[] }) => {
+    const newTags = field.value.filter((t) => t !== tag);
+    form.setValue("tags", newTags);
+
+    if (newTags.length === 0) {
+      form.setError("tags", {
+        type: "manual",
+        message: "Tags are required.",
+      });
+    }
+  };
+
   const isPending = false;
 
   return (
@@ -57,10 +116,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
               data-invalid={fieldState.invalid}
               className="flex flex-col w-full"
             >
-              <FieldLabel
-                htmlFor="question-title"
-                className="pg-semibold text-dark400_light800"
-              >
+              <FieldLabel htmlFor="question-title" className="pg-semibold">
                 Question Title
                 <span className="text-red-500">*</span>
               </FieldLabel>
@@ -68,7 +124,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
                 {...field}
                 id="question-title"
                 aria-invalid={fieldState.invalid}
-                className="pg-regular bg-light700_dark300 text-dark300_light700 min-h-12 border light-border-2 no-focus placeholder:text-dark300_light800"
+                className="pg-regular bg-light700_dark300 text-dark300_light700 min-h-12 border light-border-2! no-focus placeholder:text-dark300_light800"
                 placeholder="e.g. Is there an R function for finding the index of an element in a vector?"
                 autoComplete="off"
               />
@@ -89,10 +145,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
               data-invalid={fieldState.invalid}
               className="flex flex-col w-full"
             >
-              <FieldLabel
-                htmlFor="question-content"
-                className="pg-semibold text-dark400_light800"
-              >
+              <FieldLabel htmlFor="question-content" className="pg-semibold">
                 Detailed explanation of your problem
                 <span className="text-red-500">*</span>
               </FieldLabel>
@@ -103,6 +156,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
                 }
               >
                 <MarkdownEditor
+                  id="question-content"
                   editorRef={editorRef}
                   value={field.value}
                   onChange={field.onChange}
@@ -126,29 +180,35 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
               data-invalid={fieldState.invalid}
               className="flex flex-col w-full gap-3"
             >
-              <FieldLabel
-                htmlFor="question-tags"
-                className="pg-semibold text-dark400_light800"
-              >
+              <FieldLabel htmlFor="question-tags" className="pg-semibold">
                 Tags
                 <span className="text-red-500">*</span>
               </FieldLabel>
               <Input
-                {...field}
                 id="question-tags"
+                name={field.name}
                 aria-invalid={fieldState.invalid}
-                className="pg-regular bg-light700_dark300 text-dark300_light700 min-h-14 border light-border-2 no-focus placeholder:text-dark300_light800"
+                className="pg-regular bg-light700_dark300 text-dark300_light700 min-h-14 border light-border-2! no-focus placeholder:text-dark300_light800"
                 placeholder="Add tags..."
-                autoComplete="off"
-                value={Array.isArray(field.value) ? field.value.join(", ") : ""}
-                onChange={(e) => {
-                  const tags = e.target.value
-                    .split(",")
-                    .map((tag) => tag.trim())
-                    .filter(Boolean);
-                  field.onChange(tags);
-                }}
+                onKeyDown={(e) => handleKeyDown(e, field)}
               />
+
+              {field.value.length > 0 && (
+                <div className="flex-start flex-wrap mt-2 gap-2">
+                  {field?.value?.map((tag, index) => (
+                    <TagCard
+                      key={index}
+                      id={index.toString()}
+                      name={tag}
+                      compact
+                      isButton
+                      remove
+                      handleRemove={() => handleRemoveTag(tag, field)}
+                    />
+                  ))}
+                </div>
+              )}
+
               <FieldDescription className="body-regular text-light-500">
                 Add up to 5 tags to describe what your question is about. Start
                 typing to see suggestions.
@@ -158,7 +218,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
           )}
         />
 
-        <div className="mt-12 flex justify-end">
+        <div className="my-6 flex justify-end">
           <Button
             type="submit"
             disabled={isPending}
