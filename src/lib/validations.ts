@@ -80,3 +80,22 @@ export const OTPSchema = z.object({
     .string()
     .min(6, { message: "Your one-time password must be 6 characters." }),
 });
+
+export const QuestionSchema = z.object({
+  title: z
+    .string()
+    .min(5, { message: "Title must be at least 10 characters long." })
+    .max(100, { message: "Title cannot exceed 100 characters." }),
+
+  content: z.string().min(1, { message: "Content is required." }),
+
+  tags: z
+    .array(
+      z
+        .string()
+        .min(1, { message: "Tag cannot be empty." })
+        .max(20, { message: "Tag cannot exceed 20 characters." })
+    )
+    .min(1, { message: "At least one tag is required." })
+    .max(5, { message: "You can add a maximum of 5 tags." }),
+});
