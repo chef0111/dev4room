@@ -1,10 +1,11 @@
 "use client";
 
-import { QuestionSchema } from "@/lib/validations";
-import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Suspense, useRef } from "react";
 import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm } from "react-hook-form";
+import { QuestionSchema } from "@/lib/validations";
+
 import {
   Field,
   FieldDescription,
@@ -15,6 +16,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2Icon } from "lucide-react";
+import MarkdownEditor from "@/components/editor/MarkdownEditor";
+import { MDXEditorMethods } from "@mdxeditor/editor";
+import TextShimmer from "@/components/ui/text-shimmer";
 
 interface QuestionFormProps {
   question?: Question;
@@ -22,6 +26,8 @@ interface QuestionFormProps {
 }
 
 const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
+  const editorRef = useRef<MDXEditorMethods>(null);
+
   const form = useForm<z.infer<typeof QuestionSchema>>({
     resolver: zodResolver(QuestionSchema),
     defaultValues: {
@@ -53,7 +59,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
             >
               <FieldLabel
                 htmlFor="question-title"
-                className="paragraph-semibold text-dark400_light800"
+                className="pg-semibold text-dark400_light800"
               >
                 Question Title
                 <span className="text-red-500">*</span>
@@ -62,7 +68,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
                 {...field}
                 id="question-title"
                 aria-invalid={fieldState.invalid}
-                className="paragraph-regular bg-light700_dark300 text-dark300_light700 min-h-14 border light-border-2 no-focus placeholder:text-dark300_light800"
+                className="pg-regular bg-light700_dark300 text-dark300_light700 min-h-12 border light-border-2 no-focus placeholder:text-dark300_light800"
                 placeholder="e.g. Is there an R function for finding the index of an element in a vector?"
                 autoComplete="off"
               />
@@ -85,13 +91,24 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
             >
               <FieldLabel
                 htmlFor="question-content"
-                className="paragraph-semibold text-dark400_light800"
+                className="pg-semibold text-dark400_light800"
               >
                 Detailed explanation of your problem
                 <span className="text-red-500">*</span>
               </FieldLabel>
-              {/* TODO: Replace with Editor component */}
-              <div>Editor</div>
+
+              <Suspense
+                fallback={
+                  <TextShimmer duration={1}>Loading editor...</TextShimmer>
+                }
+              >
+                <MarkdownEditor
+                  editorRef={editorRef}
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              </Suspense>
+
               <FieldDescription className="body-regular text-light-500">
                 Introduce the problem and expand on what you put in the title.
                 Minimum 20 characters.
@@ -111,7 +128,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
             >
               <FieldLabel
                 htmlFor="question-tags"
-                className="paragraph-semibold text-dark400_light800"
+                className="pg-semibold text-dark400_light800"
               >
                 Tags
                 <span className="text-red-500">*</span>
@@ -120,7 +137,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
                 {...field}
                 id="question-tags"
                 aria-invalid={fieldState.invalid}
-                className="paragraph-regular bg-light700_dark300 text-dark300_light700 min-h-14 border light-border-2 no-focus placeholder:text-dark300_light800"
+                className="pg-regular bg-light700_dark300 text-dark300_light700 min-h-14 border light-border-2 no-focus placeholder:text-dark300_light800"
                 placeholder="Add tags..."
                 autoComplete="off"
                 value={Array.isArray(field.value) ? field.value.join(", ") : ""}
