@@ -17,8 +17,8 @@ interface MarkdownProps {
 const DynamicEditor = dynamic(() => import("./index"), {
   ssr: false,
   loading: () => (
-    <div className="h-99 w-full rounded-md border bg-light800_dark200 flex items-center justify-center">
-      <TextShimmer duration={1}>Loading editor...</TextShimmer>
+    <div className="md-editor-fallback">
+      <TextShimmer duration={0.75}>Loading editor...</TextShimmer>
     </div>
   ),
 });
