@@ -93,7 +93,7 @@ export const auth = betterAuth({
           where: (accounts, { and, eq }) =>
             and(
               eq(accounts.userId, existingUser.id),
-              eq(accounts.providerId, "credential")
+              eq(accounts.providerId, "credential"),
             ),
         });
 

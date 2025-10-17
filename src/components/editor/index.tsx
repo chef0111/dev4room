@@ -55,6 +55,7 @@ const Editor = ({
 
   return (
     <MDXEditor
+      aria-label={id}
       key={resolvedTheme}
       markdown={markdown}
       ref={editorRef}

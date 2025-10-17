@@ -41,8 +41,8 @@ const VerifyEmail = () => {
       } else if (success && type === "forget-password") {
         router.push(
           `${routes.resetPassword}?email=${encodeURIComponent(
-            email
-          )}&id=${encodeURIComponent(otp)}`
+            email,
+          )}&id=${encodeURIComponent(otp)}`,
         );
       }
 
@@ -56,7 +56,7 @@ const VerifyEmail = () => {
   };
 
   const handleResendOTP = async (
-    type: "email-verification" | "forget-password"
+    type: "email-verification" | "forget-password",
   ) => {
     if (!email) {
       toast.error("Error", {
@@ -85,6 +85,7 @@ const VerifyEmail = () => {
       toast.error("Error", {
         description: "Failed to send verification code. Please try again.",
       });
+      return handleError(error) as ErrorResponse;
     } finally {
       setIsResending(false);
     }
@@ -107,7 +108,7 @@ const VerifyEmail = () => {
       />
 
       <div className="flex-center w-full px-0 text-dark500_light400">
-        Didn't receive the code?
+        Didn&apos;t receive the code?
         <Button
           type="button"
           variant="link"

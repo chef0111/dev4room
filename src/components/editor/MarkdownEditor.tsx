@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 
 import { useDebounce } from "@/hooks/use-debounce";
-import TextShimmer from "../ui/text-shimmer";
+import EditorFallback from "./EditorFallback";
 
 interface MarkdownProps {
   id?: string;
@@ -16,11 +16,7 @@ interface MarkdownProps {
 
 const DynamicEditor = dynamic(() => import("./index"), {
   ssr: false,
-  loading: () => (
-    <div className="h-99 w-full rounded-md border bg-light800_dark200 flex items-center justify-center">
-      <TextShimmer duration={1}>Loading editor...</TextShimmer>
-    </div>
-  ),
+  loading: () => <EditorFallback />,
 });
 
 const MarkdownEditor = memo(
@@ -30,9 +26,9 @@ const MarkdownEditor = memo(
         (value: string) => {
           onChange(value);
         },
-        [onChange]
+        [onChange],
       ),
-      500
+      500,
     );
 
     return (
@@ -43,7 +39,7 @@ const MarkdownEditor = memo(
         fieldChange={fieldChange}
       />
     );
-  }
+  },
 );
 
 MarkdownEditor.displayName = "MarkdownEditor";

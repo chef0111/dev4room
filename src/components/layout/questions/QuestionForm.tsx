@@ -18,9 +18,9 @@ import { Button } from "@/components/ui/button";
 import { Loader2Icon } from "lucide-react";
 import MarkdownEditor from "@/components/editor/MarkdownEditor";
 import { MDXEditorMethods } from "@mdxeditor/editor";
-import TextShimmer from "@/components/ui/text-shimmer";
 import TagCard from "../tags/TagCard";
 import { getTechDisplayName } from "@/lib/utils";
+import EditorFallback from "@/components/editor/EditorFallback";
 
 interface QuestionFormProps {
   question?: Question;
@@ -45,7 +45,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
 
   const handleKeyDown = (
     e: React.KeyboardEvent<HTMLInputElement>,
-    field: { value: string[] }
+    field: { value: string[] },
   ) => {
     const tagInput = e.currentTarget.value.trim();
 
@@ -100,7 +100,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
     }
   };
 
-  const isPending = false;
+  const isPending = form.formState.isSubmitting;
 
   return (
     <form
@@ -124,7 +124,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
                 {...field}
                 id="question-title"
                 aria-invalid={fieldState.invalid}
-                className="pg-regular bg-light700_dark300 text-dark300_light700 min-h-12 border light-border-2! no-focus placeholder:text-dark300_light800"
+                className="base-input placeholder:text-dark300_light800"
                 placeholder="e.g. Is there an R function for finding the index of an element in a vector?"
                 autoComplete="off"
               />
@@ -150,11 +150,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
                 <span className="text-red-500">*</span>
               </FieldLabel>
 
-              <Suspense
-                fallback={
-                  <TextShimmer duration={1}>Loading editor...</TextShimmer>
-                }
-              >
+              <Suspense fallback={<EditorFallback />}>
                 <MarkdownEditor
                   id="question-content"
                   editorRef={editorRef}
@@ -178,7 +174,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
           render={({ field, fieldState }) => (
             <Field
               data-invalid={fieldState.invalid}
-              className="flex flex-col w-full gap-3"
+              className="flex flex-col w-full"
             >
               <FieldLabel htmlFor="question-tags" className="pg-semibold">
                 Tags
@@ -188,7 +184,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
                 id="question-tags"
                 name={field.name}
                 aria-invalid={fieldState.invalid}
-                className="pg-regular bg-light700_dark300 text-dark300_light700 min-h-14 border light-border-2! no-focus placeholder:text-dark300_light800"
+                className="base-input placeholder:text-dark300_light800"
                 placeholder="Add tags..."
                 onKeyDown={(e) => handleKeyDown(e, field)}
               />
@@ -210,8 +206,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
               )}
 
               <FieldDescription className="body-regular text-light-500">
-                Add up to 5 tags to describe what your question is about. Start
-                typing to see suggestions.
+                Add up to 5 tags to describe what your question is about.
               </FieldDescription>
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
