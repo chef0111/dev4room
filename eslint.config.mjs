@@ -11,11 +11,23 @@ const compat = new FlatCompat({
   allConfig: js.configs.all,
 });
 
-export default [
+const eslintConfig = [
+  {
+    ignores: [
+      ".next/**",
+      "node_modules/**",
+      "out/**",
+      ".turbo/**",
+      "dist/**",
+      "build/**",
+      "next-env.d.ts",
+      "scripts/**",
+    ],
+  },
   ...compat.extends(
     "next/core-web-vitals",
     "next/typescript",
-    "prettier"
+    "plugin:prettier/recommended",
     // "plugin:tailwindcss/recommended"
   ),
   {
@@ -25,3 +37,5 @@ export default [
     },
   },
 ];
+
+export default eslintConfig;

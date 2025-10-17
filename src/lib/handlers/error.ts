@@ -10,7 +10,7 @@ const formatResponse = (
   responseType: ResponseType,
   status: number,
   message: string,
-  errors?: Record<string, string[]> | undefined
+  errors?: Record<string, string[]> | undefined,
 ) => {
   const responseContent = {
     success: false,
@@ -29,14 +29,14 @@ const handleError = (error: unknown, responseType: ResponseType = "server") => {
   if (error instanceof RequestError) {
     logger.error(
       { err: error },
-      `${responseType.toUpperCase()} Errors: ${error.message}`
+      `${responseType.toUpperCase()} Errors: ${error.message}`,
     );
 
     return formatResponse(
       responseType,
       error.statusCode,
       error.message,
-      error.errors
+      error.errors,
     );
   }
 
@@ -47,14 +47,14 @@ const handleError = (error: unknown, responseType: ResponseType = "server") => {
 
     logger.error(
       { err: error },
-      `Validation Error: ${validationError.message}`
+      `Validation Error: ${validationError.message}`,
     );
 
     return formatResponse(
       responseType,
       validationError.statusCode,
       validationError.message,
-      validationError.errors
+      validationError.errors,
     );
   }
 
@@ -64,7 +64,7 @@ const handleError = (error: unknown, responseType: ResponseType = "server") => {
     return formatResponse(
       responseType,
       500,
-      error.message || "Internal Server Error"
+      error.message || "Internal Server Error",
     );
   }
 

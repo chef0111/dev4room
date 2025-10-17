@@ -94,7 +94,7 @@ export const QuestionSchema = z.object({
       z
         .string()
         .min(1, { message: "Tag cannot be empty." })
-        .max(20, { message: "Tag cannot exceed 20 characters." })
+        .max(20, { message: "Tag cannot exceed 20 characters." }),
     )
     .min(1, { message: "At least one tag is required." })
     .max(5, { message: "You can add a maximum of 5 tags." }),

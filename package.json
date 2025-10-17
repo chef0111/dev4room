@@ -69,6 +69,7 @@
     "drizzle-kit": "^0.31.5",
     "eslint": "^9",
     "eslint-config-next": "15.5.4",
+    "eslint-config-prettier": "^10.1.8",
     "husky": "^9.1.7",
     "shadcn": "^3.4.0",
     "tailwindcss": "^4",

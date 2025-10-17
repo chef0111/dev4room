@@ -8,7 +8,7 @@ export async function middleware(request: NextRequest) {
   // Protected routes
   const protectedRoutes = ["/admin", "/profile", "/ask-question"];
   const isProtectedRoute = protectedRoutes.some((route) =>
-    pathname.startsWith(route)
+    pathname.startsWith(route),
   );
 
   // Auth routes (redirect to home if already logged in)

@@ -30,8 +30,8 @@ const VerifyDialog = ({
             Email Not Verified
           </AlertDialogTitle>
           <AlertDialogDescription className="text-dark500_light400">
-            Your email address hasn't been verified yet. We'll send you a
-            verification code to complete your registration.
+            Your email address hasn&apos;t been verified yet. We&apos;ll send
+            you a verification code to complete your registration.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
