@@ -1,7 +1,7 @@
+import EditorFallback from "@/components/editor/EditorFallback";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import TextShimmer from "@/components/ui/text-shimmer";
 
 const Loading = () => {
   return (
@@ -37,9 +37,7 @@ const Loading = () => {
               <span className="text-red-500">*</span>
             </Label>
 
-            <div className="md-editor-fallback">
-              <TextShimmer duration={0.75}>Loading editor...</TextShimmer>
-            </div>
+            <EditorFallback />
 
             <Label className="body-regular! text-light-500 pt-px">
               Introduce the problem and expand on what you put in the title.

@@ -18,9 +18,9 @@ import { Button } from "@/components/ui/button";
 import { Loader2Icon } from "lucide-react";
 import MarkdownEditor from "@/components/editor/MarkdownEditor";
 import { MDXEditorMethods } from "@mdxeditor/editor";
-import TextShimmer from "@/components/ui/text-shimmer";
 import TagCard from "../tags/TagCard";
 import { getTechDisplayName } from "@/lib/utils";
+import EditorFallback from "@/components/editor/EditorFallback";
 
 interface QuestionFormProps {
   question?: Question;
@@ -150,11 +150,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
                 <span className="text-red-500">*</span>
               </FieldLabel>
 
-              <Suspense
-                fallback={
-                  <TextShimmer duration={1}>Loading editor...</TextShimmer>
-                }
-              >
+              <Suspense fallback={<EditorFallback />}>
                 <MarkdownEditor
                   id="question-content"
                   editorRef={editorRef}
