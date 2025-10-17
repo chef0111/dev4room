@@ -27,7 +27,7 @@ const SearchInput = ({
     <InputGroup
       className={cn(
         "flex items-center border-none ring-0! grow rounded-lg transition-all duration-200",
-        className
+        className,
       )}
     >
       <InputGroupInput {...field} type="text" placeholder={placeholder} />

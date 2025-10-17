@@ -40,8 +40,8 @@ const Register = () => {
       if (data?.user) {
         router.push(
           `${routes.verifyEmail}?type=email-verification&email=${encodeURIComponent(
-            email
-          )}`
+            email,
+          )}`,
         );
         router.refresh();
       }

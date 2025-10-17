@@ -66,7 +66,7 @@ const LocalSearch = ({ route, placeholder, className }: LocalSearchProps) => {
               placeholder={placeholder}
               className={cn(
                 "bg-light800_darkgradient! min-h-12 gap-2 px-2",
-                className
+                className,
               )}
               onClick={handleSearchSubmit}
             />

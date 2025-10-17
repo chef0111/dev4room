@@ -43,7 +43,7 @@ const NavTabs = ({ userId, isMobile = false }: NavTabsProps) => {
               isActive
                 ? "primary-gradient rounded-lg text-light-900"
                 : "text-dark300_light900 rounded-lg hover:bg-light800_dark300!",
-              "flex-start gap-4 bg-transparent p-4"
+              "flex-start gap-4 bg-transparent p-4",
             )}
           >
             <Image
@@ -53,13 +53,13 @@ const NavTabs = ({ userId, isMobile = false }: NavTabsProps) => {
               height={20}
               className={cn(
                 { "invert-colors": !isActive },
-                "transition-all duration-200"
+                "transition-all duration-200",
               )}
             />
             <p
               className={cn(
                 isActive ? "base-bold" : "base-medium",
-                !isMobile && "max-lg:hidden"
+                !isMobile && "max-lg:hidden",
               )}
             >
               {item.label}

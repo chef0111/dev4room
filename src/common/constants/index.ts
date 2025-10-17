@@ -53,3 +53,25 @@ export const AUTH_FORM_TYPES = {
     successMessage: "An OTP has been sent! Please check your email.",
   },
 } as const;
+
+export const programmingLanguages = {
+  javascript: "JavaScript",
+  jsx: "JavaScript (React)",
+  typescript: "TypeScript",
+  tsx: "TypeScript (React)",
+  python: "Python",
+  java: "Java",
+  csharp: "C#",
+  sql: "SQL",
+  go: "Go",
+  php: "PHP",
+  ruby: "Ruby",
+  html: "HTML",
+  css: "CSS",
+  scss: "SCSS",
+  sass: "Sass",
+  json: "JSON",
+  bash: "Bash",
+  txt: "Plain Text",
+  "": "Unspecified",
+};
