@@ -1,11 +1,14 @@
+import { primaryKey } from "drizzle-orm/gel-core";
 import {
   pgTable,
   text,
+  varchar,
   timestamp,
   boolean,
   integer,
 } from "drizzle-orm/pg-core";
 
+// user table
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
@@ -29,6 +32,7 @@ export const user = pgTable("user", {
   banExpires: timestamp("ban_expires"),
 });
 
+// session table
 export const session = pgTable("session", {
   id: text("id").primaryKey(),
   expiresAt: timestamp("expires_at").notNull(),
@@ -45,6 +49,7 @@ export const session = pgTable("session", {
   impersonatedBy: text("impersonated_by"),
 });
 
+// account table
 export const account = pgTable("account", {
   id: text("id").primaryKey(),
   accountId: text("account_id").notNull(),
@@ -65,6 +70,7 @@ export const account = pgTable("account", {
     .notNull(),
 });
 
+// verification table
 export const verification = pgTable("verification", {
   id: text("id").primaryKey(),
   identifier: text("identifier").notNull(),
@@ -77,4 +83,117 @@ export const verification = pgTable("verification", {
     .notNull(),
 });
 
-export const schema = { user, session, account, verification };
+// interaction table
+export const interaction = pgTable("interaction", {
+  id: text("id").primaryKey(),
+  actionId: text("action_id").notNull(), 
+  user: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade"}),
+  action: text("action"),
+  actionType: text("action_type"), 
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => /* @__PURE__*/ new Date())
+    .notNull(), 
+});
+
+// vote table
+export const vote = pgTable("vote", {
+  id: text("id").primaryKey(),
+  authorId: text("author_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  type: text("type"),
+  voteType: text("vote_type"),
+  createdAt: timestamp("created_at").defaultNow().notNull(), 
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+}); 
+
+// question table
+export const question = pgTable("question", {
+  id: text("id").primaryKey(), 
+  title: text("title").notNull(),
+  content: text("content").notNull(),
+  authorId: text("author_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade"}),  
+  views: integer("views")
+    .default(0)
+    .notNull(),
+  answers: integer("answers")
+    .default(0)
+    .notNull(),
+  upvotes: integer("upvotes")
+    .default(0)
+    .notNull(), 
+  downvotes: integer("downvotes")
+    .default(0)
+    .notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(), 
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+});
+
+// tag table
+export const tag = pgTable("tag", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull().unique(), 
+  createdAt: timestamp("created_at")
+    .defaultNow()
+    .notNull(), 
+});
+
+// junction (many-to-many) table
+export const questionTag = pgTable("question_tag", {
+  questionId: text("question_id")
+    .notNull()
+    .references(() => question.id, { onDelete: "cascade" }),
+  tagId: text("tag_id")
+    .notNull()
+    .references(() => tag.id, { onDelete: "cascade" }),
+}
+  // composite primaryKey to prevent duplicates
+  // (table) => ({
+  // pk: primaryKey({ columns: [table.questionId, table.tagId ]}), 
+  // })
+);
+
+// answer table 
+export const answer = pgTable("answer", {
+  id: text("id").primaryKey(), 
+  authorId: text("author_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade"}),
+  content: text("content").notNull(),
+  upvotes: integer("upvotes")
+    .default(0)
+    .notNull(), 
+  downvotes: integer("downvotes")
+    .default(0)
+    .notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(), 
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+});
+
+// collection table
+export const collection = pgTable("collection", {
+  id: text("id"),
+  authorId: text("author_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  questionId: text("question_id")
+    .notNull()
+    .references(() => question.id, { onDelete: "cascade" }),
+})
+
+export const schema = { user, session, account, verification, interaction, vote, question, tag, questionTag, answer, collection };
