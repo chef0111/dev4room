@@ -42,7 +42,7 @@ const Login = () => {
               setShowVerificationDialog(true);
             }
           },
-        }
+        },
       );
 
       setIsLoading(false);
@@ -72,7 +72,7 @@ const Login = () => {
         });
         setShowVerificationDialog(false);
         router.push(
-          `${routes.verifyEmail}?type=email-verification&email=${unverifiedEmail}`
+          `${routes.verifyEmail}?type=email-verification&email=${unverifiedEmail}`,
         );
       } else {
         toast.error("Error", {
@@ -83,6 +83,7 @@ const Login = () => {
       toast.error("Error", {
         description: "Failed to send verification code. Please try again.",
       });
+      return handleError(error) as ErrorResponse;
     } finally {
       setIsSendingVerification(false);
     }
@@ -117,7 +118,7 @@ const Login = () => {
 
           <div className="flex-center mt-4">
             <p>
-              Don't have an account?{" "}
+              Don&apos;t have an account?{" "}
               <Link
                 href={routes.register}
                 className="pg-semibold text-link-100 hover:underline transition-all cursor-pointer"

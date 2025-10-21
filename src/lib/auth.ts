@@ -93,7 +93,7 @@ export const auth = betterAuth({
           where: (accounts, { and, eq }) =>
             and(
               eq(accounts.userId, existingUser.id),
-              eq(accounts.providerId, "credential")
+              eq(accounts.providerId, "credential"),
             ),
         });
 
@@ -103,6 +103,20 @@ export const auth = betterAuth({
               "This email is registered with social provider. Please use social login.",
           });
         }
+      }
+    }),
+    after: createAuthMiddleware(async (ctx) => {
+      if (
+        ctx.path === "/email-otp/check-verification-otp" &&
+        ctx.body.type === "email-verification"
+      ) {
+        const email = ctx.body.email;
+
+        const { eq } = await import("drizzle-orm");
+        await db
+          .update(schema.user)
+          .set({ emailVerified: true })
+          .where(eq(schema.user.email, email));
       }
     }),
   },
@@ -152,7 +166,6 @@ export const auth = betterAuth({
           }),
         });
       },
-      overrideDefaultEmailVerification: true,
       sendVerificationOnSignUp: true,
       allowedAttempts: 5,
       expiresIn: 300,

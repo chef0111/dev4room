@@ -1,12 +1,10 @@
 import * as React from "react";
 import {
   Body,
-  Button,
   Container,
   Head,
   Heading,
   Html,
-  Img,
   Preview,
   Section,
   Text,
@@ -44,24 +42,6 @@ const SendOTPEmail = (props: SendOTPEmailProps) => {
                       }}
                     >
                       <tr>
-                        <td
-                          style={{
-                            verticalAlign: "middle",
-                            paddingRight: "12px",
-                          }}
-                        >
-                          <Img
-                            src="https://res.cloudinary.com/dpuqj2n2q/image/upload/v1759942491/brand_drlnde.png"
-                            width={48}
-                            height={48}
-                            alt="Dev4Room logo"
-                            style={{
-                              display: "block",
-                              border: "none",
-                              outline: "none",
-                            }}
-                          />
-                        </td>
                         <td style={{ verticalAlign: "middle" }}>
                           <Text
                             className="text-[48px] font-bold text-white m-0"
@@ -84,7 +64,7 @@ const SendOTPEmail = (props: SendOTPEmailProps) => {
             </Section>
 
             {/* Title Section */}
-            <Section className="px-[48px] py-[32px] text-center">
+            <Section className="px-[48px] pt-[32px] text-center">
               <Heading className="text-black text-[28px] font-bold m-0">
                 Verify Your Account
               </Heading>
@@ -125,13 +105,12 @@ const SendOTPEmail = (props: SendOTPEmailProps) => {
                         style={{ textAlign: "center", verticalAlign: "middle" }}
                       >
                         <Text
-                          className="text-white text-[32px] font-bold m-0 tracking-[8px]"
+                          className="text-white text-[32px] pl-[8px] font-bold m-0 tracking-[8px]"
                           style={{
                             fontSize: "32px",
                             fontWeight: "bold",
                             color: "white",
                             margin: 0,
-                            letterSpacing: "8px",
                             fontFamily: "monospace",
                           }}
                         >

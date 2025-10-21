@@ -48,7 +48,7 @@ interface SearchParams {
 }
 
 const HomePage = async ({ searchParams }: SearchParams) => {
-  const { query = "", filter = "" } = await searchParams;
+  const { query = "" } = await searchParams;
   // const data = axios.get("/api/questions", { query: { search: query } });
 
   const filteredQuestions = questions.filter((question) => {
@@ -57,9 +57,11 @@ const HomePage = async ({ searchParams }: SearchParams) => {
       .includes(query?.toLowerCase());
     // const matchesFilter = filter
     //   ? question.tags.some(
-    //       (tag) => tag.name.toLowerCase() === filter.toLowerCase()
+    //       (tag) => tag.name.toLowerCase() === filter.toLowerCase(),
     //     )
     //   : true;
+
+    // console.log(matchesFilter);
     return matchesQuery;
   });
 

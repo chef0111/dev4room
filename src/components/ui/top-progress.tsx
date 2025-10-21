@@ -142,7 +142,7 @@ const TopProgress = () => {
         }
       }
     },
-    [startAnimating]
+    [startAnimating],
   );
 
   useEffect(() => {

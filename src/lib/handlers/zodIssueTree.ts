@@ -6,7 +6,7 @@ type ZodErrorTree = {
 
 export const flattenTree = (
   tree: ZodErrorTree,
-  prefix = ""
+  prefix = "",
 ): Record<string, string[]> => {
   const result: Record<string, string[]> = {};
 

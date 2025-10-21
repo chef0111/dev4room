@@ -106,7 +106,7 @@ export const POST = async (req: NextRequest) => {
 
     if (decision.isDenied()) {
       if (decision.reason.isRateLimit()) {
-        console.log("⏱️ Rate limit exceeded");
+        console.log("Rate limit exceeded");
         return new Response(null, { status: 429 });
       } else if (decision.reason.isEmail()) {
         let message: string;
