@@ -1,11 +1,14 @@
+import { primaryKey } from "drizzle-orm/gel-core";
 import {
   pgTable,
   text,
+  varchar,
   timestamp,
   boolean,
   integer,
 } from "drizzle-orm/pg-core";
 
+// user table
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
@@ -29,6 +32,7 @@ export const user = pgTable("user", {
   banExpires: timestamp("ban_expires"),
 });
 
+// session table
 export const session = pgTable("session", {
   id: text("id").primaryKey(),
   expiresAt: timestamp("expires_at").notNull(),
@@ -45,6 +49,7 @@ export const session = pgTable("session", {
   impersonatedBy: text("impersonated_by"),
 });
 
+// account table
 export const account = pgTable("account", {
   id: text("id").primaryKey(),
   accountId: text("account_id").notNull(),
@@ -65,6 +70,7 @@ export const account = pgTable("account", {
     .notNull(),
 });
 
+// verification table
 export const verification = pgTable("verification", {
   id: text("id").primaryKey(),
   identifier: text("identifier").notNull(),
