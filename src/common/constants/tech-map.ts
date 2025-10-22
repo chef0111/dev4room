@@ -180,6 +180,25 @@ export const techIconMap: { [key: string]: string } = {
     "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/redux/redux-original.svg",
   threejs:
     "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/threejs/threejs-original.svg",
+
+  vsc: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vscode/vscode-original.svg",
+  vscode:
+    "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vscode/vscode-original.svg",
+
+  vs: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/visualstudio/visualstudio-original.svg",
+  visualstudio:
+    "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/visualstudio/visualstudio-original.svg",
+
+  jetbrains:
+    "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/jetbrains/jetbrains-original.svg",
+
+  ws: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/webstorm/webstorm-original.svg",
+  webstorm:
+    "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/webstorm/webstorm-original.svg",
+
+  ij: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/intellij/intellij-original.svg",
+  intellij:
+    "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/intellij/intellij-original.svg",
 };
 
 export const techDescriptionMap: { [key: string]: string } = {
@@ -385,6 +404,25 @@ export const techDescriptionMap: { [key: string]: string } = {
 
   threejs:
     "Three.js is a JavaScript 3D library that makes it easier to create and display animated 3D graphics in the browser using WebGL.",
+
+  vsc: "Visual Studio Code (VS Code) is a popular open-source code editor developed by Microsoft, known for its extensibility and support for various programming languages.",
+  vscode:
+    "Visual Studio Code (VS Code) is a popular open-source code editor developed by Microsoft, known for its extensibility and support for various programming languages.",
+
+  vs: "Visual Studio is an integrated development environment (IDE) from Microsoft, used for developing computer programs, websites, web apps, and web services.",
+  visualstudio:
+    "Visual Studio is an integrated development environment (IDE) from Microsoft, used for developing computer programs, websites, web apps, and web services.",
+
+  jetbrains:
+    "JetBrains is a software development company known for creating intelligent IDEs and tools for various programming languages, such as IntelliJ IDEA, PyCharm, and WebStorm.",
+
+  ws: "WebStorm is a powerful IDE developed by JetBrains specifically for JavaScript and related technologies, offering advanced coding assistance and debugging features.",
+  webstorm:
+    "WebStorm is a powerful IDE developed by JetBrains specifically for JavaScript and related technologies, offering advanced coding assistance and debugging features.",
+
+  ij: "IntelliJ IDEA is a robust IDE developed by JetBrains for Java development, known for its intelligent code completion, refactoring tools, and seamless integration with build systems.",
+  intellij:
+    "IntelliJ IDEA is a robust IDE developed by JetBrains for Java development, known for its intelligent code completion, refactoring tools, and seamless integration with build systems.",
 };
 
 export const displayNameMap: { [key: string]: string } = {
@@ -471,4 +509,13 @@ export const displayNameMap: { [key: string]: string } = {
   elasticsearch: "Elasticsearch",
   redux: "Redux",
   threejs: "Three.js",
+  vsc: "VSCode",
+  vscode: "VSCode",
+  vs: "Visual Studio",
+  visualstudio: "Visual Studio",
+  jetbrains: "JetBrains",
+  ws: "WebStorm",
+  webstorm: "WebStorm",
+  ij: "IntelliJ",
+  intellij: "IntelliJ",
 };
