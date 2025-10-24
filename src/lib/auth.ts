@@ -8,6 +8,11 @@ import { nextCookies } from "better-auth/next-js";
 import { PasswordSchema } from "./validations";
 import { resend } from "./resend";
 import SendOTPEmail from "@/components/layout/email/SendOTPEmail";
+import {
+  checkUserExists,
+  checkUserCredentials,
+  verifyUserEmail,
+} from "@/server/auth.action";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -76,11 +81,7 @@ export const auth = betterAuth({
         ctx.body.type === "forget-password"
       ) {
         const email = ctx.body.email;
-
-        // Check if user exists
-        const existingUser = await db.query.user.findFirst({
-          where: (users, { eq }) => eq(users.email, email),
-        });
+        const existingUser = await checkUserExists(email);
 
         if (!existingUser) {
           throw new APIError("BAD_REQUEST", {
@@ -88,15 +89,7 @@ export const auth = betterAuth({
           });
         }
 
-        // Check if user has password (credentials provider)
-        const userAccount = await db.query.account.findFirst({
-          where: (accounts, { and, eq }) =>
-            and(
-              eq(accounts.userId, existingUser.id),
-              eq(accounts.providerId, "credential"),
-            ),
-        });
-
+        const userAccount = await checkUserCredentials(existingUser.id);
         if (!userAccount) {
           throw new APIError("BAD_REQUEST", {
             message:
@@ -111,12 +104,7 @@ export const auth = betterAuth({
         ctx.body.type === "email-verification"
       ) {
         const email = ctx.body.email;
-
-        const { eq } = await import("drizzle-orm");
-        await db
-          .update(schema.user)
-          .set({ emailVerified: true })
-          .where(eq(schema.user.email, email));
+        await verifyUserEmail(email);
       }
     }),
   },
