@@ -41,10 +41,10 @@ const HomeFilter = () => {
           key={filter.label}
           onClick={() => handleClick(filter.value)}
           className={cn(
-            "base-filter-btn transition-all duration-200",
+            "base-filter-btn no-focus",
             active === filter.value
               ? "bg-primary100_primary800 hover:bg-primary200_primary700 text-primary-500"
-              : "bg-light800_dark300 text-light-500 hover:bg-light700_dark400!",
+              : "bg-light800_dark300 text-light-500 hover:bg-light700_dark400!"
           )}
         >
           {filter.label}

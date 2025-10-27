@@ -32,7 +32,7 @@ const UserAvatar = ({
         <AvatarFallback
           className={cn(
             "primary-gradient font-esbuild font-bold tracking-wider text-white",
-            fallbackClassName,
+            fallbackClassName
           )}
         >
           {initials}

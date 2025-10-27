@@ -14,6 +14,7 @@ interface SearchInputProps {
   placeholder?: string;
   onClick?: () => void;
   global?: boolean;
+  disabled?: boolean;
 }
 
 const SearchInput = ({
@@ -22,15 +23,21 @@ const SearchInput = ({
   placeholder,
   onClick,
   global = false,
+  disabled = false,
 }: SearchInputProps) => {
   return (
     <InputGroup
       className={cn(
-        "flex items-center border-none ring-0! grow rounded-lg transition-all duration-200",
-        className,
+        "flex items-center border-none ring-0! grow rounded-lg",
+        className
       )}
     >
-      <InputGroupInput {...field} type="text" placeholder={placeholder} />
+      <InputGroupInput
+        {...field}
+        type="text"
+        placeholder={placeholder}
+        disabled={disabled}
+      />
       <InputGroupAddon>
         <Search
           className="text-light400_light500 size-6! cursor-pointer"

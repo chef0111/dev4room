@@ -32,7 +32,7 @@ const TagCard = ({
 
   const TagContent = (
     <>
-      <Badge className="flex gap-2 subtle-medium bg-light800_dark300 text-light400_light500 rounded-md px-4 py-2 uppercase transition-all duration-200">
+      <Badge className="flex gap-2 subtle-medium bg-light800_dark300 text-light400_light500 rounded-md px-4 py-2 uppercase">
         <div className="flex-center space-x-2">
           <Image
             src={`${techIcon}`}

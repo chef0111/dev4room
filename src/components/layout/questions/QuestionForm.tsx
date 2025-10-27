@@ -45,7 +45,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
 
   const handleKeyDown = (
     e: React.KeyboardEvent<HTMLInputElement>,
-    field: { value: string[] },
+    field: { value: string[] }
   ) => {
     const tagInput = e.currentTarget.value.trim();
 
@@ -156,6 +156,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
                   editorRef={editorRef}
                   value={field.value}
                   onChange={field.onChange}
+                  isInvalid={fieldState.invalid}
                 />
               </Suspense>
 

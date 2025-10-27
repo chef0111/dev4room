@@ -12,7 +12,7 @@ const Navbar = async () => {
   const user = session?.user;
 
   return (
-    <nav className="flex-between bg-light900_dark200 fixed z-50 w-full p-6 dark:shadow-none sm:px-12 transition-all duration-200">
+    <nav className="flex-between bg-light900_dark200 fixed z-50 w-full p-6 dark:shadow-none sm:px-12">
       <Link href="/" className="flex-center gap-2">
         <Image
           src="/images/brand.svg"
