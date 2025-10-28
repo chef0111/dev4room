@@ -12,7 +12,9 @@ import {
   checkUserExists,
   checkUserCredentials,
   verifyUserEmail,
+  generateUniqueUsername,
 } from "@/server/auth.action";
+import { eq } from "drizzle-orm";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -23,10 +25,33 @@ export const auth = betterAuth({
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      mapProfileToUser: async (profile) => {
+        // Generate username from email or name if not provided
+        const baseUsername = profile.name || profile.email.split("@")[0];
+        const username = await generateUniqueUsername(baseUsername);
+
+        return {
+          image: profile.picture,
+          username,
+          display_username: username,
+        };
+      },
     },
     github: {
       clientId: process.env.GITHUB_CLIENT_ID as string,
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+      mapProfileToUser: async (profile) => {
+        // GitHub provides a login field which is their username
+        const baseUsername =
+          profile.login || profile.name || profile.email.split("@")[0];
+        const username = await generateUniqueUsername(baseUsername);
+
+        return {
+          image: profile.avatar_url,
+          username,
+          display_username: username,
+        };
+      },
     },
   },
   emailAndPassword: {
@@ -105,6 +130,35 @@ export const auth = betterAuth({
       ) {
         const email = ctx.body.email;
         await verifyUserEmail(email);
+      }
+
+      // Handle username generation for social login users
+      if (
+        (ctx.path === "/callback/google" || ctx.path === "/callback/github") &&
+        ctx.context?.user
+      ) {
+        const user = ctx.context.user;
+
+        // Check if user already has a username
+        const existingUser = await db.query.user.findFirst({
+          where: eq(schema.user.id, user.id),
+        });
+
+        if (
+          existingUser &&
+          (!existingUser.username || existingUser.username.trim() === "")
+        ) {
+          // Generate a unique username based on the user's name
+          const uniqueUsername = await generateUniqueUsername(
+            user.name || user.email.split("@")[0]
+          );
+
+          // Update the user with the generated username
+          await db
+            .update(schema.user)
+            .set({ username: uniqueUsername })
+            .where(eq(schema.user.id, user.id));
+        }
       }
     }),
   },
