@@ -11,6 +11,7 @@ import SocialAuthForm from "@/components/layout/auth/SocialAuthForm";
 import Link from "next/link";
 import routes from "@/common/constants/routes";
 import handleError from "@/lib/handlers/error";
+import { Button } from "@/components/ui/button";
 
 type RegisterValues = z.infer<typeof RegisterSchema>;
 
@@ -88,15 +89,16 @@ const Register = () => {
       <div className="flex flex-col">
         <SocialAuthForm disabled={isLoading} />
 
-        <div className="flex-center mt-4">
+        <div className="flex-center mt-4 pg-semibold">
           <p>
             Already have an account?{" "}
-            <Link
-              href={routes.login}
-              className="pg-semibold text-link-100 hover:underline transition-all cursor-pointer"
+            <Button
+              variant="link"
+              className="p-0 size-fit text-[16px] text-link-100"
+              asChild
             >
-              Log in
-            </Link>
+              <Link href={routes.login}>Login</Link>
+            </Button>
           </p>
         </div>
       </div>

@@ -102,12 +102,15 @@ const AuthForm = <T extends FieldValues>({
                   </FieldLabel>
 
                   {fieldName === "password" && formType === "LOGIN" && (
-                    <Link
-                      href={routes.forgotPassword}
-                      className="ml-auto inline-block text-sm text-link-100 hover:underline"
+                    <Button
+                      variant="link"
+                      className="ml-auto inline-block p-0 size-fit text-sm text-link-100"
+                      asChild
                     >
-                      Forgot your password?
-                    </Link>
+                      <Link href={routes.forgotPassword}>
+                        Forgot your password?
+                      </Link>
+                    </Button>
                   )}
                 </div>
                 <Input

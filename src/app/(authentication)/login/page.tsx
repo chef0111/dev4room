@@ -13,6 +13,7 @@ import AuthForm from "@/components/layout/auth/AuthForm";
 import SocialAuthForm from "@/components/layout/auth/SocialAuthForm";
 import routes from "@/common/constants/routes";
 import VerifyDialog from "@/components/layout/auth/VerifyDialog";
+import { Button } from "@/components/ui/button";
 
 type LoginValues = z.infer<typeof LoginSchema>;
 
@@ -119,12 +120,13 @@ const Login = () => {
           <div className="flex-center mt-4">
             <p>
               Don&apos;t have an account?{" "}
-              <Link
-                href={routes.register}
-                className="pg-semibold text-link-100 hover:underline transition-all cursor-pointer"
+              <Button
+                variant="link"
+                className="p-0 size-fit text-[16px] text-link-100"
+                asChild
               >
-                Register
-              </Link>
+                <Link href={routes.register}>Register</Link>
+              </Button>
             </p>
           </div>
         </div>
@@ -133,8 +135,8 @@ const Login = () => {
       <VerifyDialog
         open={showVerificationDialog}
         onOpenChange={setShowVerificationDialog}
-        action={isSendingVerification}
-        onAction={handleSendVerificationEmail}
+        disabled={isSendingVerification}
+        onClick={handleSendVerificationEmail}
       />
     </>
   );

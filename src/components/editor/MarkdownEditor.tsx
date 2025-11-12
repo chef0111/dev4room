@@ -27,9 +27,9 @@ const MarkdownEditor = memo(
         (value: string) => {
           onChange(value);
         },
-        [onChange]
+        [onChange],
       ),
-      500
+      500,
     );
 
     return (
@@ -41,7 +41,7 @@ const MarkdownEditor = memo(
         isInvalid={isInvalid}
       />
     );
-  }
+  },
 );
 
 MarkdownEditor.displayName = "MarkdownEditor";

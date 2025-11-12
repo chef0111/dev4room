@@ -79,7 +79,7 @@ export const SkateSkeleton = memo(
         </Link>
       )}
     </div>
-  )
+  ),
 );
 
 SkateSkeleton.displayName = "SkateSkeleton";

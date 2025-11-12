@@ -365,6 +365,18 @@
   -webkit-text-fill-color: transparent;
 }
 
+@utility light-border-gradient {
+  background: linear-gradient(135deg, #dee5f6 0%, #ffffff00 50%, #e3e9f1 100%);
+}
+
+@utility dark-border-gradient {
+  background: linear-gradient(135deg, #3a4660 0%, #191c2600 50%, #2e3645 100%);
+}
+
+@utility border-gradient {
+  @apply light-border-gradient dark:dark-border-gradient;
+}
+
 @utility base-input {
   @apply pg-regular bg-light700_dark300 text-dark300_light700 min-h-12 border light-border-2;
 }

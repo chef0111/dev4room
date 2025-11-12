@@ -9,19 +9,19 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-interface VerifyDialogProps {
+interface DialogProps {
   open: boolean;
   onOpenChange: (show: boolean) => void;
-  action: boolean;
-  onAction: () => void;
+  disabled: boolean;
+  onClick: () => void;
 }
 
 const VerifyDialog = ({
   open,
   onOpenChange,
-  action,
-  onAction,
-}: VerifyDialogProps) => {
+  disabled,
+  onClick,
+}: DialogProps) => {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent className="bg-light900_dark200">
@@ -36,17 +36,17 @@ const VerifyDialog = ({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel
-            disabled={action}
+            disabled={disabled}
             className="bg-light800_dark400 text-dark300_light700 hover:bg-light700_dark300"
           >
             Cancel
           </AlertDialogCancel>
           <AlertDialogAction
-            onClick={onAction}
-            disabled={action}
+            onClick={onClick}
+            disabled={disabled}
             className="bg-primary text-light-900"
           >
-            {action ? "Sending..." : "Send Verification Code"}
+            {disabled ? "Sending..." : "Send Verification Code"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
