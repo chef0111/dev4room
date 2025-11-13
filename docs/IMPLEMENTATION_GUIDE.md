@@ -20,32 +20,45 @@ Client Request → API Route/Server Action → DAL → Database
 
 **File**: `src/server/{entity}/{entity}.dto.ts`
 
-```typescript
-import "server-only";
-import z from "zod";
+**Requirements**:
 
-// Define schema with validation rules
-export const UsersSchema = z.object({
-  id: z.string(),
-  name: z.string().min(1, { message: "Name is required." }),
-  username: z
-    .string()
-    .min(3, { message: "Username must be at least 3 characters long." }),
-  email: z.email({ message: "Invalid email address." }),
-  image: z.url({ message: "Invalid image URL." }).nullable(),
-  role: z.string().nullable(),
+- Add `"server-only"` at the top to prevent client-side bundling
+- Import Zod: `import z from "zod"`
+- Define a Zod schema with all fields from your database table
+- Export both the schema and the inferred type
+
+**Schema Structure**:
+
+```typescript
+export const EntitySchema = z.object({
+  // Define each field with appropriate Zod type
+  // Examples:
+  // - id: z.string()
+  // - name: z.string().min(1, { message: "..." })
+  // - email: z.email({ message: "..." })
+  // - count: z.number().int().min(0)
+  // - url: z.url().nullable()
+  // - date: z.date() or z.string() depending on your DB driver
 });
 
-// Export type from schema
-export type UsersDTO = z.infer<typeof UsersSchema>;
+export type EntityDTO = z.infer<typeof EntitySchema>;
 ```
 
 **Key Points**:
 
-- Use `"server-only"` import to prevent client-side bundling
-- Define Zod schema for runtime validation
-- Export both schema and type
-- Add meaningful error messages
+- Use descriptive error messages for each validation rule
+- Mark optional fields with `.nullable()` or `.optional()`
+- Use specific Zod validators (`.email()`, `.url()`, `.uuid()`, etc.)
+- Keep DTOs minimal - only include fields you need to expose
+- One DTO per entity or use case (e.g., `UserDTO`, `UserListDTO`)
+
+**Hints**:
+
+- For nullable database fields: `z.string().nullable()`
+- For optional fields: `z.string().optional()`
+- For enums: `z.enum(["value1", "value2"])`
+- For nested objects: Nest `z.object()` schemas
+- For arrays: `z.array(z.string())`
 
 ---
 
@@ -55,100 +68,155 @@ export type UsersDTO = z.infer<typeof UsersSchema>;
 
 **File**: `src/server/{entity}/{entity}.dal.ts`
 
+**Requirements**:
+
+- Add `"server-only"` at the top
+- Import database connection: `import { db } from "@/database/drizzle"`
+- Import table schema: `import { tableName } from "@/database/schema"`
+- Import DTO schema and type from your DTO file
+- Import Drizzle helpers: `import { and, or, eq, ilike, desc, asc, sql } from "drizzle-orm"`
+
+**Function Structure**:
+
 ```typescript
-import "server-only";
-import { db } from "@/database/drizzle";
-import { user } from "@/database/schema";
-import { UsersDTO, UsersSchema } from "./user.dto";
-import { and, or, ilike, desc, asc, sql, SQL } from "drizzle-orm";
-
-export async function getUsers(
+export async function getEntities(
   params: QueryParams,
-): Promise<{ users: UsersDTO[]; totalUsers: number }> {
-  const { page = 1, pageSize = 10, query, filter } = params;
-
-  const offset = (page - 1) * pageSize;
-  const limit = pageSize;
-
-  // Build dynamic WHERE conditions
-  const conditions: (SQL<unknown> | undefined)[] = [];
-
-  if (query) {
-    conditions.push(
-      or(ilike(user.name, `%${query}%`), ilike(user.username, `%${query}%`)),
-    );
-  }
-
-  const where = conditions.length > 0 ? and(...conditions) : undefined;
-
-  // Dynamic ORDER BY
-  let sortCriteria;
-  switch (filter) {
-    case "newest":
-      sortCriteria = desc(user.createdAt);
-      break;
-    case "oldest":
-      sortCriteria = asc(user.createdAt);
-      break;
-    case "popular":
-      sortCriteria = desc(user.reputation);
-      break;
-    default:
-      sortCriteria = asc(user.createdAt);
-  }
-
-  // Single query with window function for total count
-  const results = await db
-    .select({
-      id: user.id,
-      name: user.name,
-      username: user.username,
-      email: user.email,
-      image: user.image,
-      role: user.role,
-      totalCount: sql<number>`count(*) over()`.as("total_count"),
-    })
-    .from(user)
-    .where(where)
-    .orderBy(sortCriteria)
-    .limit(limit)
-    .offset(offset);
-
-  const totalUsers = results[0]?.totalCount ?? 0;
-  const users = results.map(({ totalCount, ...userData }) => userData);
-
-  // Validate output with DTO schema
-  const validatedUsers = users
-    .map((user) => {
-      const result = UsersSchema.safeParse(user);
-      if (!result.success) {
-        console.error("User validation failed:", result.error);
-        return null;
-      }
-      return result.data;
-    })
-    .filter((user): user is UsersDTO => user !== null);
-
-  return { users: validatedUsers, totalUsers };
+): Promise<{ entities: EntityDTO[]; totalEntities: number }> {
+  // 1. Extract params with defaults
+  // 2. Calculate offset and limit for pagination
+  // 3. Build dynamic WHERE conditions
+  // 4. Determine sort criteria based on filter
+  // 5. Execute query with window function for total count
+  // 6. Extract total count and map results
+  // 7. Validate each result with DTO schema
+  // 8. Return validated data
 }
+```
+
+**Implementation Steps**:
+
+**1. Extract Parameters**:
+
+```typescript
+const { page = 1, pageSize = 10, query, filter } = params;
+const offset = (page - 1) * pageSize;
+const limit = pageSize;
+```
+
+**2. Build Dynamic WHERE Conditions**:
+
+```typescript
+const conditions: (SQL<unknown> | undefined)[] = [];
+
+// Example: Search multiple fields
+if (query) {
+  conditions.push(
+    or(ilike(table.field1, `%${query}%`), ilike(table.field2, `%${query}%`)),
+  );
+}
+
+// Example: Filter by specific field
+if (someFilter) {
+  conditions.push(eq(table.status, someFilter));
+}
+
+const where = conditions.length > 0 ? and(...conditions) : undefined;
+```
+
+**3. Determine Sort Criteria**:
+
+```typescript
+let sortCriteria;
+switch (filter) {
+  case "newest":
+    sortCriteria = desc(table.createdAt);
+    break;
+  case "oldest":
+    sortCriteria = asc(table.createdAt);
+    break;
+  case "popular":
+    sortCriteria = desc(table.someCountField);
+    break;
+  default:
+    sortCriteria = desc(table.createdAt);
+}
+```
+
+**4. Execute Query with Window Function**:
+
+```typescript
+const results = await db
+  .select({
+    // Select all fields you need
+    id: table.id,
+    name: table.name,
+    // ... other fields
+
+    // Window function for total count (avoids separate query)
+    totalCount: sql<number>`count(*) over()`.as("total_count"),
+  })
+  .from(table)
+  .where(where)
+  .orderBy(sortCriteria)
+  .limit(limit)
+  .offset(offset);
+```
+
+**5. Extract Total and Map Results**:
+
+```typescript
+const total = results[0]?.totalCount ?? 0;
+const entities = results.map(({ totalCount, ...data }) => data);
+```
+
+**6. Validate Output with DTO**:
+
+```typescript
+const validated = entities
+  .map((entity) => {
+    const result = EntitySchema.safeParse(entity);
+    if (!result.success) {
+      console.error("Validation failed:", result.error);
+      return null;
+    }
+    return result.data;
+  })
+  .filter((entity): entity is EntityDTO => entity !== null);
+
+return { entities: validated, totalEntities: total };
 ```
 
 **Key Points**:
 
 - Use `"server-only"` to prevent client bundling
-- Build dynamic WHERE conditions with `and()` and `or()`
-- Use `ilike()` for case-insensitive search
-- Window function `count(*) over()` gets total in one query
-- Always validate output with DTO schema
+- Build conditions dynamically - only add if parameter exists
+- Use `ilike()` for case-insensitive search in PostgreSQL
+- Window function `count(*) over()` gets total count efficiently (single query)
+- Always validate output with DTO schema using `.safeParse()`
+- Filter out failed validations and log errors
 - Return typed DTOs
 
-**Hints**:
+**Drizzle Query Helpers**:
 
-- For filters: Build conditions array, combine with `and()`
-- For search: Use `ilike(column, '%term%')` for partial match
-- For sorting: Use `desc()` or `asc()` from Drizzle
-- For pagination: Use `.limit()` and `.offset()`
-- For total count: Add `sql<number>\`count(\*) over()\`` to SELECT
+- `eq(column, value)` - Equals
+- `ne(column, value)` - Not equals
+- `gt(column, value)` - Greater than
+- `gte(column, value)` - Greater than or equal
+- `lt(column, value)` - Less than
+- `lte(column, value)` - Less than or equal
+- `like(column, pattern)` - Case-sensitive pattern match
+- `ilike(column, pattern)` - Case-insensitive pattern match
+- `and(...conditions)` - Combine with AND
+- `or(...conditions)` - Combine with OR
+- `desc(column)` - Sort descending
+- `asc(column)` - Sort ascending
+
+**Performance Hints**:
+
+- Select only fields you need (avoid `select(*)`)
+- Use window functions instead of separate COUNT queries
+- Add database indexes on frequently searched/filtered columns
+- Consider using `.prepare()` for repeated queries
 
 ---
 
