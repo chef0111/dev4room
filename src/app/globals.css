@@ -327,6 +327,14 @@
   background: linear-gradient(129deg, #007bff 0%, #34a9f6 100%);
 }
 
+@utility dark-card-gradient {
+  background: linear-gradient(
+    135deg,
+    var(--color-dark-300) 0%,
+    var(--color-dark-200) 75%
+  );
+}
+
 @utility dark-gradient {
   background: linear-gradient(
     232deg,
@@ -365,16 +373,38 @@
   -webkit-text-fill-color: transparent;
 }
 
-@utility light-border-gradient {
-  background: linear-gradient(135deg, #dee5f6 0%, #ffffff00 50%, #e3e9f1 100%);
+@property --gradient-angle {
+  syntax: "<angle>";
+  initial-value: 135deg;
+  inherits: false;
 }
 
-@utility dark-border-gradient {
-  background: linear-gradient(135deg, #3a4660 0%, #191c2600 50%, #2e3645 100%);
+.border-gradient {
+  --gradient-angle: 135deg;
+  background: conic-gradient(
+    from var(--gradient-angle) at 50% 50%,
+    #e3e9f1,
+    #f1f2f3,
+    #dee5f6,
+    #f1f2f3,
+    #e3e9f1
+  );
+  transition: --gradient-angle 0.3s ease-out;
 }
 
-@utility border-gradient {
-  @apply light-border-gradient dark:dark-border-gradient;
+.dark .border-gradient {
+  background: conic-gradient(
+    from var(--gradient-angle) at 50% 50%,
+    #2e3645,
+    #191c26,
+    #3a4660,
+    #191c26,
+    #2e3645
+  );
+}
+
+.border-gradient:hover {
+  --gradient-angle: 225deg;
 }
 
 @utility base-input {
@@ -401,8 +431,8 @@
   @apply flex justify-end items-center;
 }
 
-@utility card-wrapper {
-  @apply bg-light-900 dark:dark-gradient shadow-light-100! dark:shadow-dark-100;
+@utility dev-card {
+  @apply shadow-light100_darknone! bg-light-900! dark:dark-card-gradient! border-none! rounded-2xl! p-4!;
 }
 
 @utility btn {
