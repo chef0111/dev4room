@@ -408,7 +408,7 @@
 }
 
 @utility base-input {
-  @apply pg-regular bg-light700_dark300 text-dark300_light700 min-h-12 border light-border-2;
+  @apply pg-regular bg-light700_dark300 no-focus! text-dark300_light700 min-h-12 border light-border-2!;
 }
 
 @utility md-editor-fallback {
@@ -429,6 +429,10 @@
 
 @utility flex-end {
   @apply flex justify-end items-center;
+}
+
+@utility card-wrapper {
+  @apply bg-light-900 dark:dark-gradient shadow-light-100! dark:shadow-dark-100;
 }
 
 @utility dev-card {
@@ -456,7 +460,7 @@
 }
 
 @utility markdown-editor {
-  @apply prose !max-w-full prose-p:m-0 dark:prose-headings:text-white prose-headings:text-dark-400 prose-p:text-dark-500 dark:prose-p:text-light-700 prose-ul:text-dark-500 dark:prose-ul:text-light-700 prose-ol:text-dark-500 dark:prose-ol:text-light-700 dark:prose-strong:text-white prose-blockquote:text-dark-500 dark:prose-blockquote:text-light-700 rounded-md group-aria-invalid:border-destructive! group-aria-invalid:focus-within:ring-destructive/20! group-aria-invalid:dark:focus-within:ring-destructive/40!;
+  @apply prose !max-w-full prose-p:m-1 prose-headings:mx-1 prose-ul:mx-1 prose-ol:mx-1 dark:prose-headings:text-white prose-headings:text-dark-400 prose-p:text-dark-500 dark:prose-p:text-light-700 prose-ul:text-dark-500 dark:prose-ul:text-light-700 prose-ol:text-dark-500 dark:prose-ol:text-light-700 dark:prose-strong:text-white prose-blockquote:text-dark-500 dark:prose-blockquote:text-light-700 rounded-md group-aria-invalid:border-destructive! group-aria-invalid:focus-within:ring-destructive/20! group-aria-invalid:dark:focus-within:ring-destructive/40!;
 }
 
 @utility tab {
@@ -627,13 +631,13 @@ code {
 .dark .dark-editor {
   --accentBase: var(--tomato-1);
   --accentBgSubtle: var(--tomato-2);
-  --accentBg: var(--tomato-3);
+  --accentBg: var(--primary);
   --accentBgHover: var(--tomato-4);
-  --accentBgActive: var(--tomato-5);
+  --accentBgActive: var(--color-primary-700);
   --accentLine: var(--tomato-6);
-  --accentBorder: var(--tomato-7);
+  --accentBorder: var(--color-primary-600);
   --accentBorderHover: var(--tomato-8);
-  --accentSolid: var(--tomato-9);
+  --accentSolid: var(--primary);
   --accentSolidHover: var(--tomato-10);
   --accentText: var(--tomato-11);
   --accentTextContrast: var(--tomato-12);
