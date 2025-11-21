@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Route } from "next";
 import { Button } from "../ui/button";
 import { useRouter, useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -31,7 +32,7 @@ const HomeFilter = () => {
         value: filter.toLowerCase(),
       });
     }
-    router.push(newUrl, { scroll: false });
+    router.push(newUrl as Route, { scroll: false });
   };
 
   return (

@@ -1,10 +1,7 @@
-import routes from "@/common/constants/routes";
 import Link from "next/link";
-import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { getTechDescription, getTechIcon } from "@/lib/utils";
 import Image from "next/image";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import DevCard from "@/components/ui/dev-card";
 
@@ -68,14 +65,14 @@ const TagCard = ({
         {TagContent}
       </Button>
     ) : (
-      <Link href={routes.tag(id)} className="flex-between gap-2">
+      <Link href={`/tags/${id}`} className="flex-between gap-2">
         {TagContent}
       </Link>
     );
   }
 
   return (
-    <Link href={routes.tag(id)}>
+    <Link href={`/tags/${id}`}>
       <DevCard>
         <div className="flex-between gap-3">
           <div className="bg-light800_dark400 w-fit rounded-sm text-center px-3 py-1.5">

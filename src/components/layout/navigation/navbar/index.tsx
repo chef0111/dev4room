@@ -4,11 +4,21 @@ import Link from "next/link";
 import ThemeToggle from "./ThemeToggle";
 import MobileNav from "./MobileNav";
 import GlobalSearch from "../../main/GlobalSearch";
-import CachedUserSection, { UserSectionSkeleton } from "./CachedUserSection";
+import UserSection from "./UserSection";
+import { cn } from "@/lib/utils";
 
-const Navbar = () => {
+interface NavbarProps {
+  className?: string;
+}
+
+const Navbar = ({ className }: NavbarProps) => {
   return (
-    <nav className="flex-between bg-light900_dark200 fixed z-50 w-full p-6 dark:shadow-none sm:px-12">
+    <nav
+      className={cn(
+        "flex-between bg-light900_dark200 fixed w-full p-6 dark:shadow-none sm:px-12",
+        className,
+      )}
+    >
       <Link href="/" className="flex-center gap-2">
         <Image
           src="/images/brand.svg"
@@ -30,12 +40,13 @@ const Navbar = () => {
       <div className="flex-between gap-5">
         <ThemeToggle />
 
-        {/* Only this section uses cached session data */}
-        <Suspense fallback={<UserSectionSkeleton />}>
-          <CachedUserSection />
+        <Suspense fallback={null}>
+          <UserSection />
         </Suspense>
 
-        <MobileNav />
+        <Suspense fallback={null}>
+          <MobileNav />
+        </Suspense>
       </div>
     </nav>
   );

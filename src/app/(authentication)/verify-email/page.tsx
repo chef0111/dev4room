@@ -8,7 +8,6 @@ import { authClient } from "@/lib/auth-client";
 import handleError from "@/lib/handlers/error";
 import { toast } from "sonner";
 
-import routes from "@/common/constants/routes";
 import OTPForm from "@/components/layout/auth/OTPForm";
 import { Button } from "@/components/ui/button";
 
@@ -22,7 +21,7 @@ const VerifyEmail = () => {
   const [isResending, setIsResending] = useState(false);
 
   if (!email || !type) {
-    redirect(routes.login);
+    redirect("/login");
   }
 
   const handleVerifyEmail = async ({
@@ -37,12 +36,10 @@ const VerifyEmail = () => {
 
       const success = !!data;
       if (success && type === "email-verification") {
-        router.push(routes.login);
+        router.push("/login");
       } else if (success && type === "forget-password") {
         router.push(
-          `${routes.resetPassword}?email=${encodeURIComponent(
-            email,
-          )}&id=${encodeURIComponent(otp)}`,
+          `/reset-password?email=${encodeURIComponent(email)}&id=${encodeURIComponent(otp)}`,
         );
       }
 

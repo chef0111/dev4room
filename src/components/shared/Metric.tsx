@@ -1,9 +1,10 @@
 import { cn } from "@/lib/utils";
+import { Route } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
 interface MetricsProps {
-  href?: string;
+  href?: Route;
   imgUrl: string;
   alt: string;
   value: number | string;

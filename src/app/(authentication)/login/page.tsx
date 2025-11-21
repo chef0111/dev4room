@@ -11,7 +11,6 @@ import { toast } from "sonner";
 import handleError from "@/lib/handlers/error";
 import AuthForm from "@/components/layout/auth/AuthForm";
 import SocialAuthForm from "@/components/layout/auth/SocialAuthForm";
-import routes from "@/common/constants/routes";
 import VerifyDialog from "@/components/layout/auth/VerifyDialog";
 import { Button } from "@/components/ui/button";
 
@@ -73,7 +72,7 @@ const Login = () => {
         });
         setShowVerificationDialog(false);
         router.push(
-          `${routes.verifyEmail}?type=email-verification&email=${unverifiedEmail}`,
+          `/verify-email?type=email-verification&email=${encodeURIComponent(unverifiedEmail)}`,
         );
       } else {
         toast.error("Error", {
@@ -125,7 +124,7 @@ const Login = () => {
                 className="p-0 size-fit text-[16px] text-link-100"
                 asChild
               >
-                <Link href={routes.register}>Register</Link>
+                <Link href="/register">Register</Link>
               </Button>
             </p>
           </div>

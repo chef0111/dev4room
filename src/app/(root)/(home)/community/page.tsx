@@ -1,4 +1,3 @@
-import routes from "@/common/constants/routes";
 import { fetchUsers } from "@/server/user/user.action";
 import { EMPTY_USERS } from "@/common/constants/states";
 import LocalSearch from "@/components/layout/main/LocalSearch";
@@ -23,7 +22,7 @@ const Community = async ({ searchParams }: RouteParams) => {
 
       <section className="mt-10">
         <LocalSearch
-          route={routes.community}
+          route="/community"
           placeholder="Search some great developers..."
           className="flex-1"
         />

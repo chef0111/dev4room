@@ -1,4 +1,3 @@
-import routes from "@/common/constants/routes";
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -31,7 +30,7 @@ const RightSidebar = () => {
           {topQuestions.map(({ id, title }, index) => (
             <Link
               key={index}
-              href={routes.question(id)}
+              href={`/questions/${id}`}
               className="flex-between cursor-pointer gap-4 group"
             >
               <Image

@@ -6,7 +6,6 @@ import { authClient } from "@/lib/auth-client";
 import handleError from "@/lib/handlers/error";
 
 import AuthForm from "@/components/layout/auth/AuthForm";
-import routes from "@/common/constants/routes";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -47,7 +46,7 @@ const ResetPassword = () => {
         </p>
 
         <Link
-          href={routes.forgotPassword}
+          href="/forgot-password"
           className="pg-semibold text-link-100 hover:underline"
         >
           Make a new Request

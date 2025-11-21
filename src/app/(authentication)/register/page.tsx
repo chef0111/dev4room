@@ -4,12 +4,11 @@ import { useState } from "react";
 import z from "zod";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
+import Link from "next/link";
 
 import { RegisterSchema } from "@/lib/validations";
 import AuthForm from "@/components/layout/auth/AuthForm";
 import SocialAuthForm from "@/components/layout/auth/SocialAuthForm";
-import Link from "next/link";
-import routes from "@/common/constants/routes";
 import handleError from "@/lib/handlers/error";
 import { Button } from "@/components/ui/button";
 
@@ -40,7 +39,7 @@ const Register = () => {
 
       if (data?.user) {
         router.push(
-          `${routes.verifyEmail}?type=email-verification&email=${encodeURIComponent(
+          `/verify-email?type=email-verification&email=${encodeURIComponent(
             email,
           )}`,
         );
@@ -97,7 +96,7 @@ const Register = () => {
               className="p-0 size-fit text-[16px] text-link-100"
               asChild
             >
-              <Link href={routes.login}>Login</Link>
+              <Link href="/login">Login</Link>
             </Button>
           </p>
         </div>

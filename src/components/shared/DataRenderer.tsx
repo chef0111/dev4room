@@ -8,6 +8,7 @@ import {
   EMPTY_IMAGE,
   ERROR_IMAGE,
 } from "@/common/constants/states";
+import { Route } from "next";
 
 interface DataRendererProps<T> {
   success: boolean;
@@ -69,7 +70,7 @@ export const SkateSkeleton = memo(
       )}
 
       {button && (
-        <Link href={button.href}>
+        <Link href={button.href as Route}>
           <Button
             className="pg-medium mt-5 min-h-10 round-lg bg-primary-500 text-light-900 hover:bg-link-100 cursor-pointer"
             onClick={onClick}

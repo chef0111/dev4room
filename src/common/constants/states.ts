@@ -1,12 +1,10 @@
-import routes from "./routes";
-
 export const DEFAULT_EMPTY = {
   title: "No Data Found",
   message:
     "Looks like the database is taking a nap. Wake it up with some new entries.",
   button: {
     label: "Add Data",
-    href: routes.home,
+    href: "/",
   },
 };
 
@@ -15,7 +13,7 @@ export const DEFAULT_ERROR = {
   message: "Even our code can have a bad day. Give it another shot.",
   button: {
     label: "Retry Request",
-    href: routes.home,
+    href: "/",
   },
 };
 
@@ -25,7 +23,7 @@ export const EMPTY_QUESTION = {
     "The question board is empty. Maybe it's waiting for your brilliant question to get things rolling 🚀",
   button: {
     label: "Ask Question",
-    href: routes.askQuestion,
+    href: "/ask-question",
   },
 };
 
@@ -34,7 +32,7 @@ export const EMPTY_TAGS = {
   message: "The tag cloud is empty. Add some keywords to make it rain 🏷️",
   button: {
     label: "Create Tag",
-    href: routes.tags,
+    href: "/tags",
   },
 };
 
@@ -50,7 +48,7 @@ export const EMPTY_COLLECTIONS = {
     "Looks like you haven’t created any collections yet. Start curating something extraordinary today",
   button: {
     label: "Save to Collection",
-    href: routes.collection,
+    href: "/collection",
   },
 };
 

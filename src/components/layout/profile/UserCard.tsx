@@ -1,4 +1,3 @@
-import routes from "@/common/constants/routes";
 import UserAvatar from "@/components/layout/profile/UserAvatar";
 import DevCard from "@/components/ui/dev-card";
 import Link from "next/link";
@@ -21,7 +20,7 @@ const UserCard = ({ id, name, username, image }: UserCardProps) => {
         fallbackClassName="text-center text-4xl tracking-widest"
       />
 
-      <Link href={routes.profile(id)}>
+      <Link href={`/profile/${id}`}>
         <div className="mt-4 text-center">
           <h3 className="h3-bold text-dark200_light900 line-clamp-1">{name}</h3>
           <p className="body-regular text-dark500_light500 mt-2">@{username}</p>
