@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { SheetClose } from "@/components/ui/sheet";
 import { sidebarTabs } from "@/common/constants";
 import routes from "@/common/constants/routes";
+import { UrlObject } from "url";
 
 interface NavTabsProps {
   userId?: string;
@@ -22,7 +23,7 @@ const NavTabs = ({ userId, isMobile = false }: NavTabsProps) => {
     <div className="flex flex-col gap-2 flex-1">
       {sidebarTabs.map((item) => {
         // Don't show profile tab if user is not logged in
-        if (item.route === "/profile" && !userId) {
+        if (item.route === routes.profiles && !userId) {
           return null;
         }
 
@@ -31,9 +32,13 @@ const NavTabs = ({ userId, isMobile = false }: NavTabsProps) => {
             ? routes.profile(userId)
             : item.route;
 
+        const appRoutePath =
+          typeof appRoute === "string" ? appRoute : (appRoute.pathname ?? "");
+
         const isActive =
-          (pathname.includes(appRoute) && appRoute.length > 1) ||
-          pathname === appRoute;
+          appRoutePath &&
+          ((pathname.includes(appRoutePath) && appRoutePath.length > 1) ||
+            pathname === appRoutePath);
 
         const LinkComponent = (
           <Link
@@ -67,12 +72,17 @@ const NavTabs = ({ userId, isMobile = false }: NavTabsProps) => {
           </Link>
         );
 
+        const routeKey =
+          typeof item.route === "string"
+            ? item.route
+            : (item.route.pathname ?? item.label);
+
         return isMobile ? (
-          <SheetClose asChild key={item.route}>
+          <SheetClose asChild key={routeKey}>
             {LinkComponent}
           </SheetClose>
         ) : (
-          <React.Fragment key={item.route}>{LinkComponent}</React.Fragment>
+          <React.Fragment key={routeKey}>{LinkComponent}</React.Fragment>
         );
       })}
     </div>

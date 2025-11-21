@@ -1,32 +1,34 @@
+import routes from "./routes";
+
 export const sidebarTabs = [
   {
     imgUrl: "/icons/home.svg",
-    route: "/",
+    route: routes.home,
     label: "Home",
   },
   {
     imgUrl: "/icons/users.svg",
-    route: "/community",
+    route: routes.community,
     label: "Community",
   },
   {
     imgUrl: "/icons/star.svg",
-    route: "/collection",
+    route: routes.collection,
     label: "Collections",
   },
   {
     imgUrl: "/icons/tag.svg",
-    route: "/tags",
+    route: routes.tags,
     label: "Tags",
   },
   {
     imgUrl: "/icons/question.svg",
-    route: "/ask-question",
+    route: routes.askQuestion,
     label: "Ask a question",
   },
   {
     imgUrl: "/icons/user.svg",
-    route: "/profile",
+    route: routes.profiles,
     label: "Profile",
   },
 ];
