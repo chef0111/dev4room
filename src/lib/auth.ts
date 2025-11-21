@@ -13,7 +13,8 @@ import {
   checkUserCredentials,
   verifyUserEmail,
   generateUniqueUsername,
-} from "@/server/auth.action";
+  checkExistingUsername,
+} from "@/server/auth/auth.action";
 import { eq } from "drizzle-orm";
 
 export const auth = betterAuth({
@@ -26,14 +27,12 @@ export const auth = betterAuth({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
       mapProfileToUser: async (profile) => {
-        // Generate username from email or name if not provided
-        const baseUsername = profile.name || profile.email.split("@")[0];
-        const username = await generateUniqueUsername(baseUsername);
+        const username = await generateUniqueUsername("user");
 
         return {
           image: profile.picture,
           username,
-          display_username: username,
+          displayUsername: username,
         };
       },
     },
@@ -41,15 +40,17 @@ export const auth = betterAuth({
       clientId: process.env.GITHUB_CLIENT_ID as string,
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
       mapProfileToUser: async (profile) => {
-        // GitHub provides a login field which is their username
-        const baseUsername =
-          profile.login || profile.name || profile.email.split("@")[0];
-        const username = await generateUniqueUsername(baseUsername);
+        const existingUsername = await checkExistingUsername(profile.login);
+        let username = profile.login;
+
+        if (existingUsername) {
+          username = await generateUniqueUsername("user");
+        }
 
         return {
           image: profile.avatar_url,
           username,
-          display_username: username,
+          displayUsername: username,
         };
       },
     },
@@ -150,7 +151,7 @@ export const auth = betterAuth({
         ) {
           // Generate a unique username based on the user's name
           const uniqueUsername = await generateUniqueUsername(
-            user.name || user.email.split("@")[0]
+            user.name || user.email.split("@")[0],
           );
 
           // Update the user with the generated username
@@ -195,7 +196,7 @@ export const auth = betterAuth({
           process.env.RESEND_FROM_EMAIL &&
           process.env.RESEND_FROM_EMAIL.trim().length > 0
             ? `Dev4Room Admin <${process.env.RESEND_FROM_EMAIL.trim()}>`
-            : "Dev4Room Admin <admin@dev4room.pro>";
+            : "Dev4Room Admin <onboarding@resend.dev>";
 
         await resend.emails.send({
           from: sender,

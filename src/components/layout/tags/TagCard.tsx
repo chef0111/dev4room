@@ -6,7 +6,7 @@ import { getTechDescription, getTechIcon } from "@/lib/utils";
 import Image from "next/image";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import DevCard from "@/components/shared/DevCard";
+import DevCard from "@/components/ui/dev-card";
 
 interface TagCardProps {
   id: string;

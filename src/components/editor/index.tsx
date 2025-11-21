@@ -63,7 +63,7 @@ const Editor = ({
         markdown={markdown}
         ref={editorRef}
         onChange={fieldChange}
-        className="grid no-scrollbar bg-light800_dark200! light-border-2 markdown-editor dark-editor w-full border rounded-md focus-within:ring-[0.2rem] focus-within:border-primary-500 focus-within:ring-primary-500/50"
+        className="grid no-scrollbar bg-light800_dark200! light-border-2 markdown-editor dark-editor w-full border rounded-md"
         plugins={[
           headingsPlugin(),
           listsPlugin(),
