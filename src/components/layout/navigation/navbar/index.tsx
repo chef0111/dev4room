@@ -1,16 +1,12 @@
-import React from "react";
+import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import ThemeToggle from "./ThemeToggle";
-import { getServerSession } from "@/lib/session";
-import UserAvatar from "../../profile/UserAvatar";
 import MobileNav from "./MobileNav";
 import GlobalSearch from "../../main/GlobalSearch";
+import CachedUserSection, { UserSectionSkeleton } from "./CachedUserSection";
 
-const Navbar = async () => {
-  const session = await getServerSession();
-  const user = session?.user;
-
+const Navbar = () => {
   return (
     <nav className="flex-between bg-light900_dark200 fixed z-50 w-full p-6 dark:shadow-none sm:px-12">
       <Link href="/" className="flex-center gap-2">
@@ -34,14 +30,10 @@ const Navbar = async () => {
       <div className="flex-between gap-5">
         <ThemeToggle />
 
-        {user?.id && (
-          <UserAvatar
-            id={user.id}
-            name={user.name!}
-            image={user.image ?? ""}
-            className="w-9 h-9 rounded-full"
-          />
-        )}
+        {/* Only this section uses cached session data */}
+        <Suspense fallback={<UserSectionSkeleton />}>
+          <CachedUserSection />
+        </Suspense>
 
         <MobileNav />
       </div>

@@ -12,11 +12,9 @@ const DashboardLayout: React.FC<Props> = ({ children }) => {
   return (
     <main className="bg-light850_dark100 relative">
       <NextTopLoader showSpinner={false} />
-      
-      {/* Navbar wrapped in Suspense for dynamic session data */}
-      <Suspense fallback={<NavbarSkeleton />}>
-        <Navbar />
-      </Suspense>
+
+      {/* Navbar is static, only user section inside uses cached data */}
+      <Navbar />
 
       <div className="block">
         {/* LeftSidebar wrapped in Suspense for dynamic session data */}
@@ -26,31 +24,13 @@ const DashboardLayout: React.FC<Props> = ({ children }) => {
 
         <section className="flex min-h-screen flex-1 flex-col min-w-full px-6 pb-6 pt-32 max-md:pb-14 sm:px-14 sm:pl-34 lg:pl-78 2xl:px-0">
           <div className="mx-auto w-full">
-            <Suspense fallback={<PageContentSkeleton />}>
-              {children}
-            </Suspense>
+            <Suspense fallback={<PageContentSkeleton />}>{children}</Suspense>
           </div>
         </section>
       </div>
     </main>
   );
 };
-
-function NavbarSkeleton() {
-  return (
-    <nav className="flex-between bg-light900_dark200 fixed z-50 w-full p-6 dark:shadow-none sm:px-12">
-      <div className="flex-center gap-2">
-        <Skeleton className="size-6 rounded-full" />
-        <Skeleton className="h-6 w-24 max-sm:hidden" />
-      </div>
-      <Skeleton className="flex-1 h-10 mx-4" />
-      <div className="flex-between gap-5">
-        <Skeleton className="size-9 rounded-full" />
-        <Skeleton className="size-9 rounded-full" />
-      </div>
-    </nav>
-  );
-}
 
 function LeftSidebarSkeleton() {
   return (

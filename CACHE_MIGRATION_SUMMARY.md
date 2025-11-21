@@ -22,20 +22,29 @@ Successfully migrated Next.js app to **Cache Components** mode with caching for 
   - Uses `"use cache"` with "hours" profile
   - Cache key includes user id, name, and image
 
-### 3. Suspense Boundaries Added (`src/app/(root)/layout.tsx`)
-- Wrapped **Navbar** in Suspense with `NavbarSkeleton`
+### 3. Optimized Navbar Caching (`src/components/layout/navigation/navbar/`)
+- Created `CachedUserSection` component for only the user avatar portion
+- **Navbar remains static** - no Suspense wrapper needed
+- Only the user avatar section (lines 36-43) uses cached session data
+- Added internal Suspense boundary with `UserSectionSkeleton`
+
+### 4. Suspense Boundaries Added (`src/app/(root)/layout.tsx`)
 - Wrapped **LeftSidebar** in Suspense with `LeftSidebarSkeleton`
 - Wrapped **{children}** in Suspense with `PageContentSkeleton`
+- **Removed** Navbar wrapper - it's now truly static with granular caching
 - Enables proper handling of runtime data (headers, searchParams)
 
 ## Architecture
 
 ```
 Layout (Server Component)
-├── <Suspense> → Navbar (async, getServerSession)
+├── Navbar (sync, static)
+│   └── <Suspense> → CachedUserSection (cached session data)
 ├── <Suspense> → LeftSidebar (async, getServerSession)
 └── <Suspense> → {children} (pages with searchParams)
 ```
+
+**Key Improvement**: Only the user avatar section in Navbar is cached, keeping the rest of Navbar truly static for optimal performance.
 
 ## Benefits
 
@@ -93,8 +102,10 @@ export async function logout() {
 ## Files Modified
 
 - `src/lib/session.ts` - Added cached session handler
-- `src/app/(root)/layout.tsx` - Added Suspense boundaries
-- `src/components/layout/profile/CachedUserNav.tsx` - New cached wrapper
+- `src/app/(root)/layout.tsx` - Added Suspense boundaries (removed Navbar wrapper)
+- `src/components/layout/navigation/navbar/index.tsx` - Made static with internal caching
+- `src/components/layout/navigation/navbar/CachedUserSection.tsx` - New (caches only user avatar)
+- `src/components/layout/profile/CachedUserNav.tsx` - New cached wrapper for LeftSidebar
 - `src/components/layout/profile/CachedUserAvatar.tsx` - New cached component
 
 ## Cache Configuration
