@@ -16,6 +16,9 @@ export async function getUsers(
   // Build where conditions
   const conditions: (SQL<unknown> | undefined)[] = [];
 
+  // Only fetch verified users
+  conditions.push(sql`${user.emailVerified} = true`);
+
   if (query) {
     conditions.push(
       or(ilike(user.name, `%${query}%`), ilike(user.username, `%${query}%`)),

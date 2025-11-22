@@ -31,7 +31,8 @@ export async function proxy(request: NextRequest) {
   // Redirect logged-in users away from auth pages
   if (isAuthRoute && sessionCookie) {
     const from = request.nextUrl.searchParams.get("from");
-    const redirectUrl = from && from.startsWith("/") ? from : "/";
+    const redirectUrl =
+      from && from.startsWith("/") && !from.startsWith("//") ? from : "/";
     return NextResponse.redirect(new URL(redirectUrl, request.url));
   }
 
