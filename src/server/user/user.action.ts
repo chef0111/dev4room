@@ -1,4 +1,4 @@
-// "use server";
+"use server";
 
 import action from "@/lib/handlers/action";
 import handleError from "@/lib/handlers/error";
