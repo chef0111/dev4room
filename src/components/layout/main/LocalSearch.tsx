@@ -1,5 +1,6 @@
 "use client";
 
+import { Route } from "next";
 import { cn } from "@/lib/utils";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
@@ -37,7 +38,7 @@ const LocalSearch = ({ route, placeholder, className }: LocalSearchProps) => {
         value: searchQuery,
       });
 
-      router.push(newUrl, { scroll: false });
+      router.push(newUrl as Route, { scroll: false });
     } else {
       if (pathname === route) {
         const newUrl = removeKeysFromUrlQuery({
@@ -45,7 +46,7 @@ const LocalSearch = ({ route, placeholder, className }: LocalSearchProps) => {
           keysToRemove: ["query"],
         });
 
-        router.push(newUrl, { scroll: false });
+        router.push(newUrl as Route, { scroll: false });
       }
     }
   };

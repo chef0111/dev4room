@@ -1,4 +1,3 @@
-import routes from "@/common/constants/routes";
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -23,7 +22,7 @@ const popularTags = [
 
 const RightSidebar = () => {
   return (
-    <section className="no-scrollbar bg-light900_dark200 sticky light-border right-0 top-0 h-screen w-75 flex flex-col justify-start border-l p-5 pt-32 shadow-light-300 dark:shadow-none overflow-y-auto max-xl:hidden">
+    <section className="no-scrollbar bg-light900_dark200 fixed light-border right-0 top-0 h-screen w-75 flex flex-col justify-start border-l p-5 pt-32 shadow-light-300 dark:shadow-none overflow-y-auto max-xl:hidden">
       <div>
         <h3 className="h3-bold text-dark200_light900">Top Questions</h3>
 
@@ -31,7 +30,7 @@ const RightSidebar = () => {
           {topQuestions.map(({ id, title }, index) => (
             <Link
               key={index}
-              href={routes.question(id)}
+              href={`/questions/${id}`}
               className="flex-between cursor-pointer gap-4 group"
             >
               <Image

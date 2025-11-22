@@ -1,12 +1,12 @@
 import { useMemo } from "react";
 import Link from "next/link";
 
-import routes from "@/common/constants/routes";
 import { getTimeStamp } from "@/lib/utils";
 import TagCard from "../tags/TagCard";
 import Metric from "@/components/shared/Metric";
 import { Card } from "@/components/ui/card";
 import EditDelete from "@/components/shared/EditDelete";
+import { Route } from "next";
 
 interface QuestionCardProps {
   question: Question;
@@ -33,7 +33,7 @@ const QuestionCard = ({
             {getTimeStamp(createdAt)}
           </span>
 
-          <Link href={routes.question(id)}>
+          <Link href={`/questions/${id}`}>
             <h3 className="sm:h3-semibold base-semibold text-dark200_light900 line-clamp-1 flex-1">
               {title}
             </h3>
@@ -47,7 +47,7 @@ const QuestionCard = ({
 
       <div className="flex-between flex-wrap mt-6 w-full gap-3">
         <Metric
-          href={routes.profile(author.id)}
+          href={`/profile/${author.id}` as Route}
           imgUrl={author.image}
           alt={author.name}
           value={author.name}

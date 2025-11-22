@@ -8,7 +8,6 @@ import handleError from "@/lib/handlers/error";
 
 import AuthForm from "@/components/layout/auth/AuthForm";
 import Link from "next/link";
-import routes from "@/common/constants/routes";
 
 type ForgotPasswordValues = z.infer<typeof ForgotPasswordSchema>;
 
@@ -32,7 +31,7 @@ const ForgotPassword = () => {
 
       if (data) {
         router.push(
-          `${routes.verifyEmail}?type=forget-password&email=${encodeURIComponent(
+          `/verify-email?type=forget-password&email=${encodeURIComponent(
             email,
           )}`,
         );
@@ -71,7 +70,7 @@ const ForgotPassword = () => {
       />
 
       <Link
-        href={routes.login}
+        href="/login"
         className="text-center pg-semibold text-link-100 hover:underline transition-all cursor-pointer"
       >
         Back to Login

@@ -1,6 +1,7 @@
 "use client";
 
-import routes from "@/common/constants/routes";
+import { Route } from "next";
+import { useRouter } from "next/navigation";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,7 +15,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Edit, Trash } from "lucide-react";
-import { useRouter } from "next/navigation";
 
 interface EditDeleteProps {
   type: "question" | "answer";
@@ -25,7 +25,7 @@ const EditDelete = ({ type, itemId }: EditDeleteProps) => {
   const router = useRouter();
 
   const handleEdit = () => {
-    router.push(routes.questionEdit(itemId));
+    router.push(`/questions/${itemId}/edit` as Route);
   };
 
   const handleDelete = async () => {

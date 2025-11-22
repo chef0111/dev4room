@@ -200,7 +200,7 @@
 }
 
 @utility light-border-2 {
-  @apply border-light-700 dark:border-dark-400;
+  @apply border-light-600 dark:border-dark-400;
 }
 
 @utility h1-bold {
@@ -312,11 +312,11 @@
 }
 
 @utility bg-auth-light {
-  background-image: url("../../public/images/auth-light.png");
+  background-image: url("/images/auth-light.svg");
 }
 
 @utility bg-auth-dark {
-  background-image: url("../../public/images/auth-dark.png");
+  background-image: url("/images/auth-dark.svg");
 }
 
 @utility primary-gradient {
@@ -325,6 +325,14 @@
 
 @utility primary-gradient-hover {
   background: linear-gradient(129deg, #007bff 0%, #34a9f6 100%);
+}
+
+@utility dark-card-gradient {
+  background: linear-gradient(
+    135deg,
+    var(--color-dark-300) 0%,
+    var(--color-dark-200) 75%
+  );
 }
 
 @utility dark-gradient {
@@ -365,8 +373,42 @@
   -webkit-text-fill-color: transparent;
 }
 
+@property --gradient-angle {
+  syntax: "<angle>";
+  initial-value: 135deg;
+  inherits: false;
+}
+
+.border-gradient {
+  --gradient-angle: 135deg;
+  background: conic-gradient(
+    from var(--gradient-angle) at 50% 50%,
+    #e3e9f1,
+    #f1f2f3,
+    #dee5f6,
+    #f1f2f3,
+    #e3e9f1
+  );
+  transition: --gradient-angle 0.3s ease-out;
+}
+
+.dark .border-gradient {
+  background: conic-gradient(
+    from var(--gradient-angle) at 50% 50%,
+    #2e3645,
+    #191c26,
+    #3a4660,
+    #191c26,
+    #2e3645
+  );
+}
+
+.border-gradient:hover {
+  --gradient-angle: 225deg;
+}
+
 @utility base-input {
-  @apply pg-regular bg-light700_dark300 text-dark300_light700 min-h-12 border light-border-2! no-focus;
+  @apply pg-regular bg-light700_dark300 no-focus! text-dark300_light700 min-h-12 border light-border-2!;
 }
 
 @utility md-editor-fallback {
@@ -393,6 +435,10 @@
   @apply bg-light-900 dark:dark-gradient shadow-light-100! dark:shadow-dark-100;
 }
 
+@utility dev-card {
+  @apply shadow-light100_darknone! bg-light-900! dark:dark-card-gradient! border-none! rounded-2xl! p-4!;
+}
+
 @utility btn {
   @apply bg-light-800! dark:bg-dark-300!;
 }
@@ -414,7 +460,7 @@
 }
 
 @utility markdown-editor {
-  @apply prose !max-w-full prose-p:m-0 dark:prose-headings:text-white prose-headings:text-dark-400 prose-p:text-dark-500 dark:prose-p:text-light-700 prose-ul:text-dark-500 dark:prose-ul:text-light-700 prose-ol:text-dark-500 dark:prose-ol:text-light-700 dark:prose-strong:text-white prose-blockquote:text-dark-500 dark:prose-blockquote:text-light-700;
+  @apply prose !max-w-full prose-p:m-1 prose-headings:mx-1 prose-ul:mx-1 prose-ol:mx-1 dark:prose-headings:text-white prose-headings:text-dark-400 prose-p:text-dark-500 dark:prose-p:text-light-700 prose-ul:text-dark-500 dark:prose-ul:text-light-700 prose-ol:text-dark-500 dark:prose-ol:text-light-700 dark:prose-strong:text-white prose-blockquote:text-dark-500 dark:prose-blockquote:text-light-700 rounded-md group-aria-invalid:border-destructive! group-aria-invalid:focus-within:ring-destructive/20! group-aria-invalid:dark:focus-within:ring-destructive/40!;
 }
 
 @utility tab {
@@ -500,10 +546,18 @@ body:has([data-scroll-locked]) {
 
 .mdxeditor-toolbar {
   background: #ffffff !important;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
 }
 
 .dark .mdxeditor-toolbar {
   background: #151821 !important;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
 }
 
 .dark .mdxeditor-toolbar button svg {
@@ -577,13 +631,13 @@ code {
 .dark .dark-editor {
   --accentBase: var(--tomato-1);
   --accentBgSubtle: var(--tomato-2);
-  --accentBg: var(--tomato-3);
+  --accentBg: var(--primary);
   --accentBgHover: var(--tomato-4);
-  --accentBgActive: var(--tomato-5);
+  --accentBgActive: var(--color-primary-700);
   --accentLine: var(--tomato-6);
-  --accentBorder: var(--tomato-7);
+  --accentBorder: var(--color-primary-600);
   --accentBorderHover: var(--tomato-8);
-  --accentSolid: var(--tomato-9);
+  --accentSolid: var(--primary);
   --accentSolidHover: var(--tomato-10);
   --accentText: var(--tomato-11);
   --accentTextContrast: var(--tomato-12);

@@ -12,6 +12,7 @@ interface MarkdownProps {
   editorRef: ForwardedRef<MDXEditorMethods> | null;
   value: string;
   onChange: (value: string) => void;
+  isInvalid?: boolean;
 }
 
 const DynamicEditor = dynamic(() => import("./index"), {
@@ -20,7 +21,7 @@ const DynamicEditor = dynamic(() => import("./index"), {
 });
 
 const MarkdownEditor = memo(
-  ({ id, editorRef, value, onChange }: MarkdownProps) => {
+  ({ id, editorRef, value, onChange, isInvalid = false }: MarkdownProps) => {
     const fieldChange = useDebounce(
       useCallback(
         (value: string) => {
@@ -37,6 +38,7 @@ const MarkdownEditor = memo(
         editorRef={editorRef}
         markdown={value}
         fieldChange={fieldChange}
+        isInvalid={isInvalid}
       />
     );
   },

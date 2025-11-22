@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -6,13 +7,14 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import routes from "@/common/constants/routes";
 import { Menu } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { UserNav } from "../../profile/UserNav";
 import { getServerSession } from "@/lib/session";
 import NavTabs from "./NavTabs";
+import { Skeleton } from "@/components/ui/skeleton";
+import NavTabsFallback from "./NavTabsFallback";
 
 const MobileNav = async () => {
   const session = await getServerSession();
@@ -40,19 +42,25 @@ const MobileNav = async () => {
         <div className="no-scrollbar flex flex-col justify-between h-[calc(100vh-90px)] overflow-y-auto">
           <SheetClose asChild>
             <section className="h-full pt-10">
-              <NavTabs userId={user?.id} isMobile={true} />
+              <Suspense fallback={<NavTabsFallback isMobile={true} />}>
+                <NavTabs userId={user?.id} isMobile={true} />
+              </Suspense>
             </section>
           </SheetClose>
 
           <div className="flex flex-col gap-3">
             {user ? (
               <SheetClose className="w-full">
-                <UserNav user={user} isAdmin={isAdmin} />
+                <Suspense
+                  fallback={<Skeleton className="h-10 w-full rounded-lg" />}
+                >
+                  <UserNav user={user} isAdmin={isAdmin} />
+                </Suspense>
               </SheetClose>
             ) : (
               <>
                 <SheetClose asChild>
-                  <Link href={routes.login}>
+                  <Link href="/login">
                     <Button className="btn-secondary no-focus min-h-10 w-full rounded-lg px-4 py-3 hover:bg-light700_dark300! transition-all duration-200 cursor-pointer">
                       <span className="primary-text-gradient small-medium ">
                         Log in
@@ -62,7 +70,7 @@ const MobileNav = async () => {
                 </SheetClose>
 
                 <SheetClose asChild>
-                  <Link href={routes.register}>
+                  <Link href="/register">
                     <Button className="btn-tertiary no-focus light-border-2 min-h-10 w-full rounded-lg border px-4 py-3 hover:bg-light600_dark400! transition-all duration-200 cursor-pointer shadow-none">
                       <span className="text-dark400_light900 small-medium">
                         Register

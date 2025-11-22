@@ -4,13 +4,13 @@ import { useState } from "react";
 import z from "zod";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
+import Link from "next/link";
 
 import { RegisterSchema } from "@/lib/validations";
 import AuthForm from "@/components/layout/auth/AuthForm";
 import SocialAuthForm from "@/components/layout/auth/SocialAuthForm";
-import Link from "next/link";
-import routes from "@/common/constants/routes";
 import handleError from "@/lib/handlers/error";
+import { Button } from "@/components/ui/button";
 
 type RegisterValues = z.infer<typeof RegisterSchema>;
 
@@ -39,7 +39,7 @@ const Register = () => {
 
       if (data?.user) {
         router.push(
-          `${routes.verifyEmail}?type=email-verification&email=${encodeURIComponent(
+          `/verify-email?type=email-verification&email=${encodeURIComponent(
             email,
           )}`,
         );
@@ -88,15 +88,16 @@ const Register = () => {
       <div className="flex flex-col">
         <SocialAuthForm disabled={isLoading} />
 
-        <div className="flex-center mt-4">
+        <div className="flex-center mt-4 pg-semibold">
           <p>
             Already have an account?{" "}
-            <Link
-              href={routes.login}
-              className="pg-semibold text-link-100 hover:underline transition-all cursor-pointer"
+            <Button
+              variant="link"
+              className="p-0 size-fit text-[16px] text-link-100"
+              asChild
             >
-              Log in
-            </Link>
+              <Link href="/login">Login</Link>
+            </Button>
           </p>
         </div>
       </div>

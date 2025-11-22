@@ -8,6 +8,14 @@ import { nextCookies } from "better-auth/next-js";
 import { PasswordSchema } from "./validations";
 import { resend } from "./resend";
 import SendOTPEmail from "@/components/layout/email/SendOTPEmail";
+import {
+  checkUserExists,
+  checkUserCredentials,
+  verifyUserEmail,
+  generateUniqueUsername,
+  checkExistingUsername,
+} from "@/server/auth/auth.action";
+import { eq } from "drizzle-orm";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -18,10 +26,33 @@ export const auth = betterAuth({
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      mapProfileToUser: async (profile) => {
+        const username = await generateUniqueUsername("user");
+
+        return {
+          image: profile.picture,
+          username,
+          displayUsername: username,
+        };
+      },
     },
     github: {
       clientId: process.env.GITHUB_CLIENT_ID as string,
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+      mapProfileToUser: async (profile) => {
+        const existingUsername = await checkExistingUsername(profile.login);
+        let username = profile.login;
+
+        if (existingUsername) {
+          username = await generateUniqueUsername("user");
+        }
+
+        return {
+          image: profile.avatar_url,
+          username,
+          displayUsername: username,
+        };
+      },
     },
   },
   emailAndPassword: {
@@ -76,11 +107,7 @@ export const auth = betterAuth({
         ctx.body.type === "forget-password"
       ) {
         const email = ctx.body.email;
-
-        // Check if user exists
-        const existingUser = await db.query.user.findFirst({
-          where: (users, { eq }) => eq(users.email, email),
-        });
+        const existingUser = await checkUserExists(email);
 
         if (!existingUser) {
           throw new APIError("BAD_REQUEST", {
@@ -88,15 +115,7 @@ export const auth = betterAuth({
           });
         }
 
-        // Check if user has password (credentials provider)
-        const userAccount = await db.query.account.findFirst({
-          where: (accounts, { and, eq }) =>
-            and(
-              eq(accounts.userId, existingUser.id),
-              eq(accounts.providerId, "credential"),
-            ),
-        });
-
+        const userAccount = await checkUserCredentials(existingUser.id);
         if (!userAccount) {
           throw new APIError("BAD_REQUEST", {
             message:
@@ -111,12 +130,34 @@ export const auth = betterAuth({
         ctx.body.type === "email-verification"
       ) {
         const email = ctx.body.email;
+        await verifyUserEmail(email);
+      }
 
-        const { eq } = await import("drizzle-orm");
-        await db
-          .update(schema.user)
-          .set({ emailVerified: true })
-          .where(eq(schema.user.email, email));
+      // Handle username generation for social login users
+      if (
+        (ctx.path === "/callback/google" || ctx.path === "/callback/github") &&
+        ctx.context?.user
+      ) {
+        const user = ctx.context.user;
+
+        // Check if user already has a username
+        const existingUser = await db.query.user.findFirst({
+          where: eq(schema.user.id, user.id),
+        });
+
+        if (
+          existingUser &&
+          (!existingUser.username || existingUser.username.trim() === "")
+        ) {
+          // Generate a unique username based on the user's name
+          const uniqueUsername = await generateUniqueUsername("user");
+
+          // Update the user with the generated username
+          await db
+            .update(schema.user)
+            .set({ username: uniqueUsername })
+            .where(eq(schema.user.id, user.id));
+        }
       }
     }),
   },
@@ -153,7 +194,7 @@ export const auth = betterAuth({
           process.env.RESEND_FROM_EMAIL &&
           process.env.RESEND_FROM_EMAIL.trim().length > 0
             ? `Dev4Room Admin <${process.env.RESEND_FROM_EMAIL.trim()}>`
-            : "Dev4Room Admin <admin@dev4room.pro>";
+            : "Dev4Room Admin <onboarding@resend.dev>";
 
         await resend.emails.send({
           from: sender,

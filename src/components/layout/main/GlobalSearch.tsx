@@ -16,7 +16,7 @@ const GlobalSearch = ({ route, placeholder, className }: GlobalSearchProps) => {
       global
       placeholder={placeholder}
       className={cn(
-        "bg-light800_darksecondgradient! min-h-10 max-w-120 gap-1",
+        "bg-light800_darksecondgradient! min-h-10 max-w-120 gap-1 max-md:hidden",
         className,
       )}
     />

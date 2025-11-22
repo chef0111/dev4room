@@ -1,4 +1,3 @@
-import routes from "@/common/constants/routes";
 import Link from "next/link";
 import { Avatar, AvatarImage, AvatarFallback } from "../../ui/avatar";
 import { cn } from "@/lib/utils";
@@ -26,7 +25,7 @@ const UserAvatar = ({
     .slice(0, 2);
 
   return (
-    <Link href={routes.profile(id)} className="cursor-pointer">
+    <Link href={`/profile/${id}`} className="cursor-pointer">
       <Avatar className={cn("relative", className)}>
         <AvatarImage src={image} alt={name} className="object-cover" />
         <AvatarFallback

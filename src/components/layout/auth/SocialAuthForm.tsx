@@ -2,7 +2,6 @@
 
 import { useTransition } from "react";
 import { authClient } from "@/lib/auth-client";
-import routes from "@/common/constants/routes";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
@@ -16,7 +15,7 @@ const SocialAuthForm = ({ disabled }: { disabled?: boolean }) => {
     startTransition(async () => {
       await authClient.signIn.social({
         provider,
-        callbackURL: routes.home,
+        callbackURL: "/",
         fetchOptions: {
           onSuccess: () => {
             toast.success(`Signed in with ${providerName}, redirecting...`);

@@ -8,7 +8,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { SheetClose } from "@/components/ui/sheet";
 import { sidebarTabs } from "@/common/constants";
-import routes from "@/common/constants/routes";
+import { Route } from "next";
 
 interface NavTabsProps {
   userId?: string;
@@ -27,8 +27,8 @@ const NavTabs = ({ userId, isMobile = false }: NavTabsProps) => {
         }
 
         const appRoute =
-          item.route === routes.profiles && userId
-            ? routes.profile(userId)
+          item.route === "/profile" && userId
+            ? `/profile/${userId}`
             : item.route;
 
         const isActive =
@@ -37,13 +37,13 @@ const NavTabs = ({ userId, isMobile = false }: NavTabsProps) => {
 
         const LinkComponent = (
           <Link
-            href={appRoute}
+            href={appRoute as Route}
             key={item.label}
             className={cn(
               isActive
                 ? "primary-gradient rounded-lg text-light-900"
                 : "text-dark300_light900 rounded-lg hover:bg-light800_dark300!",
-              "flex-start gap-4 bg-transparent p-4",
+              "flex-start max-lg:justify-center gap-4 bg-transparent p-3.5",
             )}
           >
             <Image
@@ -51,10 +51,7 @@ const NavTabs = ({ userId, isMobile = false }: NavTabsProps) => {
               alt={item.label}
               width={20}
               height={20}
-              className={cn(
-                { "invert-colors": !isActive },
-                "transition-all duration-200",
-              )}
+              className={cn({ "invert-colors": !isActive })}
             />
             <p
               className={cn(
