@@ -312,11 +312,11 @@
 }
 
 @utility bg-auth-light {
-  background-image: url("../../public/images/auth-light.svg");
+  background-image: url("/images/auth-light.svg");
 }
 
 @utility bg-auth-dark {
-  background-image: url("../../public/images/auth-dark.svg");
+  background-image: url("/images/auth-dark.svg");
 }
 
 @utility primary-gradient {

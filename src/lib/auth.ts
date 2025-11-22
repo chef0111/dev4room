@@ -150,9 +150,7 @@ export const auth = betterAuth({
           (!existingUser.username || existingUser.username.trim() === "")
         ) {
           // Generate a unique username based on the user's name
-          const uniqueUsername = await generateUniqueUsername(
-            user.name || user.email.split("@")[0],
-          );
+          const uniqueUsername = await generateUniqueUsername("user");
 
           // Update the user with the generated username
           await db

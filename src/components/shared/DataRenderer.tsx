@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { memo, useMemo } from "react";
 import { Button } from "../ui/button";
 import {
   DEFAULT_EMPTY,
@@ -43,47 +42,49 @@ interface SkeletonProps {
   onClick?: () => void;
 }
 
-export const SkateSkeleton = memo(
-  ({ image, title, message, button, onClick }: SkeletonProps) => (
-    <div className="flex-center flex-col mt-16 w-full">
-      <>
-        <Image
-          src={image.dark}
-          alt={image.alt}
-          width={270}
-          height={200}
-          className="hidden object-contain dark:block"
-        />
-        <Image
-          src={image.light}
-          alt={image.alt}
-          width={270}
-          height={200}
-          className="block object-contain dark:hidden"
-        />
-      </>
-      <h2 className="h2-bold text-dark200_light900 mt-8">{title}</h2>
-      {message && (
-        <p className="body-regular text-dar500_light700 my-3 max-w-md text-center">
-          {message}
-        </p>
-      )}
+export const SkateSkeleton = ({
+  image,
+  title,
+  message,
+  button,
+  onClick,
+}: SkeletonProps) => (
+  <div className="flex-center flex-col mt-16 w-full">
+    <>
+      <Image
+        src={image.dark}
+        alt={image.alt}
+        width={270}
+        height={200}
+        className="hidden object-contain dark:block"
+      />
+      <Image
+        src={image.light}
+        alt={image.alt}
+        width={270}
+        height={200}
+        className="block object-contain dark:hidden"
+      />
+    </>
+    <h2 className="h2-bold text-dark200_light900 mt-8">{title}</h2>
+    {message && (
+      <p className="body-regular text-dark500_light700 my-3 max-w-md text-center">
+        {message}
+      </p>
+    )}
 
-      {button && (
-        <Link href={button.href as Route}>
-          <Button
-            className="pg-medium mt-5 min-h-10 round-lg bg-primary-500 text-light-900 hover:bg-link-100 cursor-pointer"
-            onClick={onClick}
-          >
-            {button.label}
-          </Button>
-        </Link>
-      )}
-    </div>
-  ),
+    {button && (
+      <Link href={button.href as Route}>
+        <Button
+          className="pg-medium mt-5 min-h-10 round-lg bg-primary-500 text-light-900 hover:bg-link-100 cursor-pointer"
+          onClick={onClick}
+        >
+          {button.label}
+        </Button>
+      </Link>
+    )}
+  </div>
 );
-
-SkateSkeleton.displayName = "SkateSkeleton";
 
 const DataRenderer = <T,>({
   success,
@@ -92,12 +93,9 @@ const DataRenderer = <T,>({
   empty = DEFAULT_EMPTY,
   render,
 }: DataRendererProps<T>) => {
-  const errorMessage = useMemo(() => {
-    if (!error) return DEFAULT_ERROR.message;
-    return error.details
-      ? JSON.stringify(error.details, null, 2)
-      : DEFAULT_ERROR.message;
-  }, [error]);
+  const errorMessage = error?.details
+    ? JSON.stringify(error.details, null, 2)
+    : DEFAULT_ERROR.message;
 
   if (!success) {
     return (

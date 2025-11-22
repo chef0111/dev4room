@@ -40,6 +40,14 @@ export async function getUsers(
       sortCriteria = asc(user.createdAt);
   }
 
+  const [countResult] = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(user)
+    .where(where);
+
+  const totalUsers = countResult?.count ?? 0;
+
+  // Get paginated results
   const results = await db
     .select({
       id: user.id,
@@ -48,7 +56,6 @@ export async function getUsers(
       email: user.email,
       image: user.image,
       role: user.role,
-      totalCount: sql<number>`count(*) over()`.as("total_count"),
     })
     .from(user)
     .where(where)
@@ -56,8 +63,7 @@ export async function getUsers(
     .limit(limit)
     .offset(offset);
 
-  const totalUsers = results[0]?.totalCount ?? 0;
-  const users = results.map(({ totalCount, ...userData }) => userData);
+  const users = results;
 
   // Validate and return users
   const validatedUsers = users

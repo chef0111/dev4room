@@ -8,20 +8,20 @@ export async function GET(request: NextRequest) {
     // Parse query parameters
     const searchParams = request.nextUrl.searchParams;
     const params = {
-      page: searchParams.get("page") || "1",
-      pageSize: searchParams.get("pageSize") || "10",
-      query: searchParams.get("query") || undefined,
-      filter: searchParams.get("filter") || undefined,
+      page: Number(searchParams.get("page") ?? "1"),
+      pageSize: Number(searchParams.get("pageSize") ?? "10"),
+      query: searchParams.get("query") ?? undefined,
+      filter: searchParams.get("filter") ?? undefined,
     };
 
     // Validate query parameters
     const validationResult = QueryParamsSchema.safeParse(params);
 
-    if (validationResult instanceof Error) {
-      return handleError(validationResult) as ApiErrorResponse;
+    if (!validationResult.success) {
+      return handleError(validationResult, "api") as ApiErrorResponse;
     }
 
-    const { page, pageSize, query, filter } = validationResult.data!;
+    const { page, pageSize, query, filter } = validationResult.data;
 
     // Fetch users with filters
     const { users, totalUsers } = await getUsers({

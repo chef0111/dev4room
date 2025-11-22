@@ -5,13 +5,13 @@ export async function proxy(request: NextRequest) {
   const sessionCookie = getSessionCookie(request);
   const pathname = request.nextUrl.pathname;
 
-  // Protected routes
+  // Protected routes - require authentication
   const protectedRoutes = ["/admin", "/profile", "/ask-question"];
   const isProtectedRoute = protectedRoutes.some((route) =>
     pathname.startsWith(route),
   );
 
-  // Auth routes (redirect to home if already logged in)
+  // Auth routes - redirect to home if already logged in
   const authRoutes = [
     "/login",
     "/register",
@@ -30,7 +30,9 @@ export async function proxy(request: NextRequest) {
 
   // Redirect logged-in users away from auth pages
   if (isAuthRoute && sessionCookie) {
-    return NextResponse.redirect(new URL("/", request.url));
+    const from = request.nextUrl.searchParams.get("from");
+    const redirectUrl = from && from.startsWith("/") ? from : "/";
+    return NextResponse.redirect(new URL(redirectUrl, request.url));
   }
 
   return NextResponse.next();

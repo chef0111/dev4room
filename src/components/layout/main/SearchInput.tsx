@@ -33,7 +33,7 @@ const SearchInput = ({
       )}
     >
       <InputGroupInput
-        {...field}
+        {...(field ?? {})}
         type="text"
         placeholder={placeholder}
         disabled={disabled}
