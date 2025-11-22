@@ -87,7 +87,9 @@ export const QuestionSchema = z.object({
     .min(5, { message: "Title must be at least 10 characters long." })
     .max(100, { message: "Title cannot exceed 100 characters." }),
 
-  content: z.string().min(1, { message: "Content is required." }),
+  content: z
+    .string()
+    .min(20, { message: "Content must be at least 20 characters long." }),
 
   tags: z
     .array(
@@ -98,4 +100,11 @@ export const QuestionSchema = z.object({
     )
     .min(1, { message: "At least one tag is required." })
     .max(5, { message: "You can add a maximum of 5 tags." }),
+});
+
+export const QueryParamsSchema = z.object({
+  page: z.number().int().min(1).default(1).optional(),
+  pageSize: z.number().int().min(1).max(100).default(10).optional(),
+  query: z.string().optional(),
+  filter: z.string().optional(),
 });

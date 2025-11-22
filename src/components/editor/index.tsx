@@ -40,6 +40,7 @@ interface EditorRefProps {
   editorRef: ForwardedRef<MDXEditorMethods> | null;
   markdown?: string;
   fieldChange?: (value: string) => void;
+  isInvalid?: boolean;
 }
 
 const Editor = ({
@@ -47,6 +48,7 @@ const Editor = ({
   editorRef,
   markdown,
   fieldChange,
+  isInvalid = false,
   ...props
 }: EditorRefProps & MDXEditorProps) => {
   const { resolvedTheme } = useTheme();
@@ -54,70 +56,72 @@ const Editor = ({
   const theme = resolvedTheme === "dark" ? [basicDark] : [];
 
   return (
-    <MDXEditor
-      aria-label={id}
-      key={resolvedTheme}
-      markdown={markdown}
-      ref={editorRef}
-      onChange={fieldChange}
-      className="grid no-scrollbar bg-light800_dark200! light-border-2 markdown-editor dark-editor w-full border no-focus! rounded-md"
-      plugins={[
-        headingsPlugin(),
-        listsPlugin(),
-        linkPlugin(),
-        linkDialogPlugin(),
-        imagePlugin(),
-        tablePlugin(),
-        quotePlugin(),
-        thematicBreakPlugin(),
-        markdownShortcutPlugin(),
-        codeBlockPlugin({ defaultCodeBlockLanguage: "" }),
-        codeMirrorPlugin({
-          codeBlockLanguages: programmingLanguages,
-          autoLoadLanguageSupport: true,
-          codeMirrorExtensions: theme,
-        }),
-        diffSourcePlugin({ viewMode: "rich-text", diffMarkdown: "" }),
-        toolbarPlugin({
-          toolbarContents: () => {
-            return (
-              <ConditionalContents
-                options={[
-                  {
-                    when: (editor) => editor?.editorType === "codeblock",
-                    contents: () => <ChangeCodeMirrorLanguage />,
-                  },
-                  {
-                    fallback: () => (
-                      <>
-                        <UndoRedo />
-                        <Separator />
+    <div aria-invalid={isInvalid} className="group w-full">
+      <MDXEditor
+        aria-label={id}
+        key={resolvedTheme}
+        markdown={markdown}
+        ref={editorRef}
+        onChange={fieldChange}
+        className="grid no-scrollbar bg-light800_dark200! light-border-2 markdown-editor dark-editor w-full border rounded-md"
+        plugins={[
+          headingsPlugin(),
+          listsPlugin(),
+          linkPlugin(),
+          linkDialogPlugin(),
+          imagePlugin(),
+          tablePlugin(),
+          quotePlugin(),
+          thematicBreakPlugin(),
+          markdownShortcutPlugin(),
+          codeBlockPlugin({ defaultCodeBlockLanguage: "" }),
+          codeMirrorPlugin({
+            codeBlockLanguages: programmingLanguages,
+            autoLoadLanguageSupport: true,
+            codeMirrorExtensions: theme,
+          }),
+          diffSourcePlugin({ viewMode: "rich-text", diffMarkdown: "" }),
+          toolbarPlugin({
+            toolbarContents: () => {
+              return (
+                <ConditionalContents
+                  options={[
+                    {
+                      when: (editor) => editor?.editorType === "codeblock",
+                      contents: () => <ChangeCodeMirrorLanguage />,
+                    },
+                    {
+                      fallback: () => (
+                        <>
+                          <UndoRedo />
+                          <Separator />
 
-                        <BoldItalicUnderlineToggles />
-                        <Separator />
+                          <BoldItalicUnderlineToggles />
+                          <Separator />
 
-                        <ListsToggle />
-                        <Separator />
+                          <ListsToggle />
+                          <Separator />
 
-                        <CreateLink />
-                        <InsertImage />
-                        <Separator />
+                          <CreateLink />
+                          <InsertImage />
+                          <Separator />
 
-                        <InsertTable />
-                        <InsertThematicBreak />
+                          <InsertTable />
+                          <InsertThematicBreak />
 
-                        <InsertCodeBlock />
-                      </>
-                    ),
-                  },
-                ]}
-              />
-            );
-          },
-        }),
-      ]}
-      {...props}
-    />
+                          <InsertCodeBlock />
+                        </>
+                      ),
+                    },
+                  ]}
+                />
+              );
+            },
+          }),
+        ]}
+        {...props}
+      />
+    </div>
   );
 };
 

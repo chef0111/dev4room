@@ -118,7 +118,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
             >
               <FieldLabel htmlFor="question-title" className="pg-semibold">
                 Question Title
-                <span className="text-red-500">*</span>
+                <span className="text-destructive">*</span>
               </FieldLabel>
               <Input
                 {...field}
@@ -147,7 +147,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
             >
               <FieldLabel htmlFor="question-content" className="pg-semibold">
                 Detailed explanation of your problem
-                <span className="text-red-500">*</span>
+                <span className="text-destructive">*</span>
               </FieldLabel>
 
               <Suspense fallback={<EditorFallback />}>
@@ -156,6 +156,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
                   editorRef={editorRef}
                   value={field.value}
                   onChange={field.onChange}
+                  isInvalid={fieldState.invalid}
                 />
               </Suspense>
 
@@ -178,7 +179,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
             >
               <FieldLabel htmlFor="question-tags" className="pg-semibold">
                 Tags
-                <span className="text-red-500">*</span>
+                <span className="text-destructive">*</span>
               </FieldLabel>
               <Input
                 id="question-tags"

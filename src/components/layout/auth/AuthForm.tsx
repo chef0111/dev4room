@@ -15,7 +15,6 @@ import {
 } from "react-hook-form";
 import Link from "next/link";
 
-import routes from "@/common/constants/routes";
 import { AUTH_FORM_TYPES } from "@/common/constants";
 import { formatFieldName } from "@/lib/utils";
 import { toast } from "sonner";
@@ -66,10 +65,10 @@ const AuthForm = <T extends FieldValues>({
       });
 
       if (formType === "LOGIN") {
-        router.push(routes.home);
+        router.push("/");
         router.refresh();
       } else if (formType === "RESET_PASSWORD") {
-        router.push(routes.login);
+        router.push("/login");
         router.refresh();
       }
     } else {
@@ -102,12 +101,13 @@ const AuthForm = <T extends FieldValues>({
                   </FieldLabel>
 
                   {fieldName === "password" && formType === "LOGIN" && (
-                    <Link
-                      href={routes.forgotPassword}
-                      className="ml-auto inline-block text-sm text-link-100 hover:underline"
+                    <Button
+                      variant="link"
+                      className="ml-auto inline-block p-0 size-fit text-sm text-link-100"
+                      asChild
                     >
-                      Forgot your password?
-                    </Link>
+                      <Link href="/forgot-password">Forgot your password?</Link>
+                    </Button>
                   )}
                 </div>
                 <Input

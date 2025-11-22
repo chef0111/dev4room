@@ -1,18 +1,24 @@
-import React from "react";
+import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import ThemeToggle from "./ThemeToggle";
-import { getServerSession } from "@/lib/session";
-import UserAvatar from "../../profile/UserAvatar";
 import MobileNav from "./MobileNav";
 import GlobalSearch from "../../main/GlobalSearch";
+import UserSection from "./UserSection";
+import { cn } from "@/lib/utils";
 
-const Navbar = async () => {
-  const session = await getServerSession();
-  const user = session?.user;
+interface NavbarProps {
+  className?: string;
+}
 
+const Navbar = ({ className }: NavbarProps) => {
   return (
-    <nav className="flex-between bg-light900_dark200 fixed z-50 w-full p-6 dark:shadow-none sm:px-12 transition-all duration-200">
+    <nav
+      className={cn(
+        "flex-between bg-light900_dark200 fixed w-full p-6 dark:shadow-none sm:px-12",
+        className,
+      )}
+    >
       <Link href="/" className="flex-center gap-2">
         <Image
           src="/images/brand.svg"
@@ -34,16 +40,13 @@ const Navbar = async () => {
       <div className="flex-between gap-5">
         <ThemeToggle />
 
-        {user?.id && (
-          <UserAvatar
-            id={user.id}
-            name={user.name!}
-            image={user.image ?? ""}
-            className="w-9 h-9 rounded-full"
-          />
-        )}
+        <Suspense fallback={null}>
+          <UserSection />
+        </Suspense>
 
-        <MobileNav />
+        <Suspense fallback={null}>
+          <MobileNav />
+        </Suspense>
       </div>
     </nav>
   );

@@ -14,7 +14,7 @@ function isError(error: unknown): error is Error {
 
 export async function fetchHandler<T>(
   url: string,
-  options: FetchOptions = {}
+  options: FetchOptions = {},
 ): Promise<ActionResponse<T>> {
   const { timeout, headers: customHeaders = {}, ...restOptions } = options;
 
@@ -39,7 +39,6 @@ export async function fetchHandler<T>(
 
   try {
     const response = await fetch(url, config);
-    clearTimeout(id);
 
     if (!response.ok) {
       throw new RequestError(response.status, `HTTP error: ${response.status}`);
@@ -59,5 +58,7 @@ export async function fetchHandler<T>(
     }
 
     return handleError(newError) as ActionResponse<T>;
+  } finally {
+    clearTimeout(id);
   }
 }

@@ -19,9 +19,11 @@ async function action<T>({
   authorize = false,
 }: ActionOptions<T>) {
   // Check if schema is provided and validate params
-  if (schema && params) {
+  let validatedParams = params;
+
+  if (schema && params != null) {
     try {
-      schema.parse(params);
+      validatedParams = schema.parse(params);
     } catch (error) {
       if (error instanceof ZodError) {
         const tree = treeifyError(error);
@@ -46,7 +48,7 @@ async function action<T>({
     }
   }
 
-  return { session, params, db };
+  return { session, params: validatedParams, db };
 }
 
 export default action;

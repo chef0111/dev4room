@@ -1,10 +1,12 @@
+import { Suspense } from "react";
+import Link from "next/link";
+import Image from "next/image";
 import { getServerSession } from "@/lib/session";
 import NavTabs from "./navbar/NavTabs";
-import routes from "@/common/constants/routes";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 import { UserNav } from "../profile/UserNav";
+import NavTabsFallback from "./navbar/NavTabsFallback";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const LeftSidebar = async () => {
   const session = await getServerSession();
@@ -16,22 +18,28 @@ const LeftSidebar = async () => {
       <section
         role="navigation"
         aria-label="Primary"
-        className="no-scrollbar bg-light900_dark200 light-border sticky left-0 top-0 h-screen lg:w-65 flex flex-col justify-between border-r p-4 pt-32 shadow-light-300 dark:shadow-none overflow-y-auto max-sm:hidden transition-all duration-200"
+        className="no-scrollbar bg-light900_dark200 light-border fixed left-0 top-0 h-screen  lg:w-65 flex flex-col justify-between border-r p-4 pt-32 shadow-light-300 dark:shadow-none overflow-y-auto max-sm:hidden"
       >
         <div>
-          <NavTabs userId={user?.id} isMobile={false} />
+          <Suspense fallback={<NavTabsFallback isMobile={false} />}>
+            <NavTabs userId={user?.id} isMobile={false} />
+          </Suspense>
         </div>
 
         <div className="flex flex-col gap-3">
           {user ? (
-            <UserNav user={user} isAdmin={isAdmin} />
+            <Suspense
+              fallback={<Skeleton className="h-10 w-full rounded-lg" />}
+            >
+              <UserNav user={user} isAdmin={isAdmin} />
+            </Suspense>
           ) : (
             <>
               <Button
                 className="btn-secondary no-focus min-h-10 w-full rounded-lg px-4 py-3 hover:bg-light700_dark300! transition-all duration-200 cursor-pointer"
                 asChild
               >
-                <Link href={routes.login} className="flex-center">
+                <Link href="/login" className="flex-center">
                   <Image
                     src="/icons/account.svg"
                     alt="Account"
@@ -49,7 +57,7 @@ const LeftSidebar = async () => {
                 className="btn-tertiary no-focus light-border-2 min-h-10 w-full rounded-lg border px-4 py-3 hover:bg-light600_dark400! transition-all duration-200 cursor-pointer shadow-none"
                 asChild
               >
-                <Link href={routes.register} className="flex-center">
+                <Link href="/register" className="flex-center">
                   <Image
                     src="/icons/sign-up.svg"
                     alt="Sign Up"

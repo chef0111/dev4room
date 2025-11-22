@@ -12,7 +12,10 @@ import {
   checkUserExists,
   checkUserCredentials,
   verifyUserEmail,
-} from "@/server/auth.action";
+  generateUniqueUsername,
+  checkExistingUsername,
+} from "@/server/auth/auth.action";
+import { eq } from "drizzle-orm";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -23,10 +26,33 @@ export const auth = betterAuth({
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      mapProfileToUser: async (profile) => {
+        const username = await generateUniqueUsername("user");
+
+        return {
+          image: profile.picture,
+          username,
+          displayUsername: username,
+        };
+      },
     },
     github: {
       clientId: process.env.GITHUB_CLIENT_ID as string,
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+      mapProfileToUser: async (profile) => {
+        const existingUsername = await checkExistingUsername(profile.login);
+        let username = profile.login;
+
+        if (existingUsername) {
+          username = await generateUniqueUsername("user");
+        }
+
+        return {
+          image: profile.avatar_url,
+          username,
+          displayUsername: username,
+        };
+      },
     },
   },
   emailAndPassword: {
@@ -106,6 +132,33 @@ export const auth = betterAuth({
         const email = ctx.body.email;
         await verifyUserEmail(email);
       }
+
+      // Handle username generation for social login users
+      if (
+        (ctx.path === "/callback/google" || ctx.path === "/callback/github") &&
+        ctx.context?.user
+      ) {
+        const user = ctx.context.user;
+
+        // Check if user already has a username
+        const existingUser = await db.query.user.findFirst({
+          where: eq(schema.user.id, user.id),
+        });
+
+        if (
+          existingUser &&
+          (!existingUser.username || existingUser.username.trim() === "")
+        ) {
+          // Generate a unique username based on the user's name
+          const uniqueUsername = await generateUniqueUsername("user");
+
+          // Update the user with the generated username
+          await db
+            .update(schema.user)
+            .set({ username: uniqueUsername })
+            .where(eq(schema.user.id, user.id));
+        }
+      }
     }),
   },
   session: {
@@ -141,7 +194,7 @@ export const auth = betterAuth({
           process.env.RESEND_FROM_EMAIL &&
           process.env.RESEND_FROM_EMAIL.trim().length > 0
             ? `Dev4Room Admin <${process.env.RESEND_FROM_EMAIL.trim()}>`
-            : "Dev4Room Admin <admin@dev4room.pro>";
+            : "Dev4Room Admin <onboarding@resend.dev>";
 
         await resend.emails.send({
           from: sender,

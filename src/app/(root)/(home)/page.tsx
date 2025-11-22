@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import Link from "next/link";
 
-import routes from "@/common/constants/routes";
 import { Button } from "@/components/ui/button";
 import LocalSearch from "@/components/layout/main/LocalSearch";
 import HomeFilter from "@/components/filters/HomeFilter";
@@ -77,7 +76,7 @@ const HomePage = async ({ searchParams }: SearchParams) => {
           className="primary-gradient min-h-10 px-4 py-3 text-light-900! hover:primary-gradient-hover cursor-pointer"
           asChild
         >
-          <Link href={routes.askQuestion}>Ask Question</Link>
+          <Link href="/ask-question">Ask Question</Link>
         </Button>
       </section>
       <section className="mt-10">
