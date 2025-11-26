@@ -1,4 +1,4 @@
-import { base } from "@/context";
+import { base } from "@/app/middleware";
 import { auth } from "@/lib/auth";
 import { ORPCError } from "@orpc/server";
 
@@ -18,3 +18,5 @@ export const authMiddleware = base.middleware(async ({ context, next }) => {
     },
   });
 });
+
+export const authorized = base.use(authMiddleware);

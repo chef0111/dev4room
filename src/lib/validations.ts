@@ -103,8 +103,8 @@ export const QuestionSchema = z.object({
 });
 
 export const QueryParamsSchema = z.object({
-  page: z.number().int().min(1).default(1).optional(),
-  pageSize: z.number().int().min(1).max(100).default(10).optional(),
+  page: z.number().int().min(1).default(1),
+  pageSize: z.number().int().min(1).max(100).default(10),
   query: z.string().optional(),
   filter: z.string().optional(),
 });
