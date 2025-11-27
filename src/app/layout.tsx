@@ -6,6 +6,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { ThemeProvider } from "@/context/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { Providers } from "./providers";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -42,7 +43,7 @@ const RootLayout: React.FC<Props> = ({ children }) => {
           className={`${inter.variable} ${esbuild.variable} antialiased bg-light850_dark100 custom-scrollbar`}
         >
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            {children}
+            <Providers>{children}</Providers>
             <Toaster richColors />
           </ThemeProvider>
         </body>
