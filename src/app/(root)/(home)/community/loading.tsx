@@ -1,6 +1,6 @@
-import { Skeleton } from "@/components/ui/skeleton";
 import GridCardsSkeleton from "@/components/skeletons/GridCardsSkeleton";
 import SearchInput from "@/components/layout/main/SearchInput";
+import FilterFallback from "@/components/filters/FilterFallback";
 
 const Loading = () => {
   return (
@@ -10,10 +10,10 @@ const Loading = () => {
       <div className="mt-10 flex justify-between gap-4 max-sm:flex-col sm:items-center">
         <SearchInput
           placeholder="Search some great developers..."
-          className="bg-light800_darkgradient! flex-1 min-h-12 gap-2 px-2"
+          className="bg-light800_darksecondgradient! grow w-full min-h-12 gap-2 px-2"
           disabled
         />
-        <Skeleton className="h-12 w-40" />
+        <FilterFallback />
       </div>
 
       <GridCardsSkeleton className="mt-10" />
