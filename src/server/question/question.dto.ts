@@ -61,6 +61,20 @@ export const QuestionQuerySchema = z.object({
   filter: z.enum(["newest", "oldest", "popular", "unanswered"]).optional(),
 });
 
+// Output schemas for procedures
+export const QuestionListOutputSchema = z.object({
+  questions: z.array(QuestionListSchema),
+  totalQuestions: z.number().int().min(0),
+});
+
+export const CreateQuestionOutputSchema = z.object({
+  id: z.string(),
+});
+
+export const IncrementViewsOutputSchema = z.object({
+  views: z.number().int().min(0),
+});
+
 // Types
 export type AuthorDTO = z.infer<typeof AuthorSchema>;
 export type TagDTO = z.infer<typeof TagSchema>;
@@ -68,3 +82,5 @@ export type QuestionListDTO = z.infer<typeof QuestionListSchema>;
 export type QuestionDetailDTO = z.infer<typeof QuestionDetailSchema>;
 export type CreateQuestionInput = z.infer<typeof CreateQuestionSchema>;
 export type QuestionQueryParams = z.infer<typeof QuestionQuerySchema>;
+export type QuestionListOutput = z.infer<typeof QuestionListOutputSchema>;
+export type CreateQuestionOutput = z.infer<typeof CreateQuestionOutputSchema>;

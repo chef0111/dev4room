@@ -12,4 +12,14 @@ export const UsersSchema = z.object({
   role: z.string().nullable(),
 });
 
+// Output schema for list users
+export const UsersListOutputSchema = z.object({
+  users: z.array(UsersSchema),
+  totalUsers: z.number().int().min(0),
+  page: z.number().int().min(1),
+  pageSize: z.number().int().min(1),
+  totalPages: z.number().int().min(0),
+});
+
 export type UsersDTO = z.infer<typeof UsersSchema>;
+export type UsersListOutput = z.infer<typeof UsersListOutputSchema>;
