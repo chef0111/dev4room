@@ -56,19 +56,19 @@ const LocalSearch = ({ route, placeholder, className }: LocalSearchProps) => {
   };
 
   return (
-    <form onSubmit={form.handleSubmit(handleSubmit)}>
+    <form
+      onSubmit={form.handleSubmit(handleSubmit)}
+      className={cn("w-full", className)}
+    >
       <Controller
         name="query"
         control={form.control}
         render={({ field }) => (
-          <Field className="flex-1">
+          <Field>
             <SearchInput
               field={field}
               placeholder={placeholder}
-              className={cn(
-                "bg-light800_darkgradient! min-h-12 gap-2 px-2",
-                className,
-              )}
+              className="bg-light800_darksecondgradient! min-h-12 min-w-full gap-2 px-2"
               onClick={handleSearchSubmit}
             />
           </Field>
