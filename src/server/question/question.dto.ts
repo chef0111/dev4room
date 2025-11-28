@@ -53,6 +53,32 @@ export const CreateQuestionSchema = z.object({
     .max(5, { message: "You can add a maximum of 5 tags." }),
 });
 
+// Edit question input schema
+export const EditQuestionSchema = z.object({
+  questionId: z.string(),
+  title: z
+    .string()
+    .min(5, { message: "Title must be at least 5 characters long." })
+    .max(100, { message: "Title cannot exceed 100 characters." }),
+  content: z
+    .string()
+    .min(20, { message: "Content must be at least 20 characters long." }),
+  tags: z
+    .array(
+      z
+        .string()
+        .min(1, { message: "Tag cannot be empty." })
+        .max(20, { message: "Tag cannot exceed 20 characters." }),
+    )
+    .min(1, { message: "At least one tag is required." })
+    .max(5, { message: "You can add a maximum of 5 tags." }),
+});
+
+// Get question input schema
+export const GetQuestionSchema = z.object({
+  questionId: z.string(),
+});
+
 // Query params schema for listing questions
 export const QuestionQuerySchema = z.object({
   page: z.number().int().min(1).default(1),
@@ -75,6 +101,15 @@ export const IncrementViewsOutputSchema = z.object({
   views: z.number().int().min(0),
 });
 
+export const EditQuestionOutputSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  content: z.string(),
+  tags: z.array(TagSchema),
+});
+
+export const GetQuestionOutputSchema = QuestionDetailSchema;
+
 // Types
 export type AuthorDTO = z.infer<typeof AuthorSchema>;
 export type TagDTO = z.infer<typeof TagSchema>;
@@ -84,3 +119,7 @@ export type CreateQuestionInput = z.infer<typeof CreateQuestionSchema>;
 export type QuestionQueryParams = z.infer<typeof QuestionQuerySchema>;
 export type QuestionListOutput = z.infer<typeof QuestionListOutputSchema>;
 export type CreateQuestionOutput = z.infer<typeof CreateQuestionOutputSchema>;
+export type EditQuestionInput = z.infer<typeof EditQuestionSchema>;
+export type EditQuestionOutput = z.infer<typeof EditQuestionOutputSchema>;
+export type GetQuestionInput = z.infer<typeof GetQuestionSchema>;
+export type GetQuestionOutput = z.infer<typeof GetQuestionOutputSchema>;

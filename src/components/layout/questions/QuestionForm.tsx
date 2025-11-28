@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useRef } from "react";
+import { Suspense, useRef, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -33,6 +33,7 @@ interface QuestionFormProps {
 
 const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
   const editorRef = useRef<MDXEditorMethods>(null);
 
   const createQuestionMutation = useMutation(
@@ -47,6 +48,18 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
     }),
   );
 
+  const editQuestionMutation = useMutation(
+    orpc.question.edit.mutationOptions({
+      onSuccess: (data) => {
+        toast.success("Question updated successfully!");
+        router.push(`/questions/${data.id}`);
+      },
+      onError: (error) => {
+        toast.error(error.message || "Failed to update question");
+      },
+    }),
+  );
+
   const form = useForm<z.infer<typeof QuestionSchema>>({
     resolver: zodResolver(QuestionSchema),
     defaultValues: {
@@ -56,8 +69,17 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
     },
   });
 
-  const handleCreateQuestion = async (data: z.infer<typeof QuestionSchema>) => {
-    await createQuestionMutation.mutateAsync(data);
+  const handleSubmitQuestion = async (data: z.infer<typeof QuestionSchema>) => {
+    startTransition(async () => {
+      if (isEdit && question?.id) {
+        await editQuestionMutation.mutateAsync({
+          questionId: question.id,
+          ...data,
+        });
+      } else {
+        await createQuestionMutation.mutateAsync(data);
+      }
+    });
   };
 
   const handleKeyDown = (
@@ -117,12 +139,10 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
     }
   };
 
-  const isPending = form.formState.isSubmitting;
-
   return (
     <form
       className="flex flex-col w-full gap-10"
-      onSubmit={form.handleSubmit(handleCreateQuestion)}
+      onSubmit={form.handleSubmit(handleSubmitQuestion)}
     >
       <FieldGroup>
         <Controller
@@ -236,7 +256,6 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
             type="submit"
             disabled={isPending}
             className="primary-gradient hover:primary-gradient-hover text-light-900! cursor-pointer"
-            onClick={() => handleCreateQuestion}
           >
             {isPending ? (
               <>
