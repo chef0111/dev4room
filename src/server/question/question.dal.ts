@@ -7,13 +7,9 @@ import {
   QuestionListSchema,
   QuestionQueryParams,
   CreateQuestionInput,
-  QuestionDetailDTO,
 } from "./question.dto";
 import { and, or, ilike, desc, asc, sql, eq, inArray, SQL } from "drizzle-orm";
 
-/**
- * Get paginated list of questions with author and tags
- */
 export async function getQuestions(
   params: QuestionQueryParams,
 ): Promise<{ questions: QuestionListDTO[]; totalQuestions: number }> {
@@ -151,16 +147,14 @@ export async function getQuestions(
   return { questions: validatedQuestions, totalQuestions };
 }
 
-/**
- * Create a new question with tags
- */
 export async function createQuestion(
   input: CreateQuestionInput,
   authorId: string,
-): Promise<QuestionDetailDTO> {
+): Promise<{ id: string }> {
   const { title, content, tags: tagNames } = input;
 
   return await db.transaction(async (tx) => {
+    // Create the question first
     const [newQuestion] = await tx
       .insert(question)
       .values({
@@ -168,7 +162,7 @@ export async function createQuestion(
         content,
         authorId,
       })
-      .returning();
+      .returning({ id: question.id });
 
     // Process tags - find or create each tag
     const tagIds: string[] = [];
@@ -215,49 +209,10 @@ export async function createQuestion(
       );
     }
 
-    // Get the author data
-    const [author] = await tx
-      .select({
-        id: user.id,
-        name: user.name,
-        image: user.image,
-      })
-      .from(user)
-      .where(eq(user.id, authorId))
-      .limit(1);
-
-    // Get created tags
-    const createdTags =
-      tagIds.length > 0
-        ? await tx
-            .select({ id: tag.id, name: tag.name })
-            .from(tag)
-            .where(inArray(tag.id, tagIds))
-        : [];
-
-    return {
-      id: newQuestion.id,
-      title: newQuestion.title,
-      content: newQuestion.content,
-      views: newQuestion.views,
-      upvotes: newQuestion.upvotes,
-      downvotes: newQuestion.downvotes,
-      answers: newQuestion.answers,
-      createdAt: newQuestion.createdAt,
-      updatedAt: newQuestion.updatedAt,
-      author: {
-        id: author?.id ?? authorId,
-        name: author?.name ?? "Unknown",
-        image: author?.image ?? null,
-      },
-      tags: createdTags,
-    };
+    return { id: newQuestion.id };
   });
 }
 
-/**
- * Increment view count for a question
- */
 export async function incrementQuestionViews(
   questionId: string,
 ): Promise<{ views: number }> {

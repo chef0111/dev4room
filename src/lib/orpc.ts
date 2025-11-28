@@ -16,6 +16,13 @@ const link = new RPCLink({
 
     return `${window.location.origin}/rpc`;
   },
+  fetch: (input, init) => {
+    // Include credentials (cookies) for authentication
+    return fetch(input, {
+      ...init,
+      credentials: "include",
+    });
+  },
 });
 
 /**

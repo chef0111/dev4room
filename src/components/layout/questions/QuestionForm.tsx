@@ -1,10 +1,13 @@
 "use client";
 
 import { Suspense, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
 import { QuestionSchema } from "@/lib/validations";
+import { toast } from "sonner";
 
 import {
   Field,
@@ -21,6 +24,7 @@ import { MDXEditorMethods } from "@mdxeditor/editor";
 import TagCard from "../tags/TagCard";
 import { getTechDisplayName } from "@/lib/utils";
 import EditorFallback from "@/components/editor/EditorFallback";
+import { orpc } from "@/lib/orpc";
 
 interface QuestionFormProps {
   question?: Question;
@@ -28,7 +32,20 @@ interface QuestionFormProps {
 }
 
 const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
+  const router = useRouter();
   const editorRef = useRef<MDXEditorMethods>(null);
+
+  const createQuestionMutation = useMutation(
+    orpc.question.create.mutationOptions({
+      onSuccess: (data) => {
+        toast.success("Question created successfully!");
+        router.push(`/questions/${data.id}`);
+      },
+      onError: (error) => {
+        toast.error(error.message || "Failed to create question");
+      },
+    }),
+  );
 
   const form = useForm<z.infer<typeof QuestionSchema>>({
     resolver: zodResolver(QuestionSchema),
@@ -39,8 +56,8 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
     },
   });
 
-  const handleCreateQuestion = (data: z.infer<typeof QuestionSchema>) => {
-    console.log(data);
+  const handleCreateQuestion = async (data: z.infer<typeof QuestionSchema>) => {
+    await createQuestionMutation.mutateAsync(data);
   };
 
   const handleKeyDown = (
