@@ -1,20 +1,17 @@
 import "server-only";
 import z from "zod";
 
-// Author schema for embedded author data
 export const AuthorSchema = z.object({
   id: z.string(),
   name: z.string(),
   image: z.string().nullable(),
 });
 
-// Tag schema for embedded tag data
 export const TagSchema = z.object({
   id: z.string(),
   name: z.string(),
 });
 
-// Question list item schema (for listing questions)
 export const QuestionListSchema = z.object({
   id: z.string(),
   title: z.string(),
@@ -28,12 +25,10 @@ export const QuestionListSchema = z.object({
   createdAt: z.date(),
 });
 
-// Question detail schema (for single question view)
 export const QuestionDetailSchema = QuestionListSchema.extend({
   updatedAt: z.date(),
 });
 
-// Create question input schema
 export const CreateQuestionSchema = z.object({
   title: z
     .string()
@@ -53,7 +48,6 @@ export const CreateQuestionSchema = z.object({
     .max(5, { message: "You can add a maximum of 5 tags." }),
 });
 
-// Edit question input schema
 export const EditQuestionSchema = z.object({
   questionId: z.string(),
   title: z
@@ -74,12 +68,10 @@ export const EditQuestionSchema = z.object({
     .max(5, { message: "You can add a maximum of 5 tags." }),
 });
 
-// Get question input schema
 export const GetQuestionSchema = z.object({
   questionId: z.string(),
 });
 
-// Query params schema for listing questions
 export const QuestionQuerySchema = z.object({
   page: z.number().int().min(1).default(1),
   pageSize: z.number().int().min(1).max(100).default(10),
@@ -87,7 +79,6 @@ export const QuestionQuerySchema = z.object({
   filter: z.enum(["newest", "oldest", "popular", "unanswered"]).optional(),
 });
 
-// Output schemas for procedures
 export const QuestionListOutputSchema = z.object({
   questions: z.array(QuestionListSchema),
   totalQuestions: z.number().int().min(0),
@@ -110,7 +101,6 @@ export const EditQuestionOutputSchema = z.object({
 
 export const GetQuestionOutputSchema = QuestionDetailSchema;
 
-// Types
 export type AuthorDTO = z.infer<typeof AuthorSchema>;
 export type TagDTO = z.infer<typeof TagSchema>;
 export type QuestionListDTO = z.infer<typeof QuestionListSchema>;

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getUsers } from "@/server/user/user.dal";
+import { getUsers } from "@/app/server/user/user.dal";
 import handleError from "@/lib/handlers/error";
 import { QueryParamsSchema } from "@/lib/validations";
 

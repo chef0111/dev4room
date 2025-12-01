@@ -474,7 +474,7 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
+  width: 6px;
   height: 3px;
   border-radius: 2px;
 }
@@ -498,18 +498,15 @@
   transition: all 0.2s ease;
 }
 
-/* Hide scrollbar for Chrome, Safari and Opera */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
 
-/* Hide scrollbar for IE, Edge and Firefox */
 .no-scrollbar {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
 
-/* Hide scrollbar for authentication pages */
 html:has([no-scrollbar]),
 body:has([no-scrollbar]) {
   -ms-overflow-style: none; /* IE and Edge */
