@@ -6,7 +6,7 @@ import {
   createQuestion as createQuestionDAL,
   editQuestion as editQuestionDAL,
   incrementQuestionViews,
-} from "@/server/question/question.dal";
+} from "@/app/server/question/question.dal";
 import {
   QuestionQuerySchema,
   GetQuestionSchema,
@@ -17,13 +17,13 @@ import {
   CreateQuestionOutputSchema,
   EditQuestionOutputSchema,
   IncrementViewsOutputSchema,
-} from "@/server/question/question.dto";
+} from "@/app/server/question/question.dto";
 import { z } from "zod";
 
 export const listQuestions = base
   .route({
     method: "GET",
-    path: "/questions",
+    path: "/question",
     summary: "List Questions",
     tags: ["Questions"],
   })
@@ -37,7 +37,7 @@ export const listQuestions = base
 export const getQuestion = base
   .route({
     method: "GET",
-    path: "/questions/{questionId}",
+    path: "/question/{questionId}",
     summary: "Get Question by ID",
     tags: ["Questions"],
   })
@@ -51,7 +51,7 @@ export const getQuestion = base
 export const createQuestion = authorized
   .route({
     method: "POST",
-    path: "/questions",
+    path: "/question",
     summary: "Create Question",
     tags: ["Questions"],
   })
@@ -65,7 +65,7 @@ export const createQuestion = authorized
 export const editQuestion = authorized
   .route({
     method: "PUT",
-    path: "/questions/{questionId}",
+    path: "/question/{questionId}",
     summary: "Edit Question",
     tags: ["Questions"],
   })
@@ -79,7 +79,7 @@ export const editQuestion = authorized
 export const incrementViews = base
   .route({
     method: "POST",
-    path: "/questions/view",
+    path: "/question/view",
     summary: "Increment Question Views",
     tags: ["Questions"],
   })

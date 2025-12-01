@@ -2,7 +2,7 @@ import "server-only";
 
 import { headers } from "next/headers";
 import { createRouterClient } from "@orpc/server";
-import { router } from "@/app/router";
+import { router } from "@/app/server";
 
 globalThis.$client = createRouterClient(router, {
   /**

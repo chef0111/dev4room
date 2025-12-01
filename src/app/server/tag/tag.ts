@@ -3,20 +3,20 @@ import {
   getTags,
   getTagWithQuestions,
   getPopularTags,
-} from "@/server/tag/tag.dal";
+} from "@/app/server/tag/tag.dal";
 import {
   TagQuerySchema,
   TagQuestionsQuerySchema,
   TagListOutputSchema,
   TagQuestionsOutputSchema,
   PopularTagsOutputSchema,
-} from "@/server/tag/tag.dto";
+} from "@/app/server/tag/tag.dto";
 import { z } from "zod";
 
 export const listTags = base
   .route({
     method: "GET",
-    path: "/tags",
+    path: "/tag",
     summary: "List Tags",
     tags: ["Tags"],
   })
@@ -30,7 +30,7 @@ export const listTags = base
 export const getTagQuestions = base
   .route({
     method: "GET",
-    path: "/tags/questions",
+    path: "/tag/questions",
     summary: "Get Tag Questions",
     tags: ["Tags", "Questions"],
   })
@@ -44,7 +44,7 @@ export const getTagQuestions = base
 export const getPopular = base
   .route({
     method: "GET",
-    path: "/tags/popular",
+    path: "/tag/popular",
     summary: "Get Popular Tags",
     tags: ["Tags"],
   })
