@@ -1,9 +1,7 @@
 import { base } from "@/app/middleware";
 import { getUsers } from "@/app/server/user/user.dal";
-import {
-  UserQuerySchema,
-  UsersListOutputSchema,
-} from "@/app/server/user/user.dto";
+import { UserListOutputSchema } from "@/app/server/user/user.dto";
+import { QueryParamsSchema } from "@/lib/validations";
 
 export const listUsers = base
   .route({
@@ -12,8 +10,8 @@ export const listUsers = base
     summary: "List Users",
     tags: ["Users"],
   })
-  .input(UserQuerySchema)
-  .output(UsersListOutputSchema)
+  .input(QueryParamsSchema)
+  .output(UserListOutputSchema)
   .handler(async ({ input }) => {
     const result = await getUsers(input);
     return result;

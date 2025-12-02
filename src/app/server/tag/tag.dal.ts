@@ -4,14 +4,14 @@ import { db } from "@/database/drizzle";
 import { tag, tagQuestion, question, user } from "@/database/schema";
 import { and, or, ilike, desc, asc, sql, eq, inArray } from "drizzle-orm";
 import { getPagination, validateArray, validateOne } from "../utils";
-import { TagService } from "./tag.service";
+import { TagQuestionService } from "../tag-question/service";
 import {
-  TagListDTO,
-  TagListSchema,
-  TagDetailSchema,
+  TagsDTO,
+  TagsSchema,
   TagQueryParams,
   TagQuestionsQueryParams,
   TagQuestionsOutput,
+  TagDetailSchema,
 } from "./tag.dto";
 import { QuestionListSchema } from "../question/question.dto";
 
@@ -117,7 +117,7 @@ export class TagDAL {
 
   static async findMany(
     params: TagQueryParams,
-  ): Promise<{ tags: TagListDTO[]; totalTags: number }> {
+  ): Promise<{ tags: TagsDTO[]; totalTags: number }> {
     const { query, filter } = params;
     const { offset, limit } = getPagination(params, { page: 1, pageSize: 12 });
 
@@ -139,7 +139,7 @@ export class TagDAL {
       .limit(limit)
       .offset(offset);
 
-    const tags = validateArray(rows, TagListSchema, "Tag");
+    const tags = validateArray(rows, TagsSchema, "Tag");
 
     return { tags, totalTags: count ?? 0 };
   }
@@ -192,7 +192,7 @@ export class TagDAL {
       .offset(offset);
 
     // Fetch tags for all questions
-    const tagsByQuestion = await TagService.getTagsQuestions(
+    const tagsByQuestion = await TagQuestionService.getTagsQuestions(
       rows.map((r) => r.id),
     );
 
@@ -211,14 +211,14 @@ export class TagDAL {
     };
   }
 
-  static async findPopular(limit: number = 5): Promise<TagListDTO[]> {
+  static async findPopular(limit: number = 5): Promise<TagsDTO[]> {
     const rows = await db
       .select(this.tagSelectFields)
       .from(tag)
       .orderBy(desc(tag.questions))
       .limit(limit);
 
-    return validateArray(rows, TagListSchema, "Tag");
+    return validateArray(rows, TagsSchema, "Tag");
   }
 }
 

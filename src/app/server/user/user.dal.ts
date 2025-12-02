@@ -4,7 +4,7 @@ import { db } from "@/database/drizzle";
 import { user } from "@/database/schema";
 import { and, or, ilike, desc, asc, sql, eq } from "drizzle-orm";
 import { getPagination, validateArray } from "../utils";
-import { UsersDTO, UsersSchema, UserQueryParams } from "./user.dto";
+import { UserDTO, UserSchema } from "./user.dto";
 
 type UserFilter = "newest" | "oldest" | "popular";
 
@@ -40,8 +40,8 @@ export class UserDAL {
   }
 
   static async findMany(
-    params: UserQueryParams,
-  ): Promise<{ users: UsersDTO[]; totalUsers: number }> {
+    params: QueryParams,
+  ): Promise<{ users: UserDTO[]; totalUsers: number }> {
     const { query, filter } = params;
     const { offset, limit } = getPagination(params);
 
@@ -67,7 +67,7 @@ export class UserDAL {
       .limit(limit)
       .offset(offset);
 
-    const users = validateArray(rows, UsersSchema, "User");
+    const users = validateArray(rows, UserSchema, "User");
 
     return { users, totalUsers: count ?? 0 };
   }
