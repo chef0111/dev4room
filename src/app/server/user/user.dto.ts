@@ -1,7 +1,8 @@
 import "server-only";
 import z from "zod";
 
-export const UsersSchema = z.object({
+// === User Schemas ===
+export const UserSchema = z.object({
   id: z.string(),
   name: z.string().min(1, { message: "Name is required." }),
   username: z
@@ -12,4 +13,12 @@ export const UsersSchema = z.object({
   role: z.string().nullable(),
 });
 
-export type UsersDTO = z.infer<typeof UsersSchema>;
+// Output Schemas
+export const UserListOutputSchema = z.object({
+  users: z.array(UserSchema),
+  totalUsers: z.number().int().min(0),
+});
+
+// Types
+export type UserDTO = z.infer<typeof UserSchema>;
+export type UserListOutput = z.infer<typeof UserListOutputSchema>;

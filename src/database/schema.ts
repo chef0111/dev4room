@@ -6,6 +6,8 @@ import {
   integer,
 } from "drizzle-orm/pg-core";
 
+const generateId = () => crypto.randomUUID();
+
 // user table
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -32,7 +34,7 @@ export const user = pgTable("user", {
 
 // session table
 export const session = pgTable("session", {
-  id: text("id").primaryKey(),
+  id: text("id").primaryKey().$defaultFn(generateId),
   expiresAt: timestamp("expires_at").notNull(),
   token: text("token").notNull().unique(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -49,7 +51,7 @@ export const session = pgTable("session", {
 
 // account table
 export const account = pgTable("account", {
-  id: text("id").primaryKey(),
+  id: text("id").primaryKey().$defaultFn(generateId),
   accountId: text("account_id").notNull(),
   providerId: text("provider_id").notNull(),
   userId: text("user_id")
@@ -70,7 +72,7 @@ export const account = pgTable("account", {
 
 // verification table
 export const verification = pgTable("verification", {
-  id: text("id").primaryKey(),
+  id: text("id").primaryKey().$defaultFn(generateId),
   identifier: text("identifier").notNull(),
   value: text("value").notNull(),
   expiresAt: timestamp("expires_at").notNull(),
@@ -82,7 +84,7 @@ export const verification = pgTable("verification", {
 });
 
 export const tag = pgTable("tag", {
-  id: text("id").primaryKey(),
+  id: text("id").primaryKey().$defaultFn(generateId),
   name: text("name").notNull().unique(),
   questions: integer("questions").default(0).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -93,7 +95,7 @@ export const tag = pgTable("tag", {
 });
 
 export const question = pgTable("question", {
-  id: text("id").primaryKey(),
+  id: text("id").primaryKey().$defaultFn(generateId),
   title: text("title").notNull(),
   content: text("content").notNull(),
   views: integer("views").default(0).notNull(),
@@ -111,7 +113,7 @@ export const question = pgTable("question", {
 });
 
 export const answer = pgTable("answer", {
-  id: text("id").primaryKey(),
+  id: text("id").primaryKey().$defaultFn(generateId),
   content: text("content").notNull(),
   upvotes: integer("upvotes").default(0).notNull(),
   downvotes: integer("downvotes").default(0).notNull(),
@@ -129,7 +131,7 @@ export const answer = pgTable("answer", {
 });
 
 export const tagQuestion = pgTable("tag_question", {
-  id: text("id").primaryKey(),
+  id: text("id").primaryKey().$defaultFn(generateId),
   questionId: text("question_id")
     .notNull()
     .references(() => question.id, { onDelete: "cascade" }),
@@ -144,7 +146,7 @@ export const tagQuestion = pgTable("tag_question", {
 });
 
 export const collection = pgTable("collection", {
-  id: text("id").primaryKey(),
+  id: text("id").primaryKey().$defaultFn(generateId),
   authorId: text("author_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
@@ -159,7 +161,7 @@ export const collection = pgTable("collection", {
 });
 
 export const vote = pgTable("vote", {
-  id: text("id").primaryKey(),
+  id: text("id").primaryKey().$defaultFn(generateId),
   authorId: text("author_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
@@ -174,7 +176,7 @@ export const vote = pgTable("vote", {
 });
 
 export const interaction = pgTable("interaction", {
-  id: text("id").primaryKey(),
+  id: text("id").primaryKey().$defaultFn(generateId),
   userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
