@@ -17,6 +17,7 @@ const HomeLoading = () => {
         <SearchInput
           placeholder="Search a question here..."
           className="bg-light800_darkgradient! flex-1 min-h-12 gap-2 px-2"
+          disabled
         />
       </section>
 

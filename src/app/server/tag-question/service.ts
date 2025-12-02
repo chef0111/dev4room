@@ -5,7 +5,7 @@ import { tag, tagQuestion } from "@/database/schema";
 import { eq, ilike, sql, inArray, and } from "drizzle-orm";
 import type { Transaction } from "../utils";
 
-export class TagService {
+export class TagQuestionService {
   static async findOrCreate(tx: Transaction, tagName: string): Promise<string> {
     const normalizedName = tagName.toLowerCase().trim();
 

@@ -9,7 +9,7 @@ import {
   TagQuestionsQuerySchema,
   TagListOutputSchema,
   TagQuestionsOutputSchema,
-  PopularTagsOutputSchema,
+  TagsSchema,
 } from "@/app/server/tag/tag.dto";
 import { z } from "zod";
 
@@ -49,7 +49,7 @@ export const getPopular = base
     tags: ["Tags"],
   })
   .input(z.object({ limit: z.number().optional().default(5) }))
-  .output(PopularTagsOutputSchema)
+  .output(z.array(TagsSchema))
   .handler(async ({ input }) => {
     const result = await getPopularTags(input.limit);
     return result;

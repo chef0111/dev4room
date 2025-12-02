@@ -4,19 +4,23 @@ import { db } from "@/database/drizzle";
 import { question, tag, tagQuestion, user } from "@/database/schema";
 import { and, or, ilike, desc, asc, sql, eq } from "drizzle-orm";
 import { getPagination, validateArray, validateOne } from "../utils";
-import { TagService } from "../tag/tag.service";
+import { TagQuestionService } from "../tag-question/service";
 import {
+  QuestionDTO,
   QuestionListDTO,
   QuestionListSchema,
-  QuestionDetailSchema,
-  QuestionQueryParams,
+  QuestionSchema,
+  TagDTO,
   CreateQuestionInput,
   EditQuestionInput,
-  EditQuestionOutput,
-  GetQuestionOutput,
 } from "./question.dto";
 
-type QuestionFilter = "newest" | "oldest" | "popular" | "unanswered";
+type QuestionFilter =
+  | "newest"
+  | "oldest"
+  | "popular"
+  | "unanswered"
+  | "recommended";
 
 interface QuestionRow {
   id: string;
@@ -49,12 +53,15 @@ export class QuestionDAL {
 
   private static getSortCriteria(filter?: QuestionFilter) {
     switch (filter) {
+      case "newest":
+        return desc(question.createdAt);
       case "oldest":
         return asc(question.createdAt);
       case "popular":
         return desc(question.upvotes);
-      case "newest":
       case "unanswered":
+        return eq(question.answers, 0) && desc(question.createdAt);
+      case "recommended":
       default:
         return desc(question.createdAt);
     }
@@ -91,7 +98,7 @@ export class QuestionDAL {
   }
 
   static async findMany(
-    params: QuestionQueryParams,
+    params: QueryParams,
   ): Promise<{ questions: QuestionListDTO[]; totalQuestions: number }> {
     const { query, filter } = params;
     const { offset, limit } = getPagination(params);
@@ -121,7 +128,7 @@ export class QuestionDAL {
       .offset(offset);
 
     // Fetch tags for all questions
-    const tagsByQuestion = await TagService.getTagsQuestions(
+    const tagsByQuestion = await TagQuestionService.getTagsQuestions(
       rows.map((r) => r.id),
     );
 
@@ -134,7 +141,7 @@ export class QuestionDAL {
     return { questions, totalQuestions: count ?? 0 };
   }
 
-  static async findById(questionId: string): Promise<GetQuestionOutput> {
+  static async findById(questionId: string): Promise<QuestionDTO> {
     const [row] = await db
       .select({ ...this.selectFields, updatedAt: question.updatedAt })
       .from(question)
@@ -146,13 +153,13 @@ export class QuestionDAL {
       throw new Error("Question not found");
     }
 
-    const tags = await TagService.getTagsQuestion(questionId);
+    const tags = await TagQuestionService.getTagsQuestion(questionId);
     const data = {
       ...this.mapToDTO(row, tags),
       updatedAt: row.updatedAt,
     };
 
-    return validateOne(data, QuestionDetailSchema, "Question");
+    return validateOne(data, QuestionSchema, "Question");
   }
 
   static async create(
@@ -169,10 +176,10 @@ export class QuestionDAL {
 
       // Find or create tags and associate with question
       const tagIds = await Promise.all(
-        tagNames.map((tagName) => TagService.findOrCreate(tx, tagName)),
+        tagNames.map((tagName) => TagQuestionService.findOrCreate(tx, tagName)),
       );
 
-      await TagService.addTagsToQuestion(tx, newQuestion.id, tagIds);
+      await TagQuestionService.addTagsToQuestion(tx, newQuestion.id, tagIds);
 
       return { id: newQuestion.id };
     });
@@ -181,7 +188,7 @@ export class QuestionDAL {
   static async update(
     input: EditQuestionInput,
     userId: string,
-  ): Promise<EditQuestionOutput> {
+  ): Promise<{ id: string; title: string; content: string; tags: TagDTO[] }> {
     const { questionId, title, content, tags: tagNames } = input;
 
     return db.transaction(async (tx) => {
@@ -236,16 +243,22 @@ export class QuestionDAL {
       // Add new tags
       if (tagsToAdd.length > 0) {
         const newTagIds = await Promise.all(
-          tagsToAdd.map((tagName) => TagService.findOrCreate(tx, tagName)),
+          tagsToAdd.map((tagName) =>
+            TagQuestionService.findOrCreate(tx, tagName),
+          ),
         );
-        await TagService.addTagsToQuestion(tx, questionId, newTagIds);
+        await TagQuestionService.addTagsToQuestion(tx, questionId, newTagIds);
       }
 
       // Remove old tags
       if (tagsToRemove.length > 0) {
         const tagIdsToRemove = tagsToRemove.map((t) => t.id);
-        await TagService.decrementQuestionCount(tx, tagIdsToRemove);
-        await TagService.removeTagsFromQuestion(tx, questionId, tagIdsToRemove);
+        await TagQuestionService.decrementQuestionCount(tx, tagIdsToRemove);
+        await TagQuestionService.removeTagsFromQuestion(
+          tx,
+          questionId,
+          tagIdsToRemove,
+        );
       }
 
       // Fetch updated tags
@@ -272,6 +285,19 @@ export class QuestionDAL {
 
     return { views: updated.views };
   }
+
+  static async findTop(limit: number = 5) {
+    const rows = await db
+      .select({
+        id: question.id,
+        title: question.title,
+      })
+      .from(question)
+      .orderBy(desc(question.views), desc(question.upvotes))
+      .limit(limit);
+
+    return rows;
+  }
 }
 
 export const getQuestions = QuestionDAL.findMany.bind(QuestionDAL);
@@ -280,3 +306,4 @@ export const createQuestion = QuestionDAL.create.bind(QuestionDAL);
 export const editQuestion = QuestionDAL.update.bind(QuestionDAL);
 export const incrementQuestionViews =
   QuestionDAL.incrementViews.bind(QuestionDAL);
+export const getTopQuestions = QuestionDAL.findTop.bind(QuestionDAL);

@@ -6,18 +6,17 @@ import {
   createQuestion as createQuestionDAL,
   editQuestion as editQuestionDAL,
   incrementQuestionViews,
+  getTopQuestions as getTopQuestionsDAL,
 } from "@/app/server/question/question.dal";
 import {
-  QuestionQuerySchema,
-  GetQuestionSchema,
   CreateQuestionSchema,
   EditQuestionSchema,
   QuestionListOutputSchema,
-  GetQuestionOutputSchema,
-  CreateQuestionOutputSchema,
-  EditQuestionOutputSchema,
-  IncrementViewsOutputSchema,
+  QuestionSchema,
+  TagSchema,
+  TopQuestionsOutputSchema,
 } from "@/app/server/question/question.dto";
+import { QueryParamsSchema } from "@/lib/validations";
 import { z } from "zod";
 
 export const listQuestions = base
@@ -27,7 +26,7 @@ export const listQuestions = base
     summary: "List Questions",
     tags: ["Questions"],
   })
-  .input(QuestionQuerySchema)
+  .input(QueryParamsSchema)
   .output(QuestionListOutputSchema)
   .handler(async ({ input }) => {
     const result = await getQuestions(input);
@@ -41,8 +40,8 @@ export const getQuestion = base
     summary: "Get Question by ID",
     tags: ["Questions"],
   })
-  .input(GetQuestionSchema)
-  .output(GetQuestionOutputSchema)
+  .input(z.object({ questionId: z.string() }))
+  .output(QuestionSchema)
   .handler(async ({ input }) => {
     const result = await getQuestionById(input.questionId);
     return result;
@@ -56,7 +55,7 @@ export const createQuestion = authorized
     tags: ["Questions"],
   })
   .input(CreateQuestionSchema)
-  .output(CreateQuestionOutputSchema)
+  .output(z.object({ id: z.string() }))
   .handler(async ({ input, context }) => {
     const question = await createQuestionDAL(input, context.user.id);
     return { id: question.id };
@@ -70,7 +69,14 @@ export const editQuestion = authorized
     tags: ["Questions"],
   })
   .input(EditQuestionSchema)
-  .output(EditQuestionOutputSchema)
+  .output(
+    z.object({
+      id: z.string(),
+      title: z.string(),
+      content: z.string(),
+      tags: z.array(TagSchema),
+    }),
+  )
   .handler(async ({ input, context }) => {
     const result = await editQuestionDAL(input, context.user.id);
     return result;
@@ -84,8 +90,25 @@ export const incrementViews = base
     tags: ["Questions"],
   })
   .input(z.object({ questionId: z.string() }))
-  .output(IncrementViewsOutputSchema)
+  .output(z.object({ views: z.number().int().min(0) }))
   .handler(async ({ input }) => {
     const result = await incrementQuestionViews(input.questionId);
     return result;
+  });
+
+export const getTopQuestions = base
+  .route({
+    method: "GET",
+    path: "/question/top",
+    summary: "Get Top Questions",
+    description: "Get top questions sorted by views and upvotes",
+    tags: ["Questions"],
+  })
+  .input(
+    z.object({ limit: z.number().int().min(1).max(20).optional().default(5) }),
+  )
+  .output(TopQuestionsOutputSchema)
+  .handler(async ({ input }) => {
+    const questions = await getTopQuestionsDAL(input.limit);
+    return { questions };
   });
