@@ -61,7 +61,10 @@ const TagCard = ({
 
   if (compact) {
     return isButton ? (
-      <Button type="button" className="flex justify-between gap-2">
+      <Button
+        type="button"
+        className="flex justify-between gap-2 bg-transparent! p-0! size-fit!"
+      >
         {TagContent}
       </Button>
     ) : (

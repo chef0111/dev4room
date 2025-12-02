@@ -14,7 +14,7 @@ import {
   verifyUserEmail,
   generateUniqueUsername,
   checkExistingUsername,
-} from "@/server/auth/auth.action";
+} from "@/app/server/auth";
 import { eq } from "drizzle-orm";
 
 export const auth = betterAuth({

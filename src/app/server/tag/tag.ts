@@ -1,0 +1,56 @@
+import { base } from "@/app/middleware";
+import {
+  getTags,
+  getTagWithQuestions,
+  getPopularTags,
+} from "@/app/server/tag/tag.dal";
+import {
+  TagQuerySchema,
+  TagQuestionsQuerySchema,
+  TagListOutputSchema,
+  TagQuestionsOutputSchema,
+  TagsSchema,
+} from "@/app/server/tag/tag.dto";
+import { z } from "zod";
+
+export const listTags = base
+  .route({
+    method: "GET",
+    path: "/tag",
+    summary: "List Tags",
+    tags: ["Tags"],
+  })
+  .input(TagQuerySchema)
+  .output(TagListOutputSchema)
+  .handler(async ({ input }) => {
+    const result = await getTags(input);
+    return result;
+  });
+
+export const getTagQuestions = base
+  .route({
+    method: "GET",
+    path: "/tag/questions",
+    summary: "Get Tag Questions",
+    tags: ["Tags", "Questions"],
+  })
+  .input(TagQuestionsQuerySchema)
+  .output(TagQuestionsOutputSchema)
+  .handler(async ({ input }) => {
+    const result = await getTagWithQuestions(input);
+    return result;
+  });
+
+export const getPopular = base
+  .route({
+    method: "GET",
+    path: "/tag/popular",
+    summary: "Get Popular Tags",
+    tags: ["Tags"],
+  })
+  .input(z.object({ limit: z.number().optional().default(5) }))
+  .output(z.array(TagsSchema))
+  .handler(async ({ input }) => {
+    const result = await getPopularTags(input.limit);
+    return result;
+  });
