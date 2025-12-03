@@ -5,7 +5,7 @@ import FilterFallback from "@/components/filters/FilterFallback";
 const Loading = () => {
   return (
     <section>
-      <h1 className="h1-bold text-dark100_light900">All Tags</h1>
+      <h1 className="h1-bold text-dark100_light900">Tags</h1>
 
       <div className="mt-10 flex justify-between gap-4 max-sm:flex-col sm:items-center">
         <SearchInput
