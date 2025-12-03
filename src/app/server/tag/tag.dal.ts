@@ -3,15 +3,15 @@ import "server-only";
 import { db } from "@/database/drizzle";
 import { tag, tagQuestion, question, user } from "@/database/schema";
 import { and, or, ilike, desc, asc, sql, eq, inArray } from "drizzle-orm";
+import { ORPCError } from "@orpc/server";
 import { getPagination, validateArray, validateOne } from "../utils";
 import { TagQuestionService } from "../tag-question/service";
 import {
   TagsDTO,
   TagsSchema,
-  TagQueryParams,
-  TagQuestionsQueryParams,
-  TagQuestionsOutput,
   TagDetailSchema,
+  TagQuestionsDTO,
+  TagQuestionsQueryParams,
 } from "./tag.dto";
 import { QuestionListSchema } from "../question/question.dto";
 
@@ -116,7 +116,7 @@ export class TagDAL {
   }
 
   static async findMany(
-    params: TagQueryParams,
+    params: QueryParams,
   ): Promise<{ tags: TagsDTO[]; totalTags: number }> {
     const { query, filter } = params;
     const { offset, limit } = getPagination(params, { page: 1, pageSize: 12 });
@@ -146,7 +146,7 @@ export class TagDAL {
 
   static async findWithQuestions(
     params: TagQuestionsQueryParams,
-  ): Promise<TagQuestionsOutput> {
+  ): Promise<TagQuestionsDTO> {
     const { tagId, query, filter } = params;
     const { offset, limit } = getPagination(params);
 
@@ -157,7 +157,7 @@ export class TagDAL {
       .limit(1);
 
     if (!tagRow) {
-      throw new Error("Tag not found");
+      throw new ORPCError("NOT_FOUND", { message: "Tag not found" });
     }
 
     const validatedTag = validateOne(tagRow, TagDetailSchema, "Tag");
@@ -211,14 +211,18 @@ export class TagDAL {
     };
   }
 
-  static async findPopular(limit: number = 5): Promise<TagsDTO[]> {
+  static async findPopular(limit: number = 5) {
     const rows = await db
-      .select(this.tagSelectFields)
+      .select({
+        id: tag.id,
+        name: tag.name,
+        questions: tag.questions,
+      })
       .from(tag)
       .orderBy(desc(tag.questions))
       .limit(limit);
 
-    return validateArray(rows, TagsSchema, "Tag");
+    return rows;
   }
 }
 

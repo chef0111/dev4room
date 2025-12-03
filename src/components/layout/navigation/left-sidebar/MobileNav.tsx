@@ -24,7 +24,7 @@ const MobileNav = async () => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Menu className="w-9 h-9 text-dark100_light900 sm:hidden" />
+        <Menu className="w-9 h-9 text-dark100_light900 sm:hidden cursor-pointer" />
       </SheetTrigger>
       <SheetContent side="left" className="bg-light900_dark200 border-none p-6">
         <SheetTitle className="hidden">Navigation</SheetTitle>

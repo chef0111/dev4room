@@ -77,7 +77,7 @@ const TagCard = ({
   return (
     <Link href={`/tags/${id}`}>
       <DevCard>
-        <div className="flex-between gap-3">
+        <div className="flex-between gap-3 w-full">
           <div className="bg-light800_dark400 w-fit rounded-sm text-center px-3 py-1.5">
             <p className="pg-semibold text-dark300_light900">
               {name.toLowerCase()}
@@ -95,7 +95,7 @@ const TagCard = ({
           {techDescription}
         </p>
 
-        <p className="small-medium text-dark400_light500 mt-4">
+        <p className="small-medium text-dark400_light500 mt-4 w-full">
           <span className="body-semibold primary-text-gradient mr-2.5">
             {questions}+
           </span>

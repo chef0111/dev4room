@@ -1,6 +1,7 @@
 import "server-only";
 
 import { z } from "zod";
+import { ORPCError } from "@orpc/server";
 
 export function validateArray<T>(
   items: unknown[],
@@ -27,7 +28,9 @@ export function validateOne<T>(
   const result = schema.safeParse(item);
   if (!result.success) {
     console.error(`${entityName} validation failed:`, result.error);
-    throw new Error(`Failed to validate ${entityName} data`);
+    throw new ORPCError("INTERNAL_SERVER_ERROR", {
+      message: `Failed to validate ${entityName} data`,
+    });
   }
   return result.data;
 }

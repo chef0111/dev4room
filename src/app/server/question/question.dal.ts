@@ -3,6 +3,7 @@ import "server-only";
 import { db } from "@/database/drizzle";
 import { question, tag, tagQuestion, user } from "@/database/schema";
 import { and, or, ilike, desc, asc, sql, eq } from "drizzle-orm";
+import { ORPCError } from "@orpc/server";
 import { getPagination, validateArray, validateOne } from "../utils";
 import { TagQuestionService } from "../tag-question/service";
 import {
@@ -150,7 +151,7 @@ export class QuestionDAL {
       .limit(1);
 
     if (!row) {
-      throw new Error("Question not found");
+      throw new ORPCError("NOT_FOUND", { message: "Question not found" });
     }
 
     const tags = await TagQuestionService.getTagsQuestion(questionId);
@@ -204,11 +205,13 @@ export class QuestionDAL {
         .limit(1);
 
       if (!existing) {
-        throw new Error("Question not found");
+        throw new ORPCError("NOT_FOUND", { message: "Question not found" });
       }
 
       if (existing.authorId !== userId) {
-        throw new Error("Unauthorized to edit this question");
+        throw new ORPCError("FORBIDDEN", {
+          message: "You are not authorized to edit this question",
+        });
       }
 
       if (existing.title !== title || existing.content !== content) {
@@ -280,7 +283,7 @@ export class QuestionDAL {
       .returning({ views: question.views });
 
     if (!updated) {
-      throw new Error("Question not found");
+      throw new ORPCError("NOT_FOUND", { message: "Question not found" });
     }
 
     return { views: updated.views };
