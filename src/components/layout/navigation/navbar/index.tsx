@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import ThemeToggle from "./ThemeToggle";
-import MobileNav from "./MobileNav";
+import MobileNav from "../left-sidebar/MobileNav";
 import GlobalSearch from "../../main/GlobalSearch";
 import UserSection from "./UserSection";
 import { cn } from "@/lib/utils";

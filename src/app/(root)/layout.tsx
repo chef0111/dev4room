@@ -1,9 +1,9 @@
-import LeftSidebar from "@/components/layout/navigation/LeftSidebar";
+import LeftSidebar from "@/components/layout/navigation/left-sidebar/LeftSidebar";
 import Navbar from "@/components/layout/navigation/navbar";
 import NextTopLoader from "nextjs-toploader";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import NavTabsFallback from "@/components/layout/navigation/navbar/NavTabsFallback";
+import NavTabsFallback from "@/components/layout/navigation/left-sidebar/NavTabsFallback";
 
 interface Props {
   children: React.ReactNode;

@@ -104,9 +104,7 @@ export const getTopQuestions = base
     description: "Get top questions sorted by views and upvotes",
     tags: ["Questions"],
   })
-  .input(
-    z.object({ limit: z.number().int().min(1).max(20).optional().default(5) }),
-  )
+  .input(z.object({ limit: z.number().int().default(5) }))
   .output(TopQuestionsOutputSchema)
   .handler(async ({ input }) => {
     const questions = await getTopQuestionsDAL(input.limit);

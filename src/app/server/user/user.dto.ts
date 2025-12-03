@@ -1,7 +1,6 @@
 import "server-only";
 import z from "zod";
 
-// === User Schemas ===
 export const UserSchema = z.object({
   id: z.string(),
   name: z.string().min(1, { message: "Name is required." }),

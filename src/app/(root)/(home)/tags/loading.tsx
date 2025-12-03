@@ -5,18 +5,18 @@ import FilterFallback from "@/components/filters/FilterFallback";
 const Loading = () => {
   return (
     <section>
-      <h1 className="h1-bold text-dark100_light900">All Users</h1>
+      <h1 className="h1-bold text-dark100_light900">All Tags</h1>
 
       <div className="mt-10 flex justify-between gap-4 max-sm:flex-col sm:items-center">
         <SearchInput
-          placeholder="Search some great developers..."
+          placeholder="Search tags..."
           className="bg-light800_darksecondgradient! grow w-full min-h-12 gap-2 px-2"
           disabled
         />
         <FilterFallback />
       </div>
 
-      <GridCardsSkeleton className="mt-10" itemClassName="h-51" />
+      <GridCardsSkeleton className="mt-10" itemClassName="h-41" />
     </section>
   );
 };

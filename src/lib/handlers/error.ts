@@ -6,6 +6,13 @@ import { flattenTree } from "./zodIssueTree";
 
 export type ResponseType = "api" | "server";
 
+export function getErrorMessage(
+  error: unknown,
+  message = "An unexpected error occurred",
+): string {
+  return error instanceof Error ? error.message : message;
+}
+
 const formatResponse = (
   responseType: ResponseType,
   status: number,

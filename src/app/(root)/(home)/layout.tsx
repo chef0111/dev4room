@@ -1,4 +1,4 @@
-import RightSidebar from "@/components/layout/navigation/RightSidebar";
+import RightSidebar from "@/components/layout/navigation/right-sidebar/RightSidebar";
 
 interface Props {
   children: React.ReactNode;
