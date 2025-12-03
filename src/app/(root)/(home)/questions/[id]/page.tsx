@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import { orpc } from "@/lib/orpc";
 import { getQueryClient } from "@/lib/query/hydration";
+import { incrementQuestionViews } from "@/app/server/question/question.dal";
 import TagCard from "@/components/layout/tags/TagCard";
 import MarkdownPreview from "@/components/editor/MarkdownPreview";
 import QuestionHeader from "@/components/layout/questions/QuestionHeader";
@@ -23,9 +24,7 @@ const QuestionDetails = async ({ params }: RouteParams) => {
   const { author, createdAt, answers, views, title, content, tags } = question;
 
   after(async () => {
-    await queryClient.fetchQuery(
-      orpc.question.view.queryOptions({ input: { questionId: id } }),
-    );
+    await incrementQuestionViews(id);
   });
 
   return (
