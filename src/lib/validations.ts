@@ -102,6 +102,12 @@ export const QuestionSchema = z.object({
     .max(5, { message: "You can add a maximum of 5 tags." }),
 });
 
+export const AnswerSchema = z.object({
+  content: z
+    .string()
+    .min(20, { message: "Answer must have at least 20 characters." }),
+});
+
 export const QueryParamsSchema = z.object({
   page: z.number().int().min(1).default(1),
   pageSize: z.number().int().min(1).max(100).default(10),

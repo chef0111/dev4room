@@ -4,7 +4,6 @@ import {
   getQuestion,
   createQuestion,
   editQuestion,
-  incrementViews,
   getTopQuestions,
 } from "./question/question";
 import { listTags, getTagQuestions, getPopular } from "./tag/tag";
@@ -18,7 +17,6 @@ export const router = {
     get: getQuestion,
     create: createQuestion,
     edit: editQuestion,
-    view: incrementViews,
     getTop: getTopQuestions,
   },
   tag: {

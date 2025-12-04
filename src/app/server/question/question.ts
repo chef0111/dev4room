@@ -82,20 +82,6 @@ export const editQuestion = authorized
     return result;
   });
 
-export const incrementViews = base
-  .route({
-    method: "POST",
-    path: "/question/view",
-    summary: "Increment Question Views",
-    tags: ["Questions"],
-  })
-  .input(z.object({ questionId: z.string() }))
-  .output(z.object({ views: z.number().int().min(0) }))
-  .handler(async ({ input }) => {
-    const result = await incrementQuestionViews(input.questionId);
-    return result;
-  });
-
 export const getTopQuestions = base
   .route({
     method: "GET",

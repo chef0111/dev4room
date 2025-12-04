@@ -4,10 +4,11 @@ import { notFound } from "next/navigation";
 import { orpc } from "@/lib/orpc";
 import { getQueryClient } from "@/lib/query/hydration";
 import { incrementQuestionViews } from "@/app/server/question/question.dal";
-import TagCard from "@/components/layout/tags/TagCard";
-import MarkdownPreview from "@/components/editor/MarkdownPreview";
-import QuestionHeader from "@/components/layout/questions/QuestionHeader";
 import { Separator } from "@/components/ui/separator";
+import TagCard from "@/components/layout/tags/TagCard";
+import QuestionHeader from "@/components/layout/questions/QuestionHeader";
+import MarkdownPreview from "@/components/editor/MarkdownPreview";
+import AnswerForm from "@/components/layout/answers/AnswerForm";
 
 const QuestionDetails = async ({ params }: RouteParams) => {
   const { id } = await params;
@@ -50,6 +51,14 @@ const QuestionDetails = async ({ params }: RouteParams) => {
         ))}
       </div>
       <Separator className="bg-light700_dark400 h-1 mt-10" />
+
+      <section className="my-5">
+        <AnswerForm
+          question={question.id}
+          questionTitle={question.title}
+          questionContent={question.content}
+        />
+      </section>
     </>
   );
 };
