@@ -5,6 +5,7 @@ import Link from "next/link";
 import { getTimeStamp, formatNumber } from "@/lib/utils";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import Votes from "@/components/shared/Votes";
 
 interface QuestionHeaderProps {
   questionId: string;
@@ -57,7 +58,14 @@ const QuestionHeader = ({
                   <Skeleton className="h-6 w-6 rounded-md" />
                 </div>
               }
-            ></Suspense>
+            >
+              <Votes
+                targetType="question"
+                targetId={questionId}
+                upvotes={upvotes}
+                downvotes={downvotes}
+              />
+            </Suspense>
           </div>
         </div>
 

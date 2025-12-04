@@ -1,3 +1,4 @@
+import { Activity } from "react";
 import { after } from "next/server";
 import { notFound } from "next/navigation";
 
@@ -9,9 +10,12 @@ import TagCard from "@/components/layout/tags/TagCard";
 import QuestionHeader from "@/components/layout/questions/QuestionHeader";
 import MarkdownPreview from "@/components/editor/MarkdownPreview";
 import AnswerForm from "@/components/layout/answers/AnswerForm";
+import EditDelete from "@/components/shared/EditDelete";
+import { getServerSession } from "@/lib/session";
 
 const QuestionDetails = async ({ params }: RouteParams) => {
   const { id } = await params;
+  const session = await getServerSession();
   const queryClient = getQueryClient();
 
   const result = await queryClient
@@ -23,6 +27,7 @@ const QuestionDetails = async ({ params }: RouteParams) => {
 
   const question = result.data;
   const { author, createdAt, answers, views, title, content, tags } = question;
+  const isAuthor = session?.user?.id === author.id.toString();
 
   after(async () => {
     await incrementQuestionViews(id);
@@ -44,11 +49,16 @@ const QuestionDetails = async ({ params }: RouteParams) => {
       />
 
       <MarkdownPreview content={content} />
+      <div className="mt-8 flex-between">
+        <div className="flex flex-wrap gap-2">
+          {tags.map((tag) => (
+            <TagCard key={tag.id} id={tag.id} name={tag.name} compact />
+          ))}
+        </div>
 
-      <div className="mt-8 flex flex-wrap gap-2">
-        {tags.map((tag) => (
-          <TagCard key={tag.id} id={tag.id} name={tag.name} compact />
-        ))}
+        <Activity mode={isAuthor ? "visible" : "hidden"}>
+          <EditDelete type="question" itemId={question.id} />
+        </Activity>
       </div>
       <Separator className="bg-light700_dark400 h-1 mt-10" />
 
