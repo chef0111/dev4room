@@ -6,6 +6,7 @@ import { getTimeStamp, formatNumber } from "@/lib/utils";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import Votes from "@/components/shared/Votes";
+import SaveQuestion from "./SaveQuestion";
 
 interface QuestionHeaderProps {
   questionId: string;
@@ -18,6 +19,7 @@ interface QuestionHeaderProps {
   views: number;
   upvotes: number;
   downvotes: number;
+  hasSaved?: Promise<{ saved: boolean }>;
 }
 
 const QuestionHeader = ({
@@ -31,6 +33,7 @@ const QuestionHeader = ({
   views,
   upvotes,
   downvotes,
+  hasSaved,
 }: QuestionHeaderProps) => {
   return (
     <>
@@ -50,7 +53,7 @@ const QuestionHeader = ({
             </Link>
           </div>
 
-          <div className="flex-end gap-2.5">
+          <div className="flex-end gap-2">
             <Suspense
               fallback={
                 <div className="flex gap-3.5">
@@ -65,6 +68,8 @@ const QuestionHeader = ({
                 upvotes={upvotes}
                 downvotes={downvotes}
               />
+
+              <SaveQuestion question={questionId} hasSaved={hasSaved!} />
             </Suspense>
           </div>
         </div>

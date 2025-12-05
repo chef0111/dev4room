@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Activity, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { formatNumber } from "@/lib/utils";
 import {
@@ -47,12 +47,14 @@ const Votes = ({ targetType, targetId, upvotes, downvotes }: VotesProps) => {
           )}
         </Button>
 
-        <p
-          className="body-medium text-dark400_light900 pr-1.5"
-          aria-label="Upvotes count"
-        >
-          {formatNumber(upvotes)}
-        </p>
+        <Activity mode={upvotes > 0 ? "visible" : "hidden"}>
+          <p
+            className="body-medium text-dark400_light900 pr-1.5"
+            aria-label="Upvotes count"
+          >
+            {formatNumber(upvotes)}
+          </p>
+        </Activity>
       </div>
 
       <div className="flex-center bg-light700_dark400 min-w-6 rounded-md p-1.5">
