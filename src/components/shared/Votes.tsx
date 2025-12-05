@@ -30,7 +30,7 @@ const Votes = ({ targetType, targetId, upvotes, downvotes }: VotesProps) => {
   return (
     <div className="flex-center gap-2">
       <div
-        className="flex-center bg-light700_dark400 min-w-6 rounded-md gap-1 p-1.5"
+        className="flex-center bg-light700_dark400 rounded-md gap-1 p-1.5"
         role="status"
       >
         <Button
@@ -57,7 +57,7 @@ const Votes = ({ targetType, targetId, upvotes, downvotes }: VotesProps) => {
         </Activity>
       </div>
 
-      <div className="flex-center bg-light700_dark400 min-w-6 rounded-md p-1.5">
+      <div className="flex-center bg-light700_dark400 rounded-md p-1.5">
         <Button
           variant="ghost"
           disabled={isLoading}

@@ -4,7 +4,6 @@ import { notFound } from "next/navigation";
 
 import { orpc } from "@/lib/orpc";
 import { getQueryClient } from "@/lib/query/hydration";
-import { incrementQuestionViews } from "@/app/server/question/question.dal";
 import { Separator } from "@/components/ui/separator";
 import TagCard from "@/components/layout/tags/TagCard";
 import QuestionHeader from "@/components/layout/questions/QuestionHeader";
@@ -12,6 +11,7 @@ import MarkdownPreview from "@/components/editor/MarkdownPreview";
 import AnswerForm from "@/components/layout/answers/AnswerForm";
 import EditDelete from "@/components/shared/EditDelete";
 import { getServerSession } from "@/lib/session";
+import { ViewService } from "@/services/view.service";
 
 const QuestionDetails = async ({ params }: RouteParams) => {
   const { id } = await params;
@@ -30,7 +30,7 @@ const QuestionDetails = async ({ params }: RouteParams) => {
   const isAuthor = session?.user?.id === author.id.toString();
 
   after(async () => {
-    await incrementQuestionViews(id);
+    await ViewService.incrementQuestionViews(id);
   });
 
   return (

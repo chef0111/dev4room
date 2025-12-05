@@ -2,6 +2,8 @@ import EditorFallback from "@/components/editor/EditorFallback";
 import PostCardsSkeleton from "@/components/skeletons/PostCardsSkeleton";
 import QuestionHeaderSkeleton from "@/components/skeletons/QuestionHeaderSkeleton";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import { BsStars } from "react-icons/bs";
 
 const Loading = () => {
   return (
@@ -37,13 +39,26 @@ const Loading = () => {
 
       {/* Answer Form Skeleton */}
       <div className="pt-10 flex flex-col gap-10">
-        <div className="flex-between w-full">
-          <Skeleton className="h-6 w-40" />
-          <Skeleton className="h-10 w-32" />
+        <div className="flex flex-col justify-between pt-4 gap-4 sm:flex-row sm:items-center sm:gap-2">
+          <h4 className="pg-semibold text-dark400_light800">
+            Write your answer here
+          </h4>
+          <Button
+            className="btn hover:bg-light700_dark400! light-border-2 gap-1 rounded-md border px-4 py-2 text-link-100 shadow-none"
+            disabled
+          >
+            <BsStars className="text-orange-300 size-4" />
+            Generate AI Answer
+          </Button>
         </div>
         <EditorFallback />
         <div className="flex-end w-full">
-          <Skeleton className="h-10 w-28 mb-10" />
+          <Button
+            className="primary-gradient hover:primary-gradient-hover w-fit text-light-900"
+            disabled
+          >
+            Post Answer
+          </Button>
         </div>
       </div>
     </>

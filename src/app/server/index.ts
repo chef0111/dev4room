@@ -7,6 +7,7 @@ import {
   getTopQuestions,
 } from "./question";
 import { listTags, getTagQuestions, getPopular } from "./tag";
+import { createInteraction } from "./interaction";
 
 export const router = {
   user: {
@@ -23,5 +24,8 @@ export const router = {
     list: listTags,
     getQuestions: getTagQuestions,
     getPopular: getPopular,
+  },
+  interaction: {
+    create: createInteraction,
   },
 };
