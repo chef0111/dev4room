@@ -8,6 +8,7 @@ import {
 } from "./question";
 import { listTags, getTagQuestions, getPopular } from "./tag";
 import { createInteraction } from "./interaction";
+import { createVote, hasVoted } from "./vote";
 
 export const router = {
   user: {
@@ -27,5 +28,9 @@ export const router = {
   },
   interaction: {
     create: createInteraction,
+  },
+  vote: {
+    create: createVote,
+    status: hasVoted,
   },
 };
