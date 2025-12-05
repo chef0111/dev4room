@@ -31,9 +31,13 @@ export function UserNav({ user, isAdmin = false }: UserNavProps) {
     <DropdownMenu>
       <DropdownMenuTrigger
         className="hover:bg-light800_dark300 transition-all duration-150"
+        aria-label="User navigation"
         asChild
       >
-        <div className="w-full flex-between gap-2 rounded-lg data-[state=open]:bg-accent data-[state=open]:text-sidebar-accent-foreground focus:ring-0! focus:border-none! max-sm:p-2 p-0 lg:p-2">
+        <div
+          className="w-full flex-between gap-2 rounded-lg data-[state=open]:bg-accent data-[state=open]:text-sidebar-accent-foreground focus:ring-0! focus:border-none! max-sm:p-2 p-0 lg:p-2"
+          aria-label="User navigation"
+        >
           <div className="flex-start flex-grow gap-2">
             <UserAvatar
               id={user.id}
