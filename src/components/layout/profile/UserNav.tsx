@@ -69,6 +69,7 @@ export function UserNav({ user, isAdmin = false }: UserNavProps) {
               image={user.image ?? ""}
               className="size-8 rounded-lg"
               fallbackClassName="rounded-lg"
+              aria-label="User avatar"
             />
             <div className="grid flex-1 text-left text-sm leading-tight">
               <span className="truncate font-medium">{user.name}</span>
