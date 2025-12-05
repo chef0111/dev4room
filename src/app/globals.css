@@ -8,6 +8,12 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@keyframes shimmer {
+  100% {
+    transform: translateX(200%);
+  }
+}
+
 @theme {
   --color-primary-100: #e6f7ff;
   --color-primary-200: #d8eefb;

@@ -1,7 +1,15 @@
 import { cn } from "@/lib/utils";
 import { Skeleton } from "../ui/skeleton";
 
-const GridCardsSkeleton = ({ className }: { className?: string }) => {
+interface GridCardsSkeletonProps {
+  className?: string;
+  itemClassName?: string;
+}
+
+const GridCardsSkeleton = ({
+  className,
+  itemClassName,
+}: GridCardsSkeletonProps) => {
   return (
     <div
       className={cn(
@@ -10,7 +18,10 @@ const GridCardsSkeleton = ({ className }: { className?: string }) => {
       )}
     >
       {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((item) => (
-        <Skeleton key={item} className="h-50 w-full rounded-2xl" />
+        <Skeleton
+          key={item}
+          className={cn("h-50 w-full rounded-2xl", itemClassName)}
+        />
       ))}
     </div>
   );

@@ -19,7 +19,7 @@ const NavTabs = ({ userId, isMobile = false }: NavTabsProps) => {
   const pathname = usePathname();
 
   return (
-    <div className="flex flex-col gap-2 flex-1">
+    <div className="flex flex-col gap-3 sm:gap-2 flex-1">
       {sidebarTabs.map((item) => {
         // Don't show profile tab if user is not logged in
         if (item.route === "/profile" && !userId) {
@@ -42,8 +42,8 @@ const NavTabs = ({ userId, isMobile = false }: NavTabsProps) => {
             className={cn(
               isActive
                 ? "primary-gradient rounded-lg text-light-900"
-                : "text-dark300_light900 rounded-lg hover:bg-light800_dark300!",
-              "flex-start max-lg:justify-center gap-4 bg-transparent p-3.5",
+                : "text-dark300_light900 rounded-lg hover:bg-light800_dark300! transition-none hover:transition-none [&:not(:hover)]:transition-colors [&:not(:hover)]:duration-150",
+              "flex-start max-lg:justify-center max-sm:justify-start gap-4 bg-transparent p-3.5 max-sm:p-5",
             )}
           >
             <Image
@@ -57,6 +57,7 @@ const NavTabs = ({ userId, isMobile = false }: NavTabsProps) => {
               className={cn(
                 isActive ? "base-bold" : "base-medium",
                 !isMobile && "max-lg:hidden",
+                "max-sm:text-xl",
               )}
             >
               {item.label}

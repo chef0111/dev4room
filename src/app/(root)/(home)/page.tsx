@@ -1,20 +1,23 @@
-import { Suspense } from "react";
 import { Metadata } from "next";
 import Link from "next/link";
 
 import { orpc } from "@/lib/orpc";
-import { getQueryClient, HydrateClient } from "@/lib/query/hydration";
+import { getQueryClient } from "@/lib/query/hydration";
+import { getErrorMessage } from "@/lib/handlers/error";
+import { EMPTY_QUESTION } from "@/common/constants/states";
 
 import { Button } from "@/components/ui/button";
 import LocalSearch from "@/components/layout/main/LocalSearch";
 import HomeFilter from "@/components/filters/HomeFilter";
 import QuestionCard from "@/components/layout/questions/QuestionCard";
-import PostCardsSkeleton from "@/components/skeletons/PostCardsSkeleton";
+import DataRenderer from "@/components/shared/DataRenderer";
+import Filter from "@/components/filters/Filter";
+import { HomePageFilters } from "@/common/constants/filters";
 
 export const metadata: Metadata = {
   title: "Dev4Room | Home",
   description:
-    "Post, search, and filter programming questions from the Dev Overflow community. Find solutions, share knowledge, and ask your own questions.",
+    "Post, search, and filter programming questions from the Dev4Room community. Find solutions, share knowledge, and ask your own questions.",
 };
 
 interface SearchParams {
@@ -35,15 +38,18 @@ const HomePage = async ({ searchParams }: SearchParams) => {
     },
   });
 
-  await queryClient.prefetchQuery(queryOptions);
+  const result = await queryClient
+    .fetchQuery(queryOptions)
+    .then((data) => ({ data, error: undefined }))
+    .catch((e) => ({
+      data: undefined,
+      error: { message: getErrorMessage(e, "Failed to get questions") },
+    }));
 
-  const data = queryClient.getQueryData(queryOptions.queryKey);
-  const questions = data?.questions;
-
-  const searchPlaceholder = "Search a question here...";
+  const data = result.data;
 
   return (
-    <HydrateClient client={queryClient}>
+    <>
       {/* Ask a question section */}
       <section className="flex flex-col-reverse sm:flex-row justify-between sm:items-center w-full gap-4">
         <h1 className="h1-bold text-dark100_light900">All Questions</h1>
@@ -55,23 +61,37 @@ const HomePage = async ({ searchParams }: SearchParams) => {
           <Link href="/ask-question">Ask Question</Link>
         </Button>
       </section>
+
       <section className="mt-10">
         <LocalSearch
           route="/"
-          placeholder={searchPlaceholder}
+          placeholder="Search a question here..."
           className="flex-1"
         />
+
+        <Filter
+          filters={HomePageFilters}
+          className="mt-6 min-h-12 w-full"
+          containerClassName="hidden max-sm:flex"
+        />
+
         <HomeFilter />
       </section>
 
-      <div className="flex flex-col my-10 w-full gap-6">
-        <Suspense fallback={<PostCardsSkeleton />}>
-          {questions?.map((question) => (
-            <QuestionCard key={question.id} question={question} />
-          ))}
-        </Suspense>
-      </div>
-    </HydrateClient>
+      <DataRenderer
+        data={data?.questions ?? []}
+        success={!!data}
+        error={result.error}
+        empty={EMPTY_QUESTION}
+        render={(questions) => (
+          <div className="flex flex-col my-10 w-full gap-6">
+            {questions.map((question) => (
+              <QuestionCard key={question.id} question={question} />
+            ))}
+          </div>
+        )}
+      />
+    </>
   );
 };
 
