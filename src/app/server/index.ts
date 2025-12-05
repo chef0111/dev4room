@@ -1,13 +1,12 @@
-import { listUsers } from "./user/user";
+import { listUsers } from "./user";
 import {
   listQuestions,
   getQuestion,
   createQuestion,
   editQuestion,
-  incrementViews,
   getTopQuestions,
-} from "./question/question";
-import { listTags, getTagQuestions, getPopular } from "./tag/tag";
+} from "./question";
+import { listTags, getTagQuestions, getPopular } from "./tag";
 
 export const router = {
   user: {
@@ -18,7 +17,6 @@ export const router = {
     get: getQuestion,
     create: createQuestion,
     edit: editQuestion,
-    view: incrementViews,
     getTop: getTopQuestions,
   },
   tag: {

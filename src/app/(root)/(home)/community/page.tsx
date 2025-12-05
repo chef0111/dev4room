@@ -1,12 +1,12 @@
 import { orpc } from "@/lib/orpc";
 import { getQueryClient } from "@/lib/query/hydration";
-import { EMPTY_USERS } from "@/common/constants/states";
+import { getErrorMessage } from "@/lib/handlers/error";
 import LocalSearch from "@/components/layout/main/LocalSearch";
-import UserCard from "@/components/layout/profile/UserCard";
-import DataRenderer from "@/components/shared/DataRenderer";
 import Filter from "@/components/filters/Filter";
 import { UserFilters } from "@/common/constants/filters";
-import { getErrorMessage } from "@/lib/handlers/error";
+import { EMPTY_USERS } from "@/common/constants/states";
+import DataRenderer from "@/components/shared/DataRenderer";
+import UserCard from "@/components/layout/profile/UserCard";
 
 const Community = async ({ searchParams }: RouteParams) => {
   const { page, pageSize, query, filter } = await searchParams;
@@ -30,6 +30,8 @@ const Community = async ({ searchParams }: RouteParams) => {
       error: { message: getErrorMessage(e, "Failed to fetch users data") },
     }));
 
+  const data = result.data;
+
   return (
     <div>
       <h1 className="h1-bold text-dark100_light900">All Users</h1>
@@ -44,8 +46,8 @@ const Community = async ({ searchParams }: RouteParams) => {
       </section>
 
       <DataRenderer
-        data={result.data?.users ?? []}
-        success={!!result.data}
+        data={data?.users ?? []}
+        success={!!data}
         error={result.error}
         empty={EMPTY_USERS}
         render={(users) => (

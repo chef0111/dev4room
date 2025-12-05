@@ -255,7 +255,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
           <Button
             type="submit"
             disabled={isPending}
-            className="primary-gradient hover:primary-gradient-hover text-light-900! cursor-pointer"
+            className="primary-gradient hover:primary-gradient-hover text-light-900! transition-colors cursor-pointer"
           >
             {isPending ? (
               <>

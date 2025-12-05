@@ -1,9 +1,10 @@
-import LeftSidebar from "@/components/layout/navigation/left-sidebar/LeftSidebar";
-import Navbar from "@/components/layout/navigation/navbar";
-import NextTopLoader from "nextjs-toploader";
 import { Suspense } from "react";
+import NextTopLoader from "nextjs-toploader";
+import Navbar from "@/components/layout/navigation/navbar";
 import { Skeleton } from "@/components/ui/skeleton";
+import LeftSidebar from "@/components/layout/navigation/left-sidebar/LeftSidebar";
 import NavTabsFallback from "@/components/layout/navigation/left-sidebar/NavTabsFallback";
+import { ScrollToTop } from "@/components/layout/main/ScrollToTop";
 
 interface Props {
   children: React.ReactNode;
@@ -22,7 +23,12 @@ const DashboardLayout: React.FC<Props> = ({ children }) => {
         </Suspense>
 
         <section className="flex min-h-screen flex-1 flex-col min-w-full px-6 pb-6 pt-32 max-md:pb-14 sm:px-14 sm:pl-34 lg:pl-78 2xl:px-0">
-          <div className="mx-auto w-full">{children}</div>
+          <div className="mx-auto w-full">
+            <Suspense fallback={null}>
+              <ScrollToTop />
+            </Suspense>
+            {children}
+          </div>
         </section>
       </div>
     </main>
