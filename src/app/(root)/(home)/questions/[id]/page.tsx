@@ -67,10 +67,7 @@ const QuestionDetails = async ({ params }: RouteParams) => {
                 downvotes={question.downvotes}
               />
 
-              <SaveQuestion
-                question={question.id}
-                hasSaved={Promise.resolve({ saved: false })}
-              />
+              <SaveQuestion questionId={question.id} />
             </Suspense>
           </div>
         </div>

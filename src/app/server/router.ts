@@ -9,6 +9,7 @@ import {
 import { listTags, getTagQuestions, getPopular } from "./tag";
 import { createInteraction } from "./interaction";
 import { createVote, hasVoted } from "./vote";
+import { toggleSave, hasSaved } from "./collection";
 
 export const router = {
   user: {
@@ -32,5 +33,9 @@ export const router = {
   vote: {
     create: createVote,
     status: hasVoted,
+  },
+  collection: {
+    toggle: toggleSave,
+    status: hasSaved,
   },
 };

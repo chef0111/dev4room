@@ -27,7 +27,7 @@ const Votes = ({
   downvotes: initialDownvotes,
 }: VotesProps) => {
   const canAnimate = useCanAnimate();
-  const { state, vote } = useVote({
+  const { state, vote, isVoting } = useVote({
     targetType,
     targetId,
     initialUpvotes,
@@ -54,7 +54,8 @@ const Votes = ({
           <Button
             variant="ghost"
             onClick={() => vote("upvote")}
-            className="h-5 w-5 p-0 group bg-transparent! relative overflow-visible"
+            disabled={isVoting}
+            className="h-5 w-5 p-0 group bg-transparent! relative disabled:opacity-100 overflow-visible"
             aria-label={hasUpvoted ? "Remove upvote" : "Upvote"}
             aria-pressed={hasUpvoted}
           >
@@ -109,7 +110,8 @@ const Votes = ({
         <Button
           variant="ghost"
           onClick={() => vote("downvote")}
-          className="h-5 w-5 p-0 group bg-transparent! relative overflow-visible"
+          disabled={isVoting}
+          className="h-5 w-5 p-0 group bg-transparent! relative disabled:opacity-100 overflow-visible"
           aria-label={hasDownvoted ? "Remove downvote" : "Downvote"}
           aria-pressed={hasDownvoted}
         >
