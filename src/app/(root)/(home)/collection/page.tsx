@@ -43,7 +43,7 @@ const Collections = async ({ searchParams }: SearchParams) => {
       <div className="mt-10 flex justify-between sm:items-center max-sm:flex-col gap-4">
         <LocalSearch
           route="/collection"
-          placeholder="Search a question here..."
+          placeholder="Search a bookmarked question..."
           className="flex-1"
         />
 

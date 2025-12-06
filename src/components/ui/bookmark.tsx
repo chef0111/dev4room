@@ -56,6 +56,8 @@ const Bookmark = ({
     onToggle?.();
   }, [isActive, onToggle]);
 
+  const bookmarkToggle = useDebounce(handleClick, 300);
+
   return (
     <div className={cn("relative", className)}>
       {/* Particles burst effect */}
@@ -107,7 +109,7 @@ const Bookmark = ({
         aria-label={isActive ? "Remove from saved" : "Save"}
         aria-pressed={isActive}
         disabled={isLoading}
-        onClick={useDebounce(handleClick, 300)}
+        onClick={bookmarkToggle}
       >
         <AnimatePresence mode="wait" initial={false}>
           {isActive ? (

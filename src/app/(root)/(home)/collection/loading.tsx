@@ -9,7 +9,7 @@ const Loading = () => {
 
       <div className="mt-10 flex justify-between gap-4 max-sm:flex-col sm:items-center">
         <SearchInput
-          placeholder="Search tags..."
+          placeholder="Search a bookmarked question..."
           className="bg-light800_darksecondgradient! grow w-full min-h-12 gap-2 px-2"
           disabled
         />

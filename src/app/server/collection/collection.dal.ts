@@ -119,6 +119,7 @@ export class CollectionDAL {
       .select({ count: sql<number>`count(*)::int` })
       .from(collection)
       .innerJoin(question, eq(collection.questionId, question.id))
+      .innerJoin(user, eq(question.authorId, user.id))
       .where(where);
 
     // Fetch collections with question and author
