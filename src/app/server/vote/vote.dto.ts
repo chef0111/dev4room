@@ -34,11 +34,17 @@ export const HasVotedSchema = z.object({
 // Output Schemas
 export const VoteOutputSchema = z.object({
   success: z.boolean(),
+  upvotes: z.number(),
+  downvotes: z.number(),
+  hasUpvoted: z.boolean(),
+  hasDownvoted: z.boolean(),
 });
 
 export const HasVotedOutputSchema = z.object({
   hasUpvoted: z.boolean(),
   hasDownvoted: z.boolean(),
+  upvotes: z.number(),
+  downvotes: z.number(),
 });
 
 // Types

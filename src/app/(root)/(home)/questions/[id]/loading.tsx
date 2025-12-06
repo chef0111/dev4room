@@ -1,4 +1,4 @@
-import EditorFallback from "@/components/editor/EditorFallback";
+import EditorFallback from "@/components/markdown/EditorFallback";
 import PostCardsSkeleton from "@/components/skeletons/PostCardsSkeleton";
 import QuestionHeaderSkeleton from "@/components/skeletons/QuestionHeaderSkeleton";
 import { Skeleton } from "@/components/ui/skeleton";

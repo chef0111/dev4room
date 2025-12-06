@@ -7,6 +7,7 @@ import { CollectionFilters } from "@/common/constants/filters";
 import DataRenderer from "@/components/shared/DataRenderer";
 import QuestionCard from "@/components/layout/questions/QuestionCard";
 import { EMPTY_QUESTION } from "@/common/constants/states";
+import { NextPagination } from "@/components/ui/next-pagination";
 
 interface SearchParams {
   searchParams: Promise<{ [key: string]: string }>;
@@ -20,7 +21,7 @@ const Collections = async ({ searchParams }: SearchParams) => {
   const queryOptions = orpc.collection.list.queryOptions({
     input: {
       page: Number(page) || 1,
-      pageSize: Number(pageSize) || 12,
+      pageSize: Number(pageSize) || 10,
       query,
       filter,
     },
@@ -35,6 +36,7 @@ const Collections = async ({ searchParams }: SearchParams) => {
     }));
 
   const data = result.data;
+  const totalCollections = data?.totalCollections || 0;
 
   return (
     <>
@@ -65,6 +67,13 @@ const Collections = async ({ searchParams }: SearchParams) => {
             ))}
           </div>
         )}
+      />
+
+      <NextPagination
+        page={page}
+        pageSize={pageSize}
+        totalCount={totalCollections}
+        className="pb-10"
       />
     </>
   );

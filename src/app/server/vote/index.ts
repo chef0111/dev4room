@@ -24,7 +24,7 @@ export const createVote = authorized
   .input(CreateVoteSchema)
   .output(VoteOutputSchema)
   .handler(async ({ input, context }) => {
-    const { success, contentAuthorId } = await createVoteDAL(
+    const { contentAuthorId, ...result } = await createVoteDAL(
       input,
       context.user.id,
     );
@@ -45,7 +45,7 @@ export const createVote = authorized
       }
     });
 
-    return { success };
+    return result;
   });
 
 export const hasVoted = authorized

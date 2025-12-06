@@ -15,7 +15,7 @@ import SaveQuestion from "@/components/layout/questions/SaveQuestion";
 import TagCard from "@/components/layout/tags/TagCard";
 import EditDelete from "@/components/shared/EditDelete";
 import { Separator } from "@/components/ui/separator";
-import MarkdownPreview from "@/components/editor/MarkdownPreview";
+import MarkdownPreview from "@/components/markdown/MarkdownPreview";
 import AnswerForm from "@/components/layout/answers/AnswerForm";
 import Metric from "@/components/shared/Metric";
 import QuestionUtilsFallback from "@/components/layout/questions/QuestionUtilsFallback";
@@ -102,6 +102,7 @@ const QuestionDetails = async ({ params }: RouteParams) => {
       </div>
 
       <MarkdownPreview content={content} />
+
       <div className="mt-8 flex-between">
         <div className="flex flex-wrap gap-2">
           {tags.map((tag) => (

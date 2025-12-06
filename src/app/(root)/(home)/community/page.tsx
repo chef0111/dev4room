@@ -7,6 +7,7 @@ import { UserFilters } from "@/common/constants/filters";
 import { EMPTY_USERS } from "@/common/constants/states";
 import DataRenderer from "@/components/shared/DataRenderer";
 import UserCard from "@/components/layout/profile/UserCard";
+import { NextPagination } from "@/components/ui/next-pagination";
 
 const Community = async ({ searchParams }: RouteParams) => {
   const { page, pageSize, query, filter } = await searchParams;
@@ -31,6 +32,7 @@ const Community = async ({ searchParams }: RouteParams) => {
     }));
 
   const data = result.data;
+  const totalUsers = data?.totalUsers || 0;
 
   return (
     <div>
@@ -57,6 +59,13 @@ const Community = async ({ searchParams }: RouteParams) => {
             ))}
           </div>
         )}
+      />
+
+      <NextPagination
+        page={page}
+        pageSize={pageSize || 12}
+        totalCount={totalUsers}
+        className="pb-10"
       />
     </div>
   );
