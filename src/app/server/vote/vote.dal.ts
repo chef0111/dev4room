@@ -14,7 +14,26 @@ import {
 
 type Transaction = Parameters<Parameters<typeof db.transaction>[0]>[0];
 
+export interface VoteCounts {
+  upvotes: number;
+  downvotes: number;
+}
+
 export class VoteDAL {
+  private static async getVoteCounts(
+    tx: Transaction,
+    targetId: string,
+    targetType: TargetType,
+  ): Promise<VoteCounts> {
+    const table = targetType === "question" ? question : answer;
+    const [row] = await tx
+      .select({ upvotes: table.upvotes, downvotes: table.downvotes })
+      .from(table)
+      .where(eq(table.id, targetId));
+
+    return { upvotes: row?.upvotes ?? 0, downvotes: row?.downvotes ?? 0 };
+  }
+
   private static async updateVoteCount(
     tx: Transaction,
     targetId: string,
@@ -64,7 +83,14 @@ export class VoteDAL {
   static async createVote(
     input: CreateVoteInput,
     userId: string,
-  ): Promise<{ success: boolean; contentAuthorId: string }> {
+  ): Promise<{
+    success: boolean;
+    contentAuthorId: string;
+    upvotes: number;
+    downvotes: number;
+    hasUpvoted: boolean;
+    hasDownvoted: boolean;
+  }> {
     const { targetId, targetType, voteType } = input;
 
     return await db.transaction(async (tx) => {
@@ -119,7 +145,26 @@ export class VoteDAL {
         await this.updateVoteCount(tx, targetId, targetType, voteType, 1);
       }
 
-      return { success: true, contentAuthorId };
+      // Fetch updated counts and current vote status
+      const counts = await this.getVoteCounts(tx, targetId, targetType);
+      const [currentVote] = await tx
+        .select({ voteType: vote.voteType })
+        .from(vote)
+        .where(
+          and(
+            eq(vote.authorId, userId),
+            eq(vote.actionId, targetId),
+            eq(vote.actionType, targetType),
+          ),
+        );
+
+      return {
+        success: true,
+        contentAuthorId,
+        ...counts,
+        hasUpvoted: currentVote?.voteType === "upvote",
+        hasDownvoted: currentVote?.voteType === "downvote",
+      };
     });
   }
 
@@ -129,24 +174,31 @@ export class VoteDAL {
   ): Promise<HasVotedOutput> {
     const { targetId, targetType } = input;
 
-    const [existingVote] = await db
-      .select({ voteType: vote.voteType })
-      .from(vote)
-      .where(
-        and(
-          eq(vote.authorId, userId),
-          eq(vote.actionId, targetId),
-          eq(vote.actionType, targetType),
-        ),
-      );
+    // Fetch vote status and counts in parallel
+    const table = targetType === "question" ? question : answer;
 
-    if (!existingVote) {
-      return { hasUpvoted: false, hasDownvoted: false };
-    }
+    const [[existingVote], [counts]] = await Promise.all([
+      db
+        .select({ voteType: vote.voteType })
+        .from(vote)
+        .where(
+          and(
+            eq(vote.authorId, userId),
+            eq(vote.actionId, targetId),
+            eq(vote.actionType, targetType),
+          ),
+        ),
+      db
+        .select({ upvotes: table.upvotes, downvotes: table.downvotes })
+        .from(table)
+        .where(eq(table.id, targetId)),
+    ]);
 
     return {
-      hasUpvoted: existingVote.voteType === "upvote",
-      hasDownvoted: existingVote.voteType === "downvote",
+      hasUpvoted: existingVote?.voteType === "upvote",
+      hasDownvoted: existingVote?.voteType === "downvote",
+      upvotes: counts?.upvotes ?? 0,
+      downvotes: counts?.downvotes ?? 0,
     };
   }
 }

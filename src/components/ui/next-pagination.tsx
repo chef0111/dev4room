@@ -118,7 +118,7 @@ export function NextPagination({
             isActive={Number(page) === totalPageCount}
             scroll={scroll}
           >
-            {totalPageCount}
+            {String(totalPageCount)}
           </PaginationLink>
         </PaginationItem>,
       );
