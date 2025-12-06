@@ -50,7 +50,7 @@ export function useVote({
   const { data: session } = authClient.useSession();
   const isAuthenticated = !!session?.user;
 
-  const [countDelta, setCountDelta] = useState({ upvotes: 0, downvotes: 0 });
+  const [countChange, setCountChange] = useState({ upvotes: 0, downvotes: 0 });
 
   const statusQueryKey = orpc.vote.status.queryOptions({
     input: { targetId, targetType },
@@ -76,14 +76,14 @@ export function useVote({
         hasUpvoted: boolean;
         hasDownvoted: boolean;
       }>(statusQueryKey);
-      const prevDelta = countDelta;
+      const prevChange = countChange;
 
       const hasUpvoted = prevStatus?.hasUpvoted ?? false;
       const hasDownvoted = prevStatus?.hasDownvoted ?? false;
 
       const changes = getVoteChanges(voteType, hasUpvoted, hasDownvoted);
 
-      setCountDelta((prev) => ({
+      setCountChange((prev) => ({
         upvotes: prev.upvotes + changes.upvotes,
         downvotes: prev.downvotes + changes.downvotes,
       }));
@@ -93,7 +93,7 @@ export function useVote({
         hasDownvoted: changes.newDownvoted,
       });
 
-      return { prevStatus, prevDelta };
+      return { prevStatus, prevChange };
     },
 
     onError: (_error, _voteType, context) => {
@@ -101,8 +101,8 @@ export function useVote({
       if (context?.prevStatus) {
         queryClient.setQueryData(statusQueryKey, context.prevStatus);
       }
-      if (context?.prevDelta) {
-        setCountDelta(context.prevDelta);
+      if (context?.prevChange) {
+        setCountChange(context.prevChange);
       }
       toast.error("Failed to vote. Please try again.");
     },
@@ -114,12 +114,12 @@ export function useVote({
 
   const state = useMemo<VoteState>(
     () => ({
-      upvotes: initialUpvotes + countDelta.upvotes,
-      downvotes: initialDownvotes + countDelta.downvotes,
+      upvotes: initialUpvotes + countChange.upvotes,
+      downvotes: initialDownvotes + countChange.downvotes,
       hasUpvoted: voteStatus?.hasUpvoted ?? false,
       hasDownvoted: voteStatus?.hasDownvoted ?? false,
     }),
-    [voteStatus, initialUpvotes, initialDownvotes, countDelta],
+    [voteStatus, initialUpvotes, initialDownvotes, countChange],
   );
 
   const vote = useCallback(
