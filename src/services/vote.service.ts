@@ -1,30 +1,19 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { orpc, client } from "@/lib/orpc";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 
-// Types
 export type VoteType = "upvote" | "downvote";
 export type TargetType = "question" | "answer";
 
-export interface VoteStatus {
-  hasUpvoted: boolean;
-  hasDownvoted: boolean;
-}
-
-export interface VoteCounts {
+export interface VoteState {
   upvotes: number;
   downvotes: number;
-}
-
-export interface VoteState extends VoteStatus, VoteCounts {}
-
-interface OptimisticContext {
-  previousStatus: VoteStatus | undefined;
-  previousCounts: VoteCounts | undefined;
+  hasUpvoted: boolean;
+  hasDownvoted: boolean;
 }
 
 interface UseVoteOptions {
@@ -34,58 +23,21 @@ interface UseVoteOptions {
   initialDownvotes: number;
 }
 
-export const voteQueryKeys = {
-  status: (targetType: TargetType, targetId: string) =>
-    orpc.vote.status.queryOptions({
-      input: { targetId, targetType },
-    }).queryKey,
-  counts: (targetType: TargetType, targetId: string) =>
-    ["vote", "counts", targetType, targetId] as const,
-};
-
-function calculateVoteState(
+function getVoteChanges(
   voteType: VoteType,
-  currentStatus: VoteStatus,
-  currentCounts: VoteCounts,
-): { status: VoteStatus; counts: VoteCounts } {
-  const { hasUpvoted, hasDownvoted } = currentStatus;
-  const { upvotes, downvotes } = currentCounts;
+  hasUpvoted: boolean,
+  hasDownvoted: boolean,
+) {
+  const isUpvote = voteType === "upvote";
+  const isToggleOff = isUpvote ? hasUpvoted : hasDownvoted;
+  const isSwitch = isUpvote ? hasDownvoted : hasUpvoted;
 
-  if (voteType === "upvote") {
-    if (hasUpvoted) {
-      return {
-        status: { hasUpvoted: false, hasDownvoted: false },
-        counts: { upvotes: upvotes - 1, downvotes },
-      };
-    } else if (hasDownvoted) {
-      return {
-        status: { hasUpvoted: true, hasDownvoted: false },
-        counts: { upvotes: upvotes + 1, downvotes: downvotes - 1 },
-      };
-    } else {
-      return {
-        status: { hasUpvoted: true, hasDownvoted: false },
-        counts: { upvotes: upvotes + 1, downvotes },
-      };
-    }
-  } else {
-    if (hasDownvoted) {
-      return {
-        status: { hasUpvoted: false, hasDownvoted: false },
-        counts: { upvotes, downvotes: downvotes - 1 },
-      };
-    } else if (hasUpvoted) {
-      return {
-        status: { hasUpvoted: false, hasDownvoted: true },
-        counts: { upvotes: upvotes - 1, downvotes: downvotes + 1 },
-      };
-    } else {
-      return {
-        status: { hasUpvoted: false, hasDownvoted: true },
-        counts: { upvotes, downvotes: downvotes + 1 },
-      };
-    }
-  }
+  return {
+    upvotes: isUpvote ? (isToggleOff ? -1 : 1) : isSwitch ? -1 : 0,
+    downvotes: isUpvote ? (isSwitch ? -1 : 0) : isToggleOff ? -1 : 1,
+    newUpvoted: isUpvote && !isToggleOff,
+    newDownvoted: !isUpvote && !isToggleOff,
+  };
 }
 
 export function useVote({
@@ -98,10 +50,12 @@ export function useVote({
   const { data: session } = authClient.useSession();
   const isAuthenticated = !!session?.user;
 
-  const statusQueryKey = voteQueryKeys.status(targetType, targetId);
-  const countsQueryKey = voteQueryKeys.counts(targetType, targetId);
+  const [countDelta, setCountDelta] = useState({ upvotes: 0, downvotes: 0 });
 
-  // Only fetch vote status if authenticated
+  const statusQueryKey = orpc.vote.status.queryOptions({
+    input: { targetId, targetType },
+  }).queryKey;
+
   const { data: voteStatus } = useQuery({
     ...orpc.vote.status.queryOptions({
       input: { targetId, targetType },
@@ -111,76 +65,48 @@ export function useVote({
     staleTime: 1000 * 60 * 5,
   });
 
-  // Local vote counts cache
-  const { data: voteCounts } = useQuery({
-    queryKey: countsQueryKey,
-    queryFn: () => ({ upvotes: initialUpvotes, downvotes: initialDownvotes }),
-    initialData: { upvotes: initialUpvotes, downvotes: initialDownvotes },
-    staleTime: Infinity, // Never stale - managed optimistically
-  });
-
   const voteMutation = useMutation({
-    mutationFn: async (voteType: VoteType) => {
-      return client.vote.create({
-        targetId,
-        targetType,
-        voteType,
-      });
-    },
+    mutationFn: (voteType: VoteType) =>
+      client.vote.create({ targetId, targetType, voteType }),
 
-    // Optimistic update - instant UI feedback
-    onMutate: async (voteType): Promise<OptimisticContext> => {
-      // Cancel any outgoing refetches
+    onMutate: async (voteType) => {
       await queryClient.cancelQueries({ queryKey: statusQueryKey });
-      await queryClient.cancelQueries({ queryKey: countsQueryKey });
 
-      // Snapshot previous values for rollback
-      const previousStatus =
-        queryClient.getQueryData<VoteStatus>(statusQueryKey);
-      const previousCounts =
-        queryClient.getQueryData<VoteCounts>(countsQueryKey);
+      const prevStatus = queryClient.getQueryData<{
+        hasUpvoted: boolean;
+        hasDownvoted: boolean;
+      }>(statusQueryKey);
+      const prevDelta = countDelta;
 
-      // Calculate new optimistic state
-      const currentStatus: VoteStatus = {
-        hasUpvoted: previousStatus?.hasUpvoted ?? false,
-        hasDownvoted: previousStatus?.hasDownvoted ?? false,
-      };
-      const currentCounts: VoteCounts = {
-        upvotes: previousCounts?.upvotes ?? initialUpvotes,
-        downvotes: previousCounts?.downvotes ?? initialDownvotes,
-      };
+      const hasUpvoted = prevStatus?.hasUpvoted ?? false;
+      const hasDownvoted = prevStatus?.hasDownvoted ?? false;
 
-      const { status: newStatus, counts: newCounts } = calculateVoteState(
-        voteType,
-        currentStatus,
-        currentCounts,
-      );
+      const changes = getVoteChanges(voteType, hasUpvoted, hasDownvoted);
 
-      // Optimistically update both caches
-      queryClient.setQueryData<VoteStatus>(statusQueryKey, newStatus);
-      queryClient.setQueryData<VoteCounts>(countsQueryKey, newCounts);
+      setCountDelta((prev) => ({
+        upvotes: prev.upvotes + changes.upvotes,
+        downvotes: prev.downvotes + changes.downvotes,
+      }));
 
-      return { previousStatus, previousCounts };
+      queryClient.setQueryData(statusQueryKey, {
+        hasUpvoted: changes.newUpvoted,
+        hasDownvoted: changes.newDownvoted,
+      });
+
+      return { prevStatus, prevDelta };
     },
 
-    // Rollback on error
     onError: (_error, _voteType, context) => {
-      if (context?.previousStatus) {
-        queryClient.setQueryData<VoteStatus>(
-          statusQueryKey,
-          context.previousStatus,
-        );
+      // Rollback
+      if (context?.prevStatus) {
+        queryClient.setQueryData(statusQueryKey, context.prevStatus);
       }
-      if (context?.previousCounts) {
-        queryClient.setQueryData<VoteCounts>(
-          countsQueryKey,
-          context.previousCounts,
-        );
+      if (context?.prevDelta) {
+        setCountDelta(context.prevDelta);
       }
       toast.error("Failed to vote. Please try again.");
     },
 
-    // Sync with server after mutation
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: statusQueryKey });
     },
@@ -188,15 +114,14 @@ export function useVote({
 
   const state = useMemo<VoteState>(
     () => ({
-      upvotes: voteCounts?.upvotes ?? initialUpvotes,
-      downvotes: voteCounts?.downvotes ?? initialDownvotes,
+      upvotes: initialUpvotes + countDelta.upvotes,
+      downvotes: initialDownvotes + countDelta.downvotes,
       hasUpvoted: voteStatus?.hasUpvoted ?? false,
       hasDownvoted: voteStatus?.hasDownvoted ?? false,
     }),
-    [voteStatus, voteCounts, initialUpvotes, initialDownvotes],
+    [voteStatus, initialUpvotes, initialDownvotes, countDelta],
   );
 
-  // Avoid votes spamming and require authentication
   const vote = useCallback(
     (type: VoteType) => {
       if (!isAuthenticated) {
@@ -211,10 +136,5 @@ export function useVote({
     [isAuthenticated, voteMutation],
   );
 
-  return {
-    state,
-    vote,
-    isVoting: voteMutation.isPending,
-    isAuthenticated,
-  };
+  return { state, vote, isVoting: voteMutation.isPending, isAuthenticated };
 }
