@@ -1,15 +1,10 @@
 "use client";
 
-import { motion, AnimatePresence, MotionConfig } from "motion/react";
+import { motion, MotionConfig } from "motion/react";
 import { useVote, type TargetType } from "@/services/vote.service";
-import { Button } from "@/components/ui/button";
 import NumberFlow, { useCanAnimate } from "@number-flow/react";
-import {
-  TbArrowBigDown,
-  TbArrowBigDownFilled,
-  TbArrowBigUp,
-  TbArrowBigUpFilled,
-} from "react-icons/tb";
+import Upvote from "../ui/upvote";
+import Downvote from "../ui/downvote";
 
 const MotionNumberFlow = motion.create(NumberFlow);
 
@@ -51,49 +46,7 @@ const Votes = ({
           aria-label="Vote buttons"
           layout
         >
-          <Button
-            variant="ghost"
-            onClick={() => vote("upvote")}
-            disabled={isVoting}
-            className="h-5 w-5 p-0 group bg-transparent! relative disabled:opacity-100 overflow-visible"
-            aria-label={hasUpvoted ? "Remove upvote" : "Upvote"}
-            aria-pressed={hasUpvoted}
-          >
-            <AnimatePresence mode="wait" initial={false}>
-              {hasUpvoted ? (
-                <motion.span
-                  key="upvoted"
-                  className="flex-center"
-                  initial={{ y: 0, scale: 0.8 }}
-                  animate={{
-                    y: [0, -8, 0],
-                    scale: [0.8, 1.2, 1],
-                  }}
-                  exit={{ opacity: 0, transition: { duration: 0.15 } }}
-                  transition={{
-                    duration: 0.4,
-                    times: [0, 0.4, 1],
-                    ease: [0.34, 1.56, 0.64, 1],
-                  }}
-                >
-                  <TbArrowBigUpFilled className="size-5 text-green-500" />
-                </motion.span>
-              ) : (
-                <motion.span
-                  key="not-upvoted"
-                  className="flex-center"
-                  initial={{ scale: 0.8 }}
-                  animate={{ scale: 1 }}
-                  exit={{ scale: 0.8 }}
-                  transition={{ duration: 0.15 }}
-                  whileHover={{ scale: 1.15, y: -2 }}
-                  whileTap={{ scale: 0.9, y: 1 }}
-                >
-                  <TbArrowBigUp className="size-5 text-light-400 dark:text-light-500 group-hover:text-green-500!" />
-                </motion.span>
-              )}
-            </AnimatePresence>
-          </Button>
+          <Upvote hasUpvoted={hasUpvoted} disabled={isVoting} onClick={vote} />
 
           <MotionNumberFlow
             value={upvotes}
@@ -107,49 +60,11 @@ const Votes = ({
       </MotionConfig>
 
       <div className="flex-end bg-light700_dark400 h-8 rounded-md px-1.5">
-        <Button
-          variant="ghost"
-          onClick={() => vote("downvote")}
+        <Downvote
+          hasDownvoted={hasDownvoted}
           disabled={isVoting}
-          className="h-5 w-5 p-0 group bg-transparent! relative disabled:opacity-100 overflow-visible"
-          aria-label={hasDownvoted ? "Remove downvote" : "Downvote"}
-          aria-pressed={hasDownvoted}
-        >
-          <AnimatePresence mode="wait" initial={false}>
-            {hasDownvoted ? (
-              <motion.span
-                key="downvoted"
-                className="flex-center"
-                initial={{ y: 0, scale: 0.8 }}
-                animate={{
-                  y: [0, 8, 0],
-                  scale: [0.8, 1.2, 1],
-                }}
-                exit={{ opacity: 0, transition: { duration: 0.15 } }}
-                transition={{
-                  duration: 0.4,
-                  times: [0, 0.4, 1],
-                  ease: [0.34, 1.56, 0.64, 1],
-                }}
-              >
-                <TbArrowBigDownFilled className="size-5 text-red-400" />
-              </motion.span>
-            ) : (
-              <motion.span
-                key="not-downvoted"
-                className="flex-center"
-                initial={{ scale: 0.8 }}
-                animate={{ scale: 1 }}
-                exit={{ scale: 0.8 }}
-                transition={{ duration: 0.15 }}
-                whileHover={{ scale: 1.15, y: 2 }}
-                whileTap={{ scale: 0.9, y: -1 }}
-              >
-                <TbArrowBigDown className="size-5 text-light-400 dark:text-light-500 group-hover:text-red-400!" />
-              </motion.span>
-            )}
-          </AnimatePresence>
-        </Button>
+          onClick={vote}
+        />
       </div>
     </div>
   );
