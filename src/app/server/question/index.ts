@@ -1,3 +1,5 @@
+import { z } from "zod";
+import { after } from "next/server";
 import { base } from "@/app/middleware";
 import { authorized } from "@/app/middleware/auth";
 import {
@@ -16,7 +18,7 @@ import {
   TopQuestionsOutputSchema,
 } from "@/app/server/question/question.dto";
 import { QueryParamsSchema } from "@/lib/validations";
-import { z } from "zod";
+import { createInteraction } from "../interaction/interaction.dal";
 
 export const listQuestions = base
   .route({
@@ -57,6 +59,25 @@ export const createQuestion = authorized
   .output(z.object({ id: z.string() }))
   .handler(async ({ input, context }) => {
     const question = await createQuestionDAL(input, context.user.id);
+
+    after(async () => {
+      try {
+        await createInteraction(
+          {
+            action: "post",
+            actionType: "question",
+            actionId: question.id,
+            authorId: context.user.id,
+          },
+          context.user.id,
+        );
+      } catch (error) {
+        console.error(
+          "Failed to create interaction after create question:",
+          error,
+        );
+      }
+    });
     return { id: question.id };
   });
 

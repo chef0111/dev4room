@@ -1,21 +1,36 @@
 import { authorized } from "@/app/middleware/auth";
 import {
+  listCollection as listCollectionDAL,
   toggleSave as toggleSaveDAL,
   hasSaved as hasSavedDAL,
 } from "./collection.dal";
 import {
+  ListCollectionSchema,
   ToggleSaveSchema,
   HasSavedSchema,
   ToggleSaveOutputSchema,
   HasSavedOutputSchema,
 } from "./collection.dto";
+import { QueryParamsSchema } from "@/lib/validations";
+
+export const listCollection = authorized
+  .route({
+    method: "GET",
+    path: "/collection",
+    summary: "List Collection",
+    tags: ["Collection"],
+  })
+  .input(QueryParamsSchema)
+  .output(ListCollectionSchema)
+  .handler(async ({ input, context }) => {
+    return listCollectionDAL(input, context.user.id);
+  });
 
 export const toggleSave = authorized
   .route({
     method: "POST",
     path: "/collection/toggle",
     summary: "Toggle Save Question",
-    description: "Save or unsave a question to/from collection",
     tags: ["Collection"],
   })
   .input(ToggleSaveSchema)
@@ -29,7 +44,6 @@ export const hasSaved = authorized
     method: "GET",
     path: "/collection/status",
     summary: "Check Save Status",
-    description: "Check if the current user has saved a question",
     tags: ["Collection"],
   })
   .input(HasSavedSchema)

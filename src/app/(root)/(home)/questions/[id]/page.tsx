@@ -1,4 +1,4 @@
-import { Activity, Suspense } from "react";
+import { Suspense } from "react";
 import { after } from "next/server";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -109,9 +109,7 @@ const QuestionDetails = async ({ params }: RouteParams) => {
           ))}
         </div>
 
-        <Activity mode={isAuthor ? "visible" : "hidden"}>
-          <EditDelete type="question" itemId={question.id} />
-        </Activity>
+        {isAuthor && <EditDelete type="question" itemId={question.id} />}
       </div>
       <Separator className="bg-light700_dark400 h-1 mt-10" />
 
