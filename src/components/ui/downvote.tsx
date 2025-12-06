@@ -1,29 +1,47 @@
+"use client";
+
 import { motion, AnimatePresence } from "motion/react";
-import { Button } from "./button";
+import { Button } from "@/components/ui/button";
 import { TbArrowBigDown, TbArrowBigDownFilled } from "react-icons/tb";
+import { cn } from "@/lib/utils";
 
 interface VotesProps {
+  isActive?: boolean;
   disabled?: boolean;
-  hasDownvoted?: boolean;
-  onClick: (type: "upvote" | "downvote") => void;
+  onClick?: () => void;
+  size?: "sm" | "md" | "lg";
+  className?: string;
 }
 
+const sizeConfig = {
+  sm: { button: "size-4", icon: "size-4", jump: -6 },
+  md: { button: "size-5", icon: "size-5", jump: -8 },
+  lg: { button: "size-6", icon: "size-6", jump: -10 },
+};
+
 const Downvote = ({
+  isActive = false,
   disabled = false,
-  hasDownvoted = false,
   onClick,
+  size = "md",
+  className,
 }: VotesProps) => {
+  const config = sizeConfig[size];
   return (
     <Button
       variant="ghost"
-      onClick={() => onClick("downvote")}
+      onClick={onClick}
       disabled={disabled}
-      className="h-5 w-5 p-0 group bg-transparent! relative disabled:opacity-100 overflow-visible"
-      aria-label={hasDownvoted ? "Remove downvote" : "Downvote"}
-      aria-pressed={hasDownvoted}
+      className={cn(
+        config.button,
+        "p-0 group bg-transparent! relative disabled:opacity-100 overflow-visible",
+        className,
+      )}
+      aria-label={isActive ? "Remove downvote" : "Downvote"}
+      aria-pressed={isActive}
     >
       <AnimatePresence mode="wait" initial={false}>
-        {hasDownvoted ? (
+        {isActive ? (
           <motion.span
             key="downvoted"
             className="flex-center"
@@ -39,20 +57,22 @@ const Downvote = ({
               ease: [0.34, 1.56, 0.64, 1],
             }}
           >
-            <TbArrowBigDownFilled className="size-5 text-red-400" />
+            <TbArrowBigDownFilled className={cn("text-red-400", config.icon)} />
           </motion.span>
         ) : (
           <motion.span
             key="not-downvoted"
             className="flex-center"
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1 }}
             exit={{ scale: 0.8 }}
             transition={{ duration: 0.15 }}
-            whileHover={{ scale: 1.15, y: 2 }}
             whileTap={{ scale: 0.9, y: -1 }}
           >
-            <TbArrowBigDown className="size-5 text-light-400 dark:text-light-500 group-hover:text-red-400!" />
+            <TbArrowBigDown
+              className={cn(
+                "text-light-400 dark:text-light-500 group-hover:text-red-400! transition-colors duration-200",
+                config.icon,
+              )}
+            />
           </motion.span>
         )}
       </AnimatePresence>

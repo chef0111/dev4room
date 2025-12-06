@@ -3,35 +3,52 @@
 import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { TbArrowBigUp, TbArrowBigUpFilled } from "react-icons/tb";
+import { cn } from "@/lib/utils";
 
-interface VotesProps {
+interface UpvoteProps {
+  isActive?: boolean;
   disabled?: boolean;
-  hasUpvoted?: boolean;
-  onClick: (type: "upvote" | "downvote") => void;
+  onClick?: () => void;
+  size?: "sm" | "md" | "lg";
+  className?: string;
 }
 
+const sizeConfig = {
+  sm: { button: "size-4", icon: "size-4", jump: -6 },
+  md: { button: "size-5", icon: "size-5", jump: -8 },
+  lg: { button: "size-6", icon: "size-6", jump: -10 },
+};
+
 const Upvote = ({
+  isActive = false,
   disabled = false,
-  hasUpvoted = false,
   onClick,
-}: VotesProps) => {
+  size = "md",
+  className,
+}: UpvoteProps) => {
+  const config = sizeConfig[size];
+
   return (
     <Button
       variant="ghost"
-      onClick={() => onClick("upvote")}
+      onClick={onClick}
       disabled={disabled}
-      className="h-5 w-5 p-0 group bg-transparent! relative disabled:opacity-100 overflow-visible"
-      aria-label={hasUpvoted ? "Remove upvote" : "Upvote"}
-      aria-pressed={hasUpvoted}
+      className={cn(
+        config.button,
+        "p-0 group bg-transparent! relative disabled:opacity-100 overflow-visible",
+        className,
+      )}
+      aria-label={isActive ? "Remove upvote" : "Upvote"}
+      aria-pressed={isActive}
     >
       <AnimatePresence mode="wait" initial={false}>
-        {hasUpvoted ? (
+        {isActive ? (
           <motion.span
             key="upvoted"
             className="flex-center"
             initial={{ y: 0, scale: 0.8 }}
             animate={{
-              y: [0, -8, 0],
+              y: [0, config.jump, 0],
               scale: [0.8, 1.2, 1],
             }}
             exit={{ opacity: 0, transition: { duration: 0.15 } }}
@@ -41,20 +58,22 @@ const Upvote = ({
               ease: [0.34, 1.56, 0.64, 1],
             }}
           >
-            <TbArrowBigUpFilled className="size-5 text-green-500" />
+            <TbArrowBigUpFilled className={cn("text-green-500", config.icon)} />
           </motion.span>
         ) : (
           <motion.span
             key="not-upvoted"
             className="flex-center"
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1 }}
             exit={{ scale: 0.8 }}
             transition={{ duration: 0.15 }}
-            whileHover={{ scale: 1.15, y: -2 }}
             whileTap={{ scale: 0.9, y: 1 }}
           >
-            <TbArrowBigUp className="size-5 text-light-400 dark:text-light-500 group-hover:text-green-500!" />
+            <TbArrowBigUp
+              className={cn(
+                "text-light-400 dark:text-light-500 group-hover:text-green-500! transition-colors duration-200",
+                config.icon,
+              )}
+            />
           </motion.span>
         )}
       </AnimatePresence>

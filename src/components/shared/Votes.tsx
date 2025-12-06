@@ -3,8 +3,8 @@
 import { motion, MotionConfig } from "motion/react";
 import { useVote, type TargetType } from "@/services/vote.service";
 import NumberFlow, { useCanAnimate } from "@number-flow/react";
-import Upvote from "../ui/upvote";
-import Downvote from "../ui/downvote";
+import Upvote from "@/components/ui/upvote";
+import Downvote from "@/components/ui/downvote";
 
 const MotionNumberFlow = motion.create(NumberFlow);
 
@@ -46,7 +46,11 @@ const Votes = ({
           aria-label="Vote buttons"
           layout
         >
-          <Upvote hasUpvoted={hasUpvoted} disabled={isVoting} onClick={vote} />
+          <Upvote
+            isActive={hasUpvoted}
+            disabled={isVoting}
+            onClick={() => vote("upvote")}
+          />
 
           <MotionNumberFlow
             value={upvotes}
@@ -61,9 +65,9 @@ const Votes = ({
 
       <div className="flex-end bg-light700_dark400 h-8 rounded-md px-1.5">
         <Downvote
-          hasDownvoted={hasDownvoted}
+          isActive={hasDownvoted}
           disabled={isVoting}
-          onClick={vote}
+          onClick={() => vote("downvote")}
         />
       </div>
     </div>
