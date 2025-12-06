@@ -19,7 +19,7 @@ const TagQuestions = async ({ params, searchParams }: RouteParams) => {
     input: {
       tagId: id,
       page: Number(page) || 1,
-      pageSize: Number(pageSize) || 12,
+      pageSize: Number(pageSize) || 10,
       query,
       filter,
     },

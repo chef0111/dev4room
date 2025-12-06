@@ -36,7 +36,7 @@ const Collections = async ({ searchParams }: SearchParams) => {
     }));
 
   const data = result.data;
-  const totalQuestions = data?.totalCollections || 0;
+  const totalCollections = data?.totalCollections || 0;
 
   return (
     <>
@@ -72,7 +72,7 @@ const Collections = async ({ searchParams }: SearchParams) => {
       <NextPagination
         page={page}
         pageSize={pageSize}
-        totalCount={totalQuestions}
+        totalCount={totalCollections}
         className="pb-10"
       />
     </>
