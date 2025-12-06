@@ -12,8 +12,11 @@ import {
   TargetType,
 } from "./vote.dto";
 
+type Transaction = Parameters<Parameters<typeof db.transaction>[0]>[0];
+
 export class VoteDAL {
   private static async updateVoteCount(
+    tx: Transaction,
     targetId: string,
     targetType: TargetType,
     voteType: VoteType,
@@ -22,7 +25,7 @@ export class VoteDAL {
     const table = targetType === "question" ? question : answer;
     const field = voteType === "upvote" ? "upvotes" : "downvotes";
 
-    await db
+    await tx
       .update(table)
       .set({
         [field]: sql`${table[field]} + ${change}`,
@@ -31,11 +34,12 @@ export class VoteDAL {
   }
 
   private static async getContentAuthorId(
+    tx: Transaction,
     targetId: string,
     targetType: TargetType,
   ): Promise<string> {
     if (targetType === "question") {
-      const [row] = await db
+      const [row] = await tx
         .select({ authorId: question.authorId })
         .from(question)
         .where(eq(question.id, targetId));
@@ -45,7 +49,7 @@ export class VoteDAL {
       }
       return row.authorId;
     } else {
-      const [row] = await db
+      const [row] = await tx
         .select({ authorId: answer.authorId })
         .from(answer)
         .where(eq(answer.id, targetId));
@@ -63,54 +67,60 @@ export class VoteDAL {
   ): Promise<{ success: boolean; contentAuthorId: string }> {
     const { targetId, targetType, voteType } = input;
 
-    // Get content author for interaction tracking
-    const contentAuthorId = await this.getContentAuthorId(targetId, targetType);
-
-    // Check for existing vote
-    const [existingVote] = await db
-      .select()
-      .from(vote)
-      .where(
-        and(
-          eq(vote.authorId, userId),
-          eq(vote.actionId, targetId),
-          eq(vote.actionType, targetType),
-        ),
+    return await db.transaction(async (tx) => {
+      const contentAuthorId = await this.getContentAuthorId(
+        tx,
+        targetId,
+        targetType,
       );
 
-    if (existingVote) {
-      if (existingVote.voteType === voteType) {
-        // Same vote type - remove vote (toggle off)
-        await db.delete(vote).where(eq(vote.id, existingVote.id));
-        await this.updateVoteCount(targetId, targetType, voteType, -1);
+      const [existingVote] = await tx
+        .select()
+        .from(vote)
+        .where(
+          and(
+            eq(vote.authorId, userId),
+            eq(vote.actionId, targetId),
+            eq(vote.actionType, targetType),
+          ),
+        )
+        .for("update");
+
+      if (existingVote) {
+        if (existingVote.voteType === voteType) {
+          // Same vote type - remove vote (toggle off)
+          await tx.delete(vote).where(eq(vote.id, existingVote.id));
+          await this.updateVoteCount(tx, targetId, targetType, voteType, -1);
+        } else {
+          // Different vote type - change vote
+          await tx
+            .update(vote)
+            .set({ voteType })
+            .where(eq(vote.id, existingVote.id));
+
+          // Decrement old vote type, increment new vote type
+          await this.updateVoteCount(
+            tx,
+            targetId,
+            targetType,
+            existingVote.voteType as VoteType,
+            -1,
+          );
+          await this.updateVoteCount(tx, targetId, targetType, voteType, 1);
+        }
       } else {
-        // Different vote type - change vote
-        await db
-          .update(vote)
-          .set({ voteType })
-          .where(eq(vote.id, existingVote.id));
-
-        // Decrement old vote type, increment new vote type
-        await this.updateVoteCount(
-          targetId,
-          targetType,
-          existingVote.voteType as VoteType,
-          -1,
-        );
-        await this.updateVoteCount(targetId, targetType, voteType, 1);
+        // No existing vote - create new vote
+        await tx.insert(vote).values({
+          authorId: userId,
+          actionId: targetId,
+          actionType: targetType,
+          voteType,
+        });
+        await this.updateVoteCount(tx, targetId, targetType, voteType, 1);
       }
-    } else {
-      // No existing vote - create new vote
-      await db.insert(vote).values({
-        authorId: userId,
-        actionId: targetId,
-        actionType: targetType,
-        voteType,
-      });
-      await this.updateVoteCount(targetId, targetType, voteType, 1);
-    }
 
-    return { success: true, contentAuthorId };
+      return { success: true, contentAuthorId };
+    });
   }
 
   static async hasVoted(

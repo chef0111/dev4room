@@ -17,6 +17,8 @@ interface ReputationChange {
   authorPoints: number;
 }
 
+type Transaction = Parameters<Parameters<typeof db.transaction>[0]>[0];
+
 export class InteractionDAL {
   private static readonly selectFields = {
     id: interaction.id,
@@ -52,6 +54,7 @@ export class InteractionDAL {
   }
 
   private static async updateReputation(
+    tx: Transaction,
     performerId: string,
     authorId: string,
     action: InteractionAction,
@@ -65,7 +68,7 @@ export class InteractionDAL {
     // If performer is the author, only apply author points once
     if (performerId === authorId) {
       if (authorPoints !== 0) {
-        await db
+        await tx
           .update(user)
           .set({ reputation: sql`${user.reputation} + ${authorPoints}` })
           .where(eq(user.id, performerId));
@@ -75,7 +78,7 @@ export class InteractionDAL {
 
     // Update performer reputation
     if (performerPoints !== 0) {
-      await db
+      await tx
         .update(user)
         .set({ reputation: sql`${user.reputation} + ${performerPoints}` })
         .where(eq(user.id, performerId));
@@ -83,7 +86,7 @@ export class InteractionDAL {
 
     // Update author reputation
     if (authorPoints !== 0) {
-      await db
+      await tx
         .update(user)
         .set({ reputation: sql`${user.reputation} + ${authorPoints}` })
         .where(eq(user.id, authorId));
@@ -96,30 +99,35 @@ export class InteractionDAL {
   ): Promise<InteractionDTO> {
     const { action, actionType, actionId, authorId } = input;
 
-    // Create the interaction
-    const [created] = await db
-      .insert(interaction)
-      .values({
+    const created = await db.transaction(async (tx) => {
+      // Create the interaction
+      const [inserted] = await tx
+        .insert(interaction)
+        .values({
+          userId,
+          action,
+          actionId,
+          actionType,
+        })
+        .returning(this.selectFields);
+
+      if (!inserted) {
+        throw new ORPCError("INTERNAL_SERVER_ERROR", {
+          message: "Failed to create interaction",
+        });
+      }
+
+      // Update reputation for both performer and author
+      await this.updateReputation(
+        tx,
         userId,
-        action,
-        actionId,
-        actionType,
-      })
-      .returning(this.selectFields);
+        authorId,
+        action as InteractionAction,
+        actionType as "question" | "answer",
+      );
 
-    if (!created) {
-      throw new ORPCError("INTERNAL_SERVER_ERROR", {
-        message: "Failed to create interaction",
-      });
-    }
-
-    // Update reputation for both performer and author
-    await this.updateReputation(
-      userId,
-      authorId,
-      action as InteractionAction,
-      actionType as "question" | "answer",
-    );
+      return inserted;
+    });
 
     return validateOne(created, InteractionSchema, "Interaction");
   }

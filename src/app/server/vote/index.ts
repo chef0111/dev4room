@@ -30,15 +30,19 @@ export const createVote = authorized
     );
 
     after(async () => {
-      await createInteraction(
-        {
-          action: input.voteType,
-          actionType: input.targetType,
-          actionId: input.targetId,
-          authorId: contentAuthorId,
-        },
-        context.user.id,
-      );
+      try {
+        await createInteraction(
+          {
+            action: input.voteType,
+            actionType: input.targetType,
+            actionId: input.targetId,
+            authorId: contentAuthorId,
+          },
+          context.user.id,
+        );
+      } catch (error) {
+        console.error("Failed to create interaction after vote:", error);
+      }
     });
 
     return { success };

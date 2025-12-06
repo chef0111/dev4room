@@ -26,7 +26,7 @@ const Votes = ({
   upvotes: initialUpvotes,
   downvotes: initialDownvotes,
 }: VotesProps) => {
-  const canAnimate = useCanAnimate();
+  const canAnimate = useCanAnimate({ respectMotionPreference: true });
   const { state, vote, isVoting } = useVote({
     targetType,
     targetId,

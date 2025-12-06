@@ -10,7 +10,6 @@ interface SaveQuestionProps {
   questionId: string;
 }
 
-// Generate particles with random positions around the button
 const generateParticles = (count: number) => {
   return Array.from({ length: count }, (_, i) => {
     const angle = (i / count) * 360;
