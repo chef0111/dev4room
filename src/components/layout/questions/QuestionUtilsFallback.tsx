@@ -31,11 +31,11 @@ const QuestionUtilsFallback = () => {
 
       <Button
         variant="ghost"
-        className="size-7.5 hover:bg-transparent"
+        className="size-8 hover:bg-transparent"
         aria-label="Save Question"
         disabled
       >
-        <TbBookmark className="text-light-400 dark:text-light-500 size-5" />
+        <TbBookmark className="text-light-400 dark:text-light-500 size-6" />
       </Button>
     </div>
   );

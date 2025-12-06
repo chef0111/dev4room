@@ -44,7 +44,7 @@ const Loading = () => {
             Write your answer here
           </h4>
           <Button
-            className="btn hover:bg-light700_dark400! light-border-2 gap-1 rounded-md border px-4 py-2 text-link-100 shadow-none"
+            className="btn light-border-2 gap-1 rounded-md border px-4 py-2 text-link-100 shadow-none"
             disabled
           >
             <BsStars className="text-orange-300 size-4" />
@@ -53,10 +53,7 @@ const Loading = () => {
         </div>
         <EditorFallback />
         <div className="flex-end w-full">
-          <Button
-            className="primary-gradient hover:primary-gradient-hover w-fit text-light-900"
-            disabled
-          >
+          <Button className="primary-gradient w-fit text-light-900" disabled>
             Post Answer
           </Button>
         </div>

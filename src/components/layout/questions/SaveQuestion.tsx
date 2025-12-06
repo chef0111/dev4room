@@ -17,15 +17,15 @@ const SaveQuestion = ({ question, hasSaved }: SaveQuestionProps) => {
   return (
     <Button
       variant="ghost"
-      className={`size-7.5 hover:bg-orange-500/20! ${isLoading && "opacity-50"} cursor-pointer group`}
+      className={`size-8 hover:bg-orange-500/20! ${isLoading && "opacity-50"} cursor-pointer group`}
       aria-label="Save Question"
       disabled={isLoading}
       onClick={handleSaveQuestion}
     >
       {!!hasSaved ? (
-        <TbBookmarkFilled className="text-orange-400 size-5" />
+        <TbBookmarkFilled className="text-orange-400 size-6" />
       ) : (
-        <TbBookmark className="text-light-400 dark:text-light-500 group-hover:text-orange-400! size-5" />
+        <TbBookmark className="text-light-400 dark:text-light-500 group-hover:text-orange-400! size-6" />
       )}
     </Button>
   );

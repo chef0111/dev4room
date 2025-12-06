@@ -16,6 +16,7 @@
     "@hookform/resolvers": "^5.2.2",
     "@mdxeditor/editor": "^3.47.0",
     "@neondatabase/serverless": "^1.0.1",
+    "@number-flow/react": "^0.5.10",
     "@orpc/client": "^1.11.3",
     "@orpc/server": "^1.11.3",
     "@orpc/tanstack-query": "^1.11.3",
