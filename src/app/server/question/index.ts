@@ -5,7 +5,6 @@ import {
   getQuestionById,
   createQuestion as createQuestionDAL,
   editQuestion as editQuestionDAL,
-  incrementQuestionViews,
   getTopQuestions as getTopQuestionsDAL,
 } from "@/app/server/question/question.dal";
 import {

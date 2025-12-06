@@ -71,10 +71,7 @@ const AnswerForm = ({
           name="content"
           control={form.control}
           render={({ field, fieldState }) => (
-            <Field
-              data-invalid={fieldState.invalid}
-              className="flex flex-col w-full gap-3"
-            >
+            <Field data-invalid={fieldState.invalid}>
               <Suspense fallback={<EditorFallback />}>
                 <MarkdownEditor
                   id="answer-content"

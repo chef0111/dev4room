@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Route } from "next";
 import { Button } from "../ui/button";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -11,21 +10,18 @@ import { HomePageFilters } from "@/common/constants/filters";
 const HomeFilter = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const filterParams = searchParams.get("filter");
-  const [active, setActive] = useState(filterParams || "");
+  const active = searchParams.get("filter") || "";
 
   const handleClick = (filter: string) => {
     let newUrl = "";
 
     // If filter is provided, set it as active and update the URL
     if (filter === active) {
-      setActive("");
       newUrl = removeKeysFromUrlQuery({
         params: searchParams.toString(),
         keysToRemove: ["filter"],
       });
     } else {
-      setActive(filter);
       newUrl = formUrlQuery({
         params: searchParams.toString(),
         key: "filter",

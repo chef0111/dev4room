@@ -275,20 +275,6 @@ export class QuestionDAL {
     });
   }
 
-  static async incrementViews(questionId: string): Promise<{ views: number }> {
-    const [updated] = await db
-      .update(question)
-      .set({ views: sql`${question.views} + 1` })
-      .where(eq(question.id, questionId))
-      .returning({ views: question.views });
-
-    if (!updated) {
-      throw new ORPCError("NOT_FOUND", { message: "Question not found" });
-    }
-
-    return { views: updated.views };
-  }
-
   static async findTop(limit: number = 5) {
     const rows = await db
       .select({
@@ -307,6 +293,4 @@ export const getQuestions = QuestionDAL.findMany.bind(QuestionDAL);
 export const getQuestionById = QuestionDAL.findById.bind(QuestionDAL);
 export const createQuestion = QuestionDAL.create.bind(QuestionDAL);
 export const editQuestion = QuestionDAL.update.bind(QuestionDAL);
-export const incrementQuestionViews =
-  QuestionDAL.incrementViews.bind(QuestionDAL);
 export const getTopQuestions = QuestionDAL.findTop.bind(QuestionDAL);
