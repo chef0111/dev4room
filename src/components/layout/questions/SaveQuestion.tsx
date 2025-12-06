@@ -1,33 +1,21 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { TbBookmark, TbBookmarkFilled } from "react-icons/tb";
+import { Bookmark } from "@/components/ui/bookmark";
+import { useBookmark } from "@/services/bookmark.service";
 
 interface SaveQuestionProps {
-  question: string;
-  hasSaved: Promise<{ saved: boolean }>;
+  questionId: string;
 }
 
-const SaveQuestion = ({ question, hasSaved }: SaveQuestionProps) => {
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleSaveQuestion = async () => {};
+const SaveQuestion = ({ questionId }: SaveQuestionProps) => {
+  const { isSaved, toggleBookmark, isLoading } = useBookmark({ questionId });
 
   return (
-    <Button
-      variant="ghost"
-      className={`size-7.5 hover:bg-orange-500/20! ${isLoading && "opacity-50"} cursor-pointer group`}
-      aria-label="Save Question"
-      disabled={isLoading}
-      onClick={handleSaveQuestion}
-    >
-      {!!hasSaved ? (
-        <TbBookmarkFilled className="text-orange-400 size-5" />
-      ) : (
-        <TbBookmark className="text-light-400 dark:text-light-500 group-hover:text-orange-400! size-5" />
-      )}
-    </Button>
+    <Bookmark
+      isActive={isSaved}
+      isLoading={isLoading}
+      onToggle={toggleBookmark}
+    />
   );
 };
 

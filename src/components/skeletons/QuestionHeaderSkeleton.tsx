@@ -1,4 +1,7 @@
+import { TbArrowBigDown, TbArrowBigUp, TbBookmark } from "react-icons/tb";
+import { Button } from "../ui/button";
 import { Skeleton } from "../ui/skeleton";
+import QuestionUtilsFallback from "../layout/questions/QuestionUtilsFallback";
 
 const QuestionHeaderSkeleton = () => {
   return (
@@ -8,10 +11,7 @@ const QuestionHeaderSkeleton = () => {
           <Skeleton className="h-8 w-8 rounded-full" />
           <Skeleton className="h-5 w-32 rounded-md" />
         </div>
-        <div className="flex gap-3.5">
-          <Skeleton className="h-6 w-24 rounded-md" />
-          <Skeleton className="h-6 w-6 rounded-md" />
-        </div>
+        <QuestionUtilsFallback />
       </div>
       <div className="flex flex-col gap-2">
         <Skeleton className="h-5 w-full" />

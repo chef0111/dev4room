@@ -1,17 +1,24 @@
-import { Activity } from "react";
+import { Activity, Suspense } from "react";
 import { after } from "next/server";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 
 import { orpc } from "@/lib/orpc";
+import { getServerSession } from "@/lib/session";
 import { getQueryClient } from "@/lib/query/hydration";
-import { incrementQuestionViews } from "@/app/server/question/question.dal";
-import { Separator } from "@/components/ui/separator";
+import { formatNumber, getTimeStamp } from "@/lib/utils";
+import { ViewService } from "@/services/view.service";
+
+import UserAvatar from "@/components/layout/profile/UserAvatar";
+import Votes from "@/components/shared/Votes";
+import SaveQuestion from "@/components/layout/questions/SaveQuestion";
 import TagCard from "@/components/layout/tags/TagCard";
-import QuestionHeader from "@/components/layout/questions/QuestionHeader";
+import EditDelete from "@/components/shared/EditDelete";
+import { Separator } from "@/components/ui/separator";
 import MarkdownPreview from "@/components/editor/MarkdownPreview";
 import AnswerForm from "@/components/layout/answers/AnswerForm";
-import EditDelete from "@/components/shared/EditDelete";
-import { getServerSession } from "@/lib/session";
+import Metric from "@/components/shared/Metric";
+import QuestionUtilsFallback from "@/components/layout/questions/QuestionUtilsFallback";
 
 const QuestionDetails = async ({ params }: RouteParams) => {
   const { id } = await params;
@@ -30,23 +37,69 @@ const QuestionDetails = async ({ params }: RouteParams) => {
   const isAuthor = session?.user?.id === author.id.toString();
 
   after(async () => {
-    await incrementQuestionViews(id);
+    await ViewService.incrementQuestionViews(id);
   });
 
   return (
     <>
-      <QuestionHeader
-        questionId={question.id}
-        authorId={author.id}
-        authorName={author.name}
-        authorAvatar={author.image ?? undefined}
-        title={title}
-        createdAt={createdAt}
-        answers={answers}
-        views={views}
-        upvotes={question.upvotes}
-        downvotes={question.downvotes}
-      />
+      <div className="flex-start w-full flex-col">
+        <div className="flex w-full justify-between">
+          <div className="flex-start gap-1">
+            <UserAvatar
+              id={author.id}
+              name={author.name}
+              image={author.image ?? ""}
+              className="size-6"
+              fallbackClassName="text-2.5"
+            />
+
+            <Link href={`/profile/${author.id}`}>
+              <p className="pg-semibold text-dark300_light700">{author.name}</p>
+            </Link>
+          </div>
+
+          <div className="flex-end gap-2">
+            <Suspense fallback={<QuestionUtilsFallback />}>
+              <Votes
+                targetType="question"
+                targetId={question.id}
+                upvotes={question.upvotes}
+                downvotes={question.downvotes}
+              />
+
+              <SaveQuestion questionId={question.id} />
+            </Suspense>
+          </div>
+        </div>
+
+        <h2 className="h2-semibold text-dark200_light900 mt-3 w-full">
+          {title}
+        </h2>
+      </div>
+
+      <div className="mb-8 mt-4 flex flex-wrap gap-4">
+        <Metric
+          imgUrl="/icons/clock.svg"
+          alt="clock"
+          value={` Asked ${getTimeStamp(new Date(createdAt))}`}
+          title=""
+          textStyles="small-regular text-dark400_light700"
+        />
+        <Metric
+          imgUrl="/icons/message.svg"
+          alt="message"
+          value={answers}
+          title=""
+          textStyles="small-regular text-dark400_light700"
+        />
+        <Metric
+          imgUrl="/icons/eye.svg"
+          alt="eye"
+          value={formatNumber(views)}
+          title=""
+          textStyles="small-regular text-dark400_light700"
+        />
+      </div>
 
       <MarkdownPreview content={content} />
       <div className="mt-8 flex-between">

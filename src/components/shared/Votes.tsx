@@ -1,76 +1,74 @@
 "use client";
 
-import { Activity, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { formatNumber } from "@/lib/utils";
-import {
-  TbArrowBigDown,
-  TbArrowBigDownFilled,
-  TbArrowBigUp,
-  TbArrowBigUpFilled,
-} from "react-icons/tb";
+import { motion, MotionConfig } from "motion/react";
+import { useVote, type TargetType } from "@/services/vote.service";
+import NumberFlow, { useCanAnimate } from "@number-flow/react";
+import Upvote from "@/components/ui/upvote";
+import Downvote from "@/components/ui/downvote";
+
+const MotionNumberFlow = motion.create(NumberFlow);
 
 interface VotesProps {
-  targetType: "question" | "answer";
+  targetType: TargetType;
   targetId: string;
   upvotes: number;
   downvotes: number;
 }
 
-const Votes = ({ targetType, targetId, upvotes, downvotes }: VotesProps) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const success = false;
-  const hasUpvoted = false;
-  const hasDownvoted = false;
+const Votes = ({
+  targetType,
+  targetId,
+  upvotes: initialUpvotes,
+  downvotes: initialDownvotes,
+}: VotesProps) => {
+  const canAnimate = useCanAnimate({ respectMotionPreference: true });
+  const { state, vote, isVoting } = useVote({
+    targetType,
+    targetId,
+    initialUpvotes,
+    initialDownvotes,
+  });
 
-  const handleVote = async (type: "upvote" | "downvote") => {
-    console.log(type);
-  };
+  const { upvotes, hasUpvoted, hasDownvoted } = state;
 
   return (
     <div className="flex-center gap-2">
-      <div
-        className="flex-center bg-light700_dark400 min-w-6 rounded-md gap-1 p-1.5"
-        role="status"
+      <MotionConfig
+        transition={{
+          layout: canAnimate
+            ? { duration: 0.2, bounce: 0, type: "spring" }
+            : { duration: 0 },
+        }}
       >
-        <Button
-          variant="ghost"
-          disabled={isLoading}
-          onClick={() => !isLoading && handleVote("upvote")}
-          className="h-5 w-5 group bg-transparent!"
-          aria-label="Upvote"
+        <motion.div
+          className="flex-center bg-light700_dark400 rounded-md h-8 gap-1.5 px-1.5"
+          role="group"
+          aria-label="Vote buttons"
+          layout
         >
-          {success && hasUpvoted ? (
-            <TbArrowBigUpFilled className="size-5 text-green-500" />
-          ) : (
-            <TbArrowBigUp className="size-5 text-light-400 dark:text-light-500 group-hover:text-green-500!" />
-          )}
-        </Button>
+          <Upvote
+            isActive={hasUpvoted}
+            disabled={isVoting}
+            onClick={() => vote("upvote")}
+          />
 
-        <Activity mode={upvotes > 0 ? "visible" : "hidden"}>
-          <p
-            className="body-medium text-dark400_light900 pr-1.5"
-            aria-label="Upvotes count"
-          >
-            {formatNumber(upvotes)}
-          </p>
-        </Activity>
-      </div>
+          <MotionNumberFlow
+            value={upvotes}
+            format={{ notation: "compact" }}
+            className="body-medium text-dark400_light900 pr-1"
+            aria-label={`${upvotes} upvotes`}
+            layout
+            layoutRoot
+          />
+        </motion.div>
+      </MotionConfig>
 
-      <div className="flex-center bg-light700_dark400 min-w-6 rounded-md p-1.5">
-        <Button
-          variant="ghost"
-          disabled={isLoading}
-          onClick={() => !isLoading && handleVote("downvote")}
-          className="h-5 w-5 group bg-transparent!"
-          aria-label="Downvote"
-        >
-          {success && hasDownvoted ? (
-            <TbArrowBigDownFilled className="size-5 text-red-400" />
-          ) : (
-            <TbArrowBigDown className="size-5 text-light-400 dark:text-light-500 group-hover:text-red-400!" />
-          )}
-        </Button>
+      <div className="flex-end bg-light700_dark400 h-8 rounded-md px-1.5">
+        <Downvote
+          isActive={hasDownvoted}
+          disabled={isVoting}
+          onClick={() => vote("downvote")}
+        />
       </div>
     </div>
   );
