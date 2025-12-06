@@ -33,14 +33,8 @@ export const CreateInteractionSchema = z.object({
   authorId: z.string().min(1, { message: "Author is required." }),
 });
 
-// Output Schemas
-export const InteractionOutputSchema = z.object({
-  interaction: InteractionSchema,
-});
-
 // Types
 export type InteractionAction = (typeof InteractionActions)[number];
 export type ActionTarget = (typeof ActionTargets)[number];
 export type InteractionDTO = z.infer<typeof InteractionSchema>;
 export type CreateInteractionInput = z.infer<typeof CreateInteractionSchema>;
-export type InteractionOutput = z.infer<typeof InteractionOutputSchema>;
