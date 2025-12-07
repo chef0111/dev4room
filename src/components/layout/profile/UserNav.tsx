@@ -10,7 +10,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/ui";
 import UserAvatar from "./UserAvatar";
 import Link from "next/link";
 import { toast } from "sonner";

@@ -14,7 +14,7 @@ import Votes from "@/components/shared/Votes";
 import SaveQuestion from "@/components/layout/questions/SaveQuestion";
 import TagCard from "@/components/layout/tags/TagCard";
 import EditDelete from "@/components/shared/EditDelete";
-import { Separator } from "@/components/ui/separator";
+import { Separator } from "@/components/ui";
 import MarkdownPreview from "@/components/markdown/MarkdownPreview";
 import AnswerForm from "@/components/layout/answers/AnswerForm";
 import Metric from "@/components/shared/Metric";

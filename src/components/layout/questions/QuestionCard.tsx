@@ -4,7 +4,7 @@ import Link from "next/link";
 import { getTimeStamp } from "@/lib/utils";
 import TagCard from "../tags/TagCard";
 import Metric from "@/components/shared/Metric";
-import { Card } from "@/components/ui/card";
+import { Card } from "@/components/ui";
 import EditDelete from "@/components/shared/EditDelete";
 import { Route } from "next";
 

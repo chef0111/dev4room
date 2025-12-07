@@ -10,10 +10,9 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/ui";
 import { formUrlQuery } from "@/lib/url";
 import { ListFilter } from "lucide-react";
-import { undefined } from "zod";
 
 interface Filter {
   label: string;

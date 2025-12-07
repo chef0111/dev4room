@@ -7,7 +7,7 @@ import { CollectionFilters } from "@/common/constants/filters";
 import DataRenderer from "@/components/shared/DataRenderer";
 import QuestionCard from "@/components/layout/questions/QuestionCard";
 import { EMPTY_QUESTION } from "@/common/constants/states";
-import { NextPagination } from "@/components/ui/next-pagination";
+import { NextPagination } from "@/components/ui/dev";
 
 interface SearchParams {
   searchParams: Promise<{ [key: string]: string }>;

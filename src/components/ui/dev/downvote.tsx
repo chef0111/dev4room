@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "motion/react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui";
 import { TbArrowBigDown, TbArrowBigDownFilled } from "react-icons/tb";
 import { cn } from "@/lib/utils";
 
@@ -80,4 +80,4 @@ const Downvote = ({
   );
 };
 
-export default Downvote;
+export { Downvote };

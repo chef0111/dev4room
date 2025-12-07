@@ -1,6 +1,6 @@
 import z from "zod";
 
-const NAME_REGEX = /^[^\d!@#$%^&*()_+=\[\]{};':"\\|,.<>?/`~]+$/;
+const NAME_REGEX = /^[^\d!@#$%^&*()_+=[\]{};':"\\|,.<>?/`~]+$/;
 
 export const PasswordSchema = z
   .string()

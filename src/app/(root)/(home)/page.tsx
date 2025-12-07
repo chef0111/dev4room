@@ -7,7 +7,8 @@ import { getQueryClient } from "@/lib/query/hydration";
 import { getErrorMessage } from "@/lib/handlers/error";
 import { EMPTY_QUESTION } from "@/common/constants/states";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui";
+import { NextPagination } from "@/components/ui/dev";
 import LocalSearch from "@/components/layout/main/LocalSearch";
 import HomeFilter from "@/components/filters/HomeFilter";
 import QuestionCard from "@/components/layout/questions/QuestionCard";
@@ -15,7 +16,6 @@ import DataRenderer from "@/components/shared/DataRenderer";
 import Filter from "@/components/filters/Filter";
 import { HomePageFilters } from "@/common/constants/filters";
 import PostCardsSkeleton from "@/components/skeletons/PostCardsSkeleton";
-import { NextPagination } from "@/components/ui/next-pagination";
 
 export const metadata: Metadata = {
   title: "Dev4Room | Home",

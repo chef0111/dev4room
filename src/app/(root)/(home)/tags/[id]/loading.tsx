@@ -1,4 +1,4 @@
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/components/ui";
 import SearchInput from "@/components/layout/main/SearchInput";
 import FilterFallback from "@/components/filters/FilterFallback";
 import PostCardsSkeleton from "@/components/skeletons/PostCardsSkeleton";

@@ -1,20 +1,20 @@
 import { Suspense } from "react";
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import Image from "next/image";
 import {
+  Button,
   Sheet,
   SheetClose,
   SheetContent,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
+  Skeleton,
+} from "@/components/ui";
 import { Menu } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { UserNav } from "../../profile/UserNav";
 import { getServerSession } from "@/lib/session";
 import NavTabs from "./NavTabs";
-import { Skeleton } from "@/components/ui/skeleton";
 import NavTabsFallback from "./NavTabsFallback";
+import { UserNav } from "../../profile/UserNav";
 
 const MobileNav = async () => {
   const session = await getServerSession();

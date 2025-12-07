@@ -7,7 +7,7 @@ import { UserFilters } from "@/common/constants/filters";
 import { EMPTY_USERS } from "@/common/constants/states";
 import DataRenderer from "@/components/shared/DataRenderer";
 import UserCard from "@/components/layout/profile/UserCard";
-import { NextPagination } from "@/components/ui/next-pagination";
+import { NextPagination } from "@/components/ui/dev";
 
 const Community = async ({ searchParams }: RouteParams) => {
   const { page, pageSize, query, filter } = await searchParams;

@@ -4,7 +4,7 @@ import Filter from "@/components/filters/Filter";
 import LocalSearch from "@/components/layout/main/LocalSearch";
 import QuestionCard from "@/components/layout/questions/QuestionCard";
 import DataRenderer from "@/components/shared/DataRenderer";
-import { NextPagination } from "@/components/ui/next-pagination";
+import { NextPagination } from "@/components/ui/dev";
 import { getErrorMessage } from "@/lib/handlers/error";
 import { orpc } from "@/lib/orpc";
 import { getQueryClient } from "@/lib/query/hydration";

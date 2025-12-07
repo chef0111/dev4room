@@ -1,5 +1,5 @@
 import UserAvatar from "@/components/layout/profile/UserAvatar";
-import DevCard from "@/components/ui/dev-card";
+import { DevCard } from "@/components/ui/dev";
 import Link from "next/link";
 
 interface UserCardProps {

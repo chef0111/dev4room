@@ -131,6 +131,6 @@ export const POST = async (req: NextRequest) => {
     const response = await authHandlers.POST(reqForBetterAuth);
     return response;
   } catch (error) {
-    throw error;
+    console.error(error);
   }
 };

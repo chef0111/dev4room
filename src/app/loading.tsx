@@ -1,4 +1,4 @@
-import Loader from "@/components/ui/loader";
+import { Loader } from "@/components/ui";
 import { Suspense } from "react";
 
 const Loading = () => {

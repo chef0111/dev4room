@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui";
 import { TbBookmark, TbBookmarkFilled } from "react-icons/tb";
 import { cn } from "@/lib/utils";
 import { useDebounce } from "@/hooks/use-debounce";
@@ -118,7 +118,7 @@ const Bookmark = ({
               className="flex-center"
               initial={{ scale: 0.8 }}
               animate={{ scale: [0.8, 1.2, 1] }}
-              exit={{ opacity: 0 }}
+              exit={{ opacity: 0, transition: { duration: 0.15 } }}
               transition={{
                 duration: 0.3,
                 times: [0, 0.4, 1],

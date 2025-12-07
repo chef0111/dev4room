@@ -7,7 +7,7 @@ import { TagFilters } from "@/common/constants/filters";
 import DataRenderer from "@/components/shared/DataRenderer";
 import TagCard from "@/components/layout/tags/TagCard";
 import { EMPTY_TAGS } from "@/common/constants/states";
-import { NextPagination } from "@/components/ui/next-pagination";
+import { NextPagination } from "@/components/ui/dev";
 
 const TagsPage = async ({ searchParams }: RouteParams) => {
   const { page, pageSize, query, filter } = await searchParams;

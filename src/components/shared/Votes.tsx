@@ -3,8 +3,8 @@
 import { motion, MotionConfig } from "motion/react";
 import { useVote, type TargetType } from "@/services/vote.service";
 import NumberFlow, { useCanAnimate } from "@number-flow/react";
-import Upvote from "@/components/ui/upvote";
-import Downvote from "@/components/ui/downvote";
+import { Upvote } from "@/components/ui/dev";
+import { Downvote } from "@/components/ui/dev";
 
 const MotionNumberFlow = motion.create(NumberFlow);
 

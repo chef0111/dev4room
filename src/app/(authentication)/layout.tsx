@@ -1,8 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui";
+import { TextShimmer } from "@/components/ui/dev";
 import { Suspense } from "react";
-import TextShimmer from "@/components/ui/text-shimmer";
 
 interface Props {
   children: React.ReactNode;
@@ -12,7 +12,7 @@ const AuthLayout: React.FC<Props> = ({ children }) => {
   return (
     <main
       className="flex-center flex-col min-h-screen bg-auth-light bg-cover bg-center bg-no-repeat bg-fixed px-4 py-10 dark:bg-auth-dark"
-      no-scrollbar="true"
+      data-no-scrollbar="true"
     >
       <Link href="/" className="flex-center pb-4 gap-3">
         <Image
