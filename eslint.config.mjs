@@ -34,7 +34,6 @@ const eslintConfig = [
       ...nextPlugin.configs["core-web-vitals"].rules,
       "no-undef": "off",
       camelcase: "off",
-      "react/prop-types": "off",
       "react-hooks/static-components": "off",
       "react-hooks/purity": "off",
       "react-hooks/use-memo": "off",

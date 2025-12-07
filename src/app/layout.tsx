@@ -28,7 +28,7 @@ interface Props {
   children: React.ReactNode;
 }
 
-const RootLayout: React.FC<Props> = ({ children }) => {
+const RootLayout: React.FC<Props> = ({ children }: Props) => {
   return (
     <>
       <html lang="en" suppressHydrationWarning>

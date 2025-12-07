@@ -8,7 +8,7 @@ interface Props {
   children: React.ReactNode;
 }
 
-const AuthLayout: React.FC<Props> = ({ children }) => {
+const AuthLayout: React.FC<Props> = ({ children }: Props) => {
   return (
     <main
       className="flex-center flex-col min-h-screen bg-auth-light bg-cover bg-center bg-no-repeat bg-fixed px-4 py-10 dark:bg-auth-dark"
