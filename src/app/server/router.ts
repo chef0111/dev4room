@@ -1,4 +1,11 @@
-import { listUsers } from "./user";
+import {
+  listUsers,
+  getUser,
+  getUserQuestions,
+  getUserAnswers,
+  getUserTags,
+  getUserStatsRoute,
+} from "./user";
 import {
   listQuestions,
   getQuestion,
@@ -13,6 +20,11 @@ import { listCollection, toggleSave, hasSaved } from "./collection";
 export const router = {
   user: {
     list: listUsers,
+    get: getUser,
+    questions: getUserQuestions,
+    answers: getUserAnswers,
+    tags: getUserTags,
+    stats: getUserStatsRoute,
   },
   question: {
     list: listQuestions,
