@@ -103,3 +103,8 @@ export const BADGE_CRITERIA = {
     GOLD: 100000,
   },
 };
+
+export const profileTabs = [
+  { value: "questions", label: "Questions" },
+  { value: "answers", label: "Answers" },
+];
