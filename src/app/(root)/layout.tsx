@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import NextTopLoader from "nextjs-toploader";
 import Navbar from "@/components/layout/navigation/navbar";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/components/ui";
 import LeftSidebar from "@/components/layout/navigation/left-sidebar/LeftSidebar";
 import NavTabsFallback from "@/components/layout/navigation/left-sidebar/NavTabsFallback";
 import { ScrollToTop } from "@/components/layout/main/ScrollToTop";
@@ -10,7 +10,7 @@ interface Props {
   children: React.ReactNode;
 }
 
-const DashboardLayout: React.FC<Props> = ({ children }) => {
+const DashboardLayout: React.FC<Props> = ({ children }: Props) => {
   return (
     <main className="bg-light850_dark100 relative">
       <NextTopLoader showSpinner={false} />

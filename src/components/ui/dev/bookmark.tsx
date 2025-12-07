@@ -2,9 +2,10 @@
 
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui";
 import { TbBookmark, TbBookmarkFilled } from "react-icons/tb";
 import { cn } from "@/lib/utils";
+import { useDebounce } from "@/hooks/use-debounce";
 
 interface BookmarkProps {
   isActive?: boolean;
@@ -50,10 +51,12 @@ const Bookmark = ({
   const handleClick = useCallback(() => {
     if (!isActive) {
       setShowParticles(true);
-      setTimeout(() => setShowParticles(false), 600);
+      setTimeout(() => setShowParticles(false), 500);
     }
     onToggle?.();
   }, [isActive, onToggle]);
+
+  const bookmarkToggle = useDebounce(handleClick, 300);
 
   return (
     <div className={cn("relative", className)}>
@@ -106,7 +109,7 @@ const Bookmark = ({
         aria-label={isActive ? "Remove from saved" : "Save"}
         aria-pressed={isActive}
         disabled={isLoading}
-        onClick={handleClick}
+        onClick={bookmarkToggle}
       >
         <AnimatePresence mode="wait" initial={false}>
           {isActive ? (
@@ -115,7 +118,7 @@ const Bookmark = ({
               className="flex-center"
               initial={{ scale: 0.8 }}
               animate={{ scale: [0.8, 1.2, 1] }}
-              exit={{ opacity: 0 }}
+              exit={{ opacity: 0, transition: { duration: 0.15 } }}
               transition={{
                 duration: 0.3,
                 times: [0, 0.4, 1],

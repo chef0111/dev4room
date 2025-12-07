@@ -1,4 +1,4 @@
-import { Activity, Suspense } from "react";
+import { Suspense } from "react";
 import { after } from "next/server";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -14,8 +14,8 @@ import Votes from "@/components/shared/Votes";
 import SaveQuestion from "@/components/layout/questions/SaveQuestion";
 import TagCard from "@/components/layout/tags/TagCard";
 import EditDelete from "@/components/shared/EditDelete";
-import { Separator } from "@/components/ui/separator";
-import MarkdownPreview from "@/components/editor/MarkdownPreview";
+import { Separator } from "@/components/ui";
+import MarkdownPreview from "@/components/markdown/MarkdownPreview";
 import AnswerForm from "@/components/layout/answers/AnswerForm";
 import Metric from "@/components/shared/Metric";
 import QuestionUtilsFallback from "@/components/layout/questions/QuestionUtilsFallback";
@@ -102,6 +102,7 @@ const QuestionDetails = async ({ params }: RouteParams) => {
       </div>
 
       <MarkdownPreview content={content} />
+
       <div className="mt-8 flex-between">
         <div className="flex flex-wrap gap-2">
           {tags.map((tag) => (
@@ -109,9 +110,7 @@ const QuestionDetails = async ({ params }: RouteParams) => {
           ))}
         </div>
 
-        <Activity mode={isAuthor ? "visible" : "hidden"}>
-          <EditDelete type="question" itemId={question.id} />
-        </Activity>
+        {isAuthor && <EditDelete type="question" itemId={question.id} />}
       </div>
       <Separator className="bg-light700_dark400 h-1 mt-10" />
 

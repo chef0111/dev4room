@@ -4,6 +4,7 @@ import Filter from "@/components/filters/Filter";
 import LocalSearch from "@/components/layout/main/LocalSearch";
 import QuestionCard from "@/components/layout/questions/QuestionCard";
 import DataRenderer from "@/components/shared/DataRenderer";
+import { NextPagination } from "@/components/ui/dev";
 import { getErrorMessage } from "@/lib/handlers/error";
 import { orpc } from "@/lib/orpc";
 import { getQueryClient } from "@/lib/query/hydration";
@@ -18,7 +19,7 @@ const TagQuestions = async ({ params, searchParams }: RouteParams) => {
     input: {
       tagId: id,
       page: Number(page) || 1,
-      pageSize: Number(pageSize) || 12,
+      pageSize: Number(pageSize) || 10,
       query,
       filter,
     },
@@ -34,6 +35,7 @@ const TagQuestions = async ({ params, searchParams }: RouteParams) => {
 
   const tag = result.data?.tag;
   const questions = result.data?.questions;
+  const totalQuestions = result.data?.totalQuestions || 0;
 
   return (
     <>
@@ -66,6 +68,13 @@ const TagQuestions = async ({ params, searchParams }: RouteParams) => {
             ))}
           </div>
         )}
+      />
+
+      <NextPagination
+        page={page}
+        pageSize={pageSize}
+        totalCount={totalQuestions}
+        className="pb-10"
       />
     </>
   );

@@ -12,7 +12,7 @@ import handleError from "@/lib/handlers/error";
 import AuthForm from "@/components/layout/auth/AuthForm";
 import SocialAuthForm from "@/components/layout/auth/SocialAuthForm";
 import VerifyDialog from "@/components/layout/auth/VerifyDialog";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui";
 
 type LoginValues = z.infer<typeof LoginSchema>;
 

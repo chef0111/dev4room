@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { orpc, client } from "@/lib/orpc";
 import { authClient } from "@/lib/auth-client";
@@ -23,20 +23,21 @@ interface UseVoteOptions {
   initialDownvotes: number;
 }
 
-function getVoteChanges(
+function getOptimisticState(
   voteType: VoteType,
-  hasUpvoted: boolean,
-  hasDownvoted: boolean,
-) {
+  currentState: VoteState,
+): VoteState {
+  const { upvotes, downvotes, hasUpvoted, hasDownvoted } = currentState;
   const isUpvote = voteType === "upvote";
   const isToggleOff = isUpvote ? hasUpvoted : hasDownvoted;
   const isSwitch = isUpvote ? hasDownvoted : hasUpvoted;
 
   return {
-    upvotes: isUpvote ? (isToggleOff ? -1 : 1) : isSwitch ? -1 : 0,
-    downvotes: isUpvote ? (isSwitch ? -1 : 0) : isToggleOff ? -1 : 1,
-    newUpvoted: isUpvote && !isToggleOff,
-    newDownvoted: !isUpvote && !isToggleOff,
+    upvotes: upvotes + (isUpvote ? (isToggleOff ? -1 : 1) : isSwitch ? -1 : 0),
+    downvotes:
+      downvotes + (isUpvote ? (isSwitch ? -1 : 0) : isToggleOff ? -1 : 1),
+    hasUpvoted: isUpvote && !isToggleOff,
+    hasDownvoted: !isUpvote && !isToggleOff,
   };
 }
 
@@ -50,13 +51,11 @@ export function useVote({
   const { data: session } = authClient.useSession();
   const isAuthenticated = !!session?.user;
 
-  const [countChange, setCountChange] = useState({ upvotes: 0, downvotes: 0 });
-
   const statusQueryKey = orpc.vote.status.queryOptions({
     input: { targetId, targetType },
   }).queryKey;
 
-  const { data: voteStatus } = useQuery({
+  const { data: voteData } = useQuery({
     ...orpc.vote.status.queryOptions({
       input: { targetId, targetType },
     }),
@@ -72,54 +71,49 @@ export function useVote({
     onMutate: async (voteType) => {
       await queryClient.cancelQueries({ queryKey: statusQueryKey });
 
-      const prevStatus = queryClient.getQueryData<{
-        hasUpvoted: boolean;
-        hasDownvoted: boolean;
-      }>(statusQueryKey);
-      const prevChange = countChange;
+      const prevData = queryClient.getQueryData<VoteState>(statusQueryKey);
 
-      const hasUpvoted = prevStatus?.hasUpvoted ?? false;
-      const hasDownvoted = prevStatus?.hasDownvoted ?? false;
+      // Optimistic update using current state
+      const currentState: VoteState = {
+        upvotes: prevData?.upvotes ?? initialUpvotes,
+        downvotes: prevData?.downvotes ?? initialDownvotes,
+        hasUpvoted: prevData?.hasUpvoted ?? false,
+        hasDownvoted: prevData?.hasDownvoted ?? false,
+      };
 
-      const changes = getVoteChanges(voteType, hasUpvoted, hasDownvoted);
+      const optimisticState = getOptimisticState(voteType, currentState);
+      queryClient.setQueryData(statusQueryKey, optimisticState);
 
-      setCountChange((prev) => ({
-        upvotes: prev.upvotes + changes.upvotes,
-        downvotes: prev.downvotes + changes.downvotes,
-      }));
-
-      queryClient.setQueryData(statusQueryKey, {
-        hasUpvoted: changes.newUpvoted,
-        hasDownvoted: changes.newDownvoted,
-      });
-
-      return { prevStatus, prevChange };
+      return { prevData };
     },
 
     onError: (_error, _voteType, context) => {
       // Rollback
-      if (context?.prevStatus) {
-        queryClient.setQueryData(statusQueryKey, context.prevStatus);
-      }
-      if (context?.prevChange) {
-        setCountChange(context.prevChange);
+      if (context?.prevData) {
+        queryClient.setQueryData(statusQueryKey, context.prevData);
       }
       toast.error("Failed to vote. Please try again.");
     },
 
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: statusQueryKey });
+    onSuccess: (data) => {
+      // Update with server response (authoritative source)
+      queryClient.setQueryData(statusQueryKey, {
+        upvotes: data.upvotes,
+        downvotes: data.downvotes,
+        hasUpvoted: data.hasUpvoted,
+        hasDownvoted: data.hasDownvoted,
+      });
     },
   });
 
   const state = useMemo<VoteState>(
     () => ({
-      upvotes: initialUpvotes + countChange.upvotes,
-      downvotes: initialDownvotes + countChange.downvotes,
-      hasUpvoted: voteStatus?.hasUpvoted ?? false,
-      hasDownvoted: voteStatus?.hasDownvoted ?? false,
+      upvotes: voteData?.upvotes ?? initialUpvotes,
+      downvotes: voteData?.downvotes ?? initialDownvotes,
+      hasUpvoted: voteData?.hasUpvoted ?? false,
+      hasDownvoted: voteData?.hasDownvoted ?? false,
     }),
-    [voteStatus, initialUpvotes, initialDownvotes, countChange],
+    [voteData, initialUpvotes, initialDownvotes],
   );
 
   const vote = useCallback(

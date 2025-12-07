@@ -1,12 +1,13 @@
-import { TagFilters } from "@/common/constants/filters";
-import { EMPTY_TAGS } from "@/common/constants/states";
-import Filter from "@/components/filters/Filter";
-import LocalSearch from "@/components/layout/main/LocalSearch";
-import TagCard from "@/components/layout/tags/TagCard";
-import DataRenderer from "@/components/shared/DataRenderer";
-import { getErrorMessage } from "@/lib/handlers/error";
 import { orpc } from "@/lib/orpc";
 import { getQueryClient } from "@/lib/query/hydration";
+import { getErrorMessage } from "@/lib/handlers/error";
+import LocalSearch from "@/components/layout/main/LocalSearch";
+import Filter from "@/components/filters/Filter";
+import { TagFilters } from "@/common/constants/filters";
+import DataRenderer from "@/components/shared/DataRenderer";
+import TagCard from "@/components/layout/tags/TagCard";
+import { EMPTY_TAGS } from "@/common/constants/states";
+import { NextPagination } from "@/components/ui/dev";
 
 const TagsPage = async ({ searchParams }: RouteParams) => {
   const { page, pageSize, query, filter } = await searchParams;
@@ -31,6 +32,7 @@ const TagsPage = async ({ searchParams }: RouteParams) => {
     }));
 
   const data = result.data;
+  const totalTags = data?.totalTags || 0;
 
   return (
     <>
@@ -57,6 +59,13 @@ const TagsPage = async ({ searchParams }: RouteParams) => {
             ))}
           </div>
         )}
+      />
+
+      <NextPagination
+        page={page}
+        pageSize={pageSize || 12}
+        totalCount={totalTags}
+        className="pb-10"
       />
     </>
   );

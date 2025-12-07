@@ -3,10 +3,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { getServerSession } from "@/lib/session";
 import NavTabs from "./NavTabs";
-import { Button } from "@/components/ui/button";
+import { Button, Skeleton } from "@/components/ui";
 import { UserNav } from "../../profile/UserNav";
 import NavTabsFallback from "./NavTabsFallback";
-import { Skeleton } from "@/components/ui/skeleton";
 
 const LeftSidebar = async () => {
   const session = await getServerSession();

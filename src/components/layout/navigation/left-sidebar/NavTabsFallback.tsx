@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 
 import { cn } from "@/lib/utils";
-import { SheetClose } from "@/components/ui/sheet";
+import { SheetClose } from "@/components/ui";
 
 interface NavTabsProps {
   userId?: string;

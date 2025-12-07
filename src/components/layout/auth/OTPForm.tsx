@@ -10,21 +10,21 @@ import { Loader2Icon, AlertCircleIcon } from "lucide-react";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 
 import { OTPSchema } from "@/lib/validations";
-import { Button } from "@/components/ui/button";
 import {
+  Button,
   Field,
   FieldDescription,
   FieldError,
   FieldGroup,
-} from "@/components/ui/field";
-import {
   InputOTP,
   InputOTPGroup,
   InputOTPSeparator,
   InputOTPSlot,
-} from "@/components/ui/input-otp";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import TextShimmer from "@/components/ui/text-shimmer";
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui";
+import TextShimmer from "@/components/ui/dev/text-shimmer";
 
 type OTPFormValues = z.infer<typeof OTPSchema>;
 

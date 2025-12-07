@@ -15,6 +15,11 @@ const MarkdownPreview = ({ content = "" }: { content: string }) => {
     <section className="markdown grid break-workds">
       <MDXRemote
         source={formattedContent}
+        options={{
+          mdxOptions: {
+            format: "md", // Treat as plain markdown, not MDX
+          },
+        }}
         components={{
           pre: (props) => (
             <Code

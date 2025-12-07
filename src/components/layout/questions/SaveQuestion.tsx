@@ -1,6 +1,6 @@
 "use client";
 
-import { Bookmark } from "@/components/ui/bookmark";
+import { Bookmark } from "@/components/ui/dev";
 import { useBookmark } from "@/services/bookmark.service";
 
 interface SaveQuestionProps {

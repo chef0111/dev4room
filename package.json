@@ -31,6 +31,7 @@
     "@radix-ui/react-select": "^2.2.6",
     "@radix-ui/react-separator": "^1.1.7",
     "@radix-ui/react-slot": "^1.2.3",
+    "@radix-ui/react-tabs": "^1.1.13",
     "@radix-ui/react-tooltip": "^1.2.8",
     "@react-email/components": "^0.5.6",
     "@tailwindcss/typography": "^0.5.18",
@@ -41,6 +42,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cm6-theme-basic-dark": "^0.2.0",
+    "dayjs": "^1.11.19",
     "dotenv": "^17.2.2",
     "drizzle-orm": "^0.44.5",
     "eslint-plugin-import": "^2.32.0",
@@ -74,6 +76,7 @@
     "@commitlint/config-conventional": "^20.0.0",
     "@eslint/eslintrc": "^3",
     "@eslint/js": "^9.36.0",
+    "@next/eslint-plugin-next": "^16.0.7",
     "@tailwindcss/postcss": "^4",
     "@tanstack/eslint-plugin-query": "^5.91.2",
     "@types/node": "^20",
@@ -84,11 +87,14 @@
     "eslint": "^9",
     "eslint-config-next": "16.0.3",
     "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
     "husky": "^9.1.7",
     "shadcn": "^3.4.0",
     "tailwindcss": "^4",
     "tw-animate-css": "^1.3.8",
-    "typescript": "^5"
+    "typescript": "^5",
+    "typescript-eslint": "^8.48.1"
   },
   "pnpm": {
     "overrides": {

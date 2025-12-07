@@ -1,8 +1,7 @@
-import EditorFallback from "@/components/editor/EditorFallback";
+import EditorFallback from "@/components/markdown/EditorFallback";
 import PostCardsSkeleton from "@/components/skeletons/PostCardsSkeleton";
 import QuestionHeaderSkeleton from "@/components/skeletons/QuestionHeaderSkeleton";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Button } from "@/components/ui/button";
+import { Skeleton, Button } from "@/components/ui";
 import { BsStars } from "react-icons/bs";
 
 const Loading = () => {

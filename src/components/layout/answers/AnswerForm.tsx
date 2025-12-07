@@ -6,10 +6,9 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import { AnswerSchema } from "@/lib/validations";
-import MarkdownEditor from "@/components/editor/MarkdownEditor";
-import { Button } from "@/components/ui/button";
-import EditorFallback from "@/components/editor/EditorFallback";
-import { Field, FieldError } from "@/components/ui/field";
+import MarkdownEditor from "@/components/markdown/MarkdownEditor";
+import EditorFallback from "@/components/markdown/EditorFallback";
+import { Field, FieldError, Button } from "@/components/ui";
 import { Loader2 } from "lucide-react";
 import { BsStars } from "react-icons/bs";
 
@@ -20,9 +19,9 @@ interface AnswerFormProps {
 }
 
 const AnswerForm = ({
-  question,
-  questionTitle,
-  questionContent,
+  question: _question,
+  questionTitle: _questionTitle,
+  questionContent: _questionContent,
 }: AnswerFormProps) => {
   const form = useForm<z.infer<typeof AnswerSchema>>({
     resolver: zodResolver(AnswerSchema),

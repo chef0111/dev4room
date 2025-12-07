@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { Metadata } from "next";
 import Link from "next/link";
 
@@ -6,13 +7,15 @@ import { getQueryClient } from "@/lib/query/hydration";
 import { getErrorMessage } from "@/lib/handlers/error";
 import { EMPTY_QUESTION } from "@/common/constants/states";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui";
+import { NextPagination } from "@/components/ui/dev";
 import LocalSearch from "@/components/layout/main/LocalSearch";
 import HomeFilter from "@/components/filters/HomeFilter";
 import QuestionCard from "@/components/layout/questions/QuestionCard";
 import DataRenderer from "@/components/shared/DataRenderer";
 import Filter from "@/components/filters/Filter";
 import { HomePageFilters } from "@/common/constants/filters";
+import PostCardsSkeleton from "@/components/skeletons/PostCardsSkeleton";
 
 export const metadata: Metadata = {
   title: "Dev4Room | Home",
@@ -32,7 +35,7 @@ const HomePage = async ({ searchParams }: SearchParams) => {
   const queryOptions = orpc.question.list.queryOptions({
     input: {
       page: Number(page) || 1,
-      pageSize: Number(pageSize) || 12,
+      pageSize: Number(pageSize) || 10,
       query,
       filter,
     },
@@ -47,6 +50,7 @@ const HomePage = async ({ searchParams }: SearchParams) => {
     }));
 
   const data = result.data;
+  const totalQuestions = data?.totalQuestions || 0;
 
   return (
     <>
@@ -78,18 +82,27 @@ const HomePage = async ({ searchParams }: SearchParams) => {
         <HomeFilter />
       </section>
 
-      <DataRenderer
-        data={data?.questions ?? []}
-        success={!!data}
-        error={result.error}
-        empty={EMPTY_QUESTION}
-        render={(questions) => (
-          <div className="flex flex-col my-10 w-full gap-6">
-            {questions.map((question) => (
-              <QuestionCard key={question.id} question={question} />
-            ))}
-          </div>
-        )}
+      <Suspense fallback={<PostCardsSkeleton className="mt-10" />}>
+        <DataRenderer
+          data={data?.questions ?? []}
+          success={!!data}
+          error={result.error}
+          empty={EMPTY_QUESTION}
+          render={(questions) => (
+            <div className="flex flex-col my-10 w-full gap-6">
+              {questions.map((question) => (
+                <QuestionCard key={question.id} question={question} />
+              ))}
+            </div>
+          )}
+        />
+      </Suspense>
+
+      <NextPagination
+        page={page}
+        pageSize={pageSize}
+        totalCount={totalQuestions}
+        className="pb-10"
       />
     </>
   );
