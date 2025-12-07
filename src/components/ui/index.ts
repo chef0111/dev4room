@@ -11,15 +11,10 @@ export {
   AlertDialogAction,
   AlertDialogCancel,
 } from "./alert-dialog";
-
 export { Alert, AlertTitle, AlertDescription } from "./alert";
-
 export { Avatar, AvatarImage, AvatarFallback } from "./avatar";
-
 export { Badge, badgeVariants } from "./badge";
-
 export { Button, buttonVariants } from "./button";
-
 export {
   Card,
   CardHeader,
@@ -29,9 +24,7 @@ export {
   CardDescription,
   CardContent,
 } from "./card";
-
 export { Checkbox } from "./checkbox";
-
 export {
   DropdownMenu,
   DropdownMenuPortal,
@@ -49,7 +42,6 @@ export {
   DropdownMenuSubTrigger,
   DropdownMenuSubContent,
 } from "./dropdown-menu";
-
 export {
   Field,
   FieldLabel,
@@ -62,7 +54,6 @@ export {
   FieldContent,
   FieldTitle,
 } from "./field";
-
 export {
   InputGroup,
   InputGroupAddon,
@@ -71,22 +62,16 @@ export {
   InputGroupInput,
   InputGroupTextarea,
 } from "./input-group";
-
 export {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
   InputOTPSeparator,
 } from "./input-otp";
-
 export { Input } from "./input";
-
 export { Kbd, KbdGroup } from "./kbd";
-
 export { Label } from "./label";
-
 export { default as Loader } from "./loader";
-
 export {
   Pagination,
   PaginationContent,
@@ -96,9 +81,7 @@ export {
   PaginationNext,
   PaginationEllipsis,
 } from "./pagination";
-
 export { Progress } from "./progress";
-
 export {
   Select,
   SelectContent,
@@ -111,9 +94,7 @@ export {
   SelectTrigger,
   SelectValue,
 } from "./select";
-
 export { Separator } from "./separator";
-
 export {
   Sheet,
   SheetTrigger,
@@ -124,7 +105,6 @@ export {
   SheetTitle,
   SheetDescription,
 } from "./sheet";
-
 export {
   Sidebar,
   SidebarContent,
@@ -151,16 +131,13 @@ export {
   SidebarTrigger,
   useSidebar,
 } from "./sidebar";
-
 export { Skeleton } from "./skeleton";
-
 export { Toaster } from "./sonner";
-
 export { Textarea } from "./textarea";
-
 export {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
   TooltipProvider,
 } from "./tooltip";
+export { Tabs, TabsList, TabsTrigger, TabsContent } from "./tabs";

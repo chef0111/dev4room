@@ -5,7 +5,6 @@ import { Skeleton } from "@/components/ui";
 import LeftSidebar from "@/components/layout/navigation/left-sidebar/LeftSidebar";
 import NavTabsFallback from "@/components/layout/navigation/left-sidebar/NavTabsFallback";
 import { ScrollToTop } from "@/components/layout/main/ScrollToTop";
-import { Props } from "next/script";
 
 interface Props {
   children: React.ReactNode;
