@@ -1,9 +1,10 @@
+import { Route } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
 interface ProfileLinkProps {
   icon: string;
-  href?: string;
+  href?: Route;
   title: string;
 }
 

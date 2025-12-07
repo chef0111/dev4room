@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import { Route } from "next";
 import UserAvatar from "@/components/layout/profile/UserAvatar";
 import ProfileLink from "./ProfileLink";
 
@@ -41,7 +42,7 @@ const ProfileHeader = ({
           {portfolio && (
             <ProfileLink
               icon="/icons/link.svg"
-              href={portfolio}
+              href={portfolio as Route}
               title="Portfolio"
             />
           )}
