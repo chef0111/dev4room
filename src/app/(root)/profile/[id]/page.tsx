@@ -16,17 +16,15 @@ import { Button } from "@/components/ui";
 
 const ProfilePage = async ({ params, searchParams }: RouteParams) => {
   const { id } = await params;
-  const { page, pageSize } = await searchParams;
+  const { page, pageSize, filter } = await searchParams;
 
   if (!id) notFound();
 
   const queryClient = getQueryClient();
 
-  // Get logged in user session
   const session = await authClient.getSession();
   const isOwner = session?.data?.user?.id === id;
 
-  // Fetch user data
   const userResult = await queryClient
     .fetchQuery(
       orpc.user.get.queryOptions({
@@ -52,7 +50,6 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
 
   const { user, totalQuestions, totalAnswers } = userResult.data;
 
-  // Fetch user stats
   const statsResult = await queryClient
     .fetchQuery(
       orpc.user.stats.queryOptions({
@@ -104,6 +101,7 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
             user={user}
             page={Number(page) || 1}
             pageSize={Number(pageSize) || 10}
+            filter={filter}
             isOwner={isOwner}
           />
         </Suspense>

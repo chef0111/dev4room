@@ -10,12 +10,15 @@ import { AnimatedTab, NextPagination } from "@/components/ui/dev";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui";
 import AnswerCard from "@/components/layout/answers/AnswerCard";
 import QuestionCard from "@/components/layout/questions/QuestionCard";
+import Filter from "@/components/filters/Filter";
+import { UserFilters } from "@/common/constants/filters";
 
 interface UserTabsProps {
   userId: string;
   user: Author;
   page?: number;
   pageSize?: number;
+  filter?: string;
   isOwner?: boolean;
 }
 
@@ -24,6 +27,7 @@ const UserTabs = async ({
   user,
   page = 1,
   pageSize = 10,
+  filter = "popular",
   isOwner = false,
 }: UserTabsProps) => {
   const queryClient = getQueryClient();
@@ -35,6 +39,7 @@ const UserTabs = async ({
           userId,
           page,
           pageSize,
+          filter,
         },
       }),
     )
@@ -68,27 +73,31 @@ const UserTabs = async ({
   return (
     <Tabs defaultValue={profileTabs[0].value} className="flex-2">
       {/* User Questions & Answers tabs */}
-      <TabsList className="bg-light800_dark400 min-h-11 p-1 gap-1 rounded-md">
-        <AnimatedTab
-          defaultValue={profileTabs[0].value}
-          className="bg-primary-500 shadow-light-100 rounded-sm"
-          transition={{
-            ease: "easeInOut",
-            duration: 0.2,
-          }}
-        >
-          {profileTabs.map(({ value, label }, index) => (
-            <TabsTrigger
-              key={index}
-              value={value}
-              data-id={value}
-              className="tab cursor-pointer p-3"
-            >
-              <p className="pg-medium">{label}</p>
-            </TabsTrigger>
-          ))}
-        </AnimatedTab>
-      </TabsList>
+      <div className="flex justify-between sm:items-center max-sm:flex-col gap-4">
+        <TabsList className="bg-light800_dark400 min-h-12 max-sm:w-full p-1 gap-1 rounded-md">
+          <AnimatedTab
+            defaultValue={profileTabs[0].value}
+            className="bg-primary-500 shadow-light-100 rounded-sm"
+            transition={{
+              ease: "easeInOut",
+              duration: 0.2,
+            }}
+          >
+            {profileTabs.map(({ value, label }, index) => (
+              <TabsTrigger
+                key={index}
+                value={value}
+                data-id={value}
+                className="tab cursor-pointer p-3"
+              >
+                <p className="pg-medium">{label}</p>
+              </TabsTrigger>
+            ))}
+          </AnimatedTab>
+        </TabsList>
+
+        <Filter filters={UserFilters} className="min-h-12 sm:min-w-33 w-full" />
+      </div>
 
       {/* Display User Questions */}
       <TabsContent

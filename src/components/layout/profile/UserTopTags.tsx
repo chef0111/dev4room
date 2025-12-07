@@ -12,7 +12,7 @@ interface UserTopTagsProps {
   limit?: number;
 }
 
-const UserTopTags = async ({ userId, limit = 10 }: UserTopTagsProps) => {
+const UserTopTags = async ({ userId, limit = 5 }: UserTopTagsProps) => {
   const queryClient = getQueryClient();
 
   const tagsResult = await queryClient

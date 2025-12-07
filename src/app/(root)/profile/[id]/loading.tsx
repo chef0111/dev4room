@@ -16,7 +16,10 @@ const Loading = () => {
       </div>
       <section className="mt-10 flex gap-10">
         <div className="mt-4 flex flex-col w-full gap-6">
-          <Skeleton className="h-12 w-48 rounded-md" />
+          <div className="flex justify-between sm:items-center max-sm:flex-col gap-4">
+            <Skeleton className="h-12 sm:w-48 max-sm:w-full rounded-md" />
+            <Skeleton className="h-12 sm:w-40 max-sm:w-full rounded-md" />
+          </div>
           <PostCardsSkeleton className="mt-2" />
         </div>
 
