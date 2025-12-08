@@ -1,4 +1,4 @@
-// import "@/lib/orpc.server";
+import "@/lib/orpc.server";
 
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
