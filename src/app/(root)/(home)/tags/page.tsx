@@ -3,6 +3,8 @@ import { getQueryClient } from "@/lib/query/hydration";
 import { getErrorMessage } from "@/lib/handlers/error";
 import LocalSearch from "@/components/layout/main/LocalSearch";
 import Filter from "@/components/filters/Filter";
+import FilterContent from "@/components/filters/FilterContent";
+import { FilterProvider } from "@/context";
 import { TagFilters } from "@/common/constants/filters";
 import DataRenderer from "@/components/shared/DataRenderer";
 import TagCard from "@/components/layout/tags/TagCard";
@@ -35,7 +37,7 @@ const TagsPage = async ({ searchParams }: RouteParams) => {
   const totalTags = data?.totalTags || 0;
 
   return (
-    <>
+    <FilterProvider>
       <h1 className="h1-bold text-dark100_light900 text-3xl">Tags</h1>
       <section className="mt-10 flex justify-between sm:items-center max-sm:flex-col gap-4">
         <LocalSearch
@@ -47,27 +49,29 @@ const TagsPage = async ({ searchParams }: RouteParams) => {
         <Filter filters={TagFilters} className="min-h-12 sm:min-w-33 w-full" />
       </section>
 
-      <DataRenderer
-        data={data?.tags}
-        success={!!data}
-        error={result.error}
-        empty={EMPTY_TAGS}
-        render={(tags) => (
-          <div className="my-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 2xl:grid-cols-4 w-full gap-4">
-            {tags.map((tag) => (
-              <TagCard key={tag.id} {...tag} />
-            ))}
-          </div>
-        )}
-      />
+      <FilterContent loadingMessage="Loading...">
+        <DataRenderer
+          data={data?.tags}
+          success={!!data}
+          error={result.error}
+          empty={EMPTY_TAGS}
+          render={(tags) => (
+            <div className="my-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 2xl:grid-cols-4 w-full gap-4">
+              {tags.map((tag) => (
+                <TagCard key={tag.id} {...tag} />
+              ))}
+            </div>
+          )}
+        />
 
-      <NextPagination
-        page={page}
-        pageSize={pageSize || 12}
-        totalCount={totalTags}
-        className="pb-10"
-      />
-    </>
+        <NextPagination
+          page={page}
+          pageSize={pageSize || 12}
+          totalCount={totalTags}
+          className="pb-10"
+        />
+      </FilterContent>
+    </FilterProvider>
   );
 };
 

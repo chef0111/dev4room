@@ -39,7 +39,7 @@ const UserTopTags = async ({ userId, limit = 5 }: UserTopTagsProps) => {
           error={tagsResult.error}
           empty={EMPTY_TAGS}
           render={(tags) => (
-            <div className="mt-3 flex w-full flex-col gap-4">
+            <div className="mt-4 flex w-full flex-col gap-4">
               {tags.map((tag) => (
                 <TagCard
                   key={tag.id}

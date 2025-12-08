@@ -71,7 +71,6 @@ export {
 export { Input } from "./input";
 export { Kbd, KbdGroup } from "./kbd";
 export { Label } from "./label";
-export { default as Loader } from "./loader";
 export {
   Pagination,
   PaginationContent,

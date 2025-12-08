@@ -1,10 +1,12 @@
 import { TagQuestionsFilters } from "@/common/constants/filters";
 import { EMPTY_QUESTION } from "@/common/constants/states";
 import Filter from "@/components/filters/Filter";
+import FilterContent from "@/components/filters/FilterContent";
 import LocalSearch from "@/components/layout/main/LocalSearch";
 import QuestionCard from "@/components/layout/questions/QuestionCard";
 import DataRenderer from "@/components/shared/DataRenderer";
 import { NextPagination } from "@/components/ui/dev";
+import { FilterProvider } from "@/context";
 import { getErrorMessage } from "@/lib/handlers/error";
 import { orpc } from "@/lib/orpc";
 import { getQueryClient } from "@/lib/query/hydration";
@@ -38,7 +40,7 @@ const TagQuestions = async ({ params, searchParams }: RouteParams) => {
   const totalQuestions = result.data?.totalQuestions || 0;
 
   return (
-    <>
+    <FilterProvider>
       <section className="flex flex-col-reverse sm:flex-row justify-between sm:items-center w-full gap-4">
         <h1 className="h1-bold text-dark100_light900">{tag?.name}</h1>
       </section>
@@ -56,19 +58,21 @@ const TagQuestions = async ({ params, searchParams }: RouteParams) => {
         />
       </section>
 
-      <DataRenderer
-        data={questions}
-        success={!!result.data}
-        error={result.error}
-        empty={EMPTY_QUESTION}
-        render={(questions) => (
-          <div className="flex flex-col my-10 w-full gap-6">
-            {questions.map((question) => (
-              <QuestionCard key={question.id} question={question} />
-            ))}
-          </div>
-        )}
-      />
+      <FilterContent loadingMessage="Loading...">
+        <DataRenderer
+          data={questions}
+          success={!!result.data}
+          error={result.error}
+          empty={EMPTY_QUESTION}
+          render={(questions) => (
+            <div className="flex flex-col my-10 w-full gap-6">
+              {questions.map((question) => (
+                <QuestionCard key={question.id} question={question} />
+              ))}
+            </div>
+          )}
+        />
+      </FilterContent>
 
       <NextPagination
         page={page}
@@ -76,7 +80,7 @@ const TagQuestions = async ({ params, searchParams }: RouteParams) => {
         totalCount={totalQuestions}
         className="pb-10"
       />
-    </>
+    </FilterProvider>
   );
 };
 

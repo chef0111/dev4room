@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import { Metadata } from "next";
 import Link from "next/link";
 
@@ -15,7 +14,8 @@ import QuestionCard from "@/components/layout/questions/QuestionCard";
 import DataRenderer from "@/components/shared/DataRenderer";
 import Filter from "@/components/filters/Filter";
 import { HomePageFilters } from "@/common/constants/filters";
-import PostCardsSkeleton from "@/components/skeletons/PostCardsSkeleton";
+import { FilterProvider } from "@/context";
+import FilterContent from "@/components/filters/FilterContent";
 
 export const metadata: Metadata = {
   title: "Dev4Room | Home",
@@ -53,7 +53,7 @@ const HomePage = async ({ searchParams }: SearchParams) => {
   const totalQuestions = data?.totalQuestions || 0;
 
   return (
-    <>
+    <FilterProvider>
       {/* Ask a question section */}
       <section className="flex flex-col-reverse sm:flex-row justify-between sm:items-center w-full gap-4">
         <h1 className="h1-bold text-dark100_light900">All Questions</h1>
@@ -82,7 +82,7 @@ const HomePage = async ({ searchParams }: SearchParams) => {
         <HomeFilter />
       </section>
 
-      <Suspense fallback={<PostCardsSkeleton className="mt-10" />}>
+      <FilterContent loadingMessage="Loading...">
         <DataRenderer
           data={data?.questions ?? []}
           success={!!data}
@@ -96,7 +96,7 @@ const HomePage = async ({ searchParams }: SearchParams) => {
             </div>
           )}
         />
-      </Suspense>
+      </FilterContent>
 
       <NextPagination
         page={page}
@@ -104,7 +104,7 @@ const HomePage = async ({ searchParams }: SearchParams) => {
         totalCount={totalQuestions}
         className="pb-10"
       />
-    </>
+    </FilterProvider>
   );
 };
 

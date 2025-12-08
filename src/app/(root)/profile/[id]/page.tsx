@@ -37,16 +37,7 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
       error: { message: getErrorMessage(e, "Failed to fetch user") },
     }));
 
-  if (!userResult.data) {
-    return (
-      <div className="flex-center flex-col gap-4">
-        <h1 className="h1-bold text-dark100_light900">User not found</h1>
-        <p className="pg-regular text-dark200_light800 max-w-md">
-          {userResult.error?.message}
-        </p>
-      </div>
-    );
-  }
+  if (!userResult.data) return notFound();
 
   const { user, totalQuestions, totalAnswers } = userResult.data;
 

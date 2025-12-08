@@ -8,6 +8,8 @@ import DataRenderer from "@/components/shared/DataRenderer";
 import QuestionCard from "@/components/layout/questions/QuestionCard";
 import { EMPTY_QUESTION } from "@/common/constants/states";
 import { NextPagination } from "@/components/ui/dev";
+import { FilterProvider } from "@/context";
+import FilterContent from "@/components/filters/FilterContent";
 
 interface SearchParams {
   searchParams: Promise<{ [key: string]: string }>;
@@ -39,7 +41,7 @@ const Collections = async ({ searchParams }: SearchParams) => {
   const totalCollections = data?.totalCollections || 0;
 
   return (
-    <>
+    <FilterProvider>
       <h1 className="h1-bold text-dark100_light900">Saved Questions</h1>
 
       <div className="mt-10 flex justify-between sm:items-center max-sm:flex-col gap-4">
@@ -55,19 +57,21 @@ const Collections = async ({ searchParams }: SearchParams) => {
         />
       </div>
 
-      <DataRenderer
-        success={!!data}
-        error={result.error}
-        data={data?.collections}
-        empty={EMPTY_QUESTION}
-        render={(collections) => (
-          <div className="flex flex-col my-10 w-full gap-6">
-            {collections.map((item) => (
-              <QuestionCard key={item.id} question={item.question} />
-            ))}
-          </div>
-        )}
-      />
+      <FilterContent loadingMessage="Loading...">
+        <DataRenderer
+          success={!!data}
+          error={result.error}
+          data={data?.collections}
+          empty={EMPTY_QUESTION}
+          render={(collections) => (
+            <div className="flex flex-col my-10 w-full gap-6">
+              {collections.map((item) => (
+                <QuestionCard key={item.id} question={item.question} />
+              ))}
+            </div>
+          )}
+        />
+      </FilterContent>
 
       <NextPagination
         page={page}
@@ -75,7 +79,7 @@ const Collections = async ({ searchParams }: SearchParams) => {
         totalCount={totalCollections}
         className="pb-10"
       />
-    </>
+    </FilterProvider>
   );
 };
 
