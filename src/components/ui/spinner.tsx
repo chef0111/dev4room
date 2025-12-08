@@ -1,12 +1,14 @@
 import { cn } from "@/lib/utils";
-import { TbLoader } from "react-icons/tb";
 
-function Spinner({ className, ...props }: React.ComponentProps<"svg">) {
+function Spinner({ className, ...props }: React.ComponentProps<"div">) {
   return (
-    <TbLoader
+    <div
       role="status"
       aria-label="Loading"
-      className={cn("size-4 animate-spin", className)}
+      className={cn(
+        "size-4 border-[3px] border-secondary border-t-foreground/50 dark:border-t-foreground/80 rounded-full animate-spin",
+        className,
+      )}
       {...props}
     />
   );

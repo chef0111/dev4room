@@ -124,8 +124,6 @@ export const deleteQuestion = authorized
     method: "DELETE",
     path: "/question/{questionId}",
     summary: "Delete Question",
-    description:
-      "Delete a question and all related data (answers, votes, etc.)",
     tags: ["Questions"],
   })
   .input(DeleteQuestionSchema)

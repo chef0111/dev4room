@@ -28,9 +28,10 @@ import {
   Alert,
   AlertDescription,
   AlertTitle,
+  Spinner,
 } from "@/components/ui";
 import { TextShimmer } from "@/components/ui/dev";
-import { AlertCircleIcon, Loader2Icon } from "lucide-react";
+import { AlertCircleIcon } from "lucide-react";
 
 type AuthFormType = keyof typeof AUTH_FORM_TYPES;
 
@@ -157,7 +158,7 @@ const AuthForm = <T extends FieldValues>({
         className="primary-gradient pg-semibold min-h-10 w-full text-light-900 hover:primary-gradient-hover transition-all cursor-pointer"
       >
         {form.formState.isSubmitting && (
-          <Loader2Icon className="animate-spin" />
+          <Spinner className="border-primary-foreground/30 border-t-primary-foreground!" />
         )}
         {form.formState.isSubmitting ? (
           <TextShimmer duration={1} className="text-loading!">

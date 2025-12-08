@@ -6,7 +6,7 @@ import { Controller, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { toast } from "sonner";
-import { Loader2Icon, AlertCircleIcon } from "lucide-react";
+import { AlertCircleIcon } from "lucide-react";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 
 import { OTPSchema } from "@/lib/validations";
@@ -23,6 +23,7 @@ import {
   Alert,
   AlertDescription,
   AlertTitle,
+  Spinner,
 } from "@/components/ui";
 import TextShimmer from "@/components/ui/dev/text-shimmer";
 
@@ -129,7 +130,7 @@ const OTPForm = ({
         className="primary-gradient pg-semibold min-h-10 w-full text-light-900 hover:primary-gradient-hover transition-all cursor-pointer"
       >
         {form.formState.isSubmitting && (
-          <Loader2Icon className="animate-spin" />
+          <Spinner className="border-primary-foreground/30 border-t-primary-foreground!" />
         )}
         {form.formState.isSubmitting ? (
           <TextShimmer duration={1} className="text-loading!">

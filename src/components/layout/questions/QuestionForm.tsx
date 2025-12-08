@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
+import { orpc } from "@/lib/orpc";
 import { useMutation } from "@tanstack/react-query";
 import { QuestionSchema } from "@/lib/validations";
 import { toast } from "sonner";
@@ -17,14 +18,13 @@ import {
   FieldLabel,
   Input,
   Button,
+  Spinner,
 } from "@/components/ui";
-import { Loader2Icon } from "lucide-react";
 import MarkdownEditor from "@/components/markdown/MarkdownEditor";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import TagCard from "../tags/TagCard";
 import { getTechDisplayName } from "@/lib/utils";
 import EditorFallback from "@/components/markdown/EditorFallback";
-import { orpc } from "@/lib/orpc";
 
 interface QuestionFormProps {
   question?: Question;
@@ -36,7 +36,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
   const [isPending, startTransition] = useTransition();
   const editorRef = useRef<MDXEditorMethods>(null);
 
-  const createQuestionMutation = useMutation(
+  const createQuestion = useMutation(
     orpc.question.create.mutationOptions({
       onSuccess: (data) => {
         toast.success("Question created successfully!");
@@ -48,7 +48,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
     }),
   );
 
-  const editQuestionMutation = useMutation(
+  const editQuestion = useMutation(
     orpc.question.edit.mutationOptions({
       onSuccess: (data) => {
         toast.success("Question updated successfully!");
@@ -72,12 +72,12 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
   const handleSubmitQuestion = async (data: z.infer<typeof QuestionSchema>) => {
     startTransition(async () => {
       if (isEdit && question?.id) {
-        await editQuestionMutation.mutateAsync({
+        await editQuestion.mutateAsync({
           questionId: question.id,
           ...data,
         });
       } else {
-        await createQuestionMutation.mutateAsync(data);
+        await createQuestion.mutateAsync(data);
       }
     });
   };
@@ -259,7 +259,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
           >
             {isPending ? (
               <>
-                <Loader2Icon className="animate-spin size-4" />
+                <Spinner className="border-primary-foreground/30 border-t-primary-foreground!" />
                 <span>Submitting</span>
               </>
             ) : (
