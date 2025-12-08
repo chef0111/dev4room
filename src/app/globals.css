@@ -8,6 +8,12 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@keyframes shimmer {
+  100% {
+    transform: translateX(200%);
+  }
+}
+
 @theme {
   --color-primary-100: #e6f7ff;
   --color-primary-200: #d8eefb;
@@ -465,6 +471,10 @@
 
 @utility tab {
   @apply data-[state=active]:text-light-900! text-dark400_light500! data-[state=active]:bg-transparent! data-[state=active]:border-none! data-[state=active]:shadow-none!;
+}
+
+@utility tab-panel {
+  @apply flex-center h-9 w-fit px-3 rounded-sm pg-medium text-dark400_light500;
 }
 
 @layer base {

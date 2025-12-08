@@ -18,16 +18,18 @@ import Link from "next/link";
 import { AUTH_FORM_TYPES } from "@/common/constants";
 import { formatFieldName } from "@/lib/utils";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
 import {
+  Button,
   Field,
   FieldError,
   FieldGroup,
   FieldLabel,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import TextShimmer from "@/components/ui/text-shimmer";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+  Input,
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui";
+import { TextShimmer } from "@/components/ui/dev";
 import { AlertCircleIcon, Loader2Icon } from "lucide-react";
 
 type AuthFormType = keyof typeof AUTH_FORM_TYPES;

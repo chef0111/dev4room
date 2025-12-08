@@ -1,6 +1,6 @@
 import z from "zod";
 
-const NAME_REGEX = /^[^\d!@#$%^&*()_+=\[\]{};':"\\|,.<>?/`~]+$/;
+const NAME_REGEX = /^[^\d!@#$%^&*()_+=[\]{};':"\\|,.<>?/`~]+$/;
 
 export const PasswordSchema = z
   .string()
@@ -100,6 +100,12 @@ export const QuestionSchema = z.object({
     )
     .min(1, { message: "At least one tag is required." })
     .max(5, { message: "You can add a maximum of 5 tags." }),
+});
+
+export const AnswerSchema = z.object({
+  content: z
+    .string()
+    .min(20, { message: "Answer must have at least 20 characters." }),
 });
 
 export const QueryParamsSchema = z.object({

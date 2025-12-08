@@ -4,10 +4,12 @@ import { getErrorMessage } from "@/lib/handlers/error";
 import { orpc } from "@/lib/orpc";
 import { getQueryClient } from "@/lib/query/hydration";
 
+const DEFAULT_LIMIT = 5;
+
 const PopularTags = async () => {
   const queryClient = getQueryClient();
   const queryOptions = orpc.tag.getPopular.queryOptions({
-    input: { limit: 5 },
+    input: { limit: DEFAULT_LIMIT },
   });
 
   const result = await queryClient

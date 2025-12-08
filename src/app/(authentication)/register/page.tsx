@@ -10,7 +10,7 @@ import { RegisterSchema } from "@/lib/validations";
 import AuthForm from "@/components/layout/auth/AuthForm";
 import SocialAuthForm from "@/components/layout/auth/SocialAuthForm";
 import handleError from "@/lib/handlers/error";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui";
 
 type RegisterValues = z.infer<typeof RegisterSchema>;
 

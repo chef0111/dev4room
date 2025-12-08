@@ -1,9 +1,8 @@
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
+import { Badge, Button } from "@/components/ui";
+import { DevCard } from "@/components/ui/dev";
 import { getTechDescription, getTechIcon } from "@/lib/utils";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import DevCard from "@/components/ui/dev-card";
 
 interface TagCardProps {
   id: string;

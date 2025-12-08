@@ -2,7 +2,7 @@ import { HomePageFilters } from "@/common/constants/filters";
 import FilterFallback from "@/components/filters/FilterFallback";
 import SearchInput from "@/components/layout/main/SearchInput";
 import PostCardsSkeleton from "@/components/skeletons/PostCardsSkeleton";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui";
 
 const HomeLoading = () => {
   return (

@@ -1,7 +1,7 @@
 import type { RouterClient } from "@orpc/server";
 import { RPCLink } from "@orpc/client/fetch";
 import { createORPCClient } from "@orpc/client";
-import { router } from "@/app/server";
+import { router } from "@/app/server/router";
 import { createTanstackQueryUtils } from "@orpc/tanstack-query";
 
 declare global {
@@ -25,10 +25,18 @@ const link = new RPCLink({
   },
 });
 
-/**
- * Fallback to client-side client if server-side client is not available.
- */
-export const client: RouterClient<typeof router> =
-  globalThis.$client ?? createORPCClient(link);
+function getClient(): RouterClient<typeof router> {
+  if (globalThis.$client) {
+    return globalThis.$client;
+  }
+  return createORPCClient(link);
+}
+
+// Create a proxy that lazily accesses the client
+export const client = new Proxy({} as RouterClient<typeof router>, {
+  get(_, prop) {
+    return getClient()[prop as keyof RouterClient<typeof router>];
+  },
+});
 
 export const orpc = createTanstackQueryUtils(client);

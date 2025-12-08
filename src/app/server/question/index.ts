@@ -1,3 +1,5 @@
+import { z } from "zod";
+import { after } from "next/server";
 import { base } from "@/app/middleware";
 import { authorized } from "@/app/middleware/auth";
 import {
@@ -5,7 +7,6 @@ import {
   getQuestionById,
   createQuestion as createQuestionDAL,
   editQuestion as editQuestionDAL,
-  incrementQuestionViews,
   getTopQuestions as getTopQuestionsDAL,
 } from "@/app/server/question/question.dal";
 import {
@@ -17,7 +18,7 @@ import {
   TopQuestionsOutputSchema,
 } from "@/app/server/question/question.dto";
 import { QueryParamsSchema } from "@/lib/validations";
-import { z } from "zod";
+import { createInteraction } from "../interaction/interaction.dal";
 
 export const listQuestions = base
   .route({
@@ -58,6 +59,25 @@ export const createQuestion = authorized
   .output(z.object({ id: z.string() }))
   .handler(async ({ input, context }) => {
     const question = await createQuestionDAL(input, context.user.id);
+
+    after(async () => {
+      try {
+        await createInteraction(
+          {
+            action: "post",
+            actionType: "question",
+            actionId: question.id,
+            authorId: context.user.id,
+          },
+          context.user.id,
+        );
+      } catch (error) {
+        console.error(
+          "Failed to create interaction after create question:",
+          error,
+        );
+      }
+    });
     return { id: question.id };
   });
 
@@ -79,20 +99,6 @@ export const editQuestion = authorized
   )
   .handler(async ({ input, context }) => {
     const result = await editQuestionDAL(input, context.user.id);
-    return result;
-  });
-
-export const incrementViews = base
-  .route({
-    method: "POST",
-    path: "/question/view",
-    summary: "Increment Question Views",
-    tags: ["Questions"],
-  })
-  .input(z.object({ questionId: z.string() }))
-  .output(z.object({ views: z.number().int().min(0) }))
-  .handler(async ({ input }) => {
-    const result = await incrementQuestionViews(input.questionId);
     return result;
   });
 

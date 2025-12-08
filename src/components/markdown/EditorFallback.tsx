@@ -1,4 +1,4 @@
-import TextShimmer from "../ui/text-shimmer";
+import TextShimmer from "../ui/dev/text-shimmer";
 
 const EditorFallback = () => {
   return (

@@ -15,15 +15,15 @@ import {
   FieldError,
   FieldGroup,
   FieldLabel,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+  Input,
+  Button,
+} from "@/components/ui";
 import { Loader2Icon } from "lucide-react";
-import MarkdownEditor from "@/components/editor/MarkdownEditor";
+import MarkdownEditor from "@/components/markdown/MarkdownEditor";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import TagCard from "../tags/TagCard";
 import { getTechDisplayName } from "@/lib/utils";
-import EditorFallback from "@/components/editor/EditorFallback";
+import EditorFallback from "@/components/markdown/EditorFallback";
 import { orpc } from "@/lib/orpc";
 
 interface QuestionFormProps {
@@ -255,7 +255,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
           <Button
             type="submit"
             disabled={isPending}
-            className="primary-gradient hover:primary-gradient-hover text-light-900! cursor-pointer"
+            className="primary-gradient hover:primary-gradient-hover text-light-900! transition-colors cursor-pointer"
           >
             {isPending ? (
               <>
