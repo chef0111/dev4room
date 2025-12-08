@@ -1,8 +1,15 @@
 import "server-only";
 
 import { db } from "@/database/drizzle";
-import { question, tag, tagQuestion, user } from "@/database/schema";
-import { and, or, ilike, desc, asc, sql, eq } from "drizzle-orm";
+import {
+  question,
+  tag,
+  tagQuestion,
+  user,
+  answer,
+  vote,
+} from "@/database/schema";
+import { and, or, ilike, desc, asc, sql, eq, inArray } from "drizzle-orm";
 import { ORPCError } from "@orpc/server";
 import { getPagination, validateArray, validateOne } from "../utils";
 import { TagQuestionService } from "../tag-question/service";
@@ -287,6 +294,69 @@ export class QuestionDAL {
 
     return rows;
   }
+
+  static async delete(questionId: string, userId: string): Promise<void> {
+    return db.transaction(async (tx) => {
+      // Check if question exists and user is the author
+      const [existing] = await tx
+        .select({
+          id: question.id,
+          authorId: question.authorId,
+        })
+        .from(question)
+        .where(eq(question.id, questionId))
+        .limit(1);
+
+      if (!existing) {
+        throw new ORPCError("NOT_FOUND", { message: "Question not found" });
+      }
+
+      if (existing.authorId !== userId) {
+        throw new ORPCError("FORBIDDEN", {
+          message: "You are not authorized to delete this question",
+        });
+      }
+
+      const questionTags = await tx
+        .select({ tagId: tagQuestion.tagId })
+        .from(tagQuestion)
+        .where(eq(tagQuestion.questionId, questionId));
+
+      if (questionTags.length > 0) {
+        await TagQuestionService.decrementQuestionCount(
+          tx,
+          questionTags.map((t) => t.tagId),
+        );
+      }
+
+      const questionAnswers = await tx
+        .select({ id: answer.id })
+        .from(answer)
+        .where(eq(answer.questionId, questionId));
+
+      // Delete votes for the question
+      await tx
+        .delete(vote)
+        .where(
+          and(eq(vote.actionId, questionId), eq(vote.actionType, "question")),
+        );
+
+      // Delete votes for all answers of the question
+      if (questionAnswers.length > 0) {
+        await tx.delete(vote).where(
+          and(
+            inArray(
+              vote.actionId,
+              questionAnswers.map((a) => a.id),
+            ),
+            eq(vote.actionType, "answer"),
+          ),
+        );
+      }
+
+      await tx.delete(question).where(eq(question.id, questionId));
+    });
+  }
 }
 
 export const getQuestions = QuestionDAL.findMany.bind(QuestionDAL);
@@ -294,3 +364,4 @@ export const getQuestionById = QuestionDAL.findById.bind(QuestionDAL);
 export const createQuestion = QuestionDAL.create.bind(QuestionDAL);
 export const editQuestion = QuestionDAL.update.bind(QuestionDAL);
 export const getTopQuestions = QuestionDAL.findTop.bind(QuestionDAL);
+export const deleteQuestion = QuestionDAL.delete.bind(QuestionDAL);

@@ -21,7 +21,7 @@ interface UserTabsProps {
   page?: number;
   pageSize?: number;
   filter?: string;
-  isOwner?: boolean;
+  isAuthor?: boolean;
 }
 
 const UserTabs = async ({
@@ -30,7 +30,7 @@ const UserTabs = async ({
   page = 1,
   pageSize = 10,
   filter = "popular",
-  isOwner = false,
+  isAuthor = false,
 }: UserTabsProps) => {
   const queryClient = getQueryClient();
 
@@ -126,7 +126,7 @@ const UserTabs = async ({
                         ...question,
                         author: user,
                       }}
-                      actionButtons={isOwner}
+                      actionButtons={isAuthor}
                     />
                   ))}
 
@@ -167,7 +167,7 @@ const UserTabs = async ({
                       question={answer.question}
                       className="rounded-md px-3 py-4 sm:px-5"
                       showReadMore
-                      actionButtons={isOwner}
+                      actionButtons={isAuthor}
                     />
                   ))}
 

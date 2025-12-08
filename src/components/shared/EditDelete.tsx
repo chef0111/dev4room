@@ -70,7 +70,7 @@ const EditDelete = ({ type, itemId }: EditDeleteProps) => {
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
-              className="border-primary-100 bg-destructive text-light-800 cursor-pointer"
+              className="border-primary-100 bg-destructive hover:bg-red-500 text-light-800 cursor-pointer"
               onClick={handleDelete}
             >
               Continue

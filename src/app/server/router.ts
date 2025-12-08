@@ -13,6 +13,7 @@ import {
   createQuestion,
   editQuestion,
   getTopQuestions,
+  deleteQuestion,
 } from "./question";
 import { listTags, getTagQuestions, getPopular } from "./tag";
 import { createVote, hasVoted } from "./vote";
@@ -34,6 +35,7 @@ export const router = {
     create: createQuestion,
     edit: editQuestion,
     getTop: getTopQuestions,
+    delete: deleteQuestion,
   },
   tag: {
     list: listTags,

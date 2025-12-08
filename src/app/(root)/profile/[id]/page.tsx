@@ -1,7 +1,6 @@
 import { Suspense } from "react";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { authClient } from "@/lib/auth-client";
+import { getServerSession } from "@/lib/session";
 import { orpc } from "@/lib/orpc";
 import { getQueryClient } from "@/lib/query/hydration";
 import { getErrorMessage } from "@/lib/handlers/error";
@@ -12,7 +11,7 @@ import UserTabs from "@/components/layout/profile/UserTabs";
 import UserTopTags from "@/components/layout/profile/UserTopTags";
 import UserTabsSkeleton from "@/components/skeletons/UserTabsSkeleton";
 import UserTopTagsSkeleton from "@/components/skeletons/UserTopTagsSkeleton";
-import { Button } from "@/components/ui";
+import EditProfileDialog from "@/components/layout/profile/EditProfileDialog";
 
 const ProfilePage = async ({ params, searchParams }: RouteParams) => {
   const { id } = await params;
@@ -22,8 +21,8 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
 
   const queryClient = getQueryClient();
 
-  const session = await authClient.getSession();
-  const isOwner = session?.data?.user?.id === id;
+  const session = await getServerSession();
+  const isAuthor = session?.user?.id === id;
 
   const userResult = await queryClient
     .fetchQuery(
@@ -67,14 +66,7 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
         />
 
         <div className="flex justify-end max-sm:mb-5 max-sm:w-full">
-          {isOwner && (
-            <Button
-              className="pg-medium btn-secondary hover:bg-light700_dark300! text-dark300_light900 min-h-12 min-w-40 max-sm:w-full px-4 py-3 transition-all duration-200 cursor-pointer"
-              asChild
-            >
-              <Link href="/profile/edit">Edit Profile</Link>
-            </Button>
-          )}
+          {isAuthor && <EditProfileDialog user={user} />}
         </div>
       </section>
 
@@ -93,7 +85,7 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
             page={Number(page) || 1}
             pageSize={Number(pageSize) || 10}
             filter={filter}
-            isOwner={isOwner}
+            isAuthor={isAuthor}
           />
         </Suspense>
 
