@@ -5,6 +5,7 @@ import {
   getUserAnswers,
   getUserTags,
   getUserStatsRoute,
+  updateUser,
 } from "./user";
 import {
   listQuestions,
@@ -25,6 +26,7 @@ export const router = {
     answers: getUserAnswers,
     tags: getUserTags,
     stats: getUserStatsRoute,
+    update: updateUser,
   },
   question: {
     list: listQuestions,
