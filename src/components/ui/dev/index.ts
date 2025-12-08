@@ -5,3 +5,4 @@ export { NextPagination } from "./next-pagination";
 export { default as TextShimmer } from "./text-shimmer";
 export { Upvote } from "./upvote";
 export { AnimatedTab } from "./animated-tab";
+export { default as Loader } from "./loader";

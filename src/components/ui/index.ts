@@ -71,7 +71,6 @@ export {
 export { Input } from "./input";
 export { Kbd, KbdGroup } from "./kbd";
 export { Label } from "./label";
-export { default as Loader } from "./loader";
 export {
   Pagination,
   PaginationContent,
@@ -141,3 +140,4 @@ export {
   TooltipProvider,
 } from "./tooltip";
 export { Tabs, TabsList, TabsTrigger, TabsContent } from "./tabs";
+export { LoaderIcon } from "./loader-icon";

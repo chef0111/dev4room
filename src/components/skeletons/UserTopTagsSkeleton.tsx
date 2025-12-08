@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 const UserTopTagsSkeleton = () => {
   return (
     <div className="flex w-full max-w-60 flex-1 flex-col max-lg:hidden">
-      <Skeleton className="h-10 w-36" />
+      <h2 className="h2-bold text-dark200_light900">Top Tech</h2>
       <div className="mt-10 flex flex-col gap-4">
         {[1, 2, 3, 4, 5].map((item) => (
           <div key={item} className="flex-between">
