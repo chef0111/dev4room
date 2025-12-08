@@ -3,10 +3,11 @@ import "@/lib/orpc.server";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import localFont from "next/font/local";
-import "./globals.css";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeProvider } from "@/context/theme-provider";
 import { Toaster } from "@/components/ui";
 import { Providers } from "./providers";
+import "./globals.css";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -46,6 +47,7 @@ const RootLayout: React.FC<Props> = ({ children }: Props) => {
             <Providers>{children}</Providers>
             <Toaster richColors />
           </ThemeProvider>
+          <SpeedInsights />
         </body>
       </html>
     </>
