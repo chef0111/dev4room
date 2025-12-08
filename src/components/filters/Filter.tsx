@@ -1,5 +1,6 @@
 "use client";
 
+import { useOptimistic } from "react";
 import { Route } from "next";
 import { cn } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -13,6 +14,7 @@ import {
 } from "@/components/ui";
 import { formUrlQuery } from "@/lib/url";
 import { ListFilter } from "lucide-react";
+import { useFilterTransition } from "@/context/filter-provider";
 
 interface Filter {
   label: string;
@@ -28,8 +30,9 @@ interface FilterProps {
 const Filter = ({ filters, className, containerClassName }: FilterProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-
-  const filterParams = searchParams.get("filter");
+  const filterParams = searchParams.get("filter") ?? "";
+  const [filterValue, setFilterValue] = useOptimistic(filterParams);
+  const { startTransition } = useFilterTransition();
 
   const handleUpdateFilter = (value: string) => {
     const newUrl = formUrlQuery({
@@ -38,7 +41,10 @@ const Filter = ({ filters, className, containerClassName }: FilterProps) => {
       value,
     });
 
-    router.push(newUrl as Route, { scroll: false });
+    startTransition(() => {
+      setFilterValue(value);
+      router.push(newUrl as Route, { scroll: false });
+    });
   };
 
   return (
@@ -46,7 +52,7 @@ const Filter = ({ filters, className, containerClassName }: FilterProps) => {
       <Select
         onValueChange={handleUpdateFilter}
         defaultValue=""
-        value={filterParams ?? ""}
+        value={filterValue}
       >
         <SelectTrigger
           className={cn(
