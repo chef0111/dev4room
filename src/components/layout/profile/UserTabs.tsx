@@ -111,7 +111,7 @@ const UserTabs = async ({
           value={profileTabs[0].value}
           className="mt-4 flex flex-col w-full gap-6"
         >
-          <FilterContent loadingMessage="Loading questions...">
+          <FilterContent loadingMessage="Loading...">
             <DataRenderer
               data={questions}
               success={!!questionsResult.data}
@@ -147,7 +147,7 @@ const UserTabs = async ({
           value="answers"
           className="mt-4 flex flex-col w-full gap-6"
         >
-          <FilterContent loadingMessage="Loading answers...">
+          <FilterContent loadingMessage="Loading...">
             <DataRenderer
               data={answers}
               success={!!answersResult.data}

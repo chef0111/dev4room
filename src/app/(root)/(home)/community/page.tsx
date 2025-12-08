@@ -53,7 +53,7 @@ const Community = async ({ searchParams }: RouteParams) => {
           />
         </section>
 
-        <FilterContent loadingMessage="Loading users...">
+        <FilterContent loadingMessage="Loading...">
           <DataRenderer
             data={data?.users ?? []}
             success={!!data}

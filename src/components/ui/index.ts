@@ -140,4 +140,3 @@ export {
   TooltipProvider,
 } from "./tooltip";
 export { Tabs, TabsList, TabsTrigger, TabsContent } from "./tabs";
-export { LoaderIcon } from "./loader-icon";

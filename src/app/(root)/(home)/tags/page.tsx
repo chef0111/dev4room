@@ -49,7 +49,7 @@ const TagsPage = async ({ searchParams }: RouteParams) => {
         <Filter filters={TagFilters} className="min-h-12 sm:min-w-33 w-full" />
       </section>
 
-      <FilterContent loadingMessage="Loading tags...">
+      <FilterContent loadingMessage="Loading...">
         <DataRenderer
           data={data?.tags}
           success={!!data}
