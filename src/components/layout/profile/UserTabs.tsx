@@ -12,6 +12,7 @@ import AnswerCard from "@/components/layout/answers/AnswerCard";
 import QuestionCard from "@/components/layout/questions/QuestionCard";
 import Filter from "@/components/filters/Filter";
 import FilterContent from "@/components/filters/FilterContent";
+import MarkdownPreview from "@/components/markdown/MarkdownPreview";
 import { UserFilters } from "@/common/constants/filters";
 import { FilterProvider } from "@/context";
 
@@ -155,21 +156,33 @@ const UserTabs = async ({
               empty={EMPTY_ANSWERS}
               render={(answers) => (
                 <div className="mb-10 flex w-full flex-col">
-                  {answers.map((answer) => (
-                    <AnswerCard
-                      key={answer.id}
-                      id={answer.id}
-                      author={user}
-                      content={`${answer.content.slice(0, 270)}...`}
-                      createdAt={answer.createdAt}
-                      upvotes={answer.upvotes}
-                      downvotes={answer.downvotes}
-                      question={answer.question}
-                      className="rounded-md px-3 py-4 sm:px-5"
-                      showReadMore
-                      actionButtons={isAuthor}
-                    />
-                  ))}
+                  {answers.map((answer) => {
+                    const previewLength = 240;
+                    const previewContent =
+                      answer.content.length > previewLength
+                        ? answer.content.slice(0, previewLength) + "..."
+                        : answer.content;
+
+                    return (
+                      <AnswerCard
+                        {...answer}
+                        key={answer.id}
+                        id={answer.id}
+                        author={user}
+                        questionId={answer.question.id}
+                        showDelete={isAuthor}
+                        expandable={false}
+                        previewMarkdown={
+                          <MarkdownPreview content={previewContent} />
+                        }
+                        fullMarkdown={
+                          <MarkdownPreview content={answer.content} />
+                        }
+                        toggleExpand
+                        className="rounded-md px-3 py-4 sm:px-5"
+                      />
+                    );
+                  })}
 
                   <NextPagination
                     page={page}

@@ -7,7 +7,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Loader2Icon } from "lucide-react";
 
 import {
   Field,
@@ -17,6 +16,7 @@ import {
   Input,
   Button,
   Textarea,
+  Spinner,
 } from "@/components/ui";
 import { ProfileSchema } from "@/lib/validations";
 import { orpc } from "@/lib/orpc";
@@ -138,7 +138,7 @@ const ProfileForm = ({ user, onSuccess }: ProfileFormProps) => {
         >
           {isPending ? (
             <>
-              <Loader2Icon className="size-4 animate-spin" />
+              <Spinner className="border-primary-foreground/30 border-t-primary-foreground!" />
               Saving...
             </>
           ) : (

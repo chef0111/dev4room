@@ -1,10 +1,23 @@
+"use client";
+
+import { Suspense, useState } from "react";
 import Link from "next/link";
+import { ReactNode } from "react";
+
 import { cn, getTimeStamp } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 import UserAvatar from "@/components/layout/profile/UserAvatar";
-import MarkdownPreview from "@/components/markdown/MarkdownPreview";
+import EditorFallback from "@/components/markdown/EditorFallback";
 import EditDelete from "@/components/shared/EditDelete";
 import Votes from "@/components/shared/Votes";
+import AnswerForm from "./AnswerForm";
+import AnswerCardContent from "./AnswerCardContent";
+
+interface Author {
+  id: string;
+  name: string;
+  image: string | null;
+}
 
 interface AnswerCardProps {
   id: string;
@@ -13,13 +26,14 @@ interface AnswerCardProps {
   createdAt: Date;
   upvotes: number;
   downvotes: number;
-  question: {
-    id: string;
-    title: string;
-  };
+  questionId: string;
+  showEdit?: boolean;
+  showDelete?: boolean;
+  expandable?: boolean;
   className?: string;
-  showReadMore?: boolean;
-  actionButtons?: boolean;
+  previewMarkdown: ReactNode;
+  fullMarkdown: ReactNode;
+  toggleExpand?: boolean;
 }
 
 const AnswerCard = ({
@@ -29,11 +43,17 @@ const AnswerCard = ({
   createdAt,
   upvotes,
   downvotes,
-  question,
+  questionId,
+  showEdit = false,
+  showDelete = false,
+  expandable = true,
   className,
-  showReadMore = false,
-  actionButtons = false,
+  previewMarkdown,
+  fullMarkdown,
+  toggleExpand,
 }: AnswerCardProps) => {
+  const [isEditing, setIsEditing] = useState(false);
+
   return (
     <Card
       className={cn(
@@ -43,7 +63,7 @@ const AnswerCard = ({
     >
       <span id={`answer-${id}`} className="hash-span" />
 
-      <div className="mb-6 flex flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center sm:gap-2">
+      <div className="mb-4 flex flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center sm:gap-2">
         <div className="flex flex-1 items-start gap-1 sm:items-center">
           <UserAvatar
             id={author.id}
@@ -68,7 +88,7 @@ const AnswerCard = ({
         </div>
 
         <div className="flex justify-end">
-          <div className="flex gap-3.5">
+          <div className="flex gap-2">
             <Votes
               targetType="answer"
               targetId={id}
@@ -76,20 +96,39 @@ const AnswerCard = ({
               downvotes={downvotes}
             />
 
-            {actionButtons && <EditDelete type="answer" itemId={id} />}
+            {(showEdit || showDelete) && !isEditing && (
+              <EditDelete
+                type="answer"
+                itemId={id}
+                onEdit={() => setIsEditing(true)}
+                showEdit={showEdit}
+                showDelete={showDelete}
+              />
+            )}
           </div>
         </div>
       </div>
 
-      <MarkdownPreview content={content} />
-
-      {showReadMore && (
-        <Link
-          href={`/questions/${question.id}#answer-${id}`}
-          className="pg-semibold relative z-10 w-fit font-esbuild text-link-100 hover:text-primary-500 transition-all duration-200"
-        >
-          <p className="mt-1">Read more...</p>
-        </Link>
+      {isEditing ? (
+        <Suspense fallback={<EditorFallback />}>
+          <AnswerForm
+            questionId={questionId}
+            answer={{ id, content }}
+            isEdit
+            onCancel={() => setIsEditing(false)}
+            onSuccess={() => setIsEditing(false)}
+            compact
+          />
+        </Suspense>
+      ) : (
+        <AnswerCardContent
+          previewContent={previewMarkdown}
+          fullContent={fullMarkdown}
+          toggleExpand={toggleExpand}
+          expandable={expandable}
+          questionId={questionId}
+          answerId={id}
+        />
       )}
     </Card>
   );
