@@ -4,7 +4,7 @@ import Image from "next/image";
 import { getServerSession } from "@/lib/session";
 import NavTabs from "./NavTabs";
 import { Button, Skeleton } from "@/components/ui";
-import { UserNav } from "../../profile/UserNav";
+import { UserNav } from "@/components/modules/profile/UserNav";
 import NavTabsFallback from "./NavTabsFallback";
 
 const LeftSidebar = async () => {

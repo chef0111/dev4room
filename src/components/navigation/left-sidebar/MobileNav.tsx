@@ -14,7 +14,7 @@ import { Menu } from "lucide-react";
 import { getServerSession } from "@/lib/session";
 import NavTabs from "./NavTabs";
 import NavTabsFallback from "./NavTabsFallback";
-import { UserNav } from "../../profile/UserNav";
+import { UserNav } from "@/components/modules/profile/UserNav";
 
 const MobileNav = async () => {
   const session = await getServerSession();

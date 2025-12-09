@@ -4,11 +4,11 @@ import React from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import { Route } from "next";
 
 import { cn } from "@/lib/utils";
 import { SheetClose } from "@/components/ui";
 import { sidebarTabs } from "@/common/constants";
-import { Route } from "next";
 
 interface NavTabsProps {
   userId?: string;
