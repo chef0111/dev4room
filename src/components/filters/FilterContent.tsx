@@ -2,7 +2,6 @@
 
 import { ReactNode } from "react";
 import { useFilterTransition } from "@/context/filter-provider";
-import { cn } from "@/lib/utils";
 import ContentFallback from "./ContentFallback";
 
 interface FilterContentProps {

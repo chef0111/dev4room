@@ -1,5 +1,5 @@
 import { getServerSession } from "@/lib/session";
-import UserAvatar from "../../profile/UserAvatar";
+import UserAvatar from "@/components/modules/profile/UserAvatar";
 
 export default async function UserSection() {
   const session = await getServerSession();

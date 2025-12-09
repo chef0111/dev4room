@@ -1,10 +1,10 @@
 import { Suspense } from "react";
 import ThemeToggle from "./ThemeToggle";
 import MobileNav from "../left-sidebar/MobileNav";
-import CommandMenu from "../../main/CommandMenu";
 import UserSection from "./UserSection";
 import { cn } from "@/lib/utils";
 import { Brand } from "@/components/ui";
+import CommandMenu from "@/components/modules/main/CommandMenu";
 
 interface NavbarProps {
   className?: string;
