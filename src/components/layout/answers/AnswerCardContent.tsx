@@ -2,6 +2,8 @@
 
 import { useState, ReactNode } from "react";
 import Link from "next/link";
+import { Route } from "next";
+import { useRouter } from "next/navigation";
 import { ChevronDownIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui";
@@ -9,8 +11,7 @@ import { Button } from "@/components/ui";
 interface AnswerCardContentProps {
   previewContent: ReactNode;
   fullContent: ReactNode;
-  shouldShowToggle?: boolean;
-  defaultExpanded?: boolean;
+  toggleExpand?: boolean;
   expandable?: boolean;
   questionId?: string;
   answerId?: string;
@@ -19,31 +20,56 @@ interface AnswerCardContentProps {
 const AnswerCardContent = ({
   previewContent,
   fullContent,
-  shouldShowToggle,
-  defaultExpanded = false,
+  toggleExpand,
   expandable = true,
   questionId,
   answerId,
 }: AnswerCardContentProps) => {
-  const [isExpanded, setIsExpanded] = useState(defaultExpanded);
+  const router = useRouter();
+  const [isExpanded, setIsExpanded] = useState(false);
+  const showBlur = toggleExpand && !isExpanded && expandable;
+
+  const handleReadMore = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const targetUrl = `/questions/${questionId}#answer-${answerId}` as Route;
+
+    router.push(targetUrl);
+
+    setTimeout(() => {
+      const element = document.getElementById(`answer-${answerId}`);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 1000);
+  };
 
   return (
-    <>
+    <div className="relative">
       <div
         className={cn(
           "overflow-hidden transition-all duration-300 ease-in-out",
-          !isExpanded && shouldShowToggle && "max-h-[150px]",
+          !isExpanded && toggleExpand,
         )}
+        style={
+          showBlur
+            ? {
+                maskImage:
+                  "linear-gradient(to bottom, black calc(100% - 64px), transparent 100%)",
+                WebkitMaskImage:
+                  "linear-gradient(to bottom, black calc(100% - 64px), transparent 100%)",
+              }
+            : undefined
+        }
       >
         {isExpanded ? fullContent : previewContent}
       </div>
 
-      {shouldShowToggle &&
+      {toggleExpand &&
         (expandable ? (
           <Button
             variant="link"
             onClick={() => setIsExpanded(!isExpanded)}
-            className="relative z-10 hover:no-underline mt-4 flex items-center gap-1 p-0 h-auto text-sm font-medium text-primary-500 hover:text-primary-500/80 transition-colors duration-200 cursor-pointer"
+            className="w-full relative z-10 hover:no-underline mt-1 flex items-center gap-1 p-0 h-auto text-sm font-medium text-primary-500 hover:text-primary-500/80 transition-colors duration-200"
           >
             <span>{isExpanded ? "Show less" : "Show more..."}</span>
             <ChevronDownIcon
@@ -56,12 +82,13 @@ const AnswerCardContent = ({
         ) : (
           <Link
             href={`/questions/${questionId}#answer-${answerId}`}
-            className="relative z-10 mt-4 flex items-center gap-1 text-sm font-medium text-primary-500 hover:text-primary-500/80 transition-colors duration-200"
+            onClick={handleReadMore}
+            className="relative z-10 mt-1 flex items-center gap-1 text-sm font-medium text-primary-500 hover:text-primary-500/80 transition-colors duration-200"
           >
             <span>Read more...</span>
           </Link>
         ))}
-    </>
+    </div>
   );
 };
 

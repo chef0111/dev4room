@@ -20,8 +20,6 @@ interface AnswerListProps {
   pageSize?: number;
 }
 
-const PREVIEW_LENGTH = 240;
-
 const AnswerList = async ({
   questionId,
   totalAnswers,
@@ -72,10 +70,13 @@ const AnswerList = async ({
               <div className="flex flex-col gap-4">
                 {answers.map((answer) => {
                   const content = answer.content;
-                  const shouldShowToggle = content.length > PREVIEW_LENGTH;
-                  const previewContent = shouldShowToggle
-                    ? content.slice(0, PREVIEW_LENGTH) + "..."
+                  const previewLength = 240;
+                  const toggleExpand = content.length > previewLength;
+                  const previewContent = toggleExpand
+                    ? content.slice(0, previewLength) + "..."
                     : content;
+
+                  const isAuthor = session?.user?.id === answer.author.id;
 
                   return (
                     <AnswerCard
@@ -89,10 +90,9 @@ const AnswerList = async ({
                       fullMarkdown={
                         <MarkdownPreview content={answer.content} />
                       }
-                      isAuthor={session?.user?.id === answer.author.id}
-                      shouldShowToggle={shouldShowToggle}
-                      showEdit
-                      showDelete
+                      toggleExpand={toggleExpand}
+                      showEdit={isAuthor}
+                      showDelete={isAuthor}
                       expandable
                     />
                   );

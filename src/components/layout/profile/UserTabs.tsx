@@ -157,7 +157,12 @@ const UserTabs = async ({
               render={(answers) => (
                 <div className="mb-10 flex w-full flex-col">
                   {answers.map((answer) => {
-                    const previewContent = answer.content.slice(0, 270) + "...";
+                    const previewLength = 240;
+                    const previewContent =
+                      answer.content.length > previewLength
+                        ? answer.content.slice(0, previewLength) + "..."
+                        : answer.content;
+
                     return (
                       <AnswerCard
                         {...answer}
@@ -165,7 +170,6 @@ const UserTabs = async ({
                         id={answer.id}
                         author={user}
                         questionId={answer.question.id}
-                        isAuthor={isAuthor}
                         showDelete={isAuthor}
                         expandable={false}
                         previewMarkdown={
@@ -174,7 +178,7 @@ const UserTabs = async ({
                         fullMarkdown={
                           <MarkdownPreview content={answer.content} />
                         }
-                        shouldShowToggle
+                        toggleExpand
                         className="rounded-md px-3 py-4 sm:px-5"
                       />
                     );

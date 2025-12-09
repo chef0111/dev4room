@@ -19,7 +19,7 @@ interface Author {
   image: string | null;
 }
 
-interface AnswerCardClientProps {
+interface AnswerCardProps {
   id: string;
   author: Author;
   content: string;
@@ -27,15 +27,13 @@ interface AnswerCardClientProps {
   upvotes: number;
   downvotes: number;
   questionId: string;
-  isAuthor?: boolean;
   showEdit?: boolean;
   showDelete?: boolean;
   expandable?: boolean;
-  defaultExpanded?: boolean;
   className?: string;
   previewMarkdown: ReactNode;
   fullMarkdown: ReactNode;
-  shouldShowToggle?: boolean;
+  toggleExpand?: boolean;
 }
 
 const AnswerCard = ({
@@ -46,16 +44,14 @@ const AnswerCard = ({
   upvotes,
   downvotes,
   questionId,
-  isAuthor = false,
   showEdit = false,
   showDelete = false,
   expandable = true,
-  defaultExpanded = false,
   className,
   previewMarkdown,
   fullMarkdown,
-  shouldShowToggle,
-}: AnswerCardClientProps) => {
+  toggleExpand,
+}: AnswerCardProps) => {
   const [isEditing, setIsEditing] = useState(false);
 
   return (
@@ -92,7 +88,7 @@ const AnswerCard = ({
         </div>
 
         <div className="flex justify-end">
-          <div className="flex gap-3.5">
+          <div className="flex gap-2">
             <Votes
               targetType="answer"
               targetId={id}
@@ -100,7 +96,7 @@ const AnswerCard = ({
               downvotes={downvotes}
             />
 
-            {isAuthor && (showEdit || showDelete) && !isEditing && (
+            {(showEdit || showDelete) && !isEditing && (
               <EditDelete
                 type="answer"
                 itemId={id}
@@ -128,8 +124,7 @@ const AnswerCard = ({
         <AnswerCardContent
           previewContent={previewMarkdown}
           fullContent={fullMarkdown}
-          shouldShowToggle={shouldShowToggle}
-          defaultExpanded={defaultExpanded}
+          toggleExpand={toggleExpand}
           expandable={expandable}
           questionId={questionId}
           answerId={id}
