@@ -6,10 +6,12 @@ import { getErrorMessage } from "@/lib/handlers/error";
 import DataRenderer from "@/components/shared/DataRenderer";
 import { ChevronRight } from "lucide-react";
 
+const DEFAULT_LIMIT = 5;
+
 const TopQuestions = async () => {
   const queryClient = getQueryClient();
   const queryOptions = orpc.question.getTop.queryOptions({
-    input: { limit: 5 },
+    input: { limit: DEFAULT_LIMIT },
   });
 
   const result = await queryClient

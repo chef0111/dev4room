@@ -6,13 +6,16 @@ import { getQueryClient } from "@/lib/query/hydration";
 import { getErrorMessage } from "@/lib/handlers/error";
 import { EMPTY_QUESTION } from "@/common/constants/states";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui";
+import { NextPagination } from "@/components/ui/dev";
 import LocalSearch from "@/components/layout/main/LocalSearch";
 import HomeFilter from "@/components/filters/HomeFilter";
 import QuestionCard from "@/components/layout/questions/QuestionCard";
 import DataRenderer from "@/components/shared/DataRenderer";
 import Filter from "@/components/filters/Filter";
 import { HomePageFilters } from "@/common/constants/filters";
+import { FilterProvider } from "@/context";
+import FilterContent from "@/components/filters/FilterContent";
 
 export const metadata: Metadata = {
   title: "Dev4Room | Home",
@@ -32,7 +35,7 @@ const HomePage = async ({ searchParams }: SearchParams) => {
   const queryOptions = orpc.question.list.queryOptions({
     input: {
       page: Number(page) || 1,
-      pageSize: Number(pageSize) || 12,
+      pageSize: Number(pageSize) || 10,
       query,
       filter,
     },
@@ -47,9 +50,10 @@ const HomePage = async ({ searchParams }: SearchParams) => {
     }));
 
   const data = result.data;
+  const totalQuestions = data?.totalQuestions || 0;
 
   return (
-    <>
+    <FilterProvider>
       {/* Ask a question section */}
       <section className="flex flex-col-reverse sm:flex-row justify-between sm:items-center w-full gap-4">
         <h1 className="h1-bold text-dark100_light900">All Questions</h1>
@@ -78,20 +82,29 @@ const HomePage = async ({ searchParams }: SearchParams) => {
         <HomeFilter />
       </section>
 
-      <DataRenderer
-        data={data?.questions ?? []}
-        success={!!data}
-        error={result.error}
-        empty={EMPTY_QUESTION}
-        render={(questions) => (
-          <div className="flex flex-col my-10 w-full gap-6">
-            {questions.map((question) => (
-              <QuestionCard key={question.id} question={question} />
-            ))}
-          </div>
-        )}
+      <FilterContent loadingMessage="Loading...">
+        <DataRenderer
+          data={data?.questions ?? []}
+          success={!!data}
+          error={result.error}
+          empty={EMPTY_QUESTION}
+          render={(questions) => (
+            <div className="flex flex-col my-10 w-full gap-6">
+              {questions.map((question) => (
+                <QuestionCard key={question.id} question={question} />
+              ))}
+            </div>
+          )}
+        />
+      </FilterContent>
+
+      <NextPagination
+        page={page}
+        pageSize={pageSize}
+        totalCount={totalQuestions}
+        className="pb-10"
       />
-    </>
+    </FilterProvider>
   );
 };
 

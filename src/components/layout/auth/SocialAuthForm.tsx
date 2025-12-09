@@ -3,7 +3,7 @@
 import { useTransition } from "react";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui";
 import Image from "next/image";
 
 const SocialAuthForm = ({ disabled }: { disabled?: boolean }) => {

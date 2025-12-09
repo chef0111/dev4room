@@ -4,8 +4,9 @@ import {
   InputGroup,
   InputGroupInput,
   InputGroupAddon,
-} from "@/components/ui/input-group";
-import { KbdGroup, Kbd } from "@/components/ui/kbd";
+  KbdGroup,
+  Kbd,
+} from "@/components/ui";
 import { Search } from "lucide-react";
 
 interface SearchInputProps {

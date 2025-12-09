@@ -76,6 +76,12 @@ interface Collection {
   question: Question;
 }
 
+interface Badges {
+  GOLD: number;
+  SILVER: number;
+  BRONZE: number;
+}
+
 interface RouteParams {
   params: Promise<Record<string, string>>;
   searchParams: Promise<Record<string, string | undefined>>;

@@ -1,27 +1,26 @@
 import "server-only";
 
 import { db } from "@/database/drizzle";
-import { answer, question, user } from "@/database/schema";
-import { desc, sql, eq } from "drizzle-orm";
+import { answer, question, user, vote } from "@/database/schema";
+import { and, desc, asc, sql, eq } from "drizzle-orm";
 import { ORPCError } from "@orpc/server";
 import { getPagination, validateArray, validateOne } from "../utils";
 import {
   AnswerDTO,
-  AnswerListDTO,
-  AnswerListSchema,
   AnswerSchema,
   CreateAnswerInput,
+  EditAnswerInput,
+  ListAnswersInput,
 } from "./answer.dto";
 
-// Reputation points awarded for posting an answer
-const REPUTATION_POINT_FOR_ANSWER = 10;
+type AnswerFilter = "latest" | "oldest" | "popular";
 
-// Type for raw database row with joined author info
 interface AnswerRow {
   id: string;
   content: string;
   upvotes: number;
   downvotes: number;
+  questionId: string;
   createdAt: Date;
   updatedAt: Date;
   authorId: string;
@@ -30,12 +29,12 @@ interface AnswerRow {
 }
 
 export class AnswerDAL {
-  // Fields to select when querying answers with author info
   private static readonly selectFields = {
     id: answer.id,
     content: answer.content,
     upvotes: answer.upvotes,
     downvotes: answer.downvotes,
+    questionId: answer.questionId,
     createdAt: answer.createdAt,
     updatedAt: answer.updatedAt,
     authorId: answer.authorId,
@@ -43,13 +42,26 @@ export class AnswerDAL {
     authorImage: user.image,
   } as const;
 
-  // Transform raw DB row into DTO shape
-  private static mapToDTO(row: AnswerRow) {
+  private static getSortCriteria(filter?: AnswerFilter) {
+    switch (filter) {
+      case "latest":
+        return desc(answer.createdAt);
+      case "oldest":
+        return asc(answer.createdAt);
+      case "popular":
+        return desc(answer.upvotes);
+      default:
+        return desc(answer.createdAt);
+    }
+  }
+
+  private static mapToDTO(row: AnswerRow): AnswerDTO {
     return {
       id: row.id,
       content: row.content,
       upvotes: row.upvotes,
       downvotes: row.downvotes,
+      questionId: row.questionId,
       createdAt: row.createdAt,
       updatedAt: row.updatedAt,
       author: {
@@ -60,125 +72,37 @@ export class AnswerDAL {
     };
   }
 
-  /**
-   * Create a new answer for a question
-   * Transaction: INSERT answer + UPDATE question.answers + UPDATE user.reputation
-   */
-  static async create(
-    input: CreateAnswerInput,
-    authorId: string,
-  ): Promise<AnswerDTO> {
-    const { questionId, content } = input;
-
-    return db.transaction(async (tx) => {
-      // 1. Verify question exists
-      const [existingQuestion] = await tx
-        .select({ id: question.id })
-        .from(question)
-        .where(eq(question.id, questionId))
-        .limit(1);
-
-      if (!existingQuestion) {
-        throw new ORPCError("NOT_FOUND", { message: "Question not found" });
-      }
-
-      // 2. Insert the answer
-      const [newAnswer] = await tx
-        .insert(answer)
-        .values({
-          content,
-          authorId,
-          questionId,
-        })
-        .returning({
-          id: answer.id,
-          content: answer.content,
-          upvotes: answer.upvotes,
-          downvotes: answer.downvotes,
-          createdAt: answer.createdAt,
-          updatedAt: answer.updatedAt,
-          authorId: answer.authorId,
-        });
-
-      // 3. Increment question's answer count
-      await tx
-        .update(question)
-        .set({ answers: sql`${question.answers} + 1` })
-        .where(eq(question.id, questionId));
-      
-      // 4. Increment author's reputation
-      await tx
-        .update(user)
-        .set({ reputation: sql`${user.reputation} + ${REPUTATION_POINT_FOR_ANSWER}` })
-        .where(eq(user.id, authorId));
-      
-      // 5. Fetch author info for the response
-      const [authorInfo] = await tx
-        .select({ name: user.name, image: user.image })
-        .from(user)
-        .where(eq(user.id, authorId))
-        .limit(1);
-
-      // 6. Map to DTO and validate
-      const data = this.mapToDTO({
-        ...newAnswer,
-        authorName: authorInfo?.name ?? null,
-        authorImage: authorInfo?.image ?? null,
-      });
-
-      return validateOne(data, AnswerSchema, "Answer");
-    });
-  }
-
-  /**
-   * Get all answers for a specific question with pagination
-   */
-  static async findByQuestionId(
-    questionId: string,
-    params: QueryParams,
-  ): Promise<{ answers: AnswerListDTO[]; totalAnswers: number }> {
+  static async findMany(
+    params: ListAnswersInput,
+  ): Promise<{ answers: AnswerDTO[]; totalAnswers: number }> {
+    const { questionId, filter } = params;
     const { offset, limit } = getPagination(params);
 
-    // Verify question exists
-    const [existingQuestion] = await db
-      .select({ id: question.id })
-      .from(question)
-      .where(eq(question.id, questionId))
-      .limit(1);
+    const sortCriteria = this.getSortCriteria(filter as AnswerFilter);
 
-    if (!existingQuestion) {
-      throw new ORPCError("NOT_FOUND", { message: "Question not found" });
-    }
-
-    // Get total count of answers for this question
     const [{ count }] = await db
       .select({ count: sql<number>`count(*)::int` })
       .from(answer)
       .where(eq(answer.questionId, questionId));
 
-    // Fetch answers with author info
     const rows = await db
       .select(this.selectFields)
       .from(answer)
       .leftJoin(user, eq(answer.authorId, user.id))
       .where(eq(answer.questionId, questionId))
-      .orderBy(desc(answer.createdAt)) // Newest first
+      .orderBy(sortCriteria)
       .limit(limit)
       .offset(offset);
 
-    // Map and validate each answer
     const answers = validateArray(
       rows.map((row) => this.mapToDTO(row)),
-      AnswerListSchema,
+      AnswerSchema,
       "Answer",
     );
 
     return { answers, totalAnswers: count ?? 0 };
   }
 
-  /**
-   * Get a single answer by ID
-   */
   static async findById(answerId: string): Promise<AnswerDTO> {
     const [row] = await db
       .select(this.selectFields)
@@ -193,9 +117,115 @@ export class AnswerDAL {
 
     return validateOne(this.mapToDTO(row), AnswerSchema, "Answer");
   }
+
+  static async create(
+    input: CreateAnswerInput,
+    authorId: string,
+  ): Promise<{ id: string }> {
+    const { questionId, content } = input;
+
+    return db.transaction(async (tx) => {
+      const [existingQuestion] = await tx
+        .select({ id: question.id })
+        .from(question)
+        .where(eq(question.id, questionId))
+        .limit(1);
+
+      if (!existingQuestion) {
+        throw new ORPCError("NOT_FOUND", { message: "Question not found" });
+      }
+
+      // Create answer
+      const [newAnswer] = await tx
+        .insert(answer)
+        .values({ content, authorId, questionId })
+        .returning({ id: answer.id });
+
+      // Increment question's answer count
+      await tx
+        .update(question)
+        .set({ answers: sql`${question.answers} + 1` })
+        .where(eq(question.id, questionId));
+
+      return { id: newAnswer.id };
+    });
+  }
+
+  static async update(
+    input: EditAnswerInput,
+    userId: string,
+  ): Promise<{ id: string; content: string }> {
+    const { answerId, content } = input;
+
+    const [existing] = await db
+      .select({
+        id: answer.id,
+        content: answer.content,
+        authorId: answer.authorId,
+      })
+      .from(answer)
+      .where(eq(answer.id, answerId))
+      .limit(1);
+
+    if (!existing) {
+      throw new ORPCError("NOT_FOUND", { message: "Answer not found" });
+    }
+
+    if (existing.authorId !== userId) {
+      throw new ORPCError("FORBIDDEN", {
+        message: "You are not authorized to edit this answer",
+      });
+    }
+
+    if (existing.content !== content) {
+      await db.update(answer).set({ content }).where(eq(answer.id, answerId));
+    }
+
+    return { id: answerId, content };
+  }
+
+  static async delete(answerId: string, userId: string): Promise<void> {
+    return db.transaction(async (tx) => {
+      // Check if answer exists and user is the author
+      const [existing] = await tx
+        .select({
+          id: answer.id,
+          authorId: answer.authorId,
+          questionId: answer.questionId,
+        })
+        .from(answer)
+        .where(eq(answer.id, answerId))
+        .limit(1);
+
+      if (!existing) {
+        throw new ORPCError("NOT_FOUND", { message: "Answer not found" });
+      }
+
+      if (existing.authorId !== userId) {
+        throw new ORPCError("FORBIDDEN", {
+          message: "You are not authorized to delete this answer",
+        });
+      }
+
+      // Delete votes for this answer
+      await tx
+        .delete(vote)
+        .where(and(eq(vote.actionId, answerId), eq(vote.actionType, "answer")));
+
+      // Delete the answer
+      await tx.delete(answer).where(eq(answer.id, answerId));
+
+      // Decrement question's answer count
+      await tx
+        .update(question)
+        .set({ answers: sql`${question.answers} - 1` })
+        .where(eq(question.id, existing.questionId));
+    });
+  }
 }
 
-// Export bound functions for use in route handlers
-export const createAnswer = AnswerDAL.create.bind(AnswerDAL);
-export const getAnswersByQuestionId = AnswerDAL.findByQuestionId.bind(AnswerDAL);
+export const getAnswers = AnswerDAL.findMany.bind(AnswerDAL);
 export const getAnswerById = AnswerDAL.findById.bind(AnswerDAL);
+export const createAnswer = AnswerDAL.create.bind(AnswerDAL);
+export const editAnswer = AnswerDAL.update.bind(AnswerDAL);
+export const deleteAnswer = AnswerDAL.delete.bind(AnswerDAL);

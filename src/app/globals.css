@@ -8,6 +8,12 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@keyframes shimmer {
+  100% {
+    transform: translateX(200%);
+  }
+}
+
 @theme {
   --color-primary-100: #e6f7ff;
   --color-primary-200: #d8eefb;
@@ -467,6 +473,10 @@
   @apply data-[state=active]:text-light-900! text-dark400_light500! data-[state=active]:bg-transparent! data-[state=active]:border-none! data-[state=active]:shadow-none!;
 }
 
+@utility tab-panel {
+  @apply flex-center h-9 w-fit px-3 rounded-sm pg-medium text-dark400_light500;
+}
+
 @layer base {
   :root {
     --radius: 0.5rem;
@@ -741,7 +751,7 @@ code {
   --popover-foreground: oklch(0.129 0.042 264.695);
   --primary: #0091ff;
   --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
+  --secondary: oklch(89.349% 0.01303 244.478);
   --secondary-foreground: oklch(0.208 0.042 265.755);
   --muted: oklch(0.968 0.007 247.896);
   --muted-foreground: oklch(0.554 0.046 257.417);

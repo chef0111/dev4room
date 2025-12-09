@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { cn } from "@/lib/utils";
-import { SheetClose } from "@/components/ui/sheet";
+import { SheetClose } from "@/components/ui";
 import { sidebarTabs } from "@/common/constants";
 import { Route } from "next";
 
@@ -42,7 +42,7 @@ const NavTabs = ({ userId, isMobile = false }: NavTabsProps) => {
             className={cn(
               isActive
                 ? "primary-gradient rounded-lg text-light-900"
-                : "text-dark300_light900 rounded-lg hover:bg-light800_dark300!",
+                : "text-dark300_light900 rounded-lg hover:bg-light800_dark300! transition-none hover:transition-none [&:not(:hover)]:transition-colors [&:not(:hover)]:duration-200 ease-out",
               "flex-start max-lg:justify-center max-sm:justify-start gap-4 bg-transparent p-3.5 max-sm:p-5",
             )}
           >

@@ -1,17 +1,8 @@
-import TagCard from "../../tags/TagCard";
 import { Suspense } from "react";
 import TopQuestionsSkeleton from "@/components/skeletons/TopQuestionsSkeleton";
 import TopQuestions from "./TopQuestions";
 import TopTagsSkeleton from "@/components/skeletons/TopTagsSkeleton";
 import PopularTags from "./PopularTags";
-
-const popularTags = [
-  { id: "1", name: "react", questions: 1000 },
-  { id: "2", name: "typescript", questions: 780 },
-  { id: "3", name: "tailwindcss", questions: 460 },
-  { id: "4", name: "next.js", questions: 820 },
-  { id: "5", name: "git", questions: 540 },
-];
 
 const RightSidebar = () => {
   return (
