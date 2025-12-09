@@ -23,8 +23,6 @@ interface Answer {
 
 interface AnswerFormProps {
   questionId: string;
-  questionTitle?: string;
-  questionContent?: string;
   answer?: Answer;
   isEdit?: boolean;
   onCancel?: () => void;
@@ -34,8 +32,6 @@ interface AnswerFormProps {
 
 const AnswerForm = ({
   questionId,
-  questionTitle: _questionTitle,
-  questionContent: _questionContent,
   answer,
   isEdit = false,
   onCancel,

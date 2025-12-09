@@ -13,7 +13,7 @@ const ScrollToAnswer = ({ answerId }: ScrollToAnswerProps) => {
     const timer = setTimeout(() => {
       const element = document.getElementById(`answer-${answerId}`);
       if (element) {
-        element.scrollIntoView({ behavior: "instant", block: "start" });
+        element.scrollIntoView({ behavior: "instant", block: "center" });
       }
     }, 100);
 
