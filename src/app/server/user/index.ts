@@ -97,7 +97,7 @@ export const getUserTags = base
     return getUserPopularTagsDAL(input);
   });
 
-export const getUserStatsRoute = base
+export const getUserStats = base
   .route({
     method: "GET",
     path: "/user/{userId}/stats",
@@ -117,7 +117,6 @@ export const updateUser = authorized
     method: "PATCH",
     path: "/user/profile",
     summary: "Update User Profile",
-    description: "Update the authenticated user's profile information",
     tags: ["Users"],
   })
   .input(UpdateProfileInputSchema)
