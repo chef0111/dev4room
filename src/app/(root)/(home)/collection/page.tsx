@@ -1,11 +1,11 @@
 import { orpc } from "@/lib/orpc";
 import { getQueryClient } from "@/lib/query/hydration";
 import { getErrorMessage } from "@/lib/handlers/error";
-import LocalSearch from "@/components/layout/main/LocalSearch";
+import LocalSearch from "@/components/modules/main/LocalSearch";
 import Filter from "@/components/filters/Filter";
 import { CollectionFilters } from "@/common/constants/filters";
 import DataRenderer from "@/components/shared/DataRenderer";
-import QuestionCard from "@/components/layout/questions/QuestionCard";
+import QuestionCard from "@/components/modules/questions/QuestionCard";
 import { EMPTY_QUESTION } from "@/common/constants/states";
 import { NextPagination } from "@/components/ui/dev";
 import { FilterProvider } from "@/context";

@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-import QuestionForm from "@/components/layout/questions/QuestionForm";
+import QuestionForm from "@/components/modules/questions/QuestionForm";
 import { getServerSession } from "@/lib/session";
 
 const AskQuestion = async () => {

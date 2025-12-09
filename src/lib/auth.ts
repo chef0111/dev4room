@@ -7,7 +7,7 @@ import { createAuthMiddleware, APIError } from "better-auth/api";
 import { nextCookies } from "better-auth/next-js";
 import { PasswordSchema } from "./validations";
 import { resend } from "./resend";
-import SendOTPEmail from "@/components/layout/email/SendOTPEmail";
+import SendOTPEmail from "@/components/modules/email/SendOTPEmail";
 import {
   checkUserExists,
   checkUserCredentials,

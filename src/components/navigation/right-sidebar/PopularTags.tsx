@@ -1,4 +1,4 @@
-import TagCard from "@/components/layout/tags/TagCard";
+import TagCard from "@/components/modules/tags/TagCard";
 import DataRenderer from "@/components/shared/DataRenderer";
 import { getErrorMessage } from "@/lib/handlers/error";
 import { orpc } from "@/lib/orpc";

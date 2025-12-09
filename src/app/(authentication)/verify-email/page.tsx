@@ -8,7 +8,7 @@ import { authClient } from "@/lib/auth-client";
 import handleError from "@/lib/handlers/error";
 import { toast } from "sonner";
 
-import OTPForm from "@/components/layout/auth/OTPForm";
+import OTPForm from "@/components/modules/auth/OTPForm";
 import { Button } from "@/components/ui";
 
 type OTPValues = z.infer<typeof OTPSchema>;

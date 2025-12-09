@@ -1,10 +1,10 @@
 import { Suspense } from "react";
 import NextTopLoader from "nextjs-toploader";
-import Navbar from "@/components/layout/navigation/navbar";
+import Navbar from "@/components/modules/navigation/navbar";
 import { Skeleton } from "@/components/ui";
-import LeftSidebar from "@/components/layout/navigation/left-sidebar/LeftSidebar";
-import NavTabsFallback from "@/components/layout/navigation/left-sidebar/NavTabsFallback";
-import { ScrollToTop } from "@/components/layout/main/ScrollToTop";
+import LeftSidebar from "@/components/modules/navigation/left-sidebar/LeftSidebar";
+import NavTabsFallback from "@/components/modules/navigation/left-sidebar/NavTabsFallback";
+import { ScrollToTop } from "@/components/modules/main/ScrollToTop";
 
 interface Props {
   children: React.ReactNode;

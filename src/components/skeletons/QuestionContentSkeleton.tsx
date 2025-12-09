@@ -1,6 +1,6 @@
 import { Skeleton } from "../ui/skeleton";
 import { Separator } from "../ui";
-import QuestionUtilsFallback from "../layout/questions/QuestionUtilsFallback";
+import QuestionUtilsFallback from "../modules/questions/QuestionUtilsFallback";
 
 const QuestionContentSkeleton = () => {
   return (

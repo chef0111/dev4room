@@ -5,13 +5,13 @@ import { orpc } from "@/lib/orpc";
 import { getQueryClient } from "@/lib/query/hydration";
 import { getErrorMessage } from "@/lib/handlers/error";
 
-import ProfileHeader from "@/components/layout/profile/ProfileHeader";
-import UserStats from "@/components/layout/profile/UserStats";
-import UserTabs from "@/components/layout/profile/UserTabs";
-import UserTopTags from "@/components/layout/profile/UserTopTags";
+import ProfileHeader from "@/components/modules/profile/ProfileHeader";
+import UserStats from "@/components/modules/profile/UserStats";
+import UserTabs from "@/components/modules/profile/UserTabs";
+import UserTopTags from "@/components/modules/profile/UserTopTags";
 import UserTabsSkeleton from "@/components/skeletons/UserTabsSkeleton";
 import UserTopTagsSkeleton from "@/components/skeletons/UserTopTagsSkeleton";
-import EditProfileDialog from "@/components/layout/profile/EditProfileDialog";
+import EditProfileDialog from "@/components/modules/profile/EditProfileDialog";
 
 const ProfilePage = async ({ params, searchParams }: RouteParams) => {
   const { id } = await params;

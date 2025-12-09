@@ -1,4 +1,4 @@
-import SearchInput from "@/components/layout/main/SearchInput";
+import SearchInput from "@/components/modules/main/SearchInput";
 import FilterFallback from "@/components/filters/FilterFallback";
 import PostCardsSkeleton from "@/components/skeletons/PostCardsSkeleton";
 
