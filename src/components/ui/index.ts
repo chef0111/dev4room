@@ -159,3 +159,4 @@ export {
 } from "./tooltip";
 export { Tabs, TabsList, TabsTrigger, TabsContent } from "./tabs";
 export { Spinner } from "./spinner";
+export { Brand } from "./brand";

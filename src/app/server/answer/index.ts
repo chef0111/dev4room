@@ -18,6 +18,7 @@ import {
   ListAnswersSchema,
 } from "@/app/server/answer/answer.dto";
 import { createInteraction } from "../interaction/interaction.dal";
+import { indexAnswer } from "@/services/indexing.service";
 
 export const listAnswers = base
   .route({
@@ -61,18 +62,21 @@ export const createAnswer = authorized
 
     after(async () => {
       try {
-        await createInteraction(
-          {
-            action: "post",
-            actionType: "answer",
-            actionId: result.id,
-            authorId: context.user.id,
-          },
-          context.user.id,
-        );
+        await Promise.all([
+          createInteraction(
+            {
+              action: "post",
+              actionType: "answer",
+              actionId: result.id,
+              authorId: context.user.id,
+            },
+            context.user.id,
+          ),
+          indexAnswer(result.id),
+        ]);
       } catch (error) {
         console.error(
-          "Failed to create interaction after create answer:",
+          "Failed to create interaction/index after create answer:",
           error,
         );
       }
@@ -92,7 +96,17 @@ export const editAnswer = authorized
   .input(EditAnswerSchema)
   .output(z.object({ id: z.string(), content: z.string() }))
   .handler(async ({ input, context }) => {
-    return editAnswerDAL(input, context.user.id);
+    const result = await editAnswerDAL(input, context.user.id);
+
+    after(async () => {
+      try {
+        await indexAnswer(result.id);
+      } catch (error) {
+        console.error("Failed to re-index answer after edit:", error);
+      }
+    });
+
+    return result;
   });
 
 export const deleteAnswer = authorized

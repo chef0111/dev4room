@@ -1,3 +1,4 @@
+import { after } from "next/server";
 import { base } from "@/app/middleware";
 import { authorized } from "@/app/middleware/auth";
 import {
@@ -24,6 +25,7 @@ import {
   UpdateProfileSchema,
 } from "@/app/server/user/user.dto";
 import { QueryParamsSchema } from "@/lib/validations";
+import { indexUser } from "@/services/indexing.service";
 
 export const listUsers = base
   .route({
@@ -124,5 +126,14 @@ export const updateUser = authorized
   .handler(async ({ input, context }) => {
     const { user } = context;
     const updatedUser = await updateUserDAL(user.id, input);
+
+    after(async () => {
+      try {
+        await indexUser(user.id);
+      } catch (error) {
+        console.error("Failed to re-index user after profile update:", error);
+      }
+    });
+
     return { user: updatedUser };
   });

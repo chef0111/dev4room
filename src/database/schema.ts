@@ -4,33 +4,56 @@ import {
   timestamp,
   boolean,
   integer,
+  index,
+  customType,
 } from "drizzle-orm/pg-core";
 
 const generateId = () => crypto.randomUUID();
 
-// user table
-export const user = pgTable("user", {
-  id: text("id").primaryKey(),
-  name: text("name").notNull(),
-  username: text("username").notNull().unique(),
-  email: text("email").notNull().unique(),
-  emailVerified: boolean("email_verified").default(false).notNull(),
-  image: text("image"),
-  bio: text("bio"),
-  location: text("location"),
-  portfolio: text("portfolio"),
-  reputation: integer("reputation").default(0).notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at")
-    .defaultNow()
-    .$onUpdate(() => /* @__PURE__ */ new Date())
-    .notNull(),
-  displayUsername: text("display_username"),
-  role: text("role"),
-  banned: boolean("banned").default(false),
-  banReason: text("ban_reason"),
-  banExpires: timestamp("ban_expires"),
+// Custom vector type for pgvector
+const vector = customType<{ data: number[]; driverData: string }>({
+  dataType() {
+    return "vector(2000)";
+  },
+  toDriver(value: number[]): string {
+    return `[${value.join(",")}]`;
+  },
+  fromDriver(value: string): number[] {
+    return value
+      .slice(1, -1)
+      .split(",")
+      .map((v) => parseFloat(v));
+  },
 });
+
+// user table
+export const user = pgTable(
+  "user",
+  {
+    id: text("id").primaryKey(),
+    name: text("name").notNull(),
+    username: text("username").notNull().unique(),
+    email: text("email").notNull().unique(),
+    emailVerified: boolean("email_verified").default(false).notNull(),
+    image: text("image"),
+    bio: text("bio"),
+    location: text("location"),
+    portfolio: text("portfolio"),
+    reputation: integer("reputation").default(0).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+    displayUsername: text("display_username"),
+    role: text("role"),
+    banned: boolean("banned").default(false),
+    banReason: text("ban_reason"),
+    banExpires: timestamp("ban_expires"),
+    embedding: vector("embedding"),
+  },
+  (table) => [index("user_embedding_idx").using("ivfflat", table.embedding)],
+);
 
 // session table
 export const session = pgTable("session", {
@@ -83,52 +106,69 @@ export const verification = pgTable("verification", {
     .notNull(),
 });
 
-export const tag = pgTable("tag", {
-  id: text("id").primaryKey().$defaultFn(generateId),
-  name: text("name").notNull().unique(),
-  questions: integer("questions").default(0).notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at")
-    .defaultNow()
-    .$onUpdate(() => /* @__PURE__ */ new Date())
-    .notNull(),
-});
+export const tag = pgTable(
+  "tag",
+  {
+    id: text("id").primaryKey().$defaultFn(generateId),
+    name: text("name").notNull().unique(),
+    questions: integer("questions").default(0).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+    embedding: vector("embedding"),
+  },
+  (table) => [index("tag_embedding_idx").using("ivfflat", table.embedding)],
+);
 
-export const question = pgTable("question", {
-  id: text("id").primaryKey().$defaultFn(generateId),
-  title: text("title").notNull(),
-  content: text("content").notNull(),
-  views: integer("views").default(0).notNull(),
-  upvotes: integer("upvotes").default(0).notNull(),
-  downvotes: integer("downvotes").default(0).notNull(),
-  answers: integer("answers").default(0).notNull(),
-  authorId: text("author_id")
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at")
-    .defaultNow()
-    .$onUpdate(() => /* @__PURE__ */ new Date())
-    .notNull(),
-});
+export const question = pgTable(
+  "question",
+  {
+    id: text("id").primaryKey().$defaultFn(generateId),
+    title: text("title").notNull(),
+    content: text("content").notNull(),
+    views: integer("views").default(0).notNull(),
+    upvotes: integer("upvotes").default(0).notNull(),
+    downvotes: integer("downvotes").default(0).notNull(),
+    answers: integer("answers").default(0).notNull(),
+    authorId: text("author_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+    embedding: vector("embedding"),
+  },
+  (table) => [
+    index("question_embedding_idx").using("ivfflat", table.embedding),
+  ],
+);
 
-export const answer = pgTable("answer", {
-  id: text("id").primaryKey().$defaultFn(generateId),
-  content: text("content").notNull(),
-  upvotes: integer("upvotes").default(0).notNull(),
-  downvotes: integer("downvotes").default(0).notNull(),
-  authorId: text("author_id")
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
-  questionId: text("question_id")
-    .notNull()
-    .references(() => question.id, { onDelete: "cascade" }),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at")
-    .defaultNow()
-    .$onUpdate(() => /* @__PURE__ */ new Date())
-    .notNull(),
-});
+export const answer = pgTable(
+  "answer",
+  {
+    id: text("id").primaryKey().$defaultFn(generateId),
+    content: text("content").notNull(),
+    upvotes: integer("upvotes").default(0).notNull(),
+    downvotes: integer("downvotes").default(0).notNull(),
+    authorId: text("author_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    questionId: text("question_id")
+      .notNull()
+      .references(() => question.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+    embedding: vector("embedding"),
+  },
+  (table) => [index("answer_embedding_idx").using("ivfflat", table.embedding)],
+);
 
 export const tagQuestion = pgTable("tag_question", {
   id: text("id").primaryKey().$defaultFn(generateId),

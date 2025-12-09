@@ -5,6 +5,8 @@ import { tag, tagQuestion } from "@/database/schema";
 import { eq, ilike, sql, inArray, and } from "drizzle-orm";
 import type { Transaction } from "../utils";
 
+const pendingTagIndexing: Set<string> = new Set();
+
 export class TagQuestionService {
   static async findOrCreate(tx: Transaction, tagName: string): Promise<string> {
     const normalizedName = tagName.toLowerCase().trim();
@@ -32,7 +34,17 @@ export class TagQuestionService {
       .values({ name: normalizedName, questions: 1 })
       .returning({ id: tag.id });
 
+    // Mark for indexing after transaction commits
+    pendingTagIndexing.add(newTag.id);
+
     return newTag.id;
+  }
+
+  // Call this after transaction commits to index any new tags
+  static getPendingTagIds(): string[] {
+    const ids = Array.from(pendingTagIndexing);
+    pendingTagIndexing.clear();
+    return ids;
   }
 
   static async decrementQuestionCount(
