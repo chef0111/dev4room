@@ -56,13 +56,12 @@ const AnswerCard = ({
 
   return (
     <Card
+      id={`answer-${id}`}
       className={cn(
         "bg-light900_dark300 shadow-light-100! relative light-border border-b p-6 sm:px-10 mb-6 gap-0",
         className,
       )}
     >
-      <span id={`answer-${id}`} className="hash-span" />
-
       <div className="mb-4 flex flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center sm:gap-2">
         <div className="flex flex-1 items-start gap-1 sm:items-center">
           <UserAvatar

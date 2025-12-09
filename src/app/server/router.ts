@@ -4,7 +4,7 @@ import {
   getUserQuestions,
   getUserAnswers,
   getUserTags,
-  getUserStatsRoute,
+  getUserStats,
   updateUser,
 } from "./user";
 import {
@@ -33,7 +33,7 @@ export const router = {
     questions: getUserQuestions,
     answers: getUserAnswers,
     tags: getUserTags,
-    stats: getUserStatsRoute,
+    stats: getUserStats,
     update: updateUser,
   },
   question: {

@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "next build && next start",
     "lint": "eslint",
     "prepare": "husky"
   },
@@ -18,8 +18,10 @@
     "@neondatabase/serverless": "^1.0.1",
     "@number-flow/react": "^0.5.10",
     "@orpc/client": "^1.11.3",
+    "@orpc/openapi": "^1.12.2",
     "@orpc/server": "^1.11.3",
     "@orpc/tanstack-query": "^1.11.3",
+    "@orpc/zod": "^1.12.2",
     "@radix-ui/colors": "^3.0.0",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-alert-dialog": "^1.1.15",
