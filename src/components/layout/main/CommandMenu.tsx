@@ -100,7 +100,7 @@ const CommandMenu = () => {
     [router],
   );
 
-  const MIN_SIMILARITY = 0.33; // 50% threshold
+  const MIN_SIMILARITY = 0.3;
 
   const rawResults = searchMutation.data as SearchResult | null;
 

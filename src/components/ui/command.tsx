@@ -21,7 +21,7 @@ function Command({
     <CommandPrimitive
       data-slot="command"
       className={cn(
-        "bg-popover text-popover-foreground light-border-2! border-[0.1rem] flex h-full w-full flex-col overflow-hidden rounded-md",
+        "bg-popover text-popover-foreground light-border-2! border-[0.1rem] flex h-full w-full flex-col overflow-hidden rounded-lg",
         className,
       )}
       {...props}
@@ -52,7 +52,7 @@ function CommandDialog({
       </DialogHeader>
       <DialogContent
         className={cn("overflow-hidden p-0", className)}
-        overlayClassName="bg-black/50 backdrop-blur-xs"
+        overlayClassName="bg-black/30! backdrop-blur-xs"
         showCloseButton={showCloseButton}
       >
         <Command
