@@ -22,6 +22,9 @@ import {
   UserPopularTagDTO,
   UserPopularTagSchema,
   UserStatsDTO,
+  UpdateProfileInput,
+  UserProfileDTO,
+  UserProfileSchema,
 } from "./user.dto";
 
 type UserFilter = "newest" | "oldest" | "popular";
@@ -379,12 +382,64 @@ export class UserDAL {
       badges,
     };
   }
+
+  static async update(
+    userId: string,
+    data: UpdateProfileInput,
+  ): Promise<UserProfileDTO> {
+    if (data.username) {
+      const existing = await db
+        .select({ id: user.id })
+        .from(user)
+        .where(
+          and(eq(user.username, data.username), sql`${user.id} != ${userId}`),
+        )
+        .limit(1);
+
+      if (existing.length > 0) {
+        throw new Error("Username already taken");
+      }
+    }
+
+    // Update user profile
+    const [updated] = await db
+      .update(user)
+      .set({
+        ...data,
+        updatedAt: new Date(),
+      })
+      .where(eq(user.id, userId))
+      .returning({
+        id: user.id,
+        name: user.name,
+        username: user.username,
+        email: user.email,
+        image: user.image,
+        role: user.role,
+        bio: user.bio,
+        location: user.location,
+        portfolio: user.portfolio,
+        reputation: user.reputation,
+        createdAt: user.createdAt,
+      });
+
+    if (!updated) {
+      throw new Error("User not found");
+    }
+
+    const validated = UserProfileSchema.safeParse(updated);
+    if (!validated.success) {
+      throw new Error("Failed to validate updated profile");
+    }
+
+    return validated.data;
+  }
 }
 
-// Export bound methods for use in procedures
 export const getUsers = UserDAL.findMany.bind(UserDAL);
 export const getUserById = UserDAL.findById.bind(UserDAL);
 export const getUserQuestions = UserDAL.findUserQuestions.bind(UserDAL);
 export const getUserAnswers = UserDAL.findUserAnswers.bind(UserDAL);
 export const getUserPopularTags = UserDAL.findUserPopularTags.bind(UserDAL);
 export const getUserStats = UserDAL.getUserStats.bind(UserDAL);
+export const updateUser = UserDAL.update.bind(UserDAL);

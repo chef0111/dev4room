@@ -82,6 +82,45 @@ export const BadgesSchema = z.object({
   BRONZE: z.number().int().min(0),
 });
 
+export const UpdateProfileInputSchema = z.object({
+  name: z.string().min(1, { message: "Name is required." }).optional(),
+  username: z
+    .string()
+    .min(3, { message: "Username must be at least 3 characters long." })
+    .max(30, { message: "Username cannot exceed 30 characters." })
+    .regex(/^[a-zA-Z0-9_]+$/, {
+      message: "Username can only contain letters, numbers, and underscores.",
+    })
+    .optional(),
+  image: z.url({ message: "Image must be a valid URL." }).nullable().optional(),
+  bio: z
+    .string()
+    .max(500, { message: "Bio cannot exceed 500 characters." })
+    .nullable()
+    .optional(),
+  location: z
+    .string()
+    .max(100, { message: "Location cannot exceed 100 characters." })
+    .nullable()
+    .optional(),
+  portfolio: z
+    .url({ message: "Porfolio must be a valid URL." })
+    .nullable()
+    .optional(),
+});
+
+export const UserProfileSchema = UserSchema.extend({
+  bio: z.string().nullable(),
+  location: z.string().nullable(),
+  portfolio: z.string().nullable(),
+  reputation: z.number().int().min(0),
+  createdAt: z.date(),
+});
+
+export const UpdateProfileSchema = z.object({
+  user: UserProfileSchema,
+});
+
 // Output Schemas
 export const UserListSchema = z.object({
   users: z.array(UserSchema),
@@ -129,3 +168,6 @@ export type UserAnswerDTO = z.infer<typeof UserAnswerSchema>;
 export type UserPopularTagDTO = z.infer<typeof UserPopularTagSchema>;
 export type Badges = z.infer<typeof BadgesSchema>;
 export type UserStatsDTO = z.infer<typeof UserStatsSchema>;
+export type UpdateProfileInput = z.infer<typeof UpdateProfileInputSchema>;
+export type UserProfileDTO = z.infer<typeof UserProfileSchema>;
+export type UpdateProfileDTO = z.infer<typeof UpdateProfileSchema>;

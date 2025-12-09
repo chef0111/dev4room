@@ -5,6 +5,7 @@ import {
   getUserAnswers,
   getUserTags,
   getUserStatsRoute,
+  updateUser,
 } from "./user";
 import {
   listQuestions,
@@ -12,7 +13,15 @@ import {
   createQuestion,
   editQuestion,
   getTopQuestions,
+  deleteQuestion,
 } from "./question";
+import {
+  listAnswers,
+  getAnswer,
+  createAnswer,
+  editAnswer,
+  deleteAnswer,
+} from "./answer";
 import { listTags, getTagQuestions, getPopular } from "./tag";
 import { createVote, hasVoted } from "./vote";
 import { listCollection, toggleSave, hasSaved } from "./collection";
@@ -25,6 +34,7 @@ export const router = {
     answers: getUserAnswers,
     tags: getUserTags,
     stats: getUserStatsRoute,
+    update: updateUser,
   },
   question: {
     list: listQuestions,
@@ -32,6 +42,14 @@ export const router = {
     create: createQuestion,
     edit: editQuestion,
     getTop: getTopQuestions,
+    delete: deleteQuestion,
+  },
+  answer: {
+    list: listAnswers,
+    get: getAnswer,
+    create: createAnswer,
+    update: editAnswer,
+    delete: deleteAnswer,
   },
   tag: {
     list: listTags,

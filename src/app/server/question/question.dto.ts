@@ -27,6 +27,10 @@ export const QuestionSchema = z.object({
 });
 
 // Input Schemas
+export const DeleteQuestionSchema = z.object({
+  questionId: z.string().min(1, { message: "Question ID is required." }),
+});
+
 export const CreateQuestionSchema = z.object({
   title: z
     .string()
@@ -66,6 +70,7 @@ export type Author = z.infer<typeof AuthorSchema>;
 export type TagDTO = z.infer<typeof TagSchema>;
 export type QuestionDTO = z.infer<typeof QuestionSchema>;
 export type QuestionListDTO = z.infer<typeof QuestionListSchema>;
+export type DeleteQuestionInput = z.infer<typeof DeleteQuestionSchema>;
 export type CreateQuestionInput = z.infer<typeof CreateQuestionSchema>;
 export type EditQuestionInput = z.infer<typeof EditQuestionSchema>;
 export type QuestionListOutput = z.infer<typeof QuestionListOutputSchema>;

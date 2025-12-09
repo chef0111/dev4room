@@ -8,9 +8,11 @@ import {
   createQuestion as createQuestionDAL,
   editQuestion as editQuestionDAL,
   getTopQuestions as getTopQuestionsDAL,
+  deleteQuestion as deleteQuestionDAL,
 } from "@/app/server/question/question.dal";
 import {
   CreateQuestionSchema,
+  DeleteQuestionSchema,
   EditQuestionSchema,
   QuestionListOutputSchema,
   QuestionSchema,
@@ -115,4 +117,38 @@ export const getTopQuestions = base
   .handler(async ({ input }) => {
     const questions = await getTopQuestionsDAL(input.limit);
     return { questions };
+  });
+
+export const deleteQuestion = authorized
+  .route({
+    method: "DELETE",
+    path: "/question/{questionId}",
+    summary: "Delete Question",
+    tags: ["Questions"],
+  })
+  .input(DeleteQuestionSchema)
+  .output(z.object({ success: z.boolean() }))
+  .handler(async ({ input, context }) => {
+    await deleteQuestionDAL(input.questionId, context.user.id);
+
+    after(async () => {
+      try {
+        await createInteraction(
+          {
+            action: "delete",
+            actionType: "question",
+            actionId: input.questionId,
+            authorId: context.user.id,
+          },
+          context.user.id,
+        );
+      } catch (error) {
+        console.error(
+          "Failed to create interaction after delete question:",
+          error,
+        );
+      }
+    });
+
+    return { success: true };
   });

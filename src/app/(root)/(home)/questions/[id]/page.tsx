@@ -17,11 +17,13 @@ import EditDelete from "@/components/shared/EditDelete";
 import { Separator } from "@/components/ui";
 import MarkdownPreview from "@/components/markdown/MarkdownPreview";
 import AnswerForm from "@/components/layout/answers/AnswerForm";
+import AnswerList from "@/components/layout/answers/AnswerList";
 import Metric from "@/components/shared/Metric";
 import QuestionUtilsFallback from "@/components/layout/questions/QuestionUtilsFallback";
 
-const QuestionDetails = async ({ params }: RouteParams) => {
+const QuestionDetails = async ({ params, searchParams }: RouteParams) => {
   const { id } = await params;
+  const { filter, page, pageSize } = await searchParams;
   const session = await getServerSession();
   const queryClient = getQueryClient();
 
@@ -114,9 +116,17 @@ const QuestionDetails = async ({ params }: RouteParams) => {
       </div>
       <Separator className="bg-light700_dark400 h-1 mt-10" />
 
+      <AnswerList
+        questionId={question.id}
+        totalAnswers={answers}
+        filter={filter}
+        page={page ? Number(page) : 1}
+        pageSize={pageSize ? Number(pageSize) : 10}
+      />
+
       <section className="my-5">
         <AnswerForm
-          question={question.id}
+          questionId={question.id}
           questionTitle={question.title}
           questionContent={question.content}
         />

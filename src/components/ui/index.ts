@@ -1,4 +1,10 @@
 export {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "./accordion";
+export {
   AlertDialog,
   AlertDialogPortal,
   AlertDialogOverlay,
@@ -25,6 +31,18 @@ export {
   CardContent,
 } from "./card";
 export { Checkbox } from "./checkbox";
+export {
+  Dialog,
+  DialogPortal,
+  DialogOverlay,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+  DialogTitle,
+  DialogDescription,
+  DialogClose,
+} from "./dialog";
 export {
   DropdownMenu,
   DropdownMenuPortal,
@@ -140,3 +158,4 @@ export {
   TooltipProvider,
 } from "./tooltip";
 export { Tabs, TabsList, TabsTrigger, TabsContent } from "./tabs";
+export { Spinner } from "./spinner";

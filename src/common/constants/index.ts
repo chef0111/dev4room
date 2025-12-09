@@ -108,3 +108,34 @@ export const profileTabs = [
   { value: "questions", label: "Questions" },
   { value: "answers", label: "Answers" },
 ];
+
+export const profileFields = [
+  {
+    name: "name" as const,
+    label: "Name",
+    placeholder: "Your Name",
+    required: true,
+    autoComplete: "name",
+  },
+  {
+    name: "username" as const,
+    label: "Username",
+    placeholder: "Your username",
+    required: true,
+    autoComplete: "username",
+  },
+  {
+    name: "portfolio" as const,
+    label: "Portfolio Link",
+    placeholder: "https://your-portfolio.com",
+    type: "url" as const,
+    autoComplete: "url",
+  },
+  {
+    name: "location" as const,
+    label: "Location",
+    placeholder: "Where do you live?",
+    required: true,
+    autoComplete: "address-level1",
+  },
+];

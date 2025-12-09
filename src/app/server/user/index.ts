@@ -1,4 +1,5 @@
 import { base } from "@/app/middleware";
+import { authorized } from "@/app/middleware/auth";
 import {
   getUsers,
   getUserById,
@@ -6,6 +7,7 @@ import {
   getUserAnswers as getUserAnswersDAL,
   getUserPopularTags as getUserPopularTagsDAL,
   getUserStats as getUserStatsDAL,
+  updateUser as updateUserDAL,
 } from "@/app/server/user/user.dal";
 import {
   UserListSchema,
@@ -18,6 +20,8 @@ import {
   UserPopularTagsOutputSchema,
   UserStatsSchema,
   UserPostSchema,
+  UpdateProfileInputSchema,
+  UpdateProfileSchema,
 } from "@/app/server/user/user.dto";
 import { QueryParamsSchema } from "@/lib/validations";
 
@@ -106,4 +110,20 @@ export const getUserStatsRoute = base
   .output(UserStatsSchema)
   .handler(async ({ input }) => {
     return getUserStatsDAL(input);
+  });
+
+export const updateUser = authorized
+  .route({
+    method: "PATCH",
+    path: "/user/profile",
+    summary: "Update User Profile",
+    description: "Update the authenticated user's profile information",
+    tags: ["Users"],
+  })
+  .input(UpdateProfileInputSchema)
+  .output(UpdateProfileSchema)
+  .handler(async ({ input, context }) => {
+    const { user } = context;
+    const updatedUser = await updateUserDAL(user.id, input);
+    return { user: updatedUser };
   });
