@@ -461,6 +461,10 @@
   @apply focus-visible:ring-0! focus-visible:ring-transparent! focus-visible:ring-offset-0!;
 }
 
+@utility smooth-hover {
+  @apply transition-none hover:transition-none [&:not(:hover)]:transition-colors [&:not(:hover)]:duration-150 ease-out;
+}
+
 @utility markdown {
   @apply !max-w-full prose prose-p:my-2 prose-ol:my-0 prose-ul:my-0 dark:prose-p:text-light-700 dark:prose-ol:text-light-700 dark:prose-ul:text-light-500 dark:prose-strong:text-white dark:prose-headings:text-white prose-headings:text-dark-400 prose-h1:text-dark-300 prose-h2:text-dark-300 prose-p:text-dark-500 prose-ul:text-dark-500 prose-ol:text-dark-500;
 }
@@ -781,7 +785,7 @@ code {
   --foreground: oklch(0.984 0.003 247.858);
   --card: oklch(0.208 0.042 265.755);
   --card-foreground: oklch(0.984 0.003 247.858);
-  --popover: oklch(0.208 0.042 265.755);
+  --popover: var(--color-dark-200);
   --popover-foreground: oklch(0.984 0.003 247.858);
   --primary: #0091ff;
   --primary-foreground: oklch(0.984 0.003 247.858);

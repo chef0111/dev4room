@@ -25,6 +25,7 @@ import {
 import { listTags, getTagQuestions, getPopular } from "./tag";
 import { createVote, hasVoted } from "./vote";
 import { listCollection, toggleSave, hasSaved } from "./collection";
+import { search } from "./search";
 
 export const router = {
   user: {
@@ -65,4 +66,5 @@ export const router = {
     toggle: toggleSave,
     status: hasSaved,
   },
+  search,
 };

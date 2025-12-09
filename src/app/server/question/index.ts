@@ -21,6 +21,8 @@ import {
 } from "@/app/server/question/question.dto";
 import { QueryParamsSchema } from "@/lib/validations";
 import { createInteraction } from "../interaction/interaction.dal";
+import { indexQuestion, indexTag } from "@/services/indexing.service";
+import { TagQuestionService } from "../tag-question/service";
 
 export const listQuestions = base
   .route({
@@ -62,20 +64,28 @@ export const createQuestion = authorized
   .handler(async ({ input, context }) => {
     const question = await createQuestionDAL(input, context.user.id);
 
+    // Get any newly created tags for indexing
+    const newTagIds = TagQuestionService.getPendingTagIds();
+
     after(async () => {
       try {
-        await createInteraction(
-          {
-            action: "post",
-            actionType: "question",
-            actionId: question.id,
-            authorId: context.user.id,
-          },
-          context.user.id,
-        );
+        await Promise.all([
+          createInteraction(
+            {
+              action: "post",
+              actionType: "question",
+              actionId: question.id,
+              authorId: context.user.id,
+            },
+            context.user.id,
+          ),
+          indexQuestion(question.id),
+          // Index any new tags that were created
+          ...newTagIds.map((tagId) => indexTag(tagId)),
+        ]);
       } catch (error) {
         console.error(
-          "Failed to create interaction after create question:",
+          "Failed to create interaction/index after create question:",
           error,
         );
       }
@@ -101,6 +111,22 @@ export const editQuestion = authorized
   )
   .handler(async ({ input, context }) => {
     const result = await editQuestionDAL(input, context.user.id);
+
+    // Get any newly created tags for indexing
+    const newTagIds = TagQuestionService.getPendingTagIds();
+
+    after(async () => {
+      try {
+        await Promise.all([
+          indexQuestion(result.id),
+          // Index any new tags that were created
+          ...newTagIds.map((tagId) => indexTag(tagId)),
+        ]);
+      } catch (error) {
+        console.error("Failed to re-index question/tags after edit:", error);
+      }
+    });
+
     return result;
   });
 

@@ -1,11 +1,10 @@
 import { Suspense } from "react";
-import Image from "next/image";
-import Link from "next/link";
 import ThemeToggle from "./ThemeToggle";
 import MobileNav from "../left-sidebar/MobileNav";
-import GlobalSearch from "../../main/GlobalSearch";
+import CommandMenu from "../../main/CommandMenu";
 import UserSection from "./UserSection";
 import { cn } from "@/lib/utils";
+import { Brand } from "@/components/ui";
 
 interface NavbarProps {
   className?: string;
@@ -19,23 +18,11 @@ const Navbar = ({ className }: NavbarProps) => {
         className,
       )}
     >
-      <Link href="/" className="flex-center gap-2">
-        <Image
-          src="/images/brand.svg"
-          width={23}
-          height={23}
-          alt="DevFlow logo"
-        />
-        <p className="h2-bold font-esbuild text-dark-100 dark:text-light-900 max-sm:hidden">
-          Dev<span className="text-primary-500">4Room</span>
-        </p>
-      </Link>
+      <Brand />
 
-      <GlobalSearch
-        route="/"
-        placeholder="Search anything globally..."
-        className="flex-1 mx-4"
-      />
+      <div className="flex-1 mx-4 flex justify-center">
+        <CommandMenu />
+      </div>
 
       <div className="flex-between gap-5">
         <ThemeToggle />
