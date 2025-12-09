@@ -538,14 +538,23 @@ export async function GET(request: NextRequest) {
         },
         authentication: {
           preferredSecurityScheme: "bearerAuth",
+          apiKey: {
+            token: {
+              name: "Authorization",
+              value: "Bearer {token}",
+            },
+          },
         },
         hideDarkModeToggle: false,
         hideDownloadButton: false,
         defaultOpenAllTags: false,
+        withCredentials: true,
         servers: [
           {
-            url: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
-            description: "Development",
+            url:
+              (process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000") +
+              "/api",
+            description: "Development Server",
           },
         ],
       })}'
