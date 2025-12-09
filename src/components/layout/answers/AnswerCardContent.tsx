@@ -3,7 +3,6 @@
 import { useState, ReactNode } from "react";
 import Link from "next/link";
 import { Route } from "next";
-import { useRouter } from "next/navigation";
 import { ChevronDownIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui";
@@ -25,23 +24,11 @@ const AnswerCardContent = ({
   questionId,
   answerId,
 }: AnswerCardContentProps) => {
-  const router = useRouter();
   const [isExpanded, setIsExpanded] = useState(false);
   const showBlur = toggleExpand && !isExpanded && expandable;
 
-  const handleReadMore = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    const targetUrl = `/questions/${questionId}#answer-${answerId}` as Route;
-
-    router.push(targetUrl);
-
-    setTimeout(() => {
-      const element = document.getElementById(`answer-${answerId}`);
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    }, 1000);
-  };
+  const answerUrl =
+    `/questions/${questionId}?answerId=${answerId}#answer-${answerId}` as Route;
 
   return (
     <div className="relative">
@@ -81,8 +68,7 @@ const AnswerCardContent = ({
           </Button>
         ) : (
           <Link
-            href={`/questions/${questionId}#answer-${answerId}`}
-            onClick={handleReadMore}
+            href={answerUrl}
             className="relative z-10 mt-1 flex items-center gap-1 text-sm font-medium text-primary-500 hover:text-primary-500/80 transition-colors duration-200"
           >
             <span>Read more...</span>

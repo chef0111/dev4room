@@ -222,6 +222,30 @@ export class AnswerDAL {
         .where(eq(question.id, existing.questionId));
     });
   }
+
+  static async findAnswerPage(
+    answerId: string,
+    questionId: string,
+    pageSize: number = 10,
+    filter: AnswerFilter = "latest",
+  ): Promise<number> {
+    const sortCriteria = this.getSortCriteria(filter);
+
+    // Get all answer IDs in order
+    const rows = await db
+      .select({ id: answer.id })
+      .from(answer)
+      .where(eq(answer.questionId, questionId))
+      .orderBy(sortCriteria);
+
+    const index = rows.findIndex((row) => row.id === answerId);
+
+    if (index === -1) {
+      return 1; // Default to page 1 if answer not found
+    }
+
+    return Math.floor(index / pageSize) + 1;
+  }
 }
 
 export const getAnswers = AnswerDAL.findMany.bind(AnswerDAL);
@@ -229,3 +253,4 @@ export const getAnswerById = AnswerDAL.findById.bind(AnswerDAL);
 export const createAnswer = AnswerDAL.create.bind(AnswerDAL);
 export const editAnswer = AnswerDAL.update.bind(AnswerDAL);
 export const deleteAnswer = AnswerDAL.delete.bind(AnswerDAL);
+export const getAnswerPage = AnswerDAL.findAnswerPage.bind(AnswerDAL);

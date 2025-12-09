@@ -23,7 +23,10 @@ import QuestionUtilsFallback from "@/components/layout/questions/QuestionUtilsFa
 
 const QuestionDetails = async ({ params, searchParams }: RouteParams) => {
   const { id } = await params;
-  const { filter, page, pageSize } = await searchParams;
+  const { filter, page, pageSize, answerId } = await searchParams;
+  const currentPage = page ? Number(page) : 1;
+  const currentPageSize = pageSize ? Number(pageSize) : 10;
+
   const session = await getServerSession();
   const queryClient = getQueryClient();
 
@@ -120,8 +123,9 @@ const QuestionDetails = async ({ params, searchParams }: RouteParams) => {
         questionId={question.id}
         totalAnswers={answers}
         filter={filter}
-        page={page ? Number(page) : 1}
-        pageSize={pageSize ? Number(pageSize) : 10}
+        page={currentPage}
+        pageSize={currentPageSize}
+        answerId={answerId}
       />
 
       <section className="my-5">

@@ -1,7 +1,10 @@
+import { redirect } from "next/navigation";
+import { Route } from "next";
 import { orpc } from "@/lib/orpc";
 import { getQueryClient } from "@/lib/query/hydration";
 import { getServerSession } from "@/lib/session";
 import { getErrorMessage } from "@/lib/handlers/error";
+import { getAnswerPage } from "@/app/server/answer/answer.dal";
 import { AnswerFilters } from "@/common/constants/filters";
 import { EMPTY_ANSWERS } from "@/common/constants/states";
 import Filter from "@/components/filters/Filter";
@@ -10,6 +13,7 @@ import DataRenderer from "@/components/shared/DataRenderer";
 import { FilterProvider } from "@/context";
 import { NextPagination } from "@/components/ui/dev";
 import AnswerCard from "./AnswerCard";
+import ScrollToAnswer from "./ScrollToAnswer";
 import MarkdownPreview from "@/components/markdown/MarkdownPreview";
 
 interface AnswerListProps {
@@ -18,6 +22,7 @@ interface AnswerListProps {
   filter?: string;
   page?: number;
   pageSize?: number;
+  answerId?: string;
 }
 
 const AnswerList = async ({
@@ -26,7 +31,23 @@ const AnswerList = async ({
   filter,
   page = 1,
   pageSize = 10,
+  answerId,
 }: AnswerListProps) => {
+  if (answerId) {
+    const answerPage = await getAnswerPage(
+      answerId,
+      questionId,
+      pageSize,
+      (filter as "latest" | "oldest" | "popular") || "latest",
+    );
+
+    if (answerPage !== page) {
+      const redirectUrl =
+        `/questions/${questionId}?page=${answerPage}&pageSize=${pageSize}${filter ? `&filter=${filter}` : ""}#answer-${answerId}` as Route;
+      redirect(redirectUrl);
+    }
+  }
+
   const session = await getServerSession();
   const queryClient = getQueryClient();
 
@@ -108,6 +129,8 @@ const AnswerList = async ({
           totalCount={totalAnswers}
           className="pt-6"
         />
+
+        {answerId && <ScrollToAnswer answerId={answerId} />}
       </div>
     </FilterProvider>
   );
