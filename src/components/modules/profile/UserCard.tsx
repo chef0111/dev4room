@@ -1,4 +1,4 @@
-import UserAvatar from "@/components/layout/profile/UserAvatar";
+import UserAvatar from "@/components/modules/profile/UserAvatar";
 import { DevCard } from "@/components/ui/dev";
 import Link from "next/link";
 

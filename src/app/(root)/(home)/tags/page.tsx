@@ -1,13 +1,13 @@
 import { orpc } from "@/lib/orpc";
 import { getQueryClient } from "@/lib/query/hydration";
 import { getErrorMessage } from "@/lib/handlers/error";
-import LocalSearch from "@/components/layout/main/LocalSearch";
+import LocalSearch from "@/components/modules/main/LocalSearch";
 import Filter from "@/components/filters/Filter";
 import FilterContent from "@/components/filters/FilterContent";
 import { FilterProvider } from "@/context";
 import { TagFilters } from "@/common/constants/filters";
 import DataRenderer from "@/components/shared/DataRenderer";
-import TagCard from "@/components/layout/tags/TagCard";
+import TagCard from "@/components/modules/tags/TagCard";
 import { EMPTY_TAGS } from "@/common/constants/states";
 import { NextPagination } from "@/components/ui/dev";
 

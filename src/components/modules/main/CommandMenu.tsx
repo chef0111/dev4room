@@ -16,7 +16,7 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Brand, Button, Kbd, KbdGroup, Spinner } from "@/components/ui";
-import UserAvatar from "@/components/layout/profile/UserAvatar";
+import UserAvatar from "@/components/modules/profile/UserAvatar";
 import { orpc } from "@/lib/orpc";
 
 // Hook to debounce a value

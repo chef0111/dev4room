@@ -7,8 +7,8 @@ import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 
 import { RegisterSchema } from "@/lib/validations";
-import AuthForm from "@/components/layout/auth/AuthForm";
-import SocialAuthForm from "@/components/layout/auth/SocialAuthForm";
+import AuthForm from "@/components/modules/auth/AuthForm";
+import SocialAuthForm from "@/components/modules/auth/SocialAuthForm";
 import handleError from "@/lib/handlers/error";
 import { Button } from "@/components/ui";
 

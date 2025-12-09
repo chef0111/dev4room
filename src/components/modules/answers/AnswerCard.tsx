@@ -6,7 +6,7 @@ import { ReactNode } from "react";
 
 import { cn, getTimeStamp } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
-import UserAvatar from "@/components/layout/profile/UserAvatar";
+import UserAvatar from "@/components/modules/profile/UserAvatar";
 import EditorFallback from "@/components/markdown/EditorFallback";
 import EditDelete from "@/components/shared/EditDelete";
 import Votes from "@/components/shared/Votes";

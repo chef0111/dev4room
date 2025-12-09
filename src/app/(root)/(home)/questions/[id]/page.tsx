@@ -1,8 +1,8 @@
 import { Suspense } from "react";
 
-import QuestionContent from "@/components/layout/questions/QuestionContent";
-import AnswerForm from "@/components/layout/answers/AnswerForm";
-import AnswerList from "@/components/layout/answers/AnswerList";
+import QuestionContent from "@/components/modules/questions/QuestionContent";
+import AnswerForm from "@/components/modules/answers/AnswerForm";
+import AnswerList from "@/components/modules/answers/AnswerList";
 import QuestionContentSkeleton from "@/components/skeletons/QuestionContentSkeleton";
 import PostCardsSkeleton from "@/components/skeletons/PostCardsSkeleton";
 

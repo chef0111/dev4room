@@ -6,7 +6,7 @@ import { ForgotPasswordSchema } from "@/lib/validations";
 import { authClient } from "@/lib/auth-client";
 import handleError from "@/lib/handlers/error";
 
-import AuthForm from "@/components/layout/auth/AuthForm";
+import AuthForm from "@/components/modules/auth/AuthForm";
 import Link from "next/link";
 
 type ForgotPasswordValues = z.infer<typeof ForgotPasswordSchema>;

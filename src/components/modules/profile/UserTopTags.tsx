@@ -5,7 +5,7 @@ import { getErrorMessage } from "@/lib/handlers/error";
 import { EMPTY_TAGS } from "@/common/constants/states";
 
 import DataRenderer from "@/components/shared/DataRenderer";
-import TagCard from "@/components/layout/tags/TagCard";
+import TagCard from "@/components/modules/tags/TagCard";
 
 interface UserTopTagsProps {
   userId: string;

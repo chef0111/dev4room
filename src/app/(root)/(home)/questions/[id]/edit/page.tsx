@@ -1,6 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 
-import QuestionForm from "@/components/layout/questions/QuestionForm";
+import QuestionForm from "@/components/modules/questions/QuestionForm";
 import { getServerSession } from "@/lib/session";
 import { getQueryClient, HydrateClient } from "@/lib/query/hydration";
 import { orpc } from "@/lib/orpc";

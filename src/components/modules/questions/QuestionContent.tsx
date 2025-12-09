@@ -7,15 +7,15 @@ import { getServerSession } from "@/lib/session";
 import { getQueryClient } from "@/lib/query/hydration";
 import { formatNumber, getTimeStamp } from "@/lib/utils";
 import { ViewService } from "@/services/view.service";
-import UserAvatar from "@/components/layout/profile/UserAvatar";
+import UserAvatar from "@/components/modules/profile/UserAvatar";
 import Votes from "@/components/shared/Votes";
-import SaveQuestion from "@/components/layout/questions/SaveQuestion";
-import TagCard from "@/components/layout/tags/TagCard";
+import SaveQuestion from "@/components/modules/questions/SaveQuestion";
+import TagCard from "@/components/modules/tags/TagCard";
 import EditDelete from "@/components/shared/EditDelete";
 import { Separator } from "@/components/ui";
 import MarkdownPreview from "@/components/markdown/MarkdownPreview";
 import Metric from "@/components/shared/Metric";
-import QuestionUtilsFallback from "@/components/layout/questions/QuestionUtilsFallback";
+import QuestionUtilsFallback from "@/components/modules/questions/QuestionUtilsFallback";
 
 interface QuestionContentProps {
   questionId: string;

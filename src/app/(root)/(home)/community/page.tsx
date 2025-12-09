@@ -1,14 +1,14 @@
 import { orpc } from "@/lib/orpc";
 import { getQueryClient } from "@/lib/query/hydration";
 import { getErrorMessage } from "@/lib/handlers/error";
-import LocalSearch from "@/components/layout/main/LocalSearch";
+import LocalSearch from "@/components/modules/main/LocalSearch";
 import Filter from "@/components/filters/Filter";
 import FilterContent from "@/components/filters/FilterContent";
 import { FilterProvider } from "@/context";
 import { UserFilters } from "@/common/constants/filters";
 import { EMPTY_USERS } from "@/common/constants/states";
 import DataRenderer from "@/components/shared/DataRenderer";
-import UserCard from "@/components/layout/profile/UserCard";
+import UserCard from "@/components/modules/profile/UserCard";
 import { NextPagination } from "@/components/ui/dev";
 
 const Community = async ({ searchParams }: RouteParams) => {

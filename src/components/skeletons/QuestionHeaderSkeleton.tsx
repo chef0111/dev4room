@@ -1,5 +1,5 @@
 import { Skeleton } from "../ui/skeleton";
-import QuestionUtilsFallback from "../layout/questions/QuestionUtilsFallback";
+import QuestionUtilsFallback from "../modules/questions/QuestionUtilsFallback";
 
 const QuestionHeaderSkeleton = () => {
   return (
