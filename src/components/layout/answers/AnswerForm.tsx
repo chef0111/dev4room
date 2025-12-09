@@ -13,8 +13,8 @@ import MarkdownEditor from "@/components/markdown/MarkdownEditor";
 import EditorFallback from "@/components/markdown/EditorFallback";
 import { Field, FieldError, Button, Spinner } from "@/components/ui";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
-import { BsStars } from "react-icons/bs";
+import GenerateAIButton from "./GenerateAIButton";
+import AIValidationAlert from "./AIValidationAlert";
 
 interface Answer {
   id: string;
@@ -42,6 +42,8 @@ const AnswerForm = ({
   const [isPending, startTransition] = useTransition();
   const editorRef = useRef<MDXEditorMethods>(null);
   const [editorKey, setEditorKey] = useState(0);
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
 
   const form = useForm<z.infer<typeof AnswerSchema>>({
     resolver: zodResolver(AnswerSchema),
@@ -78,6 +80,11 @@ const AnswerForm = ({
     }),
   );
 
+  const handleAISuccess = (generatedAnswer: string) => {
+    form.setValue("content", generatedAnswer, { shouldValidate: true });
+    editorRef.current?.setMarkdown(generatedAnswer);
+  };
+
   const handleSubmit = (data: z.infer<typeof AnswerSchema>) => {
     startTransition(async () => {
       if (isEdit && answer?.id) {
@@ -95,7 +102,6 @@ const AnswerForm = ({
   };
 
   const isSubmitting = isPending || form.formState.isSubmitting;
-  const AISubmitting = false;
 
   return (
     <div>
@@ -104,24 +110,19 @@ const AnswerForm = ({
           <h4 className="pg-semibold text-dark400_light800">
             Write your answer here
           </h4>
-          <Button
-            className="btn hover:bg-light700_dark400! light-border-2 gap-1 rounded-md border px-4 py-2 text-link-100 shadow-none cursor-pointer"
-            disabled={AISubmitting}
-          >
-            {AISubmitting ? (
-              <>
-                <Loader2 className="mr-1 size 4 animate-spin" />
-                Generating...
-              </>
-            ) : (
-              <>
-                <BsStars className="text-orange-300 size-4" />
-                Generate AI Answer
-              </>
-            )}
-          </Button>
+          <GenerateAIButton
+            questionId={questionId}
+            getUserAnswer={() => form.getValues("content") || ""}
+            onSuccess={handleAISuccess}
+            onValidationError={(msg) => {
+              setAlertMessage(msg);
+              setAlertOpen(true);
+            }}
+            disabled={isSubmitting}
+          />
         </div>
       )}
+
       <form
         className={
           compact
@@ -167,21 +168,25 @@ const AnswerForm = ({
             disabled={isSubmitting}
             className="primary-gradient hover:primary-gradient-hover w-fit text-light-900 cursor-pointer"
           >
-            {(() => {
-              if (isSubmitting) {
-                return (
-                  <>
-                    <Spinner className="border-primary-foreground/30 border-t-primary-foreground!" />
-                    {isEdit ? "Updating..." : "Posting..."}
-                  </>
-                );
-              }
-
-              return isEdit ? "Update Answer" : "Post Answer";
-            })()}
+            {isSubmitting ? (
+              <>
+                <Spinner className="border-primary-foreground/30 border-t-primary-foreground!" />
+                {isEdit ? "Updating..." : "Posting..."}
+              </>
+            ) : isEdit ? (
+              "Update Answer"
+            ) : (
+              "Post Answer"
+            )}
           </Button>
         </div>
       </form>
+
+      <AIValidationAlert
+        open={alertOpen}
+        onOpenChange={setAlertOpen}
+        message={alertMessage}
+      />
     </div>
   );
 };
