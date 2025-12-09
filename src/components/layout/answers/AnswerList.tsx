@@ -18,7 +18,6 @@ import MarkdownPreview from "@/components/markdown/MarkdownPreview";
 
 interface AnswerListProps {
   questionId: string;
-  totalAnswers: number;
   filter?: string;
   page?: number;
   pageSize?: number;
@@ -27,7 +26,6 @@ interface AnswerListProps {
 
 const AnswerList = async ({
   questionId,
-  totalAnswers,
   filter,
   page = 1,
   pageSize = 10,
@@ -69,6 +67,7 @@ const AnswerList = async ({
     }));
 
   const data = result.data;
+  const totalAnswers = data?.totalAnswers ?? 0;
 
   return (
     <FilterProvider>
