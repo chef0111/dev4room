@@ -1,4 +1,5 @@
 import { after } from "next/server";
+import { revalidateTag } from "next/cache";
 import { base } from "@/app/middleware";
 import { authorized } from "@/app/middleware/auth";
 import {
@@ -129,6 +130,8 @@ export const updateUser = authorized
 
     after(async () => {
       try {
+        revalidateTag(`user:${user.id}`, "max");
+
         await indexUser(user.id);
       } catch (error) {
         console.error("Failed to re-index user after profile update:", error);

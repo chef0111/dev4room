@@ -1,5 +1,7 @@
 import "server-only";
 
+import { cacheTag, cacheLife } from "next/cache";
+
 import { db } from "@/database/drizzle";
 import { tag, tagQuestion, question, user } from "@/database/schema";
 import { and, or, ilike, desc, asc, sql, eq, inArray } from "drizzle-orm";
@@ -212,6 +214,10 @@ export class TagDAL {
   }
 
   static async findPopular(limit: number = 5) {
+    "use cache";
+    cacheLife({ stale: 300, revalidate: 120, expire: 3600 });
+    cacheTag("tags");
+
     const rows = await db
       .select({
         id: tag.id,
