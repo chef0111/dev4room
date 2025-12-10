@@ -20,6 +20,9 @@ import {
 } from "@/app/server/answer/answer.dto";
 import { createInteraction } from "../interaction/interaction.dal";
 import { indexAnswer } from "@/services/indexing.service";
+import { standardSecurityMiddleware } from "@/app/middleware/arcjet/standard";
+import { heavyWriteSecurityMiddleware } from "@/app/middleware/arcjet/heavy-write";
+import { writeSecurityMiddleware } from "@/app/middleware/arcjet/write";
 
 export const listAnswers = base
   .route({
@@ -49,6 +52,8 @@ export const getAnswer = base
   });
 
 export const createAnswer = authorized
+  .use(standardSecurityMiddleware)
+  .use(heavyWriteSecurityMiddleware)
   .route({
     method: "POST",
     path: "/answer",
@@ -89,6 +94,8 @@ export const createAnswer = authorized
   });
 
 export const editAnswer = authorized
+  .use(standardSecurityMiddleware)
+  .use(writeSecurityMiddleware)
   .route({
     method: "PUT",
     path: "/answer/{answerId}",
@@ -113,6 +120,8 @@ export const editAnswer = authorized
   });
 
 export const deleteAnswer = authorized
+  .use(standardSecurityMiddleware)
+  .use(writeSecurityMiddleware)
   .route({
     method: "DELETE",
     path: "/answer/{answerId}",

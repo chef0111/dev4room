@@ -24,6 +24,9 @@ import { QueryParamsSchema } from "@/lib/validations";
 import { createInteraction } from "../interaction/interaction.dal";
 import { indexQuestion, indexTag } from "@/services/indexing.service";
 import { TagQuestionService } from "../tag-question/service";
+import { standardSecurityMiddleware } from "@/app/middleware/arcjet/standard";
+import { heavyWriteSecurityMiddleware } from "@/app/middleware/arcjet/heavy-write";
+import { writeSecurityMiddleware } from "@/app/middleware/arcjet/write";
 
 export const listQuestions = base
   .route({
@@ -54,6 +57,8 @@ export const getQuestion = base
   });
 
 export const createQuestion = authorized
+  .use(standardSecurityMiddleware)
+  .use(heavyWriteSecurityMiddleware)
   .route({
     method: "POST",
     path: "/question",
@@ -98,6 +103,8 @@ export const createQuestion = authorized
   });
 
 export const editQuestion = authorized
+  .use(standardSecurityMiddleware)
+  .use(writeSecurityMiddleware)
   .route({
     method: "PUT",
     path: "/question/{questionId}",
@@ -153,6 +160,8 @@ export const getTopQuestions = base
   });
 
 export const deleteQuestion = authorized
+  .use(standardSecurityMiddleware)
+  .use(writeSecurityMiddleware)
   .route({
     method: "DELETE",
     path: "/question/{questionId}",

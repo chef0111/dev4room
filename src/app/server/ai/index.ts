@@ -1,6 +1,8 @@
 import { openai } from "@ai-sdk/openai";
 import { generateObject } from "ai";
 import { authorized } from "@/app/middleware/auth";
+import { standardSecurityMiddleware } from "@/app/middleware/arcjet/standard";
+import { heavyWriteSecurityMiddleware } from "@/app/middleware/arcjet/heavy-write";
 import {
   GenerateAnswerInputSchema,
   GenerateAnswerOutputSchema,
@@ -8,6 +10,8 @@ import {
 } from "./ai.dto";
 
 export const generateAnswer = authorized
+  .use(standardSecurityMiddleware)
+  .use(heavyWriteSecurityMiddleware)
   .route({
     method: "POST",
     path: "/ai/answer",

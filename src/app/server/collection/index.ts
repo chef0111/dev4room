@@ -1,4 +1,6 @@
 import { authorized } from "@/app/middleware/auth";
+import { standardSecurityMiddleware } from "@/app/middleware/arcjet/standard";
+import { writeSecurityMiddleware } from "@/app/middleware/arcjet/write";
 import {
   listCollection as listCollectionDAL,
   toggleSave as toggleSaveDAL,
@@ -27,6 +29,8 @@ export const listCollection = authorized
   });
 
 export const toggleSave = authorized
+  .use(standardSecurityMiddleware)
+  .use(writeSecurityMiddleware)
   .route({
     method: "POST",
     path: "/collection/toggle",

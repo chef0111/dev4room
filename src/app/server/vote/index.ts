@@ -12,8 +12,12 @@ import {
   HasVotedOutputSchema,
 } from "./vote.dto";
 import { createInteraction } from "../interaction/interaction.dal";
+import { standardSecurityMiddleware } from "@/app/middleware/arcjet/standard";
+import { writeSecurityMiddleware } from "@/app/middleware/arcjet/write";
 
 export const createVote = authorized
+  .use(standardSecurityMiddleware)
+  .use(writeSecurityMiddleware)
   .route({
     method: "POST",
     path: "/vote",
