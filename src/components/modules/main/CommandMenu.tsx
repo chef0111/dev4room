@@ -177,6 +177,7 @@ const CommandMenu = () => {
                     <CommandItem
                       key={question.id}
                       value={`question-${question.id}`}
+                      className="smooth-hover py-2!"
                       onSelect={() => handleSelect(`/questions/${question.id}`)}
                     >
                       <FileQuestion className="text-primary-500" />
@@ -197,6 +198,7 @@ const CommandMenu = () => {
                     <CommandItem
                       key={answer.id}
                       value={`answer-${answer.id}`}
+                      className="smooth-hover py-2!"
                       onSelect={() =>
                         handleSelect(
                           `/questions/${answer.questionId}?answerId=${answer.id}#answer-${answer.id}`,
@@ -224,7 +226,7 @@ const CommandMenu = () => {
                       key={tag.id}
                       value={`tag-${tag.id}`}
                       onSelect={() => handleSelect(`/tags/${tag.id}`)}
-                      className="smooth-hover"
+                      className="smooth-hover py-2!"
                     >
                       <Tag className="text-light-400" />
                       <span>{tag.name}</span>
@@ -243,7 +245,7 @@ const CommandMenu = () => {
                       key={user.id}
                       value={`user-${user.id}`}
                       onSelect={() => handleSelect(`/profile/${user.id}`)}
-                      className="smooth-hover"
+                      className="smooth-hover py-2!"
                     >
                       <UserAvatar
                         id={user.id}

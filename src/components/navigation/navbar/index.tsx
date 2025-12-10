@@ -1,8 +1,8 @@
 import { Suspense } from "react";
+import { cn } from "@/lib/utils";
 import ThemeToggle from "./ThemeToggle";
 import MobileNav from "../left-sidebar/MobileNav";
 import UserSection from "./UserSection";
-import { cn } from "@/lib/utils";
 import { Brand } from "@/components/ui";
 import CommandMenu from "@/components/modules/main/CommandMenu";
 import CommandMenuFallback from "@/components/modules/main/CommandMenuFallback";

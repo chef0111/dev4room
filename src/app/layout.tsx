@@ -37,32 +37,15 @@ const RootLayout: React.FC<Props> = ({ children }: Props) => {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Preload devicon CSS for non-blocking load */}
         <link
-          rel="preload"
-          as="style"
-          href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css"
+          rel="preconnect"
+          href="https://cdn.jsdelivr.net"
+          crossOrigin="anonymous"
         />
-        <link
-          rel="stylesheet"
-          id="devicon-css"
-          href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css"
-          media="print"
-        />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `document.getElementById('devicon-css').media='all'`,
-          }}
-        />
-        <noscript>
-          <link
-            rel="stylesheet"
-            href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css"
-          />
-        </noscript>
+        <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
       </head>
       <body
-        className={`${inter.variable} ${esbuild.variable} antialiased bg-light850_dark100 custom-scrollbar`}
+        className={`${inter.variable} ${esbuild.variable} antialiased bg-light850_dark100`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Providers>{children}</Providers>
