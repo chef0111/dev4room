@@ -1,8 +1,13 @@
 import { Suspense } from "react";
+import dynamic from "next/dynamic";
 import NextTopLoader from "nextjs-toploader";
 import Navbar from "@/components/navigation/navbar";
-import LeftSidebar from "@/components/navigation/left-sidebar/LeftSidebar";
 import { ScrollToTop } from "@/components/modules/main/ScrollToTop";
+
+const LeftSidebar = dynamic(
+  () => import("@/components/navigation/left-sidebar/LeftSidebar"),
+  { ssr: true },
+);
 
 interface Props {
   children: React.ReactNode;
