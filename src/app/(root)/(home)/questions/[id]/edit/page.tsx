@@ -1,9 +1,16 @@
 import { notFound, redirect } from "next/navigation";
+import { db } from "@/database/drizzle";
+import { question } from "@/database/schema";
 
-import QuestionForm from "@/components/modules/questions/QuestionForm";
+import { orpc } from "@/lib/orpc";
 import { getServerSession } from "@/lib/session";
 import { getQueryClient, HydrateClient } from "@/lib/query/hydration";
-import { orpc } from "@/lib/orpc";
+import QuestionForm from "@/components/modules/questions/QuestionForm";
+
+export async function generateStaticParams() {
+  const questions = await db.select({ id: question.id }).from(question);
+  return questions.map((q) => ({ id: q.id }));
+}
 
 const EditQuestion = async ({ params }: RouteParams) => {
   const { id } = await params;

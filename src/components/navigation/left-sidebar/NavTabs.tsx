@@ -50,7 +50,7 @@ const NavTabs = ({ isMobile = false }: NavTabsProps) => {
           >
             <Image
               src={item.imgUrl}
-              alt={item.label}
+              alt={`${item.label} icon`}
               width={20}
               height={20}
               className={cn({ "invert-colors": !isActive })}

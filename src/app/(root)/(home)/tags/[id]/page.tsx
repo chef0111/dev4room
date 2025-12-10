@@ -1,5 +1,8 @@
+import { db } from "@/database/drizzle";
+import { tag } from "@/database/schema";
 import { TagQuestionsFilters } from "@/common/constants/filters";
 import { EMPTY_QUESTION } from "@/common/constants/states";
+
 import Filter from "@/components/filters/Filter";
 import FilterContent from "@/components/filters/FilterContent";
 import LocalSearch from "@/components/modules/main/LocalSearch";
@@ -10,6 +13,11 @@ import { FilterProvider } from "@/context";
 import { getErrorMessage } from "@/lib/handlers/error";
 import { orpc } from "@/lib/orpc";
 import { getQueryClient } from "@/lib/query/hydration";
+
+export async function generateStaticParams() {
+  const tags = await db.select({ id: tag.id }).from(tag);
+  return tags.map((t) => ({ id: t.id }));
+}
 
 const TagQuestions = async ({ params, searchParams }: RouteParams) => {
   const { id } = await params;
