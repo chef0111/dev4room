@@ -1,7 +1,7 @@
 import { os } from "@orpc/server";
 
 export const base = os
-  .$context<{ headers: Headers; request: Request }>()
+  .$context<{ headers: Headers; request?: Request }>()
   .errors({
     RATE_LIMITED: {
       message: "Too many requests. Please try again later.",

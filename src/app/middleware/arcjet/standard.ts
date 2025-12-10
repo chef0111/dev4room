@@ -21,8 +21,12 @@ const buildStandardAj = () =>
     );
 
 export const standardSecurityMiddleware = base
-  .$context<{ request: Request; user: User }>()
+  .$context<{ request?: Request; user: User }>()
   .middleware(async ({ context, next, errors }) => {
+    if (!context.request) {
+      return next();
+    }
+
     const decision = await buildStandardAj().protect(context.request, {
       userId: context.user.id,
     });
