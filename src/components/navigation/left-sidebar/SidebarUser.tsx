@@ -1,15 +1,13 @@
-"use client";
-
+import { Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { UserNav } from "@/components/modules/profile/UserNav";
 import { Button, Skeleton } from "@/components/ui";
-import { Suspense } from "react";
-import { authClient } from "@/lib/auth-client";
+import { getServerSession } from "@/lib/session";
 
-const SidebarUser = () => {
-  const { data } = authClient.useSession();
-  const user = data?.user;
+const SidebarUser = async () => {
+  const session = await getServerSession();
+  const user = session?.user;
   const isAdmin = user?.role === "admin";
 
   return (

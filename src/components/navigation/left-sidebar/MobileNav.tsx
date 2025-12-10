@@ -7,6 +7,7 @@ import {
   SheetContent,
   SheetTitle,
   SheetTrigger,
+  Skeleton,
 } from "@/components/ui";
 import { Menu } from "lucide-react";
 import NavTabs from "./NavTabs";
@@ -41,7 +42,11 @@ const MobileNav = () => {
             </section>
           </SheetClose>
           <SheetClose asChild>
-            <SidebarUser />
+            <Suspense
+              fallback={<Skeleton className="h-10 w-full rounded-lg" />}
+            >
+              <SidebarUser />
+            </Suspense>
           </SheetClose>
         </div>
       </SheetContent>

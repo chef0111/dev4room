@@ -3,8 +3,8 @@ import { Avatar, AvatarImage, AvatarFallback } from "../../ui/avatar";
 import { cn } from "@/lib/utils";
 
 interface UserAvatarProps {
-  id: string;
-  name: string;
+  id: string | undefined;
+  name: string | undefined;
   image?: string;
   className?: string;
   fallbackClassName?: string;
@@ -18,7 +18,7 @@ const UserAvatar = ({
   fallbackClassName,
 }: UserAvatarProps) => {
   const initials = name
-    .split(" ")
+    ?.split(" ")
     .map((word) => word[0])
     .join("")
     .toUpperCase()

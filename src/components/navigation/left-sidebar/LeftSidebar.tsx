@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import NavTabs from "./NavTabs";
 import NavTabsFallback from "./NavTabsFallback";
 import SidebarUser from "./SidebarUser";
+import { Skeleton } from "@/components/ui";
 
 const LeftSidebar = () => {
   return (
@@ -17,7 +18,9 @@ const LeftSidebar = () => {
           </Suspense>
         </div>
 
-        <SidebarUser />
+        <Suspense fallback={<Skeleton className="h-12 w-full rounded-lg" />}>
+          <SidebarUser />
+        </Suspense>
       </section>
     </div>
   );

@@ -40,8 +40,8 @@ export function UserNav({ isAdmin = false }: UserNavProps) {
         >
           <div className="flex-start flex-grow gap-2">
             <UserAvatar
-              id={user!.id}
-              name={user!.name}
+              id={user?.id}
+              name={user?.name}
               image={user?.image ?? ""}
               className="max-sm:size-8 size-12 lg:size-8 rounded-lg"
               fallbackClassName="rounded-lg max-sm:text-sm text-xl lg:text-sm"
@@ -64,8 +64,8 @@ export function UserNav({ isAdmin = false }: UserNavProps) {
         <DropdownMenuLabel className="p-0 font-normal">
           <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
             <UserAvatar
-              id={user!.id}
-              name={user!.name}
+              id={user?.id}
+              name={user?.name}
               image={user?.image ?? ""}
               className="size-8 rounded-lg"
               fallbackClassName="rounded-lg"
