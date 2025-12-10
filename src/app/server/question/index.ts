@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { after } from "next/server";
+import { revalidateTag } from "next/cache";
 import { base } from "@/app/middleware";
 import { authorized } from "@/app/middleware/auth";
 import {
@@ -69,6 +70,9 @@ export const createQuestion = authorized
 
     after(async () => {
       try {
+        // Invalidate questions list cache
+        revalidateTag("questions", "max");
+
         await Promise.all([
           createInteraction(
             {
@@ -117,6 +121,9 @@ export const editQuestion = authorized
 
     after(async () => {
       try {
+        revalidateTag(`question:${result.id}`, "max");
+        revalidateTag("questions", "max");
+
         await Promise.all([
           indexQuestion(result.id),
           // Index any new tags that were created
@@ -159,6 +166,9 @@ export const deleteQuestion = authorized
 
     after(async () => {
       try {
+        revalidateTag(`question:${input.questionId}`, "max");
+        revalidateTag("questions", "max");
+
         await createInteraction(
           {
             action: "delete",

@@ -9,26 +9,28 @@ import { Route } from "next";
 import { cn } from "@/lib/utils";
 import { SheetClose } from "@/components/ui";
 import { sidebarTabs } from "@/common/constants";
+import { authClient } from "@/lib/auth-client";
 
 interface NavTabsProps {
-  userId?: string;
   isMobile?: boolean;
 }
 
-const NavTabs = ({ userId, isMobile = false }: NavTabsProps) => {
+const NavTabs = ({ isMobile = false }: NavTabsProps) => {
+  const { data } = authClient.useSession();
+  const user = data?.user;
   const pathname = usePathname();
 
   return (
     <div className="flex flex-col gap-3 sm:gap-2 flex-1">
       {sidebarTabs.map((item) => {
         // Don't show profile tab if user is not logged in
-        if (item.route === "/profile" && !userId) {
+        if (item.route === "/profile" && !user?.id) {
           return null;
         }
 
         const appRoute =
-          item.route === "/profile" && userId
-            ? `/profile/${userId}`
+          item.route === "/profile" && user?.id
+            ? `/profile/${user.id}`
             : item.route;
 
         const isActive =

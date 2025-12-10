@@ -1,5 +1,7 @@
 import "server-only";
 
+import { cacheTag, cacheLife } from "next/cache";
+
 import { db } from "@/database/drizzle";
 import { user, question, answer, tagQuestion, tag } from "@/database/schema";
 import { and, or, ilike, desc, asc, sql, eq, inArray } from "drizzle-orm";
@@ -99,8 +101,26 @@ export class UserDAL {
   }
 
   static async findById(userId: string): Promise<GetUserOutput> {
+    "use cache";
+    cacheLife({ stale: 120, revalidate: 60, expire: 3600 });
+    cacheTag(`user:${userId}`);
+
+    const selectFields = {
+      id: user.id,
+      name: user.name,
+      username: user.username,
+      email: user.email,
+      image: user.image,
+      bio: user.bio,
+      location: user.location,
+      portfolio: user.portfolio,
+      reputation: user.reputation,
+      role: user.role,
+      createdAt: user.createdAt,
+    };
+
     const [row] = await db
-      .select(this.selectFields)
+      .select(selectFields)
       .from(user)
       .where(eq(user.id, userId))
       .limit(1);
@@ -333,6 +353,10 @@ export class UserDAL {
   }
 
   static async getUserStats(input: GetUserStatsInput): Promise<UserStatsDTO> {
+    "use cache";
+    cacheLife({ stale: 180, revalidate: 90, expire: 3600 });
+    cacheTag(`user:${input.userId}`);
+
     const { userId } = input;
 
     // Verify user exists

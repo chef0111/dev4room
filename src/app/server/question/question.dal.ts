@@ -1,5 +1,7 @@
 import "server-only";
 
+import { cacheTag, cacheLife } from "next/cache";
+
 import { db } from "@/database/drizzle";
 import {
   question,
@@ -150,8 +152,26 @@ export class QuestionDAL {
   }
 
   static async findById(questionId: string): Promise<QuestionDTO> {
+    "use cache";
+    cacheLife({ stale: 60, revalidate: 30, expire: 3600 });
+    cacheTag(`question:${questionId}`);
+
+    const selectFields = {
+      id: question.id,
+      title: question.title,
+      content: question.content,
+      views: question.views,
+      upvotes: question.upvotes,
+      downvotes: question.downvotes,
+      answers: question.answers,
+      createdAt: question.createdAt,
+      authorId: question.authorId,
+      authorName: user.name,
+      authorImage: user.image,
+    };
+
     const [row] = await db
-      .select({ ...this.selectFields, updatedAt: question.updatedAt })
+      .select({ ...selectFields, updatedAt: question.updatedAt })
       .from(question)
       .leftJoin(user, eq(question.authorId, user.id))
       .where(eq(question.id, questionId))
@@ -162,9 +182,23 @@ export class QuestionDAL {
     }
 
     const tags = await TagQuestionService.getTagsQuestion(questionId);
+
     const data = {
-      ...this.mapToDTO(row, tags),
+      id: row.id,
+      title: row.title,
+      content: row.content,
+      views: row.views,
+      upvotes: row.upvotes,
+      downvotes: row.downvotes,
+      answers: row.answers,
+      createdAt: row.createdAt,
       updatedAt: row.updatedAt,
+      author: {
+        id: row.authorId,
+        name: row.authorName ?? "Unknown",
+        image: row.authorImage,
+      },
+      tags,
     };
 
     return validateOne(data, QuestionSchema, "Question");
@@ -283,6 +317,10 @@ export class QuestionDAL {
   }
 
   static async findTop(limit: number = 5) {
+    "use cache";
+    cacheLife({ stale: 300, revalidate: 120, expire: 3600 });
+    cacheTag("questions");
+
     const rows = await db
       .select({
         id: question.id,

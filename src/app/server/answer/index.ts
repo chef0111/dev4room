@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { after } from "next/server";
+import { revalidateTag } from "next/cache";
 import { base } from "@/app/middleware";
 import { authorized } from "@/app/middleware/auth";
 import {
@@ -62,6 +63,8 @@ export const createAnswer = authorized
 
     after(async () => {
       try {
+        revalidateTag(`question:${input.questionId}`, "max");
+
         await Promise.all([
           createInteraction(
             {

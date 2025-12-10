@@ -5,6 +5,7 @@ import UserSection from "./UserSection";
 import { cn } from "@/lib/utils";
 import { Brand } from "@/components/ui";
 import CommandMenu from "@/components/modules/main/CommandMenu";
+import CommandMenuFallback from "@/components/modules/main/CommandMenuFallback";
 
 interface NavbarProps {
   className?: string;
@@ -21,7 +22,9 @@ const Navbar = ({ className }: NavbarProps) => {
       <Brand />
 
       <div className="flex-1 mx-4 flex justify-center">
-        <CommandMenu />
+        <Suspense fallback={<CommandMenuFallback />}>
+          <CommandMenu />
+        </Suspense>
       </div>
 
       <div className="flex-between gap-5">
