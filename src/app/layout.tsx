@@ -12,12 +12,16 @@ import "./globals.css";
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
+  display: "swap",
+  preload: true,
 });
 
 const esbuild = localFont({
   src: "../../public/fonts/ESBuild.otf",
   variable: "--font-esbuild",
   weight: "400 500 600 700",
+  display: "swap",
+  preload: true,
 });
 
 export const metadata: Metadata = {
@@ -33,11 +37,29 @@ const RootLayout: React.FC<Props> = ({ children }: Props) => {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Preload devicon CSS for non-blocking load */}
         <link
-          rel="stylesheet"
-          type="text/css"
+          rel="preload"
+          as="style"
           href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css"
         />
+        <link
+          rel="stylesheet"
+          id="devicon-css"
+          href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css"
+          media="print"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `document.getElementById('devicon-css').media='all'`,
+          }}
+        />
+        <noscript>
+          <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css"
+          />
+        </noscript>
       </head>
       <body
         className={`${inter.variable} ${esbuild.variable} antialiased bg-light850_dark100 custom-scrollbar`}

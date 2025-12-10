@@ -1,10 +1,17 @@
 import { Suspense } from "react";
+import { db } from "@/database/drizzle";
+import { question } from "@/database/schema";
 
 import QuestionContent from "@/components/modules/questions/QuestionContent";
 import AnswerForm from "@/components/modules/answers/AnswerForm";
 import AnswerList from "@/components/modules/answers/AnswerList";
 import QuestionContentSkeleton from "@/components/skeletons/QuestionContentSkeleton";
 import PostCardsSkeleton from "@/components/skeletons/PostCardsSkeleton";
+
+export async function generateStaticParams() {
+  const questions = await db.select({ id: question.id }).from(question);
+  return questions.map((q) => ({ id: q.id }));
+}
 
 const QuestionDetails = async ({ params, searchParams }: RouteParams) => {
   const { id } = await params;

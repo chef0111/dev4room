@@ -1,15 +1,15 @@
 "use client";
 
 import React from "react";
-import { usePathname } from "next/navigation";
-import Image from "next/image";
-import Link from "next/link";
 import { Route } from "next";
+import Link from "next/link";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
+import { authClient } from "@/lib/auth-client";
 import { SheetClose } from "@/components/ui";
 import { sidebarTabs } from "@/common/constants";
-import { authClient } from "@/lib/auth-client";
 
 interface NavTabsProps {
   isMobile?: boolean;
@@ -50,7 +50,7 @@ const NavTabs = ({ isMobile = false }: NavTabsProps) => {
           >
             <Image
               src={item.imgUrl}
-              alt={item.label}
+              alt={`${item.label} icon`}
               width={20}
               height={20}
               className={cn({ "invert-colors": !isActive })}

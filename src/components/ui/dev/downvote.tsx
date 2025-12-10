@@ -57,7 +57,9 @@ const Downvote = ({
               ease: [0.34, 1.56, 0.64, 1],
             }}
           >
-            <TbArrowBigDownFilled className={cn("text-red-400", config.icon)} />
+            <TbArrowBigDownFilled
+              className={cn("text-destructive", config.icon)}
+            />
           </motion.span>
         ) : (
           <motion.span
@@ -69,7 +71,7 @@ const Downvote = ({
           >
             <TbArrowBigDown
               className={cn(
-                "text-light-400 dark:text-light-500 group-hover:text-red-400! transition-colors duration-200",
+                "text-light-400 dark:text-light-500 group-hover:text-destructive! transition-colors duration-200",
                 config.icon,
               )}
             />

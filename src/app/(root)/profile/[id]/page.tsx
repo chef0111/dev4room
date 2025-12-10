@@ -1,5 +1,8 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
+
+import { db } from "@/database/drizzle";
+import { user } from "@/database/schema";
 import { getServerSession } from "@/lib/session";
 import { orpc } from "@/lib/orpc";
 import { getQueryClient } from "@/lib/query/hydration";
@@ -12,6 +15,11 @@ import UserTopTags from "@/components/modules/profile/UserTopTags";
 import UserTabsSkeleton from "@/components/skeletons/UserTabsSkeleton";
 import UserTopTagsSkeleton from "@/components/skeletons/UserTopTagsSkeleton";
 import EditProfileDialog from "@/components/modules/profile/EditProfileDialog";
+
+export async function generateStaticParams() {
+  const users = await db.select({ id: user.id }).from(user);
+  return users.map((u) => ({ id: u.id }));
+}
 
 const ProfilePage = async ({ params, searchParams }: RouteParams) => {
   const { id } = await params;
