@@ -11,6 +11,7 @@ const nextConfig: NextConfig = {
   experimental: {
     typedEnv: true,
     authInterrupts: true,
+    optimizeCss: true,
   },
   serverExternalPackages: ["pino", "pino-pretty"],
   images: {
