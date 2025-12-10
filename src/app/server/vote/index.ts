@@ -1,4 +1,5 @@
 import { after } from "next/server";
+import { revalidateTag } from "next/cache";
 import { authorized } from "@/app/middleware/auth";
 import {
   createVote as createVoteDAL,
@@ -31,6 +32,10 @@ export const createVote = authorized
 
     after(async () => {
       try {
+        if (input.targetType === "question") {
+          revalidateTag(`question:${input.targetId}`, "max");
+        }
+
         await createInteraction(
           {
             action: input.voteType,

@@ -2,6 +2,11 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   cacheComponents: true,
+  cacheLife: {
+    questions: { stale: 60, revalidate: 30, expire: 3600 },
+    users: { stale: 120, revalidate: 60, expire: 3600 },
+    default: { stale: 300, revalidate: 120, expire: 3600 },
+  },
   typedRoutes: true,
   experimental: {
     typedEnv: true,
