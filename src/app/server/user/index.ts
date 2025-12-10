@@ -2,6 +2,8 @@ import { after } from "next/server";
 import { revalidateTag } from "next/cache";
 import { base } from "@/app/middleware";
 import { authorized } from "@/app/middleware/auth";
+import { standardSecurityMiddleware } from "@/app/middleware/arcjet/standard";
+import { writeSecurityMiddleware } from "@/app/middleware/arcjet/write";
 import {
   getUsers,
   getUserById,
@@ -116,6 +118,8 @@ export const getUserStats = base
   });
 
 export const updateUser = authorized
+  .use(standardSecurityMiddleware)
+  .use(writeSecurityMiddleware)
   .route({
     method: "PATCH",
     path: "/user/profile",
