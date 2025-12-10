@@ -59,17 +59,15 @@ async function protect(req: NextRequest): Promise<ArcjetDecision> {
     if (typeof body.email === "string") {
       return arcjet
         .withRule(protectSignup(signupOptions))
-        .protect(req, { email: body.email, fingerprint: userId });
+        .protect(req, { email: body.email, userId });
     } else {
       return arcjet
         .withRule(detectBot(botOptions))
         .withRule(slidingWindow(rateLimitOptions))
-        .protect(req, { fingerprint: userId });
+        .protect(req, { userId });
     }
   } else {
-    return arcjet
-      .withRule(detectBot(botOptions))
-      .protect(req, { fingerprint: userId });
+    return arcjet.withRule(detectBot(botOptions)).protect(req, { userId });
   }
 }
 

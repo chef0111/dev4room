@@ -17,11 +17,7 @@ export {
 };
 
 export default arcjet({
-  key: process.env.ARCJET_KEY as string,
-  characteristics: ["fingerprint"],
-  rules: [
-    shield({
-      mode: "LIVE",
-    }),
-  ],
+  key: process.env.ARCJET_KEY!,
+  characteristics: ["userId"],
+  rules: [],
 });
