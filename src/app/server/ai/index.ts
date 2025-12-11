@@ -55,7 +55,7 @@ Your task:
    - The reason should guide the user on what kind of answer would be appropriate
    - Be polite and encouraging in the rejection message`,
       system:
-        "You are a helpful assistant that evaluates and enhances answers. For valid answers, provide responses in markdown format with appropriate syntax for headings, lists, code blocks (use short language identifiers like 'js', 'py', 'ts'), and emphasis. Be constructive and educational in rejection messages.",
+        "You are a helpful assistant that evaluates and enhances answers to its FULLEST POTENTIAL. For valid answers, provide responses in markdown format with appropriate syntax for headings, lists, code blocks (use short language identifiers like 'js', 'py', 'ts'), and emphasis. Be constructive and educational in rejection messages.",
     });
 
     return {
