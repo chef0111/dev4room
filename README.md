@@ -8,7 +8,7 @@
     <img src="https://img.shields.io/badge/-Open_AI-black?style=for-the-badge&logoColor=white&logo=openai&color=412991" alt="openai" />
   </div>
 
-  <h3 align="center">Dev4Room</h3>
+  <h1 align="center">Dev4Room</h1>
 
    <div align="center">
      Build a community-driven platform for developers to ask questions, post answers, and get help from other developers.
