@@ -151,7 +151,7 @@ const CommandMenu = () => {
           value={query}
           onValueChange={setQuery}
         />
-        <CommandList className="custom-scrollbar">
+        <CommandList className="">
           {searchMutation.isPending && (
             <div className="flex items-center justify-center gap-2 py-6">
               <Spinner />

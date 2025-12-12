@@ -41,7 +41,6 @@ const EditDelete = ({
     orpc.question.delete.mutationOptions({
       onSuccess: () => {
         toast.success("Question deleted successfully");
-        router.push("/");
         router.refresh();
       },
       onError: (error: Error) => {
@@ -85,10 +84,10 @@ const EditDelete = ({
       {showEdit && (
         <Button
           variant="ghost"
-          className="hover:bg-primary-500/20! size-7.5 cursor-pointer"
+          className="hover:bg-primary-500/20! size-8 cursor-pointer"
           onClick={handleEdit}
         >
-          <Edit className="text-primary-500 size-4.5" />
+          <Edit className="text-primary-500 size-5" />
         </Button>
       )}
 
@@ -97,14 +96,10 @@ const EditDelete = ({
           <AlertDialogTrigger asChild>
             <Button
               variant="ghost"
-              className="hover:bg-red-500/20! size-7.5 cursor-pointer"
+              className="hover:bg-red-500/20! size-5 cursor-pointer"
               disabled={isDeleting}
             >
-              {isDeleting ? (
-                <Spinner className="size-4.5" />
-              ) : (
-                <Trash className="text-red-500 size-4.5" />
-              )}
+              <Trash className="text-red-500 size-8" />
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent className="bg-light900_dark200 border-light700_dark400">

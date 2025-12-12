@@ -28,7 +28,7 @@ export const generateAnswer = authorized
     const { object } = await generateObject({
       model: openai("gpt-4o-mini"),
       schema: AIResponseSchema,
-      prompt: `You are evaluating a user's answer to a question and potentially enhancing it.
+      prompt: `You are evaluating a user's answer to a question and potentially enhancing it to the fullest.
 
 **Question:** ${question}
 

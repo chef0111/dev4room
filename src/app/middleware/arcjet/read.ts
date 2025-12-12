@@ -25,7 +25,7 @@ export const readSecurityMiddleware = base
     if (decision.isDenied()) {
       if (decision.reason.isRateLimit())
         throw errors.RATE_LIMITED({
-          message: "Too many requests.",
+          message: "Too many requests. Please try again later.",
         });
 
       throw errors.RATE_LIMITED({

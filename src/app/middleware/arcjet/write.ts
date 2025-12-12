@@ -25,7 +25,7 @@ export const writeSecurityMiddleware = base
     if (decision.isDenied()) {
       if (decision.reason.isRateLimit())
         throw errors.RATE_LIMITED({
-          message: "Too many requests.",
+          message: "Too many requests. Spam is not allowed.",
         });
 
       throw errors.RATE_LIMITED({
