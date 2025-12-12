@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { after } from "next/server";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { base } from "@/app/middleware";
 import { authorized } from "@/app/middleware/auth";
 import {
@@ -27,6 +27,7 @@ import { TagQuestionService } from "../tag-question/service";
 import { standardSecurityMiddleware } from "@/app/middleware/arcjet/standard";
 import { heavyWriteSecurityMiddleware } from "@/app/middleware/arcjet/heavy-write";
 import { writeSecurityMiddleware } from "@/app/middleware/arcjet/write";
+import { ViewService } from "@/services/view.service";
 
 export const listQuestions = base
   .route({
@@ -52,8 +53,11 @@ export const getQuestion = base
   .input(z.object({ questionId: z.string() }))
   .output(QuestionSchema)
   .handler(async ({ input }) => {
-    const result = await getQuestionById(input.questionId);
-    return result;
+    const [result, views] = await Promise.all([
+      getQuestionById(input.questionId),
+      ViewService.getViewCount(input.questionId),
+    ]);
+    return { ...result, views };
   });
 
 export const createQuestion = authorized
@@ -99,6 +103,9 @@ export const createQuestion = authorized
         );
       }
     });
+
+    revalidatePath(`/profile/${context.user.id}`);
+    
     return { id: question.id };
   });
 
@@ -172,7 +179,7 @@ export const deleteQuestion = authorized
   .output(z.object({ success: z.boolean() }))
   .handler(async ({ input, context }) => {
     await deleteQuestionDAL(input.questionId, context.user.id);
-
+    
     after(async () => {
       try {
         revalidateTag(`question:${input.questionId}`, "max");
@@ -196,5 +203,7 @@ export const deleteQuestion = authorized
       }
     });
 
+    revalidatePath(`/profile/${context.user.id}`);
+    
     return { success: true };
   });

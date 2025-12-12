@@ -187,7 +187,7 @@ export class QuestionDAL {
       id: row.id,
       title: row.title,
       content: row.content,
-      views: row.views,
+      views: 0,
       upvotes: row.upvotes,
       downvotes: row.downvotes,
       answers: row.answers,

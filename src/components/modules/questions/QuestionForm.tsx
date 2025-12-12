@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useRef } from "react";
+import { Suspense, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -34,11 +34,14 @@ interface QuestionFormProps {
 const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
   const router = useRouter();
   const editorRef = useRef<MDXEditorMethods>(null);
+  const [editorKey, setEditorKey] = useState(0);
 
   const createQuestion = useMutation(
     orpc.question.create.mutationOptions({
       onSuccess: (data) => {
         toast.success("Question created successfully!");
+        form.reset();
+        setEditorKey((prev) => prev + 1);
         router.push(`/questions/${data.id}`);
       },
       onError: (error) => {
@@ -51,6 +54,8 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
     orpc.question.edit.mutationOptions({
       onSuccess: (data) => {
         toast.success("Question updated successfully!");
+        form.reset();
+        setEditorKey((prev) => prev + 1);
         router.push(`/questions/${data.id}`);
       },
       onError: (error) => {
@@ -188,6 +193,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
 
               <Suspense fallback={<EditorFallback />}>
                 <MarkdownEditor
+                  key={editorKey}
                   id="question-content"
                   editorRef={editorRef}
                   value={field.value}

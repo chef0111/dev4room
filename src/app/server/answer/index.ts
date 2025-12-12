@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { after } from "next/server";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { base } from "@/app/middleware";
 import { authorized } from "@/app/middleware/auth";
 import {
@@ -91,6 +91,8 @@ export const createAnswer = authorized
       }
     });
 
+    revalidatePath(`/profile/${context.user.id}`);
+    
     return result;
   });
 
@@ -154,6 +156,8 @@ export const deleteAnswer = authorized
         );
       }
     });
+
+    revalidatePath(`/profile/${context.user.id}`);
 
     return { success: true };
   });

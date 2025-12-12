@@ -1,7 +1,7 @@
 import "server-only";
 
 import { db } from "@/database/drizzle";
-import { question, interaction } from "@/database/schema";
+import { question } from "@/database/schema";
 import { eq, sql } from "drizzle-orm";
 
 export class ViewService {
@@ -12,26 +12,12 @@ export class ViewService {
       .where(eq(question.id, questionId));
   }
 
-  static async trackAnonymousView(
-    actionId: string,
-    actionType: "question" | "answer",
-  ): Promise<void> {
-    await db.insert(interaction).values({
-      userId: "anonymous",
-      action: "view",
-      actionId,
-      actionType,
-    });
-  }
-
-  static async processQueuedViews(
-    views: { questionId: string; count: number }[],
-  ): Promise<void> {
-    for (const { questionId, count } of views) {
-      await db
-        .update(question)
-        .set({ views: sql`${question.views} + ${count}` })
-        .where(eq(question.id, questionId));
-    }
+  static async getViewCount(questionId: string): Promise<number> {
+    const [row] = await db
+      .select({ views: question.views })
+      .from(question)
+      .where(eq(question.id, questionId))
+      .limit(1);
+    return row?.views ?? 0;
   }
 }
