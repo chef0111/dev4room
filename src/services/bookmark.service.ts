@@ -4,7 +4,6 @@ import { useCallback } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { orpc, client } from "@/lib/orpc";
 import { authClient } from "@/lib/auth-client";
-import { handleDefinedError } from "@/lib/handlers/error";
 import { toast } from "sonner";
 
 interface UseBookmarkOptions {
@@ -51,8 +50,7 @@ export function useBookmark({ questionId }: UseBookmarkOptions) {
       return { prevStatus };
     },
 
-    onError: (error, _vars, context) => {
-      handleDefinedError(error);
+    onError: (_error, _vars, context) => {
       if (context?.prevStatus) {
         queryClient.setQueryData(statusQueryKey, context.prevStatus);
       }
