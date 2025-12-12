@@ -2,9 +2,6 @@
 
 import { Route } from "next";
 import { usePathname, useRouter } from "next/navigation";
-import { useMutation } from "@tanstack/react-query";
-import { orpc } from "@/lib/orpc";
-import { toast } from "sonner";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,6 +16,8 @@ import {
   Spinner,
 } from "@/components/ui";
 import { Edit, Trash } from "lucide-react";
+import { useDeleteQuestion } from "@/queries/question.queries";
+import { useDeleteAnswer } from "@/queries/answer.queries";
 
 interface EditDeleteProps {
   type: "question" | "answer";
@@ -38,32 +37,11 @@ const EditDelete = ({
   const router = useRouter();
   const pathname = usePathname();
 
-  const deleteQuestion = useMutation(
-    orpc.question.delete.mutationOptions({
-      onSuccess: () => {
-        toast.success("Question deleted successfully");
-        if (pathname.includes("questions")) {
-          router.push("/");
-        }
-        router.refresh();
-      },
-      onError: (error: Error) => {
-        toast.error(error.message || "Failed to delete question");
-      },
-    }),
-  );
+  const deleteQuestion = useDeleteQuestion({
+    redirectTo: pathname.includes("questions") ? "/" : undefined,
+  });
 
-  const deleteAnswer = useMutation(
-    orpc.answer.delete.mutationOptions({
-      onSuccess: () => {
-        toast.success("Answer deleted successfully");
-        router.refresh();
-      },
-      onError: (error: Error) => {
-        toast.error(error.message || "Failed to delete answer");
-      },
-    }),
-  );
+  const deleteAnswer = useDeleteAnswer();
 
   const isDeleting = deleteQuestion.isPending || deleteAnswer.isPending;
 

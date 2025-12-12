@@ -1,21 +1,18 @@
 "use client";
 
 import z from "zod";
-import { Suspense, useRef, useState } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { Suspense, useRef, useState, useCallback } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 
-import { orpc } from "@/lib/orpc";
 import { AnswerSchema } from "@/lib/validations";
 import MarkdownEditor from "@/components/markdown/MarkdownEditor";
 import EditorFallback from "@/components/markdown/EditorFallback";
 import { Field, FieldError, Button, Spinner } from "@/components/ui";
 import GenerateAIButton from "./GenerateAIButton";
 import AIValidationAlert from "./AIValidationAlert";
-import { toast } from "sonner";
+import { useCreateAnswer, useEditAnswer } from "@/queries/answer.queries";
 
 interface Answer {
   id: string;
@@ -39,7 +36,6 @@ const AnswerForm = ({
   onSuccess,
   compact = false,
 }: AnswerFormProps) => {
-  const router = useRouter();
   const editorRef = useRef<MDXEditorMethods>(null);
   const [editorKey, setEditorKey] = useState(0);
   const [alertOpen, setAlertOpen] = useState(false);
@@ -52,33 +48,18 @@ const AnswerForm = ({
     },
   });
 
-  const createAnswer = useMutation(
-    orpc.answer.create.mutationOptions({
-      onSuccess: () => {
-        toast.success("Answer posted successfully!");
-        form.reset();
-        setEditorKey((prev) => prev + 1);
-        router.refresh();
-        onSuccess?.();
-      },
-      onError: (error: Error) => {
-        toast.error(error.message || "Failed to post answer");
-      },
-    }),
-  );
+  const handleFormReset = useCallback(() => form.reset(), [form]);
+  const handleEditorReset = useCallback(() => setEditorKey((prev) => prev + 1), []);
 
-  const editAnswer = useMutation(
-    orpc.answer.update.mutationOptions({
-      onSuccess: () => {
-        toast.success("Answer updated successfully!");
-        router.refresh();
-        onSuccess?.();
-      },
-      onError: (error: Error) => {
-        toast.error(error.message || "Failed to update answer");
-      },
-    }),
-  );
+  const createAnswer = useCreateAnswer({
+    onFormReset: handleFormReset,
+    onEditorReset: handleEditorReset,
+    onSuccess,
+  });
+
+  const editAnswer = useEditAnswer({
+    onSuccess,
+  });
 
   const handleAISuccess = (generatedAnswer: string) => {
     form.setValue("content", generatedAnswer, { shouldValidate: true });

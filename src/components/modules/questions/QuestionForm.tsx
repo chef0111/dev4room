@@ -1,14 +1,10 @@
 "use client";
 
-import { Suspense, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useRef, useState, useCallback } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
-import { orpc } from "@/lib/orpc";
-import { useMutation } from "@tanstack/react-query";
 import { QuestionSchema } from "@/lib/validations";
-import { toast } from "sonner";
 
 import {
   Field,
@@ -25,6 +21,7 @@ import { MDXEditorMethods } from "@mdxeditor/editor";
 import TagCard from "../tags/TagCard";
 import { getTechDisplayName } from "@/lib/utils";
 import EditorFallback from "@/components/markdown/EditorFallback";
+import { useCreateQuestion, useEditQuestion } from "@/queries/question.queries";
 
 interface QuestionFormProps {
   question?: Question;
@@ -32,39 +29,8 @@ interface QuestionFormProps {
 }
 
 const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
-  const router = useRouter();
   const editorRef = useRef<MDXEditorMethods>(null);
   const [editorKey, setEditorKey] = useState(0);
-
-  const createQuestion = useMutation(
-    orpc.question.create.mutationOptions({
-      onSuccess: (data) => {
-        toast.success("Question created successfully!");
-        form.reset();
-        setEditorKey((prev) => prev + 1);
-        router.push(`/questions/${data.id}`);
-      },
-      onError: (error) => {
-        toast.error(error.message || "Failed to create question");
-      },
-    }),
-  );
-
-  const editQuestion = useMutation(
-    orpc.question.edit.mutationOptions({
-      onSuccess: (data) => {
-        toast.success("Question updated successfully!");
-        form.reset();
-        setEditorKey((prev) => prev + 1);
-        router.push(`/questions/${data.id}`);
-      },
-      onError: (error) => {
-        toast.error(error.message || "Failed to update question");
-      },
-    }),
-  );
-
-  const isPending = createQuestion.isPending || editQuestion.isPending;
 
   const form = useForm<z.infer<typeof QuestionSchema>>({
     resolver: zodResolver(QuestionSchema),
@@ -74,6 +40,21 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
       tags: question?.tags.map((tag) => tag.name) || [],
     },
   });
+
+  const handleFormReset = useCallback(() => form.reset(), [form]);
+  const handleEditorReset = useCallback(() => setEditorKey((prev) => prev + 1), []);
+
+  const createQuestion = useCreateQuestion({
+    onFormReset: handleFormReset,
+    onEditorReset: handleEditorReset,
+  });
+
+  const editQuestion = useEditQuestion({
+    onFormReset: handleFormReset,
+    onEditorReset: handleEditorReset,
+  });
+
+  const isPending = createQuestion.isPending || editQuestion.isPending;
 
   const handleSubmitQuestion = (data: z.infer<typeof QuestionSchema>) => {
     if (isEdit && question?.id) {
