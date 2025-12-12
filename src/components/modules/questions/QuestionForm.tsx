@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useRef, useTransition } from "react";
+import { Suspense, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -33,7 +33,6 @@ interface QuestionFormProps {
 
 const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
   const editorRef = useRef<MDXEditorMethods>(null);
 
   const createQuestion = useMutation(
@@ -60,6 +59,8 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
     }),
   );
 
+  const isPending = createQuestion.isPending || editQuestion.isPending;
+
   const form = useForm<z.infer<typeof QuestionSchema>>({
     resolver: zodResolver(QuestionSchema),
     defaultValues: {
@@ -69,17 +70,15 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
     },
   });
 
-  const handleSubmitQuestion = async (data: z.infer<typeof QuestionSchema>) => {
-    startTransition(async () => {
-      if (isEdit && question?.id) {
-        await editQuestion.mutateAsync({
-          questionId: question.id,
-          ...data,
-        });
-      } else {
-        await createQuestion.mutateAsync(data);
-      }
-    });
+  const handleSubmitQuestion = (data: z.infer<typeof QuestionSchema>) => {
+    if (isEdit && question?.id) {
+      editQuestion.mutate({
+        questionId: question.id,
+        ...data,
+      });
+    } else {
+      createQuestion.mutate(data);
+    }
   };
 
   const handleKeyDown = (

@@ -1,7 +1,7 @@
 "use client";
 
 import { Route } from "next";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { orpc } from "@/lib/orpc";
 import { toast } from "sonner";
@@ -36,11 +36,15 @@ const EditDelete = ({
   showDelete = true,
 }: EditDeleteProps) => {
   const router = useRouter();
+  const pathname = usePathname();
 
   const deleteQuestion = useMutation(
     orpc.question.delete.mutationOptions({
       onSuccess: () => {
         toast.success("Question deleted successfully");
+        if (pathname.includes("questions")) {
+          router.push("/");
+        }
         router.refresh();
       },
       onError: (error: Error) => {
@@ -84,7 +88,7 @@ const EditDelete = ({
       {showEdit && (
         <Button
           variant="ghost"
-          className="hover:bg-primary-500/20! size-8 cursor-pointer"
+          className="hover:bg-primary-500/20! size-8 active:scale-90"
           onClick={handleEdit}
         >
           <Edit className="text-primary-500 size-5" />
@@ -96,10 +100,10 @@ const EditDelete = ({
           <AlertDialogTrigger asChild>
             <Button
               variant="ghost"
-              className="hover:bg-red-500/20! size-5 cursor-pointer"
+              className="hover:bg-red-500/20! size-8 active:scale-90"
               disabled={isDeleting}
             >
-              <Trash className="text-red-500 size-8" />
+              <Trash className="text-red-500 size-5" />
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent className="bg-light900_dark200 border-light700_dark400">

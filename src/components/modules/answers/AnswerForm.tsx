@@ -1,7 +1,7 @@
 "use client";
 
 import z from "zod";
-import { Suspense, useRef, useTransition, useState } from "react";
+import { Suspense, useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
@@ -40,7 +40,6 @@ const AnswerForm = ({
   compact = false,
 }: AnswerFormProps) => {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
   const editorRef = useRef<MDXEditorMethods>(null);
   const [editorKey, setEditorKey] = useState(0);
   const [alertOpen, setAlertOpen] = useState(false);
@@ -87,22 +86,20 @@ const AnswerForm = ({
   };
 
   const handleSubmit = (data: z.infer<typeof AnswerSchema>) => {
-    startTransition(async () => {
-      if (isEdit && answer?.id) {
-        await editAnswer.mutateAsync({
-          answerId: answer.id,
-          content: data.content,
-        });
-      } else {
-        await createAnswer.mutateAsync({
-          questionId,
-          content: data.content,
-        });
-      }
-    });
+    if (isEdit && answer?.id) {
+      editAnswer.mutate({
+        answerId: answer.id,
+        content: data.content,
+      });
+    } else {
+      createAnswer.mutate({
+        questionId,
+        content: data.content,
+      });
+    }
   };
 
-  const isSubmitting = isPending || form.formState.isSubmitting;
+  const isSubmitting = createAnswer.isPending || editAnswer.isPending;
 
   return (
     <div>

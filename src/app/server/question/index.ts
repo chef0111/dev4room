@@ -75,8 +75,8 @@ export const createQuestion = authorized
 
     after(async () => {
       try {
-        // Invalidate questions list cache
         revalidateTag("questions", "max");
+        revalidateTag(`user:${context.user.id}`, "max");
 
         await Promise.all([
           createInteraction(
@@ -177,6 +177,7 @@ export const deleteQuestion = authorized
       try {
         revalidateTag(`question:${input.questionId}`, "max");
         revalidateTag("questions", "max");
+        revalidateTag(`user:${context.user.id}`, "max");
 
         await createInteraction(
           {

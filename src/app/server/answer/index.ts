@@ -69,6 +69,7 @@ export const createAnswer = authorized
     after(async () => {
       try {
         revalidateTag(`question:${input.questionId}`, "max");
+        revalidateTag(`user:${context.user.id}`, "max");
 
         await Promise.all([
           createInteraction(
@@ -136,6 +137,7 @@ export const deleteAnswer = authorized
 
     after(async () => {
       try {
+        revalidateTag(`user:${context.user.id}`, "max");
         await createInteraction(
           {
             action: "delete",
