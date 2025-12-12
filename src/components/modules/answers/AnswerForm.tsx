@@ -4,17 +4,18 @@ import z from "zod";
 import { Suspense, useRef, useTransition, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { orpc } from "@/lib/orpc";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MDXEditorMethods } from "@mdxeditor/editor";
+
+import { orpc } from "@/lib/orpc";
 import { AnswerSchema } from "@/lib/validations";
 import MarkdownEditor from "@/components/markdown/MarkdownEditor";
 import EditorFallback from "@/components/markdown/EditorFallback";
 import { Field, FieldError, Button, Spinner } from "@/components/ui";
-import { toast } from "sonner";
 import GenerateAIButton from "./GenerateAIButton";
 import AIValidationAlert from "./AIValidationAlert";
+import { toast } from "sonner";
 
 interface Answer {
   id: string;

@@ -87,22 +87,21 @@ export function useVote({
       return { prevData };
     },
 
-    onError: (_error, _voteType, context) => {
-      // Rollback
-      if (context?.prevData) {
-        queryClient.setQueryData(statusQueryKey, context.prevData);
-      }
-      toast.error("Failed to vote. Please try again.");
-    },
-
     onSuccess: (data) => {
-      // Update with server response (authoritative source)
       queryClient.setQueryData(statusQueryKey, {
         upvotes: data.upvotes,
         downvotes: data.downvotes,
         hasUpvoted: data.hasUpvoted,
         hasDownvoted: data.hasDownvoted,
       });
+    },
+
+    onError: (_error, _voteType, context) => {
+      if (context?.prevData) {
+        queryClient.setQueryData(statusQueryKey, context.prevData);
+      }
+
+      toast.error("Failed to vote. Please try again.");
     },
   });
 

@@ -32,7 +32,7 @@ const EditProfileDialog = ({ user }: EditProfileDialogProps) => {
           Edit Profile
         </Button>
       </DialogTrigger>
-      <DialogContent className="bg-light900_dark200 lg:min-w-3xl sm:max-w-[60vw] min-w-[80vw] max-h-[90vh] overflow-y-auto custom-scrollbar px-10">
+      <DialogContent className="bg-light900_dark200 lg:min-w-3xl sm:max-w-[60vw] min-w-[80vw] max-h-[90vh] overflow-y-auto no-scrollbar px-10">
         <DialogHeader>
           <DialogTitle className="h1-bold text-3xl text-dark100_light900">
             Edit Profile
