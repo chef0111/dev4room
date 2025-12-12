@@ -1,6 +1,7 @@
 import StatsCard from "@/components/shared/StatsCard";
 import { Card, CardContent } from "@/components/ui/card";
 import { formatNumber } from "@/lib/utils";
+import NumberFlow from "@number-flow/react";
 
 interface UserStatsProps {
   totalQuestions: number;
@@ -28,18 +29,14 @@ const UserStats = ({
         <Card className="bg-light900_dark300 light-border flex-center rounded-md border px-4 py-3 shadow-light100_dark200">
           <CardContent className="flex items-center justify-evenly gap-6 md:gap-4 lg:gap-6 max-xs:gap-16">
             <div className="flex flex-col gap-1">
-              <p className="pg-semibold text-dark200_light900">
-                {formatNumber(totalQuestions)}
-              </p>
+                <NumberFlow value={totalQuestions} format={{ notation: "compact" }} className="pg-semibold text-dark200_light900" />
               <p className="small-semibold text-dark400_light700">
                 {totalQuestions === 1 ? "Question" : "Questions"}
               </p>
             </div>
 
             <div className="flex flex-col gap-1">
-              <p className="pg-semibold text-dark200_light900">
-                {formatNumber(totalAnswers)}
-              </p>
+                <NumberFlow value={totalAnswers} format={{ notation: "compact" }} className="pg-semibold text-dark200_light900" />
               <p className="small-semibold text-dark400_light700">
                 {totalAnswers === 1 ? "Answer" : "Answers"}
               </p>

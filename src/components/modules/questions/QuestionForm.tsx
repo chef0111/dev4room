@@ -1,14 +1,10 @@
 "use client";
 
-import { Suspense, useRef, useTransition } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useRef, useState, useCallback } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
-import { orpc } from "@/lib/orpc";
-import { useMutation } from "@tanstack/react-query";
 import { QuestionSchema } from "@/lib/validations";
-import { toast } from "sonner";
 
 import {
   Field,
@@ -25,6 +21,7 @@ import { MDXEditorMethods } from "@mdxeditor/editor";
 import TagCard from "../tags/TagCard";
 import { getTechDisplayName } from "@/lib/utils";
 import EditorFallback from "@/components/markdown/EditorFallback";
+import { useCreateQuestion, useEditQuestion } from "@/queries/question.queries";
 
 interface QuestionFormProps {
   question?: Question;
@@ -32,33 +29,8 @@ interface QuestionFormProps {
 }
 
 const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
-  const router = useRouter();
-  const [isPending, startTransition] = useTransition();
   const editorRef = useRef<MDXEditorMethods>(null);
-
-  const createQuestion = useMutation(
-    orpc.question.create.mutationOptions({
-      onSuccess: (data) => {
-        toast.success("Question created successfully!");
-        router.push(`/questions/${data.id}`);
-      },
-      onError: (error) => {
-        toast.error(error.message || "Failed to create question");
-      },
-    }),
-  );
-
-  const editQuestion = useMutation(
-    orpc.question.edit.mutationOptions({
-      onSuccess: (data) => {
-        toast.success("Question updated successfully!");
-        router.push(`/questions/${data.id}`);
-      },
-      onError: (error) => {
-        toast.error(error.message || "Failed to update question");
-      },
-    }),
-  );
+  const [editorKey, setEditorKey] = useState(0);
 
   const form = useForm<z.infer<typeof QuestionSchema>>({
     resolver: zodResolver(QuestionSchema),
@@ -69,17 +41,30 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
     },
   });
 
-  const handleSubmitQuestion = async (data: z.infer<typeof QuestionSchema>) => {
-    startTransition(async () => {
-      if (isEdit && question?.id) {
-        await editQuestion.mutateAsync({
-          questionId: question.id,
-          ...data,
-        });
-      } else {
-        await createQuestion.mutateAsync(data);
-      }
-    });
+  const handleFormReset = useCallback(() => form.reset(), [form]);
+  const handleEditorReset = useCallback(() => setEditorKey((prev) => prev + 1), []);
+
+  const createQuestion = useCreateQuestion({
+    onFormReset: handleFormReset,
+    onEditorReset: handleEditorReset,
+  });
+
+  const editQuestion = useEditQuestion({
+    onFormReset: handleFormReset,
+    onEditorReset: handleEditorReset,
+  });
+
+  const isPending = createQuestion.isPending || editQuestion.isPending;
+
+  const handleSubmitQuestion = (data: z.infer<typeof QuestionSchema>) => {
+    if (isEdit && question?.id) {
+      editQuestion.mutate({
+        questionId: question.id,
+        ...data,
+      });
+    } else {
+      createQuestion.mutate(data);
+    }
   };
 
   const handleKeyDown = (
@@ -189,6 +174,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
 
               <Suspense fallback={<EditorFallback />}>
                 <MarkdownEditor
+                  key={editorKey}
                   id="question-content"
                   editorRef={editorRef}
                   value={field.value}

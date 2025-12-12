@@ -1,12 +1,8 @@
 "use client";
 
-import { useTransition } from "react";
-import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
-import { toast } from "sonner";
 
 import {
   Field,
@@ -19,8 +15,8 @@ import {
   Spinner,
 } from "@/components/ui";
 import { ProfileSchema } from "@/lib/validations";
-import { orpc } from "@/lib/orpc";
 import { profileFields } from "@/common/constants";
+import { useUpdateProfile } from "@/queries/user.queries";
 
 interface ProfileFormProps {
   user: {
@@ -35,21 +31,10 @@ interface ProfileFormProps {
 }
 
 const ProfileForm = ({ user, onSuccess }: ProfileFormProps) => {
-  const router = useRouter();
-  const [isPending, startTransition] = useTransition();
-
-  const updateProfile = useMutation(
-    orpc.user.update.mutationOptions({
-      onSuccess: () => {
-        toast.success("Your profile has been updated successfully.");
-        onSuccess?.();
-        router.push(`/profile/${user.id}`);
-      },
-      onError: (error) => {
-        toast.error(error.message || "Failed to update profile");
-      },
-    }),
-  );
+  const updateProfile = useUpdateProfile({
+    userId: user.id,
+    onSuccess,
+  });
 
   const form = useForm<z.infer<typeof ProfileSchema>>({
     resolver: zodResolver(ProfileSchema),
@@ -62,10 +47,8 @@ const ProfileForm = ({ user, onSuccess }: ProfileFormProps) => {
     },
   });
 
-  const handleUpdateProfile = async (values: z.infer<typeof ProfileSchema>) => {
-    startTransition(async () => {
-      await updateProfile.mutateAsync(values);
-    });
+  const handleUpdateProfile = (values: z.infer<typeof ProfileSchema>) => {
+    updateProfile.mutate(values);
   };
 
   return (
@@ -134,9 +117,9 @@ const ProfileForm = ({ user, onSuccess }: ProfileFormProps) => {
         <Button
           type="submit"
           className="primary-gradient hover:primary-gradient-hover w-fit"
-          disabled={isPending}
+          disabled={updateProfile.isPending}
         >
-          {isPending ? (
+          {updateProfile.isPending ? (
             <>
               <Spinner className="border-primary-foreground/30 border-t-primary-foreground!" />
               Saving...

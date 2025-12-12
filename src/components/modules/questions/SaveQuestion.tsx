@@ -1,7 +1,7 @@
 "use client";
 
 import { Bookmark } from "@/components/ui/dev";
-import { useBookmark } from "@/services/bookmark.service";
+import { useBookmark } from "@/queries/bookmark.queries";
 
 interface SaveQuestionProps {
   questionId: string;
