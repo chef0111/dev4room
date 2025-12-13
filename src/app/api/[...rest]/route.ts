@@ -25,7 +25,7 @@ async function handleRequest(request: Request) {
   headers.set("Access-Control-Allow-Origin", "*");
   headers.set(
     "Access-Control-Allow-Methods",
-    "GET, POST, PUT, PATCH, DELETE, OPTIONS",
+    "GET, POST, PUT, PATCH, DELETE, OPTIONS"
   );
   headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
   headers.set("Access-Control-Max-Age", "86400");

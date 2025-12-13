@@ -44,7 +44,7 @@ const Collections = async ({ searchParams }: SearchParams) => {
     <FilterProvider>
       <h1 className="h1-bold text-dark100_light900">Saved Questions</h1>
 
-      <div className="mt-10 flex justify-between sm:items-center max-sm:flex-col gap-4">
+      <div className="mt-10 flex justify-between gap-4 max-sm:flex-col sm:items-center">
         <LocalSearch
           route="/collection"
           placeholder="Search a bookmarked question..."
@@ -64,7 +64,7 @@ const Collections = async ({ searchParams }: SearchParams) => {
           data={data?.collections}
           empty={EMPTY_QUESTION}
           render={(collections) => (
-            <div className="flex flex-col my-10 w-full gap-6">
+            <div className="my-10 flex w-full flex-col gap-6">
               {collections.map((item) => (
                 <QuestionCard key={item.id} question={item.question} />
               ))}

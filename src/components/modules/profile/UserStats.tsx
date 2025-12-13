@@ -25,18 +25,26 @@ const UserStats = ({
         </span>
       </h3>
 
-      <div className="mt-4 grid grid-cols-1 xs:grid-cols-2 md:grid-cols-4 gap-4">
-        <Card className="bg-light900_dark300 light-border flex-center rounded-md border px-4 py-3 shadow-light100_dark200">
-          <CardContent className="flex items-center justify-evenly gap-6 md:gap-4 lg:gap-6 max-xs:gap-16">
+      <div className="xs:grid-cols-2 mt-4 grid grid-cols-1 gap-4 md:grid-cols-4">
+        <Card className="bg-light900_dark300 light-border flex-center shadow-light100_dark200 rounded-md border px-4 py-3">
+          <CardContent className="max-xs:gap-16 flex items-center justify-evenly gap-6 md:gap-4 lg:gap-6">
             <div className="flex flex-col gap-1">
-                <NumberFlow value={totalQuestions} format={{ notation: "compact" }} className="pg-semibold text-dark200_light900" />
+              <NumberFlow
+                value={totalQuestions}
+                format={{ notation: "compact" }}
+                className="pg-semibold text-dark200_light900"
+              />
               <p className="small-semibold text-dark400_light700">
                 {totalQuestions === 1 ? "Question" : "Questions"}
               </p>
             </div>
 
             <div className="flex flex-col gap-1">
-                <NumberFlow value={totalAnswers} format={{ notation: "compact" }} className="pg-semibold text-dark200_light900" />
+              <NumberFlow
+                value={totalAnswers}
+                format={{ notation: "compact" }}
+                className="pg-semibold text-dark200_light900"
+              />
               <p className="small-semibold text-dark400_light700">
                 {totalAnswers === 1 ? "Answer" : "Answers"}
               </p>

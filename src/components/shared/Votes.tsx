@@ -41,7 +41,7 @@ const Votes = ({
         }}
       >
         <motion.div
-          className="flex-center bg-light700_dark400 rounded-md h-8 gap-1.5 px-1.5"
+          className="flex-center bg-light700_dark400 h-8 gap-1.5 rounded-md px-1.5"
           role="group"
           aria-label="Vote buttons"
           layout

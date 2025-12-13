@@ -24,7 +24,7 @@ export const AIResponseSchema = z.object({
   isValid: z
     .boolean()
     .describe(
-      "Whether the user answer is relevant and meaningful to the question",
+      "Whether the user answer is relevant and meaningful to the question"
     ),
   answer: z
     .string()
@@ -34,7 +34,7 @@ export const AIResponseSchema = z.object({
     .string()
     .optional()
     .describe(
-      "Rejection reason explaining why the answer is not acceptable (only if isValid is false)",
+      "Rejection reason explaining why the answer is not acceptable (only if isValid is false)"
     ),
 });
 

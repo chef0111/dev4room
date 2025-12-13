@@ -29,8 +29,8 @@ const SearchInput = ({
   return (
     <InputGroup
       className={cn(
-        "flex items-center border-none ring-0! grow rounded-lg",
-        className,
+        "flex grow items-center rounded-lg border-none ring-0!",
+        className
       )}
     >
       <InputGroupInput
@@ -49,11 +49,11 @@ const SearchInput = ({
       {global && (
         <InputGroupAddon align="inline-end">
           <KbdGroup>
-            <Kbd className="bg-light900_dark300 border size-6.5 text-lg text-light400_light500">
+            <Kbd className="bg-light900_dark300 text-light400_light500 size-6.5 border text-lg">
               ⌘
             </Kbd>
             <span className="text-light400_light500">+</span>
-            <Kbd className="bg-light900_dark300 border size-6.5 text-md text-light400_light500">
+            <Kbd className="bg-light900_dark300 text-md text-light400_light500 size-6.5 border">
               K
             </Kbd>
           </KbdGroup>

@@ -31,7 +31,7 @@ export const createVote = authorized
   .handler(async ({ input, context }) => {
     const { contentAuthorId, ...result } = await createVoteDAL(
       input,
-      context.user.id,
+      context.user.id
     );
 
     after(async () => {
@@ -47,7 +47,7 @@ export const createVote = authorized
             actionId: input.targetId,
             authorId: contentAuthorId,
           },
-          context.user.id,
+          context.user.id
         );
       } catch (error) {
         console.error("Failed to create interaction after vote:", error);

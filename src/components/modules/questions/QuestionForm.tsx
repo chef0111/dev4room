@@ -42,7 +42,10 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
   });
 
   const handleFormReset = useCallback(() => form.reset(), [form]);
-  const handleEditorReset = useCallback(() => setEditorKey((prev) => prev + 1), []);
+  const handleEditorReset = useCallback(
+    () => setEditorKey((prev) => prev + 1),
+    []
+  );
 
   const createQuestion = useCreateQuestion({
     onFormReset: handleFormReset,
@@ -69,7 +72,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
 
   const handleKeyDown = (
     e: React.KeyboardEvent<HTMLInputElement>,
-    field: { value: string[] },
+    field: { value: string[] }
   ) => {
     const tagInput = e.currentTarget.value.trim();
 
@@ -126,7 +129,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
 
   return (
     <form
-      className="flex flex-col w-full gap-10"
+      className="flex w-full flex-col gap-10"
       onSubmit={form.handleSubmit(handleSubmitQuestion)}
     >
       <FieldGroup>
@@ -136,7 +139,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
           render={({ field, fieldState }) => (
             <Field
               data-invalid={fieldState.invalid}
-              className="flex flex-col w-full"
+              className="flex w-full flex-col"
             >
               <FieldLabel htmlFor="question-title" className="pg-semibold">
                 Question Title
@@ -165,7 +168,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
           render={({ field, fieldState }) => (
             <Field
               data-invalid={fieldState.invalid}
-              className="flex flex-col w-full"
+              className="flex w-full flex-col"
             >
               <FieldLabel htmlFor="question-content" className="pg-semibold">
                 Detailed explanation of your problem
@@ -198,7 +201,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
           render={({ field, fieldState }) => (
             <Field
               data-invalid={fieldState.invalid}
-              className="flex flex-col w-full"
+              className="flex w-full flex-col"
             >
               <FieldLabel htmlFor="question-tags" className="pg-semibold">
                 Tags
@@ -214,7 +217,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
               />
 
               {field.value.length > 0 && (
-                <div className="flex-start flex-wrap mt-2 gap-2">
+                <div className="flex-start mt-2 flex-wrap gap-2">
                   {field?.value?.map((tag, index) => (
                     <TagCard
                       key={index}
@@ -241,7 +244,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
           <Button
             type="submit"
             disabled={isPending}
-            className="primary-gradient hover:primary-gradient-hover text-light-900! transition-colors cursor-pointer"
+            className="primary-gradient hover:primary-gradient-hover text-light-900! cursor-pointer transition-colors"
           >
             {isPending ? (
               <>

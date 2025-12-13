@@ -36,7 +36,7 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
     .fetchQuery(
       orpc.user.get.queryOptions({
         input: { userId: id },
-      }),
+      })
     )
     .then((data) => ({ data, error: undefined }))
     .catch((e) => ({
@@ -52,7 +52,7 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
     .fetchQuery(
       orpc.user.stats.queryOptions({
         input: { userId: id },
-      }),
+      })
     )
     .then((data) => ({ data, error: undefined }))
     .catch(() => ({ data: undefined, error: undefined }));

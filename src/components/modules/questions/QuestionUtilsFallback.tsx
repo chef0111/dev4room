@@ -5,7 +5,7 @@ const QuestionUtilsFallback = () => {
   return (
     <div className="flex items-center gap-2">
       <div
-        className="flex-center bg-light700_dark400 rounded-md gap-1 p-1.5"
+        className="flex-center bg-light700_dark400 gap-1 rounded-md p-1.5"
         role="status"
       >
         <Button
@@ -14,7 +14,7 @@ const QuestionUtilsFallback = () => {
           disabled
           aria-label="Upvote"
         >
-          <TbArrowBigUp className="size-5 text-light-400 dark:text-light-500" />
+          <TbArrowBigUp className="text-light-400 dark:text-light-500 size-5" />
         </Button>
       </div>
 
@@ -25,7 +25,7 @@ const QuestionUtilsFallback = () => {
           disabled
           aria-label="Downvote"
         >
-          <TbArrowBigDown className="size-5 text-light-400 dark:text-light-500" />
+          <TbArrowBigDown className="text-light-400 dark:text-light-500 size-5" />
         </Button>
       </div>
 

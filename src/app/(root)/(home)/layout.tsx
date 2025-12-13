@@ -2,7 +2,7 @@ import dynamic from "next/dynamic";
 
 const RightSidebar = dynamic(
   () => import("@/components/navigation/right-sidebar/RightSidebar"),
-  { ssr: true },
+  { ssr: true }
 );
 
 interface Props {

@@ -15,13 +15,13 @@ const Navbar = ({ className }: NavbarProps) => {
   return (
     <nav
       className={cn(
-        "flex-between bg-light900_dark200 fixed w-full p-6 dark:shadow-none sm:px-12",
-        className,
+        "flex-between bg-light900_dark200 fixed w-full p-6 sm:px-12 dark:shadow-none",
+        className
       )}
     >
       <Brand />
 
-      <div className="flex-1 mx-4 flex justify-center">
+      <div className="mx-4 flex flex-1 justify-center">
         <Suspense fallback={<CommandMenuFallback />}>
           <CommandMenu />
         </Suspense>

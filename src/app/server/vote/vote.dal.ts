@@ -23,7 +23,7 @@ export class VoteDAL {
   private static async getVoteCounts(
     tx: Transaction,
     targetId: string,
-    targetType: TargetType,
+    targetType: TargetType
   ): Promise<VoteCounts> {
     const table = targetType === "question" ? question : answer;
     const [row] = await tx
@@ -39,7 +39,7 @@ export class VoteDAL {
     targetId: string,
     targetType: TargetType,
     voteType: VoteType,
-    change: 1 | -1,
+    change: 1 | -1
   ): Promise<void> {
     const table = targetType === "question" ? question : answer;
     const field = voteType === "upvote" ? "upvotes" : "downvotes";
@@ -55,7 +55,7 @@ export class VoteDAL {
   private static async getContentAuthorId(
     tx: Transaction,
     targetId: string,
-    targetType: TargetType,
+    targetType: TargetType
   ): Promise<string> {
     if (targetType === "question") {
       const [row] = await tx
@@ -82,7 +82,7 @@ export class VoteDAL {
 
   static async createVote(
     input: CreateVoteInput,
-    userId: string,
+    userId: string
   ): Promise<{
     success: boolean;
     contentAuthorId: string;
@@ -97,7 +97,7 @@ export class VoteDAL {
       const contentAuthorId = await this.getContentAuthorId(
         tx,
         targetId,
-        targetType,
+        targetType
       );
 
       const [existingVote] = await tx
@@ -107,8 +107,8 @@ export class VoteDAL {
           and(
             eq(vote.authorId, userId),
             eq(vote.actionId, targetId),
-            eq(vote.actionType, targetType),
-          ),
+            eq(vote.actionType, targetType)
+          )
         )
         .for("update");
 
@@ -130,7 +130,7 @@ export class VoteDAL {
             targetId,
             targetType,
             existingVote.voteType as VoteType,
-            -1,
+            -1
           );
           await this.updateVoteCount(tx, targetId, targetType, voteType, 1);
         }
@@ -154,8 +154,8 @@ export class VoteDAL {
           and(
             eq(vote.authorId, userId),
             eq(vote.actionId, targetId),
-            eq(vote.actionType, targetType),
-          ),
+            eq(vote.actionType, targetType)
+          )
         );
 
       return {
@@ -170,7 +170,7 @@ export class VoteDAL {
 
   static async hasVoted(
     input: HasVotedInput,
-    userId: string,
+    userId: string
   ): Promise<HasVotedOutput> {
     const { targetId, targetType } = input;
 
@@ -185,8 +185,8 @@ export class VoteDAL {
           and(
             eq(vote.authorId, userId),
             eq(vote.actionId, targetId),
-            eq(vote.actionType, targetType),
-          ),
+            eq(vote.actionType, targetType)
+          )
         ),
       db
         .select({ upvotes: table.upvotes, downvotes: table.downvotes })

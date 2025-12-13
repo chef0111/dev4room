@@ -77,7 +77,7 @@ const QuestionContent = async ({ questionId }: QuestionContentProps) => {
         </h2>
       </div>
 
-      <div className="mb-8 mt-4 flex flex-wrap gap-4">
+      <div className="mt-4 mb-8 flex flex-wrap gap-4">
         <Metric
           imgUrl="/icons/clock.svg"
           alt="clock"
@@ -103,7 +103,7 @@ const QuestionContent = async ({ questionId }: QuestionContentProps) => {
 
       <MarkdownPreview content={content} />
 
-      <div className="mt-8 flex-between">
+      <div className="flex-between mt-8">
         <div className="flex flex-wrap gap-2">
           {tags.map((tag) => (
             <TagCard key={tag.id} id={tag.id} name={tag.name} compact />
@@ -112,7 +112,7 @@ const QuestionContent = async ({ questionId }: QuestionContentProps) => {
 
         {isAuthor && <EditDelete type="question" itemId={question.id} />}
       </div>
-      <Separator className="bg-light700_dark400 h-1 mt-10" />
+      <Separator className="bg-light700_dark400 mt-10 h-1" />
     </>
   );
 };

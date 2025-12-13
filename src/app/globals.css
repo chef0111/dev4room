@@ -69,7 +69,7 @@
 }
 
 @utility btn-social {
-  @apply bg-light800_dark400 body-medium text-dark200_light800 min-h-12 flex-1 rounded-2 hover:bg-light700_dark450! transition-all duration-200 cursor-pointer;
+  @apply bg-light800_dark400 body-medium text-dark200_light800 rounded-2 hover:bg-light700_dark450! min-h-12 flex-1 cursor-pointer transition-all duration-200;
 }
 
 @utility bg-primary100_primary800 {
@@ -210,83 +210,83 @@
 }
 
 @utility h1-bold {
-  @apply text-[30px] font-bold leading-[42px] tracking-tighter;
+  @apply text-[30px] leading-10.5 font-bold tracking-tighter;
 }
 
 @utility h2-bold {
-  @apply text-[24px] font-bold leading-[31.2px];
+  @apply text-[24px] leading-[31.2px] font-bold;
 }
 
 @utility h2-semibold {
-  @apply text-[24px] font-semibold leading-[31.2px];
+  @apply text-[24px] leading-[31.2px] font-semibold;
 }
 
 @utility h3-bold {
-  @apply text-[20px] font-bold leading-[26px];
+  @apply text-[20px] leading-6.5 font-bold;
 }
 
 @utility h3-semibold {
-  @apply text-[20px] font-semibold leading-[24.8px];
+  @apply text-[20px] leading-[24.8px] font-semibold;
 }
 
 @utility base-medium {
-  @apply text-[18px] font-medium leading-[25.2px];
+  @apply text-[18px] leading-[25.2px] font-medium;
 }
 
 @utility base-semibold {
-  @apply text-[18px] font-semibold leading-[25.2px];
+  @apply text-[18px] leading-[25.2px] font-semibold;
 }
 
 @utility base-bold {
-  @apply text-[18px] font-bold leading-[140%];
+  @apply text-[18px] leading-[140%] font-bold;
 }
 
 @utility pg-regular {
-  @apply text-[16px] font-normal leading-[22.4px];
+  @apply text-[16px] leading-[22.4px] font-normal;
 }
 
 @utility pg-medium {
-  @apply text-[16px] font-medium leading-[22.4px];
+  @apply text-[16px] leading-[22.4px] font-medium;
 }
 
 @utility pg-semibold {
-  @apply text-[16px] font-semibold leading-[20.8px];
+  @apply text-[16px] leading-[20.8px] font-semibold;
 }
 
 @utility body-regular {
-  @apply text-[14px] font-normal leading-[19.6px];
+  @apply text-[14px] leading-[19.6px] font-normal;
 }
 
 @utility body-medium {
-  @apply text-[14px] font-medium leading-[18.2px];
+  @apply text-[14px] leading-[18.2px] font-medium;
 }
 
 @utility body-semibold {
-  @apply text-[14px] font-semibold leading-[18.2px];
+  @apply text-[14px] leading-[18.2px] font-semibold;
 }
 
 @utility body-bold {
-  @apply text-[14px] font-bold leading-[18.2px];
+  @apply text-[14px] leading-[18.2px] font-bold;
 }
 
 @utility small-regular {
-  @apply text-[12px] font-normal leading-[15.6px];
+  @apply text-[12px] leading-[15.6px] font-normal;
 }
 
 @utility small-medium {
-  @apply text-[12px] font-medium leading-[15.6px];
+  @apply text-[12px] leading-[15.6px] font-medium;
 }
 
 @utility small-semibold {
-  @apply text-[12px] font-semibold leading-[15.6px];
+  @apply text-[12px] leading-[15.6px] font-semibold;
 }
 
 @utility subtle-medium {
-  @apply text-[10px]! font-medium! leading-[13px]!;
+  @apply text-[10px]! leading-3.25! font-medium!;
 }
 
 @utility subtle-regular {
-  @apply text-[10px] font-normal leading-[13px];
+  @apply text-[10px] leading-3.25 font-normal;
 }
 
 @utility placeholder {
@@ -310,7 +310,7 @@
 }
 
 @utility input-otp-slot {
-  @apply light-border-2 sm:size-12! xs:size-10! text-2xl! bg-light900_dark300 text-dark300_light700;
+  @apply light-border-2 xs:size-10! bg-light900_dark300 text-dark300_light700 text-2xl! sm:size-12!;
 }
 
 @utility base-filter-btn {
@@ -414,27 +414,27 @@
 }
 
 @utility base-input {
-  @apply pg-regular bg-light700_dark300 no-focus! text-dark300_light700 min-h-12 border light-border-2!;
+  @apply pg-regular bg-light700_dark300 no-focus! text-dark300_light700 light-border-2! min-h-12 border;
 }
 
 @utility md-editor-fallback {
-  @apply h-99 w-full rounded-md border bg-light800_dark200 light-border-2 flex items-center justify-center;
+  @apply bg-light800_dark200 light-border-2 flex h-99 w-full items-center justify-center rounded-md border;
 }
 
 @utility flex-center {
-  @apply flex justify-center items-center;
+  @apply flex items-center justify-center;
 }
 
 @utility flex-between {
-  @apply flex justify-between items-center;
+  @apply flex items-center justify-between;
 }
 
 @utility flex-start {
-  @apply flex justify-start items-center;
+  @apply flex items-center justify-start;
 }
 
 @utility flex-end {
-  @apply flex justify-end items-center;
+  @apply flex items-center justify-end;
 }
 
 @utility card-wrapper {
@@ -442,7 +442,7 @@
 }
 
 @utility dev-card {
-  @apply shadow-light100_darknone! bg-light-900! dark:dark-card-gradient! border-none! rounded-2xl! p-4!;
+  @apply shadow-light100_darknone! bg-light-900! dark:dark-card-gradient! rounded-2xl! border-none! p-4!;
 }
 
 @utility btn {
@@ -462,23 +462,23 @@
 }
 
 @utility smooth-hover {
-  @apply transition-none hover:transition-none [&:not(:hover)]:transition-colors [&:not(:hover)]:duration-150 ease-out;
+  @apply transition-none ease-out not-[&:hover]:transition-colors not-[&:hover]:duration-150 hover:transition-none;
 }
 
 @utility markdown {
-  @apply !max-w-full prose prose-p:my-2 prose-ol:my-0 prose-ul:my-0 dark:prose-p:text-light-700 dark:prose-ol:text-light-700 dark:prose-ul:text-light-500 dark:prose-strong:text-white dark:prose-headings:text-white prose-headings:text-dark-400 prose-h1:text-dark-300 prose-h2:text-dark-300 prose-p:text-dark-500 prose-ul:text-dark-500 prose-ol:text-dark-500;
+  @apply prose prose-p:my-2 prose-ol:my-0 prose-ul:my-0 dark:prose-p:text-light-700 dark:prose-ol:text-light-700 dark:prose-ul:text-light-500 dark:prose-strong:text-white dark:prose-headings:text-white prose-headings:text-dark-400 prose-h1:text-dark-300 prose-h2:text-dark-300 prose-p:text-dark-500 prose-ul:text-dark-500 prose-ol:text-dark-500 max-w-full!;
 }
 
 @utility markdown-editor {
-  @apply prose !max-w-full prose-p:m-1 prose-headings:mx-1 prose-ul:mx-1 prose-ol:mx-1 dark:prose-headings:text-white prose-headings:text-dark-400 prose-p:text-dark-500 dark:prose-p:text-light-700 prose-ul:text-dark-500 dark:prose-ul:text-light-700 prose-ol:text-dark-500 dark:prose-ol:text-light-700 dark:prose-strong:text-white prose-blockquote:text-dark-500 dark:prose-blockquote:text-light-700 rounded-md group-aria-invalid:border-destructive! group-aria-invalid:focus-within:ring-destructive/20! group-aria-invalid:dark:focus-within:ring-destructive/40!;
+  @apply prose prose-p:m-1 prose-headings:mx-1 prose-ul:mx-1 prose-ol:mx-1 dark:prose-headings:text-white prose-headings:text-dark-400 prose-p:text-dark-500 dark:prose-p:text-light-700 prose-ul:text-dark-500 dark:prose-ul:text-light-700 prose-ol:text-dark-500 dark:prose-ol:text-light-700 dark:prose-strong:text-white prose-blockquote:text-dark-500 dark:prose-blockquote:text-light-700 group-aria-invalid:border-destructive! group-aria-invalid:focus-within:ring-destructive/20! group-aria-invalid:dark:focus-within:ring-destructive/40! max-w-full! rounded-md;
 }
 
 @utility tab {
-  @apply data-[state=active]:text-light-900! text-dark400_light500! data-[state=active]:bg-transparent! data-[state=active]:border-none! data-[state=active]:shadow-none!;
+  @apply data-[state=active]:text-light-900! text-dark400_light500! data-[state=active]:border-none! data-[state=active]:bg-transparent! data-[state=active]:shadow-none!;
 }
 
 @utility tab-panel {
-  @apply flex-center h-9 w-fit px-3 rounded-sm pg-medium text-dark400_light500;
+  @apply flex-center pg-medium text-dark400_light500 h-9 w-fit rounded-sm px-3;
 }
 
 @layer base {

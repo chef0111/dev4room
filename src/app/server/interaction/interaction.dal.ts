@@ -31,7 +31,7 @@ export class InteractionDAL {
 
   private static getReputationChange(
     action: InteractionAction,
-    actionType: "question" | "answer",
+    actionType: "question" | "answer"
   ): ReputationChange {
     switch (action) {
       case "upvote":
@@ -58,11 +58,11 @@ export class InteractionDAL {
     performerId: string,
     authorId: string,
     action: InteractionAction,
-    actionType: "question" | "answer",
+    actionType: "question" | "answer"
   ): Promise<void> {
     const { performerPoints, authorPoints } = this.getReputationChange(
       action,
-      actionType,
+      actionType
     );
 
     // If performer is the author, only apply author points once
@@ -95,7 +95,7 @@ export class InteractionDAL {
 
   static async create(
     input: CreateInteractionInput,
-    userId: string,
+    userId: string
   ): Promise<InteractionDTO> {
     const { action, actionType, actionId, authorId } = input;
 
@@ -123,7 +123,7 @@ export class InteractionDAL {
         userId,
         authorId,
         action as InteractionAction,
-        actionType as "question" | "answer",
+        actionType as "question" | "answer"
       );
 
       return inserted;
@@ -135,7 +135,7 @@ export class InteractionDAL {
   static async findByUserAndAction(
     userId: string,
     actionId: string,
-    action: InteractionAction,
+    action: InteractionAction
   ): Promise<InteractionDTO | null> {
     const [row] = await db
       .select(this.selectFields)
@@ -144,8 +144,8 @@ export class InteractionDAL {
         and(
           eq(interaction.userId, userId),
           eq(interaction.actionId, actionId),
-          eq(interaction.action, action),
-        ),
+          eq(interaction.action, action)
+        )
       );
 
     if (!row) return null;

@@ -88,7 +88,7 @@ const CommandMenu = () => {
       e.preventDefault();
       setOpen((prev) => !prev);
     },
-    { enableOnFormTags: true },
+    { enableOnFormTags: true }
   );
 
   const handleSelect = useCallback(
@@ -97,7 +97,7 @@ const CommandMenu = () => {
       setQuery("");
       router.push(href as Route);
     },
-    [router],
+    [router]
   );
 
   const MIN_SIMILARITY = 0.3;
@@ -108,10 +108,10 @@ const CommandMenu = () => {
   const results = rawResults
     ? {
         questions: rawResults.questions.filter(
-          (q) => q.similarity >= MIN_SIMILARITY,
+          (q) => q.similarity >= MIN_SIMILARITY
         ),
         answers: rawResults.answers.filter(
-          (a) => a.similarity >= MIN_SIMILARITY,
+          (a) => a.similarity >= MIN_SIMILARITY
         ),
         tags: rawResults.tags.filter((t) => t.similarity >= MIN_SIMILARITY),
         users: rawResults.users.filter((u) => u.similarity >= MIN_SIMILARITY),
@@ -129,14 +129,14 @@ const CommandMenu = () => {
     <>
       <Button
         variant="outline"
-        className="bg-light800_darksecondgradient border-none text-light400_light500 relative h-10 w-full max-w-80 lg:max-w-140 justify-start gap-2 rounded-lg px-3 text-sm max-md:hidden"
+        className="bg-light800_darksecondgradient text-light400_light500 relative h-10 w-full max-w-80 justify-start gap-2 rounded-lg border-none px-3 text-sm max-md:hidden lg:max-w-140"
         onClick={() => setOpen(true)}
       >
         <Search className="size-4" />
         <span className="flex-1 text-left">Search...</span>
         <KbdGroup className="gap-0.5">
-          <Kbd className="bg-light900_dark300 border size-6 text-xs">⌘</Kbd>
-          <Kbd className="bg-light900_dark300 border size-6 text-xs">K</Kbd>
+          <Kbd className="bg-light900_dark300 size-6 border text-xs">⌘</Kbd>
+          <Kbd className="bg-light900_dark300 size-6 border text-xs">K</Kbd>
         </KbdGroup>
       </Button>
 
@@ -201,7 +201,7 @@ const CommandMenu = () => {
                       className="smooth-hover py-2!"
                       onSelect={() =>
                         handleSelect(
-                          `/questions/${answer.questionId}?answerId=${answer.id}#answer-${answer.id}`,
+                          `/questions/${answer.questionId}?answerId=${answer.id}#answer-${answer.id}`
                         )
                       }
                     >

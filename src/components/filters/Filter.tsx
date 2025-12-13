@@ -56,12 +56,12 @@ const Filter = ({ filters, className, containerClassName }: FilterProps) => {
       >
         <SelectTrigger
           className={cn(
-            "body-regular no-focus light-border! bg-light800_dark300 text-dark500_light700 border cursor-pointer",
-            className,
+            "body-regular no-focus light-border! bg-light800_dark300 text-dark500_light700 cursor-pointer border",
+            className
           )}
           aria-label="Filter Options"
         >
-          <div className="line-clamp-1 flex items-center gap-2 flex-1 text-left">
+          <div className="line-clamp-1 flex flex-1 items-center gap-2 text-left">
             <ListFilter />
             <SelectValue placeholder="Select a filter" />
           </div>

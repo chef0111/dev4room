@@ -49,7 +49,10 @@ const AnswerForm = ({
   });
 
   const handleFormReset = useCallback(() => form.reset(), [form]);
-  const handleEditorReset = useCallback(() => setEditorKey((prev) => prev + 1), []);
+  const handleEditorReset = useCallback(
+    () => setEditorKey((prev) => prev + 1),
+    []
+  );
 
   const createAnswer = useCreateAnswer({
     onFormReset: handleFormReset,
@@ -85,7 +88,7 @@ const AnswerForm = ({
   return (
     <div>
       {!compact && (
-        <div className="flex flex-col justify-between pt-4 gap-4 sm:flex-row sm:items-center sm:gap-2">
+        <div className="flex flex-col justify-between gap-4 pt-4 sm:flex-row sm:items-center sm:gap-2">
           <h4 className="pg-semibold text-dark400_light800">
             Write your answer here
           </h4>
@@ -106,7 +109,7 @@ const AnswerForm = ({
         className={
           compact
             ? "flex w-full flex-col gap-4"
-            : "space-y-4 mt-6 flex w-full flex-col gap-10"
+            : "mt-6 flex w-full flex-col gap-10 space-y-4"
         }
         onSubmit={form.handleSubmit(handleSubmit)}
       >
@@ -130,7 +133,7 @@ const AnswerForm = ({
           )}
         />
 
-        <div className="flex justify-end gap-2 z-10">
+        <div className="z-10 flex justify-end gap-2">
           {onCancel && (
             <Button
               type="button"
@@ -145,7 +148,7 @@ const AnswerForm = ({
           <Button
             type="submit"
             disabled={isSubmitting}
-            className="primary-gradient hover:primary-gradient-hover w-fit text-light-900 cursor-pointer"
+            className="primary-gradient hover:primary-gradient-hover text-light-900 w-fit cursor-pointer"
           >
             {isSubmitting ? (
               <>

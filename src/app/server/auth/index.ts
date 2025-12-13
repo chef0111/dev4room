@@ -43,7 +43,7 @@ function generateRandomUsername(name: string): string {
 }
 
 export async function generateUniqueUsername(
-  baseName: string,
+  baseName: string
 ): Promise<string> {
   let username = generateRandomUsername(baseName);
   let attempts = 0;

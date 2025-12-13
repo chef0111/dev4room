@@ -78,10 +78,10 @@ const EditDelete = ({
           <AlertDialogTrigger asChild>
             <Button
               variant="ghost"
-              className="hover:bg-red-500/20! size-8 active:scale-90"
+              className="size-8 hover:bg-red-500/20! active:scale-90"
               disabled={isDeleting}
             >
-              <Trash className="text-red-500 size-5" />
+              <Trash className="size-5 text-red-500" />
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent className="bg-light900_dark200 border-light700_dark400">
@@ -100,7 +100,7 @@ const EditDelete = ({
                 Cancel
               </AlertDialogCancel>
               <AlertDialogAction
-                className="border-primary-100 bg-destructive hover:bg-red-500 text-light-800 cursor-pointer"
+                className="border-primary-100 bg-destructive text-light-800 cursor-pointer hover:bg-red-500"
                 onClick={handleDelete}
                 disabled={isDeleting}
               >

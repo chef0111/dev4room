@@ -9,7 +9,7 @@ interface StatsCardProps {
 
 const StatsCard = ({ badge, value, title }: StatsCardProps) => {
   return (
-    <Card className="bg-light900_dark300 flex items-start rounded-md light-border border px-4 py-3 shadow-light100_dark200">
+    <Card className="bg-light900_dark300 light-border shadow-light100_dark200 flex items-start rounded-md border px-4 py-3">
       <CardContent
         className="flex-start flex-row gap-4 px-0"
         aria-label="User's Badge"

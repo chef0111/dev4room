@@ -21,7 +21,7 @@ const QuestionContentSkeleton = () => {
         <Skeleton className="mt-2 h-8 w-3/4 rounded-md" />
       </div>
 
-      <div className="mb-8 mt-4 flex flex-wrap gap-4">
+      <div className="mt-4 mb-8 flex flex-wrap gap-4">
         <Skeleton className="h-4 w-28" />
         <Skeleton className="h-4 w-16" />
         <Skeleton className="h-4 w-20" />
@@ -35,7 +35,7 @@ const QuestionContentSkeleton = () => {
         <Skeleton className="h-4 w-3/4" />
       </div>
 
-      <div className="mt-8 flex-between">
+      <div className="flex-between mt-8">
         <div className="flex flex-wrap gap-2">
           <Skeleton className="h-6 w-16 rounded-md" />
           <Skeleton className="h-6 w-20 rounded-md" />
@@ -43,7 +43,7 @@ const QuestionContentSkeleton = () => {
         </div>
       </div>
 
-      <Separator className="bg-light700_dark400 h-1 mt-10" />
+      <Separator className="bg-light700_dark400 mt-10 h-1" />
     </>
   );
 };

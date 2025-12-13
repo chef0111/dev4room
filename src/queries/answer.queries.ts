@@ -26,7 +26,7 @@ export function useCreateAnswer(options?: UseCreateAnswerOptions) {
       onError: (error: Error) => {
         toast.error(error.message || "Failed to post answer");
       },
-    }),
+    })
   );
 }
 
@@ -47,7 +47,7 @@ export function useEditAnswer(options?: UseEditAnswerOptions) {
       onError: (error: Error) => {
         toast.error(error.message || "Failed to update answer");
       },
-    }),
+    })
   );
 }
 
@@ -63,6 +63,6 @@ export function useDeleteAnswer() {
       onError: (error: Error) => {
         toast.error(error.message || "Failed to delete answer");
       },
-    }),
+    })
   );
 }

@@ -18,7 +18,7 @@ const MobileNav = () => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Menu className="w-9 h-9 text-dark100_light900 sm:hidden cursor-pointer" />
+        <Menu className="text-dark100_light900 h-9 w-9 cursor-pointer sm:hidden" />
       </SheetTrigger>
       <SheetContent side="left" className="bg-light900_dark200 border-none p-6">
         <SheetTitle className="hidden">Navigation</SheetTitle>
@@ -33,7 +33,7 @@ const MobileNav = () => {
             Dev<span className="text-primary-500">Overflow</span>
           </p>
         </Link>
-        <div className="no-scrollbar flex flex-col justify-between h-[calc(100vh-90px)] overflow-y-auto">
+        <div className="no-scrollbar flex h-[calc(100vh-90px)] flex-col justify-between overflow-y-auto">
           <SheetClose asChild>
             <section className="h-full pt-10">
               <Suspense fallback={<NavTabsFallback isMobile={true} />}>

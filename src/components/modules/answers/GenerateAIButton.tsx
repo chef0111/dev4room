@@ -31,7 +31,7 @@ const GenerateAIButton = ({
 
     if (userAnswer.length < MIN_ANSWER_LENGTH) {
       onValidationError(
-        `Please write your answer first (at least ${MIN_ANSWER_LENGTH} characters). The AI will then help enhance and improve your response.`,
+        `Please write your answer first (at least ${MIN_ANSWER_LENGTH} characters). The AI will then help enhance and improve your response.`
       );
       return;
     }
@@ -53,7 +53,7 @@ const GenerateAIButton = ({
       if (!result.isValid) {
         onValidationError(
           result.reason ||
-            "Your answer doesn't appear to be related to the question. Please provide a relevant response and try again.",
+            "Your answer doesn't appear to be related to the question. Please provide a relevant response and try again."
         );
         return;
       }
@@ -74,7 +74,7 @@ const GenerateAIButton = ({
   return (
     <Button
       type="button"
-      className="btn hover:bg-light700_dark400! light-border-2 gap-1 rounded-md border px-4 py-2 text-link-100 shadow-none cursor-pointer"
+      className="btn hover:bg-light700_dark400! light-border-2 text-link-100 cursor-pointer gap-1 rounded-md border px-4 py-2 shadow-none"
       disabled={isGenerating || disabled}
       onClick={handleClick}
     >
@@ -85,7 +85,7 @@ const GenerateAIButton = ({
         </>
       ) : (
         <>
-          <BsStars className="text-orange-300 size-4" />
+          <BsStars className="size-4 text-orange-300" />
           Generate AI Answer
         </>
       )}

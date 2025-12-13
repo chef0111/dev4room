@@ -45,7 +45,7 @@ const RootLayout: React.FC<Props> = ({ children }: Props) => {
         <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
       </head>
       <body
-        className={`${inter.variable} ${esbuild.variable} antialiased bg-light850_dark100`}
+        className={`${inter.variable} ${esbuild.variable} bg-light850_dark100 antialiased`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Providers>{children}</Providers>

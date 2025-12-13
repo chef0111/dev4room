@@ -91,7 +91,7 @@ export class IndexingService {
     for (let i = 0; i < questions.length; i += batchSize) {
       const batch = questions.slice(i, i + batchSize);
       const texts = batch.map((q) =>
-        EmbeddingService.prepareQuestionText(q.title, q.content),
+        EmbeddingService.prepareQuestionText(q.title, q.content)
       );
       const embeddings = await EmbeddingService.generateEmbeddings(texts);
 
@@ -100,8 +100,8 @@ export class IndexingService {
           db
             .update(question)
             .set({ embedding: embeddings[idx] })
-            .where(eq(question.id, q.id)),
-        ),
+            .where(eq(question.id, q.id))
+        )
       );
 
       // Small delay between batches to avoid rate limits
@@ -126,7 +126,7 @@ export class IndexingService {
     for (let i = 0; i < answers.length; i += batchSize) {
       const batch = answers.slice(i, i + batchSize);
       const texts = batch.map((a) =>
-        EmbeddingService.prepareAnswerText(a.content),
+        EmbeddingService.prepareAnswerText(a.content)
       );
       const embeddings = await EmbeddingService.generateEmbeddings(texts);
 
@@ -135,8 +135,8 @@ export class IndexingService {
           db
             .update(answer)
             .set({ embedding: embeddings[idx] })
-            .where(eq(answer.id, a.id)),
-        ),
+            .where(eq(answer.id, a.id))
+        )
       );
 
       if (i + batchSize < answers.length) {
@@ -167,8 +167,8 @@ export class IndexingService {
           db
             .update(tag)
             .set({ embedding: embeddings[idx] })
-            .where(eq(tag.id, t.id)),
-        ),
+            .where(eq(tag.id, t.id))
+        )
       );
 
       if (i + batchSize < tags.length) {
@@ -197,7 +197,7 @@ export class IndexingService {
     for (let i = 0; i < users.length; i += batchSize) {
       const batch = users.slice(i, i + batchSize);
       const texts = batch.map((u) =>
-        EmbeddingService.prepareUserText(u.name, u.username, u.bio),
+        EmbeddingService.prepareUserText(u.name, u.username, u.bio)
       );
       const embeddings = await EmbeddingService.generateEmbeddings(texts);
 
@@ -206,8 +206,8 @@ export class IndexingService {
           db
             .update(user)
             .set({ embedding: embeddings[idx] })
-            .where(eq(user.id, u.id)),
-        ),
+            .where(eq(user.id, u.id))
+        )
       );
 
       if (i + batchSize < users.length) {

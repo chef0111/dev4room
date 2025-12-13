@@ -20,7 +20,7 @@ const ResetPassword = () => {
   if (!email || !id) {
     return (
       <div className="flex flex-col gap-2 text-center sm:max-w-104">
-        <div className="w-full flex-center">
+        <div className="flex-center w-full">
           <Image
             src="/images/error-dark.png"
             alt="Invalid Link"
@@ -37,10 +37,10 @@ const ResetPassword = () => {
           />
         </div>
 
-        <h1 className="md:h2-bold h3-bold mt-2 text-dark100_light900">
+        <h1 className="md:h2-bold h3-bold text-dark100_light900 mt-2">
           Invalid Reset Request
         </h1>
-        <p className="body-regular mb-4 text-dark500_light500 text-center">
+        <p className="body-regular text-dark500_light500 mb-4 text-center">
           This password reset request is invalid or has expired. Please request
           a new one.
         </p>
@@ -78,7 +78,7 @@ const ResetPassword = () => {
 
   return (
     <div className="flex flex-col gap-4 sm:w-120">
-      <div className="flex-center flex-col text-center space-y-1">
+      <div className="flex-center flex-col space-y-1 text-center">
         <h1 className="md:h2-bold h3-bold text-dark100_light900">
           Reset Password
         </h1>

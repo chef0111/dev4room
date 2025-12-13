@@ -30,7 +30,7 @@ const TagCard = ({
 
   const TagContent = (
     <>
-      <Badge className="flex gap-2 subtle-medium bg-light800_dark300 text-light400_light500 rounded-md px-4 py-2 uppercase">
+      <Badge className="subtle-medium bg-light800_dark300 text-light400_light500 flex gap-2 rounded-md px-4 py-2 uppercase">
         <div className="flex-center space-x-2">
           <Image
             src={`${techIcon}`}
@@ -44,7 +44,7 @@ const TagCard = ({
 
         {remove && (
           <label
-            className="flex-center subtle-medium text-dark400_light800 bg-transparent hover:bg-transparent no-focus h-0 px-0 cursor-pointer"
+            className="flex-center subtle-medium text-dark400_light800 no-focus h-0 cursor-pointer bg-transparent px-0 hover:bg-transparent"
             onClick={handleRemove}
           >
             ✕
@@ -62,7 +62,7 @@ const TagCard = ({
     return isButton ? (
       <Button
         type="button"
-        className="flex justify-between gap-2 bg-transparent! p-0! size-fit!"
+        className="flex size-fit! justify-between gap-2 bg-transparent! p-0!"
       >
         {TagContent}
       </Button>
@@ -76,8 +76,8 @@ const TagCard = ({
   return (
     <Link href={`/tags/${id}`}>
       <DevCard>
-        <div className="flex-between gap-3 w-full">
-          <div className="bg-light800_dark400 w-fit rounded-sm text-center px-3 py-1.5">
+        <div className="flex-between w-full gap-3">
+          <div className="bg-light800_dark400 w-fit rounded-sm px-3 py-1.5 text-center">
             <p className="pg-semibold text-dark300_light900">
               {name.toLowerCase()}
             </p>

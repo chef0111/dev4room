@@ -81,13 +81,13 @@ export class QuestionDAL {
     if (!query) return undefined;
     return or(
       ilike(question.title, `%${query}%`),
-      ilike(question.content, `%${query}%`),
+      ilike(question.content, `%${query}%`)
     );
   }
 
   private static mapToDTO(
     row: QuestionRow,
-    tags: { id: string; name: string }[],
+    tags: { id: string; name: string }[]
   ) {
     return {
       id: row.id,
@@ -108,7 +108,7 @@ export class QuestionDAL {
   }
 
   static async findMany(
-    params: QueryParams,
+    params: QueryParams
   ): Promise<{ questions: QuestionListDTO[]; totalQuestions: number }> {
     const { query, filter } = params;
     const { offset, limit } = getPagination(params);
@@ -139,13 +139,13 @@ export class QuestionDAL {
 
     // Fetch tags for all questions
     const tagsByQuestion = await TagQuestionService.getTagsQuestions(
-      rows.map((r) => r.id),
+      rows.map((r) => r.id)
     );
 
     const questions = validateArray(
       rows.map((row) => this.mapToDTO(row, tagsByQuestion[row.id] ?? [])),
       QuestionListSchema,
-      "Question",
+      "Question"
     );
 
     return { questions, totalQuestions: count ?? 0 };
@@ -206,7 +206,7 @@ export class QuestionDAL {
 
   static async create(
     input: CreateQuestionInput,
-    authorId: string,
+    authorId: string
   ): Promise<{ id: string }> {
     const { title, content, tags: tagNames } = input;
 
@@ -218,7 +218,7 @@ export class QuestionDAL {
 
       // Find or create tags and associate with question
       const tagIds = await Promise.all(
-        tagNames.map((tagName) => TagQuestionService.findOrCreate(tx, tagName)),
+        tagNames.map((tagName) => TagQuestionService.findOrCreate(tx, tagName))
       );
 
       await TagQuestionService.addTagsToQuestion(tx, newQuestion.id, tagIds);
@@ -229,7 +229,7 @@ export class QuestionDAL {
 
   static async update(
     input: EditQuestionInput,
-    userId: string,
+    userId: string
   ): Promise<{ id: string; title: string; content: string; tags: TagDTO[] }> {
     const { questionId, title, content, tags: tagNames } = input;
 
@@ -277,19 +277,19 @@ export class QuestionDAL {
       const newTags = tagNames.map((t) => t.toLowerCase().trim());
 
       const tagsToAdd = newTags.filter(
-        (newTag) => !currentTags.some((t) => t.name === newTag),
+        (newTag) => !currentTags.some((t) => t.name === newTag)
       );
 
       const tagsToRemove = currentTags.filter(
-        (current) => !newTags.includes(current.name),
+        (current) => !newTags.includes(current.name)
       );
 
       // Add new tags
       if (tagsToAdd.length > 0) {
         const newTagIds = await Promise.all(
           tagsToAdd.map((tagName) =>
-            TagQuestionService.findOrCreate(tx, tagName),
-          ),
+            TagQuestionService.findOrCreate(tx, tagName)
+          )
         );
         await TagQuestionService.addTagsToQuestion(tx, questionId, newTagIds);
       }
@@ -301,7 +301,7 @@ export class QuestionDAL {
         await TagQuestionService.removeTagsFromQuestion(
           tx,
           questionId,
-          tagIdsToRemove,
+          tagIdsToRemove
         );
       }
 
@@ -363,7 +363,7 @@ export class QuestionDAL {
       if (questionTags.length > 0) {
         await TagQuestionService.decrementQuestionCount(
           tx,
-          questionTags.map((t) => t.tagId),
+          questionTags.map((t) => t.tagId)
         );
       }
 
@@ -376,7 +376,7 @@ export class QuestionDAL {
       await tx
         .delete(vote)
         .where(
-          and(eq(vote.actionId, questionId), eq(vote.actionType, "question")),
+          and(eq(vote.actionId, questionId), eq(vote.actionType, "question"))
         );
 
       // Delete votes for all answers of the question
@@ -385,10 +385,10 @@ export class QuestionDAL {
           and(
             inArray(
               vote.actionId,
-              questionAnswers.map((a) => a.id),
+              questionAnswers.map((a) => a.id)
             ),
-            eq(vote.actionType, "answer"),
-          ),
+            eq(vote.actionType, "answer")
+          )
         );
       }
 

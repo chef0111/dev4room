@@ -184,7 +184,7 @@ async function main() {
 
     console.log("\nIndexing complete!");
     console.log(
-      `Total: ${questionCount + answerCount + tagCount + userCount} entities`,
+      `Total: ${questionCount + answerCount + tagCount + userCount} entities`
     );
   } catch (error) {
     console.error("Error during indexing:", error);

@@ -90,7 +90,7 @@ export const createQuestion = authorized
               actionId: question.id,
               authorId: context.user.id,
             },
-            context.user.id,
+            context.user.id
           ),
           indexQuestion(question.id),
           // Index any new tags that were created
@@ -99,13 +99,13 @@ export const createQuestion = authorized
       } catch (error) {
         console.error(
           "Failed to create interaction/index after create question:",
-          error,
+          error
         );
       }
     });
 
     revalidatePath(`/profile/${context.user.id}`);
-    
+
     return { id: question.id };
   });
 
@@ -125,7 +125,7 @@ export const editQuestion = authorized
       title: z.string(),
       content: z.string(),
       tags: z.array(TagSchema),
-    }),
+    })
   )
   .handler(async ({ input, context }) => {
     const result = await editQuestionDAL(input, context.user.id);
@@ -179,7 +179,7 @@ export const deleteQuestion = authorized
   .output(z.object({ success: z.boolean() }))
   .handler(async ({ input, context }) => {
     await deleteQuestionDAL(input.questionId, context.user.id);
-    
+
     after(async () => {
       try {
         revalidateTag(`question:${input.questionId}`, "max");
@@ -193,17 +193,17 @@ export const deleteQuestion = authorized
             actionId: input.questionId,
             authorId: context.user.id,
           },
-          context.user.id,
+          context.user.id
         );
       } catch (error) {
         console.error(
           "Failed to create interaction after delete question:",
-          error,
+          error
         );
       }
     });
 
     revalidatePath(`/profile/${context.user.id}`);
-    
+
     return { success: true };
   });

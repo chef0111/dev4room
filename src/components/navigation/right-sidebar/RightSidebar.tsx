@@ -6,7 +6,7 @@ import PopularTags from "./PopularTags";
 
 const RightSidebar = () => {
   return (
-    <section className="no-scrollbar bg-light900_dark200 fixed light-border right-0 top-0 h-screen w-75 flex flex-col justify-start border-l p-5 pt-32 shadow-light-300 dark:shadow-none overflow-y-auto max-xl:hidden">
+    <section className="no-scrollbar bg-light900_dark200 light-border shadow-light-300 fixed top-0 right-0 flex h-screen w-75 flex-col justify-start overflow-y-auto border-l p-5 pt-32 max-xl:hidden dark:shadow-none">
       <div>
         <h3 className="h3-bold text-dark200_light900">Top Questions</h3>
         <Suspense fallback={<TopQuestionsSkeleton />}>

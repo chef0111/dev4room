@@ -79,20 +79,20 @@ export const createAnswer = authorized
               actionId: result.id,
               authorId: context.user.id,
             },
-            context.user.id,
+            context.user.id
           ),
           indexAnswer(result.id),
         ]);
       } catch (error) {
         console.error(
           "Failed to create interaction/index after create answer:",
-          error,
+          error
         );
       }
     });
 
     revalidatePath(`/profile/${context.user.id}`);
-    
+
     return result;
   });
 
@@ -147,12 +147,12 @@ export const deleteAnswer = authorized
             actionId: input.answerId,
             authorId: context.user.id,
           },
-          context.user.id,
+          context.user.id
         );
       } catch (error) {
         console.error(
           "Failed to create interaction after delete answer:",
-          error,
+          error
         );
       }
     });

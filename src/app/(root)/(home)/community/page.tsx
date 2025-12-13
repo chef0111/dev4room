@@ -41,7 +41,7 @@ const Community = async ({ searchParams }: RouteParams) => {
       <div>
         <h1 className="h1-bold text-dark100_light900">All Users</h1>
 
-        <section className="mt-10 flex justify-between sm:items-center max-sm:flex-col gap-4">
+        <section className="mt-10 flex justify-between gap-4 max-sm:flex-col sm:items-center">
           <LocalSearch
             route="/community"
             placeholder="Search some great developers..."
@@ -49,7 +49,7 @@ const Community = async ({ searchParams }: RouteParams) => {
           />
           <Filter
             filters={UserFilters}
-            className="min-h-12 sm:min-w-33 w-full"
+            className="min-h-12 w-full sm:min-w-33"
           />
         </section>
 
@@ -60,7 +60,7 @@ const Community = async ({ searchParams }: RouteParams) => {
             error={result.error}
             empty={EMPTY_USERS}
             render={(users) => (
-              <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 2xl:grid-cols-4 w-full gap-4">
+              <div className="mt-10 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 2xl:grid-cols-4">
                 {users.map((user) => (
                   <UserCard key={user.id} {...user} />
                 ))}

@@ -91,13 +91,13 @@ export class TagDAL {
     if (!query) return undefined;
     return or(
       ilike(question.title, `%${query}%`),
-      ilike(question.content, `%${query}%`),
+      ilike(question.content, `%${query}%`)
     );
   }
 
   private static mapQuestionToDTO(
     row: QuestionRow,
-    tags: { id: string; name: string }[],
+    tags: { id: string; name: string }[]
   ) {
     return {
       id: row.id,
@@ -118,7 +118,7 @@ export class TagDAL {
   }
 
   static async findMany(
-    params: QueryParams,
+    params: QueryParams
   ): Promise<{ tags: TagsDTO[]; totalTags: number }> {
     const { query, filter } = params;
     const { offset, limit } = getPagination(params, { page: 1, pageSize: 12 });
@@ -147,7 +147,7 @@ export class TagDAL {
   }
 
   static async findWithQuestions(
-    params: TagQuestionsQueryParams,
+    params: TagQuestionsQueryParams
   ): Promise<TagQuestionsDTO> {
     const { tagId, query, filter } = params;
     const { offset, limit } = getPagination(params);
@@ -195,15 +195,15 @@ export class TagDAL {
 
     // Fetch tags for all questions
     const tagsByQuestion = await TagQuestionService.getTagsQuestions(
-      rows.map((r) => r.id),
+      rows.map((r) => r.id)
     );
 
     const questions = validateArray(
       rows.map((row) =>
-        this.mapQuestionToDTO(row, tagsByQuestion[row.id] ?? []),
+        this.mapQuestionToDTO(row, tagsByQuestion[row.id] ?? [])
       ),
       QuestionListSchema,
-      "Question",
+      "Question"
     );
 
     return {

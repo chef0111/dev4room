@@ -6,7 +6,7 @@ import { ScrollToTop } from "@/components/modules/main/ScrollToTop";
 
 const LeftSidebar = dynamic(
   () => import("@/components/navigation/left-sidebar/LeftSidebar"),
-  { ssr: true },
+  { ssr: true }
 );
 
 interface Props {
@@ -23,7 +23,7 @@ const DashboardLayout: React.FC<Props> = ({ children }: Props) => {
       <div className="block">
         <LeftSidebar />
 
-        <section className="flex min-h-screen flex-1 flex-col min-w-full px-6 pb-6 pt-32 max-md:pb-14 sm:px-14 sm:pl-34 lg:pl-78 2xl:px-0">
+        <section className="flex min-h-screen min-w-full flex-1 flex-col px-6 pt-32 pb-6 max-md:pb-14 sm:px-14 sm:pl-34 lg:pl-78 2xl:px-0">
           <div className="mx-auto w-full">
             <Suspense fallback={null}>
               <ScrollToTop />

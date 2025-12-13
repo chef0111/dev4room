@@ -22,11 +22,11 @@ const QuestionCard = ({
       tags.map((tag: Tag) => (
         <TagCard key={tag.id} id={tag.id} name={tag.name} compact />
       )),
-    [tags],
+    [tags]
   );
 
   return (
-    <Card className="card-wrapper border-none rounded-lg p-6 sm:px-10 gap-0">
+    <Card className="card-wrapper gap-0 rounded-lg border-none p-6 sm:px-10">
       <div className="flex flex-col-reverse items-start justify-between gap-5 sm:flex-row">
         <div className="flex-1">
           <span className="subtle-regular text-dark400_light700 line-clamp-1 flex sm:hidden">
@@ -43,9 +43,9 @@ const QuestionCard = ({
         {actionButtons && <EditDelete type="question" itemId={id} />}
       </div>
 
-      <div className="my-3 flex flex-wrap w-full gap-2">{renderTags}</div>
+      <div className="my-3 flex w-full flex-wrap gap-2">{renderTags}</div>
 
-      <div className="flex-between flex-wrap mt-6 w-full gap-3">
+      <div className="flex-between mt-6 w-full flex-wrap gap-3">
         <Metric
           href={`/profile/${author.id}` as Route}
           imgUrl={author.image ?? ""}

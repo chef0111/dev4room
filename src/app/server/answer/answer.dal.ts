@@ -73,7 +73,7 @@ export class AnswerDAL {
   }
 
   static async findMany(
-    params: ListAnswersInput,
+    params: ListAnswersInput
   ): Promise<{ answers: AnswerDTO[]; totalAnswers: number }> {
     const { questionId, filter } = params;
     const { offset, limit } = getPagination(params);
@@ -97,7 +97,7 @@ export class AnswerDAL {
     const answers = validateArray(
       rows.map((row) => this.mapToDTO(row)),
       AnswerSchema,
-      "Answer",
+      "Answer"
     );
 
     return { answers, totalAnswers: count ?? 0 };
@@ -120,7 +120,7 @@ export class AnswerDAL {
 
   static async create(
     input: CreateAnswerInput,
-    authorId: string,
+    authorId: string
   ): Promise<{ id: string }> {
     const { questionId, content } = input;
 
@@ -153,7 +153,7 @@ export class AnswerDAL {
 
   static async update(
     input: EditAnswerInput,
-    userId: string,
+    userId: string
   ): Promise<{ id: string; content: string }> {
     const { answerId, content } = input;
 
@@ -227,7 +227,7 @@ export class AnswerDAL {
     answerId: string,
     questionId: string,
     pageSize: number = 10,
-    filter: AnswerFilter = "latest",
+    filter: AnswerFilter = "latest"
   ): Promise<number> {
     const sortCriteria = this.getSortCriteria(filter);
 

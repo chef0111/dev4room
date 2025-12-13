@@ -40,7 +40,7 @@ const HomeFilter = () => {
   };
 
   return (
-    <div className="mt-6 hidden sm:flex flex-wrap gap-3">
+    <div className="mt-6 hidden flex-wrap gap-3 sm:flex">
       {HomePageFilters.map((filter) => (
         <Button
           key={filter.label}
@@ -49,7 +49,7 @@ const HomeFilter = () => {
             "base-filter-btn no-focus",
             filterValue === filter.value
               ? "bg-primary100_primary800 hover:bg-primary200_primary700 text-primary-500"
-              : "bg-light800_dark300 text-light-500 hover:bg-light700_dark400!",
+              : "bg-light800_dark300 text-light-500 hover:bg-light700_dark400!"
           )}
         >
           {filter.label}

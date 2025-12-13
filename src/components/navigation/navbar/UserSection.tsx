@@ -14,7 +14,7 @@ export default async function UserSection() {
       id={user.id}
       name={user.name!}
       image={user.image ?? ""}
-      className="w-9 h-9 rounded-full"
+      className="h-9 w-9 rounded-full"
       aria-label="User avatar"
     />
   );

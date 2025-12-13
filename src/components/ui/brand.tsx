@@ -30,7 +30,7 @@ export function Brand({
         <p
           className={cn(
             "h2-bold font-esbuild text-dark100_light900 max-sm:hidden",
-            textClassName,
+            textClassName
           )}
         >
           Dev<span className="text-primary-500">4Room</span>

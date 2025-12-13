@@ -44,7 +44,7 @@ export class SearchDAL {
 
   private static async searchQuestions(
     embeddingString: string,
-    limit: number,
+    limit: number
   ): Promise<QuestionResult[]> {
     const results = await db
       .select({
@@ -81,7 +81,7 @@ export class SearchDAL {
 
   private static async searchAnswers(
     embeddingString: string,
-    limit: number,
+    limit: number
   ): Promise<AnswerResult[]> {
     const results = await db
       .select({
@@ -119,7 +119,7 @@ export class SearchDAL {
 
   private static async searchTags(
     embeddingString: string,
-    limit: number,
+    limit: number
   ): Promise<TagResult[]> {
     const results = await db
       .select({
@@ -143,7 +143,7 @@ export class SearchDAL {
 
   private static async searchUsers(
     embeddingString: string,
-    limit: number,
+    limit: number
   ): Promise<UserResult[]> {
     const results = await db
       .select({

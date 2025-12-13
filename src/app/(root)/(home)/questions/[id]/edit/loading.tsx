@@ -6,9 +6,9 @@ const Loading = () => {
     <>
       <h1 className="h1-bold text-dark100_light900">Edit Question</h1>
 
-      <div className="w-full mt-8">
+      <div className="mt-8 w-full">
         <section className="flex flex-col gap-[29px]">
-          <div className="flex flex-col w-full gap-3">
+          <div className="flex w-full flex-col gap-3">
             <Label
               htmlFor="question-title"
               className="pg-semibold leading-snug"
@@ -26,7 +26,7 @@ const Loading = () => {
             </Label>
           </div>
 
-          <div className="flex flex-col w-full gap-3">
+          <div className="flex w-full flex-col gap-3">
             <Label
               htmlFor="question-content"
               className="pg-semibold leading-4.5!"
@@ -43,7 +43,7 @@ const Loading = () => {
             </Label>
           </div>
 
-          <div className="flex flex-col w-full gap-3">
+          <div className="flex w-full flex-col gap-3">
             <Label className="pg-semibold leading-snug">
               Tags
               <span className="text-red-500">*</span>

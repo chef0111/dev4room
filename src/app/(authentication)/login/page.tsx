@@ -42,7 +42,7 @@ const Login = () => {
               setShowVerificationDialog(true);
             }
           },
-        },
+        }
       );
 
       setIsLoading(false);
@@ -72,7 +72,7 @@ const Login = () => {
         });
         setShowVerificationDialog(false);
         router.push(
-          `/verify-email?type=email-verification&email=${encodeURIComponent(unverifiedEmail)}`,
+          `/verify-email?type=email-verification&email=${encodeURIComponent(unverifiedEmail)}`
         );
       } else {
         toast.error("Error", {
@@ -92,7 +92,7 @@ const Login = () => {
   return (
     <>
       <div className="flex flex-col gap-4 sm:w-120">
-        <div className="flex-center flex-col text-center space-y-1">
+        <div className="flex-center flex-col space-y-1 text-center">
           <h1 className="md:h2-bold h3-bold text-dark100_light900">
             Login to Dev4Room
           </h1>
@@ -107,7 +107,7 @@ const Login = () => {
           onSubmit={handleLogin}
         />
 
-        <div className="flex-center my-1 after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:border-t">
+        <div className="flex-center after:border-border relative my-1 text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:border-t">
           <span className="bg-light900_dark200 text-dark500_light400 relative z-10 px-2">
             Or continue with
           </span>
@@ -121,7 +121,7 @@ const Login = () => {
               Don&apos;t have an account?{" "}
               <Button
                 variant="link"
-                className="p-0 size-fit text-[16px] text-link-100"
+                className="text-link-100 size-fit p-0 text-[16px]"
                 asChild
               >
                 <Link href="/register">Register</Link>

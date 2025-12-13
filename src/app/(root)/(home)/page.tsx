@@ -55,11 +55,11 @@ const HomePage = async ({ searchParams }: SearchParams) => {
   return (
     <FilterProvider>
       {/* Ask a question section */}
-      <section className="flex flex-col-reverse sm:flex-row justify-between sm:items-center w-full gap-4">
+      <section className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
         <h1 className="h1-bold text-dark100_light900">All Questions</h1>
 
         <Button
-          className="primary-gradient min-h-10 px-4 py-3 text-light-900! hover:primary-gradient-hover cursor-pointer"
+          className="primary-gradient text-light-900! hover:primary-gradient-hover min-h-10 cursor-pointer px-4 py-3"
           asChild
         >
           <Link href="/ask-question">Ask Question</Link>
@@ -89,7 +89,7 @@ const HomePage = async ({ searchParams }: SearchParams) => {
           error={result.error}
           empty={EMPTY_QUESTION}
           render={(questions) => (
-            <div className="flex flex-col my-10 w-full gap-6">
+            <div className="my-10 flex w-full flex-col gap-6">
               {questions.map((question) => (
                 <QuestionCard key={question.id} question={question} />
               ))}

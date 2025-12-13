@@ -10,7 +10,10 @@ interface UseUpdateProfileOptions {
   onSuccess?: () => void;
 }
 
-export function useUpdateProfile({ userId, onSuccess }: UseUpdateProfileOptions) {
+export function useUpdateProfile({
+  userId,
+  onSuccess,
+}: UseUpdateProfileOptions) {
   const router = useRouter();
 
   return useMutation(
@@ -23,6 +26,6 @@ export function useUpdateProfile({ userId, onSuccess }: UseUpdateProfileOptions)
       onError: (error) => {
         toast.error(error.message || "Failed to update profile");
       },
-    }),
+    })
   );
 }

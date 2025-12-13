@@ -19,7 +19,7 @@ const UserTopTags = async ({ userId, limit = 5 }: UserTopTagsProps) => {
     .fetchQuery(
       orpc.user.tags.queryOptions({
         input: { userId, limit },
-      }),
+      })
     )
     .then((data) => ({ data, error: undefined }))
     .catch((e) => ({

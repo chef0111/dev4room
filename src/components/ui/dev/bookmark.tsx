@@ -63,7 +63,7 @@ const Bookmark = ({
       {/* Particles burst effect */}
       <AnimatePresence>
         {showParticles && (
-          <div className="absolute inset-0 pointer-events-none flex-center">
+          <div className="flex-center pointer-events-none absolute inset-0">
             {particles.map((particle) => (
               <motion.span
                 key={particle.id}
@@ -104,7 +104,7 @@ const Bookmark = ({
         variant="ghost"
         className={cn(
           config.button,
-          "hover:bg-orange-500/20! disabled:opacity-100 group",
+          "group hover:bg-orange-500/20! disabled:opacity-100"
         )}
         aria-label={isActive ? "Remove from saved" : "Save"}
         aria-pressed={isActive}
@@ -140,7 +140,7 @@ const Bookmark = ({
               <TbBookmark
                 className={cn(
                   "text-light-400 dark:text-light-500 group-hover:text-orange-400!",
-                  config.icon,
+                  config.icon
                 )}
               />
             </motion.span>

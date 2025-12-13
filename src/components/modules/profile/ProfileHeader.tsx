@@ -25,12 +25,12 @@ const ProfileHeader = ({
   bio,
 }: ProfileHeaderProps) => {
   return (
-    <div className="flex flex-col items-start gap-4 md:flex-row max-sm:flex-row">
+    <div className="flex flex-col items-start gap-4 max-sm:flex-row md:flex-row">
       <UserAvatar
         id={id}
         name={name}
         image={image ?? undefined}
-        className="size-35 max-sm:size-28 rounded-full object-cover"
+        className="size-35 rounded-full object-cover max-sm:size-28"
         fallbackClassName="text-6xl font-bold"
       />
 
@@ -38,7 +38,7 @@ const ProfileHeader = ({
         <h2 className="h2-bold text-dark100_light900">{name}</h2>
         <p className="pg-regular text-dark400_light500">@{username}</p>
 
-        <div className="mt-5 flex-start flex-wrap gap-4">
+        <div className="flex-start mt-5 flex-wrap gap-4">
           {portfolio && (
             <ProfileLink
               icon="/icons/link.svg"

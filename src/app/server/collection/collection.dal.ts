@@ -70,13 +70,13 @@ export class CollectionDAL {
     if (!query) return undefined;
     return or(
       ilike(question.title, `%${query}%`),
-      ilike(question.content, `%${query}%`),
+      ilike(question.content, `%${query}%`)
     );
   }
 
   private static mapToDTO(
     row: CollectionRow,
-    tags: { id: string; name: string }[],
+    tags: { id: string; name: string }[]
   ): CollectionItem {
     return {
       id: row.id,
@@ -102,7 +102,7 @@ export class CollectionDAL {
 
   static async findMany(
     input: QueryParams,
-    userId: string,
+    userId: string
   ): Promise<{ collections: CollectionItem[]; totalCollections: number }> {
     const { query, filter } = input;
     const { offset, limit } = getPagination(input);
@@ -135,15 +135,15 @@ export class CollectionDAL {
 
     // Fetch tags for all questions
     const tagsByQuestion = await TagQuestionService.getTagsQuestions(
-      rows.map((r) => r.questionId),
+      rows.map((r) => r.questionId)
     );
 
     const collections = validateArray(
       rows.map((row) =>
-        this.mapToDTO(row, tagsByQuestion[row.questionId] ?? []),
+        this.mapToDTO(row, tagsByQuestion[row.questionId] ?? [])
       ),
       CollectionItemSchema,
-      "Collection",
+      "Collection"
     );
 
     return { collections, totalCollections: count ?? 0 };
@@ -151,7 +151,7 @@ export class CollectionDAL {
 
   static async toggleSave(
     input: ToggleSaveInput,
-    userId: string,
+    userId: string
   ): Promise<ToggleSaveOutput> {
     const { questionId } = input;
 
@@ -172,8 +172,8 @@ export class CollectionDAL {
       .where(
         and(
           eq(collection.questionId, questionId),
-          eq(collection.authorId, userId),
-        ),
+          eq(collection.authorId, userId)
+        )
       );
 
     if (existingCollection) {
@@ -195,7 +195,7 @@ export class CollectionDAL {
 
   static async hasSaved(
     input: HasSavedInput,
-    userId: string,
+    userId: string
   ): Promise<HasSavedOutput> {
     const { questionId } = input;
 
@@ -205,8 +205,8 @@ export class CollectionDAL {
       .where(
         and(
           eq(collection.questionId, questionId),
-          eq(collection.authorId, userId),
-        ),
+          eq(collection.authorId, userId)
+        )
       );
 
     return { saved: !!existingCollection };

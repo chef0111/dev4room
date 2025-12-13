@@ -72,7 +72,7 @@ export class EmbeddingService {
   static prepareUserText(
     name: string,
     username: string,
-    bio?: string | null,
+    bio?: string | null
   ): string {
     const parts = [name, `@${username}`];
     if (bio) {

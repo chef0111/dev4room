@@ -19,7 +19,7 @@ const SidebarUser = async () => {
       ) : (
         <>
           <Button
-            className="btn-secondary no-focus min-h-10 w-full rounded-lg px-4 py-3 hover:bg-light700_dark300! transition-all duration-200 cursor-pointer"
+            className="btn-secondary no-focus hover:bg-light700_dark300! min-h-10 w-full cursor-pointer rounded-lg px-4 py-3 transition-all duration-200"
             asChild
           >
             <Link href="/login" className="flex-center">
@@ -37,7 +37,7 @@ const SidebarUser = async () => {
           </Button>
 
           <Button
-            className="btn-tertiary no-focus light-border-2 min-h-10 w-full rounded-lg border px-4 py-3 hover:bg-light600_dark400! transition-all duration-200 cursor-pointer shadow-none"
+            className="btn-tertiary no-focus light-border-2 hover:bg-light600_dark400! min-h-10 w-full cursor-pointer rounded-lg border px-4 py-3 shadow-none transition-all duration-200"
             asChild
           >
             <Link href="/register" className="flex-center">

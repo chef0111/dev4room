@@ -25,11 +25,11 @@ const SendOTPEmail = (props: SendOTPEmailProps) => {
       <Tailwind>
         <Head />
         <Preview>Your verification code - {otp}</Preview>
-        <Body className="bg-gray-100 font-sans py-[40px]">
-          <Container className="bg-white rounded-[8px] shadow-sm max-w-[580px] mx-auto">
+        <Body className="bg-gray-100 py-[40px] font-sans">
+          <Container className="mx-auto max-w-[580px] rounded-[8px] bg-white shadow-sm">
             {/* Logo Header */}
             <Section
-              className="rounded-t-[8px] py-[20px] text-center border-b-2 border-gray-200 shadow-sm"
+              className="rounded-t-[8px] border-b-2 border-gray-200 py-[20px] text-center shadow-sm"
               style={{ backgroundColor: "#0f1117" }}
             >
               <table style={{ width: "100%", textAlign: "center" }}>
@@ -44,7 +44,7 @@ const SendOTPEmail = (props: SendOTPEmailProps) => {
                       <tr>
                         <td style={{ verticalAlign: "middle" }}>
                           <Text
-                            className="text-[48px] font-bold text-white m-0"
+                            className="m-0 text-[48px] font-bold text-white"
                             style={{
                               fontSize: "48px",
                               fontWeight: "bold",
@@ -65,29 +65,29 @@ const SendOTPEmail = (props: SendOTPEmailProps) => {
 
             {/* Title Section */}
             <Section className="px-[48px] pt-[32px] text-center">
-              <Heading className="text-black text-[28px] font-bold m-0">
+              <Heading className="m-0 text-[28px] font-bold text-black">
                 Verify Your Account
               </Heading>
             </Section>
 
             {/* Main Content */}
             <Section className="px-[48px] pt-[20px] pb-[40px]">
-              <Text className="text-gray-800 text-[16px] leading-[24px]">
+              <Text className="text-[16px] leading-[24px] text-gray-800">
                 Hello,
               </Text>
 
-              <Text className="text-gray-800 text-[16px] leading-[24px] mb-[24px]">
+              <Text className="mb-[24px] text-[16px] leading-[24px] text-gray-800">
                 We received a request to verify your account for{" "}
                 <strong>{userEmail}</strong>.
               </Text>
 
-              <Text className="text-gray-800 text-[16px] leading-[24px] mb-[32px]">
+              <Text className="mb-[32px] text-[16px] leading-[24px] text-gray-800">
                 Please use the verification code below to complete your account
                 setup. This code will expire in {expiryMinutes} minutes.
               </Text>
 
               {/* OTP Code Display with Integrated Copy Button */}
-              <Section className="text-center mb-[32px]">
+              <Section className="mb-[32px] text-center">
                 <div
                   style={{
                     display: "inline-block",
@@ -105,7 +105,7 @@ const SendOTPEmail = (props: SendOTPEmailProps) => {
                         style={{ textAlign: "center", verticalAlign: "middle" }}
                       >
                         <Text
-                          className="text-white text-[32px] pl-[8px] font-bold m-0 tracking-[8px]"
+                          className="m-0 pl-[8px] text-[32px] font-bold tracking-[8px] text-white"
                           style={{
                             fontSize: "32px",
                             fontWeight: "bold",
@@ -122,39 +122,39 @@ const SendOTPEmail = (props: SendOTPEmailProps) => {
                 </div>
               </Section>
 
-              <Text className="text-gray-600 text-[14px] leading-[20px] mb-[24px] text-center">
+              <Text className="mb-[24px] text-center text-[14px] leading-[20px] text-gray-600">
                 Enter this code in the verification field to continue, or click
                 the copy icon above.
               </Text>
 
-              <Text className="text-gray-600 text-[14px] leading-[20px] mb-[16px]">
+              <Text className="mb-[16px] text-[14px] leading-[20px] text-gray-600">
                 <strong>Security Notice:</strong> This verification code is
                 valid for {expiryMinutes} minutes only. If you didn&apos;t
                 request this verification, please ignore this email.
               </Text>
 
-              <Text className="text-gray-600 text-[14px] leading-[20px] mb-[24px]">
+              <Text className="mb-[24px] text-[14px] leading-[20px] text-gray-600">
                 For your security, never share this code with anyone. Our team
                 will never ask you for this code via phone or email.
               </Text>
 
-              <Text className="text-gray-600 text-[14px] leading-[20px]">
+              <Text className="text-[14px] leading-[20px] text-gray-600">
                 If you&apos;re having trouble with verification, please contact
                 our support team for assistance.
               </Text>
             </Section>
 
             {/* Footer */}
-            <Section className="bg-gray-50 px-[48px] py-[32px] rounded-b-[8px] border-t border-gray-200">
-              <Text className="text-gray-500 text-[12px] leading-[16px] text-center m-0 mb-[8px]">
+            <Section className="rounded-b-[8px] border-t border-gray-200 bg-gray-50 px-[48px] py-[32px]">
+              <Text className="m-0 mb-[8px] text-center text-[12px] leading-[16px] text-gray-500">
                 This email was sent to {userEmail}
               </Text>
 
-              <Text className="text-gray-500 text-[12px] leading-[16px] text-center m-0 mb-[8px]">
+              <Text className="m-0 mb-[8px] text-center text-[12px] leading-[16px] text-gray-500">
                 Dev4Room, Linh Xuan, Ho Chi Minh City, Vietnam
               </Text>
 
-              <Text className="text-gray-500 text-[12px] leading-[16px] text-center m-0">
+              <Text className="m-0 text-center text-[12px] leading-[16px] text-gray-500">
                 © 2025 Dev4Room. All rights reserved.
               </Text>
             </Section>

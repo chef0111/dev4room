@@ -11,7 +11,7 @@ const Loading = () => {
       <div className="mt-10.5 flex justify-between gap-4 max-sm:flex-col sm:items-center">
         <SearchInput
           placeholder="Search questions..."
-          className="bg-light800_darksecondgradient! grow w-full min-h-12 gap-2 px-2"
+          className="bg-light800_darksecondgradient! min-h-12 w-full grow gap-2 px-2"
           disabled
         />
         <FilterFallback />

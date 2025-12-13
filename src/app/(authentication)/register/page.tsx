@@ -40,8 +40,8 @@ const Register = () => {
       if (data?.user) {
         router.push(
           `/verify-email?type=email-verification&email=${encodeURIComponent(
-            email,
-          )}`,
+            email
+          )}`
         );
         router.refresh();
       }
@@ -57,7 +57,7 @@ const Register = () => {
 
   return (
     <div className="flex flex-col gap-4 sm:w-120">
-      <div className="flex-center flex-col text-center space-y-1">
+      <div className="flex-center flex-col space-y-1 text-center">
         <h1 className="md:h2-bold h3-bold text-dark100_light900">
           Create an account
         </h1>
@@ -79,7 +79,7 @@ const Register = () => {
         onSubmit={handleRegister}
       />
 
-      <div className="flex-center my-1 after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:border-t">
+      <div className="flex-center after:border-border relative my-1 text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:border-t">
         <span className="bg-light900_dark200 text-dark500_light400 relative z-10 px-2">
           Or continue with
         </span>
@@ -88,12 +88,12 @@ const Register = () => {
       <div className="flex flex-col">
         <SocialAuthForm disabled={isLoading} />
 
-        <div className="flex-center mt-4 pg-semibold">
+        <div className="flex-center pg-semibold mt-4">
           <p>
             Already have an account?{" "}
             <Button
               variant="link"
-              className="p-0 size-fit text-[16px] text-link-100"
+              className="text-link-100 size-fit p-0 text-[16px]"
               asChild
             >
               <Link href="/login">Login</Link>
