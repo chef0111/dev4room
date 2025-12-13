@@ -28,13 +28,13 @@ const EditProfileDialog = ({ user }: EditProfileDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="pg-medium btn-secondary hover:bg-light700_dark300! text-dark300_light900 min-h-12 min-w-40 max-sm:w-full px-4 py-3">
+        <Button className="pg-medium btn-secondary hover:bg-light700_dark300! text-dark300_light900 min-h-12 min-w-40 px-4 py-3 max-sm:w-full">
           Edit Profile
         </Button>
       </DialogTrigger>
-      <DialogContent className="bg-light900_dark200 lg:min-w-3xl sm:max-w-[60vw] min-w-[80vw] max-h-[90vh] overflow-y-auto no-scrollbar px-10">
+      <DialogContent className="bg-light900_dark200 no-scrollbar max-h-[90vh] min-w-[80vw] overflow-y-auto px-10 sm:max-w-[60vw] lg:min-w-3xl">
         <DialogHeader>
-          <DialogTitle className="h1-bold text-3xl text-dark100_light900">
+          <DialogTitle className="h1-bold text-dark100_light900 text-3xl">
             Edit Profile
           </DialogTitle>
         </DialogHeader>

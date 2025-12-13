@@ -78,8 +78,8 @@ const UserTabs = async ({
     <FilterProvider>
       <Tabs defaultValue={profileTabs[0].value} className="flex-2">
         {/* User Questions & Answers tabs */}
-        <div className="flex justify-between sm:items-center max-sm:flex-col gap-4">
-          <TabsList className="bg-light800_dark400 min-h-12 max-sm:w-full p-1 gap-1 rounded-md">
+        <div className="flex justify-between gap-4 max-sm:flex-col sm:items-center">
+          <TabsList className="bg-light800_dark400 min-h-12 gap-1 rounded-md p-1 max-sm:w-full">
             <AnimatedTab
               defaultValue={profileTabs[0].value}
               className="bg-primary-500 shadow-light-100 rounded-sm"
@@ -103,14 +103,14 @@ const UserTabs = async ({
 
           <Filter
             filters={UserFilters}
-            className="min-h-12 sm:min-w-33 w-full"
+            className="min-h-12 w-full sm:min-w-33"
           />
         </div>
 
         {/* Display User Questions */}
         <TabsContent
           value={profileTabs[0].value}
-          className="mt-4 flex flex-col w-full gap-6"
+          className="mt-4 flex w-full flex-col gap-6"
         >
           <FilterContent loadingMessage="Loading...">
             <DataRenderer
@@ -146,7 +146,7 @@ const UserTabs = async ({
         {/* Display User Answers */}
         <TabsContent
           value="answers"
-          className="mt-4 flex flex-col w-full gap-6"
+          className="mt-4 flex w-full flex-col gap-6"
         >
           <FilterContent loadingMessage="Loading...">
             <DataRenderer

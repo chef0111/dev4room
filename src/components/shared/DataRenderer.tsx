@@ -49,7 +49,7 @@ export const SkateSkeleton = ({
   button,
   onClick,
 }: SkeletonProps) => (
-  <div className="flex-center flex-col mt-16 w-full">
+  <div className="flex-center mt-16 w-full flex-col">
     <>
       <Image
         src={image.dark}
@@ -76,7 +76,7 @@ export const SkateSkeleton = ({
     {button && (
       <Link href={button.href as Route}>
         <Button
-          className="pg-medium mt-5 min-h-10 round-lg bg-primary-500 text-light-900 hover:bg-link-100 cursor-pointer"
+          className="pg-medium round-lg bg-primary-500 text-light-900 hover:bg-link-100 mt-5 min-h-10 cursor-pointer"
           onClick={onClick}
         >
           {button.label}

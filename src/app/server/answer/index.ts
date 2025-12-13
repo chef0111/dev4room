@@ -92,7 +92,7 @@ export const createAnswer = authorized
     });
 
     revalidatePath(`/profile/${context.user.id}`);
-    
+
     return result;
   });
 

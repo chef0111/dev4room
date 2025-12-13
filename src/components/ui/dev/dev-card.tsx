@@ -8,7 +8,7 @@ interface DevCardProps {
 
 const DevCard = ({ children, className }: DevCardProps) => {
   return (
-    <div className="relative w-full rounded-2xl p-[0.1rem] border-gradient z-0">
+    <div className="border-gradient relative z-0 w-full rounded-2xl p-[0.1rem]">
       <Card className={cn("dev-card", className)}>
         <CardContent className="flex-center flex-col px-0">
           {children}

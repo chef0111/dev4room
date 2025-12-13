@@ -10,7 +10,10 @@ interface UseUpdateProfileOptions {
   onSuccess?: () => void;
 }
 
-export function useUpdateProfile({ userId, onSuccess }: UseUpdateProfileOptions) {
+export function useUpdateProfile({
+  userId,
+  onSuccess,
+}: UseUpdateProfileOptions) {
   const router = useRouter();
 
   return useMutation(

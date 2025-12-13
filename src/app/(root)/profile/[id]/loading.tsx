@@ -15,10 +15,10 @@ const Loading = () => {
         <ProfileStatsSkeleton />
       </div>
       <section className="mt-10 flex gap-10">
-        <div className="mt-4 flex flex-col w-full gap-6">
-          <div className="flex justify-between sm:items-center max-sm:flex-col gap-4">
-            <Skeleton className="h-12 sm:w-48 max-sm:w-full rounded-md" />
-            <Skeleton className="h-12 sm:w-40 max-sm:w-full rounded-md" />
+        <div className="mt-4 flex w-full flex-col gap-6">
+          <div className="flex justify-between gap-4 max-sm:flex-col sm:items-center">
+            <Skeleton className="h-12 rounded-md max-sm:w-full sm:w-48" />
+            <Skeleton className="h-12 rounded-md max-sm:w-full sm:w-40" />
           </div>
           <PostCardsSkeleton className="mt-2" />
         </div>

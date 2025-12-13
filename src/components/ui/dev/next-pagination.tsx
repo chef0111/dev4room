@@ -130,7 +130,7 @@ export function NextPagination({
   return (
     <div
       className={cn(
-        "gap-2 w-full",
+        "w-full gap-2",
         totalCount > Number(pageSize) ? "flex-center" : "hidden",
         className,
       )}

@@ -39,10 +39,10 @@ export const sidebarTabs = [
 
 const NavTabsFallback = ({ isMobile = false }: NavTabsProps) => {
   return (
-    <div className="flex flex-col gap-2 flex-1">
+    <div className="flex flex-1 flex-col gap-2">
       {sidebarTabs.map((item) => {
         const LinkComponent = (
-          <div className="flex-start max-lg:justify-center gap-4 text-dark300_light900 rounded-lg hover:bg-light800_dark300! bg-transparent p-3.5">
+          <div className="flex-start text-dark300_light900 hover:bg-light800_dark300! gap-4 rounded-lg bg-transparent p-3.5 max-lg:justify-center">
             <Image
               src={item.imgUrl}
               alt={item.label}

@@ -53,7 +53,7 @@ const ForgotPassword = () => {
 
   return (
     <div className="flex flex-col gap-4 sm:w-120">
-      <div className="flex-center flex-col text-center space-y-1">
+      <div className="flex-center flex-col space-y-1 text-center">
         <h1 className="md:h2-bold h3-bold text-dark100_light900">
           Forgot Password
         </h1>
@@ -71,7 +71,7 @@ const ForgotPassword = () => {
 
       <Link
         href="/login"
-        className="text-center pg-semibold text-link-100 hover:underline transition-all cursor-pointer"
+        className="pg-semibold text-link-100 cursor-pointer text-center transition-all hover:underline"
       >
         Back to Login
       </Link>

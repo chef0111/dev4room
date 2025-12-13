@@ -58,7 +58,7 @@ const AnswerCard = ({
     <Card
       id={`answer-${id}`}
       className={cn(
-        "bg-light900_dark300 shadow-light-100! relative light-border border-b p-6 sm:px-10 mb-6 gap-0",
+        "bg-light900_dark300 shadow-light-100! light-border relative mb-6 gap-0 border-b p-6 sm:px-10",
         className,
       )}
     >
@@ -73,13 +73,13 @@ const AnswerCard = ({
 
           <Link
             href={`/profile/${author.id}`}
-            className="flex flex-col sm:flex-wrap md:flex-row w-full sm:items-start max-sm:ml-1"
+            className="flex w-full flex-col max-sm:ml-1 sm:flex-wrap sm:items-start md:flex-row"
           >
             <p className="body-semibold text-dark300_light700">
               {author.name ?? "Anonymous"}
             </p>
 
-            <p className="small-regular text-light400_light500 ml-0.5 mt-0.5 line-clamp-1">
+            <p className="small-regular text-light400_light500 mt-0.5 ml-0.5 line-clamp-1">
               <span className="max-md:hidden"> • </span>
               answered {getTimeStamp(createdAt)}
             </p>

@@ -29,7 +29,7 @@ const SocialAuthForm = ({ disabled }: { disabled?: boolean }) => {
   };
 
   return (
-    <div className="grid grid-cols-2 max-sm:grid-cols-1 gap-2.5 w-full">
+    <div className="grid w-full grid-cols-2 gap-2.5 max-sm:grid-cols-1">
       <Button
         className="btn-social"
         disabled={disabled || isPending}

@@ -105,7 +105,7 @@ export const createQuestion = authorized
     });
 
     revalidatePath(`/profile/${context.user.id}`);
-    
+
     return { id: question.id };
   });
 
@@ -179,7 +179,7 @@ export const deleteQuestion = authorized
   .output(z.object({ success: z.boolean() }))
   .handler(async ({ input, context }) => {
     await deleteQuestionDAL(input.questionId, context.user.id);
-    
+
     after(async () => {
       try {
         revalidateTag(`question:${input.questionId}`, "max");
@@ -204,6 +204,6 @@ export const deleteQuestion = authorized
     });
 
     revalidatePath(`/profile/${context.user.id}`);
-    
+
     return { success: true };
   });

@@ -49,11 +49,11 @@ const TagQuestions = async ({ params, searchParams }: RouteParams) => {
 
   return (
     <FilterProvider>
-      <section className="flex flex-col-reverse sm:flex-row justify-between sm:items-center w-full gap-4">
+      <section className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
         <h1 className="h1-bold text-dark100_light900">{tag?.name}</h1>
       </section>
 
-      <section className="mt-10 flex justify-between sm:items-center max-sm:flex-col gap-4">
+      <section className="mt-10 flex justify-between gap-4 max-sm:flex-col sm:items-center">
         <LocalSearch
           route={`/tags/${id}`}
           placeholder="Search questions..."
@@ -73,7 +73,7 @@ const TagQuestions = async ({ params, searchParams }: RouteParams) => {
           error={result.error}
           empty={EMPTY_QUESTION}
           render={(questions) => (
-            <div className="flex flex-col my-10 w-full gap-6">
+            <div className="my-10 flex w-full flex-col gap-6">
               {questions.map((question) => (
                 <QuestionCard key={question.id} question={question} />
               ))}

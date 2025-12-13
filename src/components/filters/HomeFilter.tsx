@@ -40,7 +40,7 @@ const HomeFilter = () => {
   };
 
   return (
-    <div className="mt-6 hidden sm:flex flex-wrap gap-3">
+    <div className="mt-6 hidden flex-wrap gap-3 sm:flex">
       {HomePageFilters.map((filter) => (
         <Button
           key={filter.label}

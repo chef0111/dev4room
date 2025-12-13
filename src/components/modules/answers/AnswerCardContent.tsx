@@ -56,7 +56,7 @@ const AnswerCardContent = ({
           <Button
             variant="link"
             onClick={() => setIsExpanded(!isExpanded)}
-            className="w-full relative z-10 hover:no-underline mt-1 flex items-center gap-1 p-0 h-auto text-sm font-medium text-primary-500 hover:text-primary-500/80 transition-colors duration-200"
+            className="text-primary-500 hover:text-primary-500/80 relative z-10 mt-1 flex h-auto w-full items-center gap-1 p-0 text-sm font-medium transition-colors duration-200 hover:no-underline"
           >
             <span>{isExpanded ? "Show less" : "Show more..."}</span>
             <ChevronDownIcon
@@ -69,7 +69,7 @@ const AnswerCardContent = ({
         ) : (
           <Link
             href={answerUrl}
-            className="relative z-10 mt-1 flex items-center gap-1 text-sm font-medium text-primary-500 hover:text-primary-500/80 transition-colors duration-200"
+            className="text-primary-500 hover:text-primary-500/80 relative z-10 mt-1 flex items-center gap-1 text-sm font-medium transition-colors duration-200"
           >
             <span>Read more...</span>
           </Link>

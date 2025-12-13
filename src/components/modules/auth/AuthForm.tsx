@@ -85,7 +85,7 @@ const AuthForm = <T extends FieldValues>({
     <form
       id="auth-form"
       onSubmit={form.handleSubmit(handleSubmit)}
-      className="space-y-6 mt-6"
+      className="mt-6 space-y-6"
     >
       <FieldGroup>
         {Object.keys(defaultValues).map((fieldName) => (
@@ -98,7 +98,7 @@ const AuthForm = <T extends FieldValues>({
                 <div className="flex-between w-full">
                   <FieldLabel
                     htmlFor={`auth-form-${fieldName}`}
-                    className="flex-grow pg-medium"
+                    className="pg-medium flex-grow"
                   >
                     {formatFieldName(fieldName)}
                   </FieldLabel>
@@ -106,7 +106,7 @@ const AuthForm = <T extends FieldValues>({
                   {fieldName === "password" && formType === "LOGIN" && (
                     <Button
                       variant="link"
-                      className="ml-auto inline-block p-0 size-fit text-sm text-link-100"
+                      className="text-link-100 ml-auto inline-block size-fit p-0 text-sm"
                       asChild
                     >
                       <Link href="/forgot-password">Forgot your password?</Link>
@@ -141,7 +141,7 @@ const AuthForm = <T extends FieldValues>({
       {!!error && (
         <Alert
           variant="destructive"
-          className="bg-destructive/10 border border-destructive/20"
+          className="bg-destructive/10 border-destructive/20 border"
         >
           <AlertCircleIcon />
           <AlertTitle>Error</AlertTitle>
@@ -155,7 +155,7 @@ const AuthForm = <T extends FieldValues>({
       <Button
         type="submit"
         disabled={form.formState.isSubmitting}
-        className="primary-gradient pg-semibold min-h-10 w-full text-light-900 hover:primary-gradient-hover transition-all cursor-pointer"
+        className="primary-gradient pg-semibold text-light-900 hover:primary-gradient-hover min-h-10 w-full cursor-pointer transition-all"
       >
         {form.formState.isSubmitting && (
           <Spinner className="border-primary-foreground/30 border-t-primary-foreground!" />

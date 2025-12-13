@@ -67,7 +67,7 @@ const OTPForm = ({
     <form
       id="otp-form"
       onSubmit={form.handleSubmit(handleSubmit)}
-      className="space-y-6 mt-6"
+      className="mt-6 space-y-6"
     >
       <FieldGroup>
         <Controller
@@ -101,7 +101,7 @@ const OTPForm = ({
                     <InputOTPSlot index={5} className="input-otp-slot" />
                   </InputOTPGroup>
                 </InputOTP>
-                <FieldDescription className="text-center text-dark500_light400 pg-regular">
+                <FieldDescription className="text-dark500_light400 pg-regular text-center">
                   Enter the 6-digit code sent to your email
                 </FieldDescription>
                 {fieldState.invalid && (
@@ -116,7 +116,7 @@ const OTPForm = ({
       {!!error && (
         <Alert
           variant="destructive"
-          className="bg-destructive/10 border border-destructive/20"
+          className="bg-destructive/10 border-destructive/20 border"
         >
           <AlertCircleIcon />
           <AlertTitle>Error</AlertTitle>
@@ -127,7 +127,7 @@ const OTPForm = ({
       <Button
         type="submit"
         disabled={form.formState.isSubmitting}
-        className="primary-gradient pg-semibold min-h-10 w-full text-light-900 hover:primary-gradient-hover transition-all cursor-pointer"
+        className="primary-gradient pg-semibold text-light-900 hover:primary-gradient-hover min-h-10 w-full cursor-pointer transition-all"
       >
         {form.formState.isSubmitting && (
           <Spinner className="border-primary-foreground/30 border-t-primary-foreground!" />

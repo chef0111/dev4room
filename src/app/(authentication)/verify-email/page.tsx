@@ -90,7 +90,7 @@ const VerifyEmail = () => {
 
   return (
     <div className="flex flex-col gap-4 sm:w-120">
-      <div className="flex-center flex-col text-center space-y-1">
+      <div className="flex-center flex-col space-y-1 text-center">
         <h1 className="md:h2-bold h3-bold text-dark100_light900">
           Verify Email
         </h1>
@@ -104,14 +104,14 @@ const VerifyEmail = () => {
         successMessage="Email verified successfully! You can now continue."
       />
 
-      <div className="flex-center w-full px-0 text-dark500_light400">
+      <div className="flex-center text-dark500_light400 w-full px-0">
         Didn&apos;t receive the code?
         <Button
           type="button"
           variant="link"
           disabled={isResending}
           onClick={() => handleResendOTP(type)}
-          className="text-center pg-semibold text-link-100 hover:underline transition-all cursor-pointer px-1"
+          className="pg-semibold text-link-100 cursor-pointer px-1 text-center transition-all hover:underline"
         >
           {isResending ? "Sending..." : "Resend"}
         </Button>

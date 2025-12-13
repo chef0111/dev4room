@@ -34,12 +34,12 @@ const TopQuestions = async () => {
         message: "No questions have been asked yet.",
       }}
       render={(topQuestions) => (
-        <ul className="mt-6 flex flex-col w-full gap-5">
+        <ul className="mt-6 flex w-full flex-col gap-5">
           {topQuestions.map(({ id, title }, index) => (
             <li key={index}>
               <Link
                 href={`/questions/${id}`}
-                className="flex-between cursor-pointer gap-4 group"
+                className="flex-between group cursor-pointer gap-4"
               >
                 <Image
                   src={
@@ -54,7 +54,7 @@ const TopQuestions = async () => {
                 />
 
                 <p
-                  className="block body-medium flex-1 text-left line-clamp-2 overflow-hidden text-ellipsis transition-all duration-200 ease group-hover:text-link-100 group-hover:text-shadow-link-100 group-hover:transform group-hover:translate-x-2"
+                  className="body-medium ease group-hover:text-link-100 group-hover:text-shadow-link-100 line-clamp-2 block flex-1 overflow-hidden text-left text-ellipsis transition-all duration-200 group-hover:translate-x-2 group-hover:transform"
                   style={{
                     display: "-webkit-box",
                     WebkitBoxOrient: "vertical",
@@ -64,7 +64,7 @@ const TopQuestions = async () => {
                 </p>
 
                 <ChevronRight
-                  className="text-dark400_light900 w-5 h-5 transform opacity-0 -translate-x-6 scale-0 group-hover:opacity-100 group-hover:scale-100 group-hover:translate-x-0 transition-all duration-300 ease"
+                  className="text-dark400_light900 ease h-5 w-5 -translate-x-6 scale-0 transform opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:scale-100 group-hover:opacity-100"
                   aria-hidden="true"
                 />
               </Link>

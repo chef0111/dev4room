@@ -12,7 +12,7 @@ const MarkdownPreview = ({ content = "" }: { content: string }) => {
   const formattedContent = content.replace(/\\/g, "").replace(/&#x20;/g, "");
 
   return (
-    <section className="markdown grid break-workds">
+    <section className="markdown break-workds grid">
       <MDXRemote
         source={formattedContent}
         options={{
