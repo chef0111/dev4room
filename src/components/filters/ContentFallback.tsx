@@ -15,7 +15,7 @@ const ContentFallback = ({
     <div
       className={cn(
         "flex flex-col items-center justify-center gap-4 py-20",
-        className,
+        className
       )}
     >
       <Spinner className="size-8" />

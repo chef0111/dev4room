@@ -6,7 +6,7 @@ import { ORPCError } from "@orpc/server";
 export function validateArray<T>(
   items: unknown[],
   schema: z.ZodType<T>,
-  entityName: string = "item",
+  entityName: string = "item"
 ): T[] {
   return items
     .map((item) => {
@@ -23,7 +23,7 @@ export function validateArray<T>(
 export function validateOne<T>(
   item: unknown,
   schema: z.ZodType<T>,
-  entityName: string = "item",
+  entityName: string = "item"
 ): T {
   const result = schema.safeParse(item);
   if (!result.success) {

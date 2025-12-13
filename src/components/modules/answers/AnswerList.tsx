@@ -36,7 +36,7 @@ const AnswerList = async ({
       answerId,
       questionId,
       pageSize,
-      (filter as "latest" | "oldest" | "popular") || "latest",
+      (filter as "latest" | "oldest" | "popular") || "latest"
     );
 
     if (answerPage !== page) {

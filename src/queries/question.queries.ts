@@ -25,7 +25,7 @@ export function useCreateQuestion(options?: UseCreateQuestionOptions) {
       onError: (error) => {
         toast.error(error.message || "Failed to create question");
       },
-    }),
+    })
   );
 }
 
@@ -48,7 +48,7 @@ export function useEditQuestion(options?: UseEditQuestionOptions) {
       onError: (error) => {
         toast.error(error.message || "Failed to update question");
       },
-    }),
+    })
   );
 }
 
@@ -73,6 +73,6 @@ export function useDeleteQuestion(options?: UseDeleteQuestionOptions) {
       onError: (error: Error) => {
         toast.error(error.message || "Failed to delete question");
       },
-    }),
+    })
   );
 }

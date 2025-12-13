@@ -30,7 +30,7 @@ const SearchInput = ({
     <InputGroup
       className={cn(
         "flex grow items-center rounded-lg border-none ring-0!",
-        className,
+        className
       )}
     >
       <InputGroupInput

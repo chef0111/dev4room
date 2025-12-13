@@ -63,12 +63,12 @@ export class UserDAL {
     if (!query) return undefined;
     return or(
       ilike(user.name, `%${query}%`),
-      ilike(user.username, `%${query}%`),
+      ilike(user.username, `%${query}%`)
     );
   }
 
   static async findMany(
-    params: QueryParams,
+    params: QueryParams
   ): Promise<{ users: UserDTO[]; totalUsers: number }> {
     const { query, filter } = params;
     const { offset, limit } = getPagination(params);
@@ -150,12 +150,12 @@ export class UserDAL {
         totalAnswers: answerCount.count ?? 0,
       },
       GetUserOutputSchema,
-      "GetUserOutput",
+      "GetUserOutput"
     );
   }
 
   static async findUserQuestions(
-    input: UserPostInput,
+    input: UserPostInput
   ): Promise<{ questions: UserQuestionDTO[]; totalQuestions: number }> {
     const { userId, page, pageSize, filter } = input;
     const { offset, limit } = getPagination({ page, pageSize });
@@ -210,7 +210,7 @@ export class UserDAL {
 
     // Fetch tags for all questions
     const tagsByQuestion = await TagQuestionService.getTagsQuestions(
-      rows.map((r) => r.id),
+      rows.map((r) => r.id)
     );
 
     const questions = validateArray(
@@ -219,14 +219,14 @@ export class UserDAL {
         tags: tagsByQuestion[row.id] ?? [],
       })),
       UserQuestionSchema,
-      "UserQuestion",
+      "UserQuestion"
     );
 
     return { questions, totalQuestions: count ?? 0 };
   }
 
   static async findUserAnswers(
-    input: UserPostInput,
+    input: UserPostInput
   ): Promise<{ answers: UserAnswerDTO[]; totalAnswers: number }> {
     const { userId, page, pageSize, filter } = input;
     const { offset, limit } = getPagination({ page, pageSize });
@@ -291,14 +291,14 @@ export class UserDAL {
         },
       })),
       UserAnswerSchema,
-      "UserAnswer",
+      "UserAnswer"
     );
 
     return { answers, totalAnswers: count ?? 0 };
   }
 
   static async findUserPopularTags(
-    input: GetUserTagsInput,
+    input: GetUserTagsInput
   ): Promise<{ tags: UserPopularTagDTO[] }> {
     const { userId, limit: tagLimit } = input;
 
@@ -346,7 +346,7 @@ export class UserDAL {
         count: t.count,
       })),
       UserPopularTagSchema,
-      "UserPopularTag",
+      "UserPopularTag"
     );
 
     return { tags };
@@ -409,14 +409,14 @@ export class UserDAL {
 
   static async update(
     userId: string,
-    data: UpdateProfileInput,
+    data: UpdateProfileInput
   ): Promise<UserProfileDTO> {
     if (data.username) {
       const existing = await db
         .select({ id: user.id })
         .from(user)
         .where(
-          and(eq(user.username, data.username), sql`${user.id} != ${userId}`),
+          and(eq(user.username, data.username), sql`${user.id} != ${userId}`)
         )
         .limit(1);
 

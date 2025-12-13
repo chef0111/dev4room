@@ -35,7 +35,7 @@ export function useBookmark({ questionId }: UseBookmarkOptions) {
       await queryClient.cancelQueries({ queryKey: statusQueryKey });
 
       const prevStatus = queryClient.getQueryData<{ saved: boolean }>(
-        statusQueryKey,
+        statusQueryKey
       );
       const newSaved = !prevStatus?.saved;
 

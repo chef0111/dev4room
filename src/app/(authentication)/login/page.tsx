@@ -42,7 +42,7 @@ const Login = () => {
               setShowVerificationDialog(true);
             }
           },
-        },
+        }
       );
 
       setIsLoading(false);
@@ -72,7 +72,7 @@ const Login = () => {
         });
         setShowVerificationDialog(false);
         router.push(
-          `/verify-email?type=email-verification&email=${encodeURIComponent(unverifiedEmail)}`,
+          `/verify-email?type=email-verification&email=${encodeURIComponent(unverifiedEmail)}`
         );
       } else {
         toast.error("Error", {

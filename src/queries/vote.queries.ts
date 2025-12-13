@@ -25,7 +25,7 @@ interface UseVoteOptions {
 
 function getOptimisticState(
   voteType: VoteType,
-  currentState: VoteState,
+  currentState: VoteState
 ): VoteState {
   const { upvotes, downvotes, hasUpvoted, hasDownvoted } = currentState;
   const isUpvote = voteType === "upvote";
@@ -112,7 +112,7 @@ export function useVote({
       hasUpvoted: voteData?.hasUpvoted ?? false,
       hasDownvoted: voteData?.hasDownvoted ?? false,
     }),
-    [voteData, initialUpvotes, initialDownvotes],
+    [voteData, initialUpvotes, initialDownvotes]
   );
 
   const vote = useCallback(
@@ -126,7 +126,7 @@ export function useVote({
       if (voteMutation.isPending) return;
       voteMutation.mutate(type);
     },
-    [isAuthenticated, voteMutation],
+    [isAuthenticated, voteMutation]
   );
 
   return { state, vote, isVoting: voteMutation.isPending, isAuthenticated };

@@ -8,7 +8,7 @@ const buildStandardAj = () =>
       mode: "LIVE",
       interval: "1m",
       max: 180,
-    }),
+    })
   );
 
 export const readSecurityMiddleware = base

@@ -9,7 +9,7 @@ function Skeleton({ className, ...props }: React.ComponentProps<"div">) {
         "before:absolute before:inset-0 before:-translate-x-full",
         "ease before:animate-[shimmer_1.5s_infinite]",
         "before:bg-gradient-to-r before:from-transparent before:via-white/40 before:to-transparent dark:before:via-white/10",
-        className,
+        className
       )}
       {...props}
     />

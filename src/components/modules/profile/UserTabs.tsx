@@ -45,7 +45,7 @@ const UserTabs = async ({
             pageSize,
             filter,
           },
-        }),
+        })
       )
       .then((data) => ({ data, error: undefined }))
       .catch((e) => ({
@@ -60,7 +60,7 @@ const UserTabs = async ({
             page,
             pageSize,
           },
-        }),
+        })
       )
       .then((data) => ({ data, error: undefined }))
       .catch((e) => ({

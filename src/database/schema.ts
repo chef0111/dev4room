@@ -52,7 +52,7 @@ export const user = pgTable(
     banExpires: timestamp("ban_expires"),
     embedding: vector("embedding"),
   },
-  (table) => [index("user_embedding_idx").using("ivfflat", table.embedding)],
+  (table) => [index("user_embedding_idx").using("ivfflat", table.embedding)]
 );
 
 // session table
@@ -119,7 +119,7 @@ export const tag = pgTable(
       .notNull(),
     embedding: vector("embedding"),
   },
-  (table) => [index("tag_embedding_idx").using("ivfflat", table.embedding)],
+  (table) => [index("tag_embedding_idx").using("ivfflat", table.embedding)]
 );
 
 export const question = pgTable(
@@ -142,9 +142,7 @@ export const question = pgTable(
       .notNull(),
     embedding: vector("embedding"),
   },
-  (table) => [
-    index("question_embedding_idx").using("ivfflat", table.embedding),
-  ],
+  (table) => [index("question_embedding_idx").using("ivfflat", table.embedding)]
 );
 
 export const answer = pgTable(
@@ -167,7 +165,7 @@ export const answer = pgTable(
       .notNull(),
     embedding: vector("embedding"),
   },
-  (table) => [index("answer_embedding_idx").using("ivfflat", table.embedding)],
+  (table) => [index("answer_embedding_idx").using("ivfflat", table.embedding)]
 );
 
 export const tagQuestion = pgTable("tag_question", {

@@ -31,7 +31,7 @@ const GenerateAIButton = ({
 
     if (userAnswer.length < MIN_ANSWER_LENGTH) {
       onValidationError(
-        `Please write your answer first (at least ${MIN_ANSWER_LENGTH} characters). The AI will then help enhance and improve your response.`,
+        `Please write your answer first (at least ${MIN_ANSWER_LENGTH} characters). The AI will then help enhance and improve your response.`
       );
       return;
     }
@@ -53,7 +53,7 @@ const GenerateAIButton = ({
       if (!result.isValid) {
         onValidationError(
           result.reason ||
-            "Your answer doesn't appear to be related to the question. Please provide a relevant response and try again.",
+            "Your answer doesn't appear to be related to the question. Please provide a relevant response and try again."
         );
         return;
       }

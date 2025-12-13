@@ -49,7 +49,7 @@ export class TagQuestionService {
 
   static async decrementQuestionCount(
     tx: Transaction,
-    tagIds: string[],
+    tagIds: string[]
   ): Promise<void> {
     if (tagIds.length === 0) return;
 
@@ -60,7 +60,7 @@ export class TagQuestionService {
   }
 
   static async getTagsQuestion(
-    questionId: string,
+    questionId: string
   ): Promise<{ id: string; name: string }[]> {
     return db
       .select({ id: tag.id, name: tag.name })
@@ -70,7 +70,7 @@ export class TagQuestionService {
   }
 
   static async getTagsQuestions(
-    questionIds: string[],
+    questionIds: string[]
   ): Promise<Record<string, { id: string; name: string }[]>> {
     if (questionIds.length === 0) return {};
 
@@ -89,14 +89,14 @@ export class TagQuestionService {
         (acc[t.questionId] ??= []).push({ id: t.tagId, name: t.tagName });
         return acc;
       },
-      {} as Record<string, { id: string; name: string }[]>,
+      {} as Record<string, { id: string; name: string }[]>
     );
   }
 
   static async addTagsToQuestion(
     tx: Transaction,
     questionId: string,
-    tagIds: string[],
+    tagIds: string[]
   ): Promise<void> {
     if (tagIds.length === 0) return;
 
@@ -108,7 +108,7 @@ export class TagQuestionService {
   static async removeTagsFromQuestion(
     tx: Transaction,
     questionId: string,
-    tagIds: string[],
+    tagIds: string[]
   ): Promise<void> {
     if (tagIds.length === 0) return;
 
@@ -117,8 +117,8 @@ export class TagQuestionService {
       .where(
         and(
           eq(tagQuestion.questionId, questionId),
-          inArray(tagQuestion.tagId, tagIds),
-        ),
+          inArray(tagQuestion.tagId, tagIds)
+        )
       );
   }
 }

@@ -35,7 +35,7 @@ const Downvote = ({
       className={cn(
         config.button,
         "group relative overflow-visible bg-transparent! p-0 disabled:opacity-100",
-        className,
+        className
       )}
       aria-label={isActive ? "Remove downvote" : "Downvote"}
       aria-pressed={isActive}
@@ -72,7 +72,7 @@ const Downvote = ({
             <TbArrowBigDown
               className={cn(
                 "text-light-400 dark:text-light-500 group-hover:text-destructive! transition-colors duration-200",
-                config.icon,
+                config.icon
               )}
             />
           </motion.span>

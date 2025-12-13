@@ -7,7 +7,7 @@ const buildStandardAj = () =>
     .withRule(
       shield({
         mode: "LIVE",
-      }),
+      })
     )
     .withRule(
       detectBot({
@@ -17,7 +17,7 @@ const buildStandardAj = () =>
           "CATEGORY:PREVIEW",
           "CATEGORY:MONITOR",
         ],
-      }),
+      })
     );
 
 export const standardSecurityMiddleware = base

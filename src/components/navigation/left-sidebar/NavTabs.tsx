@@ -45,7 +45,7 @@ const NavTabs = ({ isMobile = false }: NavTabsProps) => {
               isActive
                 ? "primary-gradient text-light-900 rounded-lg"
                 : "text-dark300_light900 hover:bg-light800_dark300! smooth-hover rounded-lg [&:not(:hover)]:duration-200!",
-              "flex-start gap-4 bg-transparent p-3.5 max-lg:justify-center max-sm:justify-start max-sm:p-5",
+              "flex-start gap-4 bg-transparent p-3.5 max-lg:justify-center max-sm:justify-start max-sm:p-5"
             )}
           >
             <Image
@@ -59,7 +59,7 @@ const NavTabs = ({ isMobile = false }: NavTabsProps) => {
               className={cn(
                 isActive ? "base-bold" : "base-medium",
                 !isMobile && "max-lg:hidden",
-                "max-sm:text-xl",
+                "max-sm:text-xl"
               )}
             >
               {item.label}

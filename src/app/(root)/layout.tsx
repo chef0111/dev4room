@@ -6,7 +6,7 @@ import { ScrollToTop } from "@/components/modules/main/ScrollToTop";
 
 const LeftSidebar = dynamic(
   () => import("@/components/navigation/left-sidebar/LeftSidebar"),
-  { ssr: true },
+  { ssr: true }
 );
 
 interface Props {

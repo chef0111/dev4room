@@ -22,7 +22,7 @@ const QuestionCard = ({
       tags.map((tag: Tag) => (
         <TagCard key={tag.id} id={tag.id} name={tag.name} compact />
       )),
-    [tags],
+    [tags]
   );
 
   return (

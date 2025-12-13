@@ -35,7 +35,7 @@ const AnswerCardContent = ({
       <div
         className={cn(
           "overflow-hidden transition-all duration-300 ease-in-out",
-          !isExpanded && toggleExpand,
+          !isExpanded && toggleExpand
         )}
         style={
           showBlur
@@ -62,7 +62,7 @@ const AnswerCardContent = ({
             <ChevronDownIcon
               className={cn(
                 "size-4 transition-transform duration-200",
-                isExpanded && "rotate-180",
+                isExpanded && "rotate-180"
               )}
             />
           </Button>

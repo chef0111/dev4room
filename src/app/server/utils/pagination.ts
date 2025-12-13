@@ -12,7 +12,7 @@ export interface PaginationResult {
 
 export function getPagination(
   params: PaginationParams,
-  defaults: { page: number; pageSize: number } = { page: 1, pageSize: 10 },
+  defaults: { page: number; pageSize: number } = { page: 1, pageSize: 10 }
 ): PaginationResult {
   const page = params.page ?? defaults.page;
   const pageSize = params.pageSize ?? defaults.pageSize;

@@ -16,7 +16,7 @@ const Navbar = ({ className }: NavbarProps) => {
     <nav
       className={cn(
         "flex-between bg-light900_dark200 fixed w-full p-6 sm:px-12 dark:shadow-none",
-        className,
+        className
       )}
     >
       <Brand />

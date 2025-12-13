@@ -32,8 +32,8 @@ const ForgotPassword = () => {
       if (data) {
         router.push(
           `/verify-email?type=forget-password&email=${encodeURIComponent(
-            email,
-          )}`,
+            email
+          )}`
         );
         router.refresh();
 

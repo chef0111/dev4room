@@ -14,7 +14,7 @@ const GridCardsSkeleton = ({
     <div
       className={cn(
         "grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 2xl:grid-cols-4",
-        className,
+        className
       )}
     >
       {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((item) => (

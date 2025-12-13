@@ -27,7 +27,7 @@ export const formUrlQuery = ({ params, key, value }: UrlQueryParams) => {
         if (b === "page" && a !== "page") return -1;
         return 0;
       },
-    },
+    }
   );
 };
 
@@ -46,6 +46,6 @@ export const removeKeysFromUrlQuery = ({
       url: window.location.pathname,
       query: queryString,
     },
-    { skipNull: true },
+    { skipNull: true }
   );
 };

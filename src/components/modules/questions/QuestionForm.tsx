@@ -44,7 +44,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
   const handleFormReset = useCallback(() => form.reset(), [form]);
   const handleEditorReset = useCallback(
     () => setEditorKey((prev) => prev + 1),
-    [],
+    []
   );
 
   const createQuestion = useCreateQuestion({
@@ -72,7 +72,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
 
   const handleKeyDown = (
     e: React.KeyboardEvent<HTMLInputElement>,
-    field: { value: string[] },
+    field: { value: string[] }
   ) => {
     const tagInput = e.currentTarget.value.trim();
 

@@ -7,7 +7,7 @@ const sql = neon(process.env.DATABASE_URL!);
 
 async function main() {
   console.log(
-    "Creating HNSW indexes (more memory-efficient than IVFFlat)...\n",
+    "Creating HNSW indexes (more memory-efficient than IVFFlat)...\n"
   );
 
   try {
@@ -29,7 +29,7 @@ async function main() {
 
     console.log("✓ All HNSW indexes created successfully!");
     console.log(
-      "\nHNSW indexes are better for small-to-medium datasets and use less memory.",
+      "\nHNSW indexes are better for small-to-medium datasets and use less memory."
     );
   } catch (error) {
     console.error("Failed to create indexes:", error);

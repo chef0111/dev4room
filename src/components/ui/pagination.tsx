@@ -59,7 +59,7 @@ function PaginationLink({
           variant: isActive ? "default" : "ghost",
           size,
         }),
-        className,
+        className
       )}
       {...props}
     />

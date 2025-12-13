@@ -44,7 +44,7 @@ export function NextPagination({
       newSearchParams.set(key, String(newPage));
       return `${pathname}?${newSearchParams.toString()}`;
     },
-    [searchParams, pathname, pageSearchParam],
+    [searchParams, pathname, pageSearchParam]
   );
 
   const renderPageNumbers = () => {
@@ -62,7 +62,7 @@ export function NextPagination({
             >
               {i}
             </PaginationLink>
-          </PaginationItem>,
+          </PaginationItem>
         );
       }
     } else {
@@ -75,14 +75,14 @@ export function NextPagination({
           >
             1
           </PaginationLink>
-        </PaginationItem>,
+        </PaginationItem>
       );
 
       if (Number(page) > 3) {
         items.push(
           <PaginationItem key="ellipsis-start">
             <PaginationEllipsis />
-          </PaginationItem>,
+          </PaginationItem>
         );
       }
 
@@ -99,7 +99,7 @@ export function NextPagination({
             >
               {i}
             </PaginationLink>
-          </PaginationItem>,
+          </PaginationItem>
         );
       }
 
@@ -107,7 +107,7 @@ export function NextPagination({
         items.push(
           <PaginationItem key="ellipsis-end">
             <PaginationEllipsis />
-          </PaginationItem>,
+          </PaginationItem>
         );
       }
 
@@ -120,7 +120,7 @@ export function NextPagination({
           >
             {String(totalPageCount)}
           </PaginationLink>
-        </PaginationItem>,
+        </PaginationItem>
       );
     }
 
@@ -132,7 +132,7 @@ export function NextPagination({
       className={cn(
         "w-full gap-2",
         totalCount > Number(pageSize) ? "flex-center" : "hidden",
-        className,
+        className
       )}
     >
       <Pagination>

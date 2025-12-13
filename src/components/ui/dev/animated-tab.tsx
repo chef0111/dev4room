@@ -33,7 +33,7 @@ export function AnimatedTab({
   enableHover = false,
 }: AnimatedTabProps) {
   const [internalActiveId, setInternalActiveId] = useState<string | null>(
-    defaultValue ?? null,
+    defaultValue ?? null
   );
   const childRefs = useState(() => new Map<string, HTMLElement | null>())[0];
   const uniqueId = useId();
@@ -123,7 +123,7 @@ export function AnimatedTab({
           )}
         </AnimatePresence>
         <div className="z-10">{child.props.children}</div>
-      </>,
+      </>
     );
   });
 }

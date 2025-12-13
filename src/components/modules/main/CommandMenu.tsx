@@ -88,7 +88,7 @@ const CommandMenu = () => {
       e.preventDefault();
       setOpen((prev) => !prev);
     },
-    { enableOnFormTags: true },
+    { enableOnFormTags: true }
   );
 
   const handleSelect = useCallback(
@@ -97,7 +97,7 @@ const CommandMenu = () => {
       setQuery("");
       router.push(href as Route);
     },
-    [router],
+    [router]
   );
 
   const MIN_SIMILARITY = 0.3;
@@ -108,10 +108,10 @@ const CommandMenu = () => {
   const results = rawResults
     ? {
         questions: rawResults.questions.filter(
-          (q) => q.similarity >= MIN_SIMILARITY,
+          (q) => q.similarity >= MIN_SIMILARITY
         ),
         answers: rawResults.answers.filter(
-          (a) => a.similarity >= MIN_SIMILARITY,
+          (a) => a.similarity >= MIN_SIMILARITY
         ),
         tags: rawResults.tags.filter((t) => t.similarity >= MIN_SIMILARITY),
         users: rawResults.users.filter((u) => u.similarity >= MIN_SIMILARITY),
@@ -201,7 +201,7 @@ const CommandMenu = () => {
                       className="smooth-hover py-2!"
                       onSelect={() =>
                         handleSelect(
-                          `/questions/${answer.questionId}?answerId=${answer.id}#answer-${answer.id}`,
+                          `/questions/${answer.questionId}?answerId=${answer.id}#answer-${answer.id}`
                         )
                       }
                     >

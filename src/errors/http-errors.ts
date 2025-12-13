@@ -5,7 +5,7 @@ export class RequestError extends Error {
   constructor(
     statusCode: number,
     message: string,
-    error?: Record<string, string[]>,
+    error?: Record<string, string[]>
   ) {
     super(message);
     this.name = "RequestError";

@@ -6,7 +6,7 @@ const FilterFallback = ({ className }: { className?: string }) => {
     <div
       className={cn(
         "light-border bg-light800_dark300 text-muted-foreground flex h-12 min-w-fit items-center rounded-md px-3 py-2",
-        className,
+        className
       )}
     >
       <div className="flex-between w-full gap-2 sm:min-w-fit">

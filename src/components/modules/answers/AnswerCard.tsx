@@ -59,7 +59,7 @@ const AnswerCard = ({
       id={`answer-${id}`}
       className={cn(
         "bg-light900_dark300 shadow-light-100! light-border relative mb-6 gap-0 border-b p-6 sm:px-10",
-        className,
+        className
       )}
     >
       <div className="mb-4 flex flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center sm:gap-2">

@@ -104,7 +104,7 @@ const Bookmark = ({
         variant="ghost"
         className={cn(
           config.button,
-          "group hover:bg-orange-500/20! disabled:opacity-100",
+          "group hover:bg-orange-500/20! disabled:opacity-100"
         )}
         aria-label={isActive ? "Remove from saved" : "Save"}
         aria-pressed={isActive}
@@ -140,7 +140,7 @@ const Bookmark = ({
               <TbBookmark
                 className={cn(
                   "text-light-400 dark:text-light-500 group-hover:text-orange-400!",
-                  config.icon,
+                  config.icon
                 )}
               />
             </motion.span>

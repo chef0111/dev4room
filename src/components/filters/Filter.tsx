@@ -57,7 +57,7 @@ const Filter = ({ filters, className, containerClassName }: FilterProps) => {
         <SelectTrigger
           className={cn(
             "body-regular no-focus light-border! bg-light800_dark300 text-dark500_light700 cursor-pointer border",
-            className,
+            className
           )}
           aria-label="Filter Options"
         >

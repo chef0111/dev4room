@@ -39,7 +39,7 @@ const VerifyEmail = () => {
         router.push("/login");
       } else if (success && type === "forget-password") {
         router.push(
-          `/reset-password?email=${encodeURIComponent(email)}&id=${encodeURIComponent(otp)}`,
+          `/reset-password?email=${encodeURIComponent(email)}&id=${encodeURIComponent(otp)}`
         );
       }
 
@@ -53,7 +53,7 @@ const VerifyEmail = () => {
   };
 
   const handleResendOTP = async (
-    type: "email-verification" | "forget-password",
+    type: "email-verification" | "forget-password"
   ) => {
     if (!email) {
       toast.error("Error", {

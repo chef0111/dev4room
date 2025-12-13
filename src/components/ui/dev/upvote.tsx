@@ -36,7 +36,7 @@ const Upvote = ({
       className={cn(
         config.button,
         "group relative overflow-visible bg-transparent! p-0 disabled:opacity-100",
-        className,
+        className
       )}
       aria-label={isActive ? "Remove upvote" : "Upvote"}
       aria-pressed={isActive}
@@ -71,7 +71,7 @@ const Upvote = ({
             <TbArrowBigUp
               className={cn(
                 "text-light-400 dark:text-light-500 transition-colors duration-200 group-hover:text-green-500!",
-                config.icon,
+                config.icon
               )}
             />
           </motion.span>

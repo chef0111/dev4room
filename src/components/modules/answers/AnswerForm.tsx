@@ -51,7 +51,7 @@ const AnswerForm = ({
   const handleFormReset = useCallback(() => form.reset(), [form]);
   const handleEditorReset = useCallback(
     () => setEditorKey((prev) => prev + 1),
-    [],
+    []
   );
 
   const createAnswer = useCreateAnswer({
