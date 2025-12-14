@@ -106,7 +106,7 @@ const EditDelete = ({
               >
                 {isDeleting ? (
                   <>
-                    <Spinner />
+                    <Spinner className="border-primary-foreground/30 border-t-primary-foreground!" />
                     Deleting...
                   </>
                 ) : (
