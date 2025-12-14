@@ -1,9 +1,9 @@
-import { getServerSession } from "@/lib/session";
 import UserAvatar from "@/components/modules/profile/UserAvatar";
+import { authClient } from "@/lib/auth-client";
 
-export default async function UserSection() {
-  const session = await getServerSession();
-  const user = session?.user;
+export default function UserSection() {
+  const session = authClient.useSession();
+  const user = session.data?.user;
 
   if (!user?.id) {
     return null;
@@ -12,7 +12,7 @@ export default async function UserSection() {
   return (
     <UserAvatar
       id={user.id}
-      name={user.name!}
+      name={user.name}
       image={user.image ?? ""}
       className="h-9 w-9 rounded-full"
       aria-label="User avatar"

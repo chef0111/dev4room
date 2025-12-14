@@ -44,7 +44,7 @@ const NavTabs = ({ isMobile = false }: NavTabsProps) => {
             className={cn(
               isActive
                 ? "primary-gradient text-light-900 rounded-lg"
-                : "text-dark300_light900 hover:bg-light800_dark300! smooth-hover rounded-lg [&:not(:hover)]:duration-200!",
+                : "text-dark300_light900 hover:bg-light800_dark300! smooth-hover rounded-lg not-[&:hover]:duration-200!",
               "flex-start gap-4 bg-transparent p-3.5 max-lg:justify-center max-sm:justify-start max-sm:p-5"
             )}
           >

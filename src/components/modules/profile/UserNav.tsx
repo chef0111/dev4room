@@ -38,7 +38,7 @@ export function UserNav({ isAdmin = false }: UserNavProps) {
           className="flex-between data-[state=open]:bg-accent data-[state=open]:text-sidebar-accent-foreground w-full gap-2 rounded-lg p-0 focus:border-none! focus:ring-0! max-sm:p-2 lg:p-2"
           aria-label="User navigation"
         >
-          <div className="flex-start flex-grow gap-2">
+          <div className="flex-start grow gap-2">
             <UserAvatar
               id={user?.id}
               name={user?.name}
