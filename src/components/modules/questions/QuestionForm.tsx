@@ -107,6 +107,12 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
           type: "manual",
           message: "You can only add up to 5 tags.",
         });
+      } else if (!/^[a-z]+([-.][a-z]+)*$/.test(tagInput)) {
+        form.setError("tags", {
+          type: "manual",
+          message:
+            "Tags must be in lowercase letters, using only hyphens or dots as separators (e.g., node.js, react-native).",
+        });
       } else if (tagInput && tagInput.length <= 20 && !existedTag) {
         form.setValue("tags", [...field.value, normalizedTag]);
         e.currentTarget.value = "";
