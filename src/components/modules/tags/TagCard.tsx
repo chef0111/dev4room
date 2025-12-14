@@ -86,12 +86,17 @@ const TagCard = ({
               {name.toLowerCase()}
             </p>
           </div>
-          <Image
-            src={`${techIcon}`}
-            alt={`${name} icon`}
-            width={24}
-            height={24}
-          />
+          {techIcon === "devicon" ? (
+            <DevIcon className="text-light400_light500" />
+          ) : (
+            <Image
+              src={`${techIcon}`}
+              alt={`${name} icon`}
+              width={24}
+              height={24}
+              aria-hidden="true"
+            />
+          )}
         </div>
 
         <p className="small-regular text-dark500_light700 mt-4 line-clamp-3">
