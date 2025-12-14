@@ -18,7 +18,7 @@ const DashboardLayout: React.FC<Props> = ({ children }: Props) => {
       <div className="block">
         <LeftSidebar />
 
-        <section className="flex min-h-screen min-w-full flex-1 flex-col px-6 pt-32 pb-6 max-md:pb-14 sm:px-14 sm:pl-34 lg:pl-78 2xl:px-0">
+        <section className="flex min-h-screen min-w-full flex-1 flex-col px-6 pt-32 pb-6 max-md:pb-14 sm:px-14 sm:pl-34 lg:pl-78">
           <div className="mx-auto w-full">
             <Suspense fallback={null}>
               <ScrollToTop />
