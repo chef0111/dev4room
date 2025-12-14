@@ -20,7 +20,7 @@ export const formatFieldName = (fieldName: string): string => {
 
 export const getTechIcon = (techName: string) => {
   const normalizedTechName = techName.toLowerCase().replace(/[ .]/g, "");
-  const defaultIcon = "/images/brand.svg";
+  const defaultIcon = "devicon";
 
   return techIconMap[normalizedTechName]
     ? `${techIconMap[normalizedTechName]}`

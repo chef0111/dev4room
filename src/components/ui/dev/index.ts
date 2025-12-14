@@ -7,3 +7,6 @@ export { Upvote } from "./upvote";
 export { AnimatedTab } from "./animated-tab";
 export { default as Loader } from "./loader";
 export { Brand } from "./brand";
+export { Logo } from "./logo";
+export { ItemIcon } from "./item-icon";
+export { default as DevIcon } from "./dev-icon";

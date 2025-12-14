@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Badge, Button } from "@/components/ui";
-import { DevCard } from "@/components/ui/dev";
+import { DevCard, DevIcon } from "@/components/ui/dev";
 import { getTechDescription, getTechIcon } from "@/lib/utils";
 import Image from "next/image";
 
@@ -30,15 +30,19 @@ const TagCard = ({
 
   const TagContent = (
     <>
-      <Badge className="subtle-medium bg-light800_dark300 text-light400_light500 flex gap-2 rounded-md px-4 py-2 uppercase">
+      <Badge className="subtle-medium bg-light800_dark300 text-light400_light500 flex min-h-8 gap-2 rounded-md px-3 py-2 uppercase">
         <div className="flex-center space-x-2">
-          <Image
-            src={`${techIcon}`}
-            alt={`${name} icon`}
-            width={14}
-            height={14}
-            aria-hidden="true"
-          />
+          {techIcon === "devicon" ? (
+            <DevIcon className="size-3 rounded-[3px]" />
+          ) : (
+            <Image
+              src={`${techIcon}`}
+              alt={`${name} icon`}
+              width={14}
+              height={14}
+              aria-hidden="true"
+            />
+          )}
           <span>{name}</span>
         </div>
 

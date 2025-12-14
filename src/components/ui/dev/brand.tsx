@@ -1,7 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Route } from "next";
 import { cn } from "@/lib/utils";
+import { Logo } from "./logo";
 
 interface BrandProps {
   href?: Route | null;
@@ -20,12 +20,7 @@ export function Brand({
 }: BrandProps) {
   const content = (
     <div className={cn("flex-center gap-2", className)}>
-      <Image
-        src="/images/brand.svg"
-        width={size}
-        height={size}
-        alt="Dev4Room logo"
-      />
+      <Logo width={size} height={size} />
       {showText && (
         <p
           className={cn(
