@@ -42,6 +42,7 @@
 
   --radius-2: 8px;
   --radius-1_5: 6px;
+  --radius-1: 4px;
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);

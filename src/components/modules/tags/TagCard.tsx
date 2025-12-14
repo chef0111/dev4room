@@ -33,7 +33,7 @@ const TagCard = ({
       <Badge className="subtle-medium bg-light800_dark300 text-light400_light500 flex min-h-8 gap-2 rounded-md px-3 py-2 uppercase">
         <div className="flex-center space-x-2">
           {techIcon === "devicon" ? (
-            <DevIcon className="size-3 rounded-[3px]" />
+            <DevIcon className="rounded-1! size-3" />
           ) : (
             <Image
               src={`${techIcon}`}
