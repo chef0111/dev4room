@@ -1,8 +1,10 @@
 import { Skeleton } from "@/components/ui";
-import PostCardsSkeleton from "@/components/skeletons/PostCardsSkeleton";
-import ProfileHeaderSkeleton from "@/components/skeletons/ProfileHeaderSkeleton";
-import ProfileStatsSkeleton from "@/components/skeletons/ProfileStatsSkeletion";
 import TopTagsSkeleton from "@/components/skeletons/TopTagsSkeleton";
+import {
+  PostCardsSkeleton,
+  ProfileHeaderSkeleton,
+  ProfileStatsSkeleton,
+} from "@/components/skeletons";
 
 const Loading = () => {
   return (

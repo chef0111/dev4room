@@ -3,7 +3,8 @@ import { FilterProvider } from "@/context";
 import LocalSearch from "@/components/modules/main/LocalSearch";
 import Filter from "@/components/filters/Filter";
 import { UserFilters } from "@/common/constants/filters";
-import GridCardsSkeleton from "@/components/skeletons/GridCardsSkeleton";
+import FilterContent from "@/components/filters/FilterContent";
+import { GridCardsSkeleton } from "@/components/skeletons";
 import Users from "./users";
 
 const Community = ({ searchParams }: RouteParams) => {
@@ -29,7 +30,14 @@ const Community = ({ searchParams }: RouteParams) => {
             <GridCardsSkeleton className="mt-10" itemClassName="h-51" />
           }
         >
-          <Users searchParams={searchParams} />
+          <FilterContent
+            fallback={
+              <GridCardsSkeleton className="mt-10" itemClassName="h-51" />
+            }
+            loadingMessage="Loading..."
+          >
+            <Users searchParams={searchParams} />
+          </FilterContent>
         </Suspense>
       </div>
     </FilterProvider>

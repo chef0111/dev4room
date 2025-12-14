@@ -12,7 +12,7 @@ import { useFilterTransition } from "@/context/filter-provider";
 const HomeFilter = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const filterParams = searchParams.get("filter") || "";
+  const filterParams = searchParams.get("filter") ?? "";
   const [filterValue, setFilterValue] = useOptimistic(filterParams);
   const { startTransition } = useFilterTransition();
 
@@ -34,7 +34,7 @@ const HomeFilter = () => {
     }
 
     startTransition(() => {
-      setFilterValue(filter);
+      setFilterValue(filter === filterValue ? "" : filter);
       router.push(newUrl as Route, { scroll: false });
     });
   };

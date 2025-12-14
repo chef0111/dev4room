@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Skeleton } from "../ui/skeleton";
+import { Skeleton } from "@/components/ui";
 
 const PostCardsSkeleton = ({ className }: { className?: string }) => {
   return (

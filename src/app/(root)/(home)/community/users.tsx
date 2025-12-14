@@ -2,8 +2,6 @@ import { orpc } from "@/lib/orpc";
 import { getQueryClient } from "@/lib/query/hydration";
 import { getErrorMessage } from "@/lib/handlers/error";
 
-import FilterContent from "@/components/filters/FilterContent";
-import GridCardsSkeleton from "@/components/skeletons/GridCardsSkeleton";
 import DataRenderer from "@/components/shared/DataRenderer";
 import { EMPTY_USERS } from "@/common/constants/states";
 import UserCard from "@/components/modules/profile/UserCard";
@@ -35,31 +33,26 @@ const Users = async ({ searchParams }: Omit<RouteParams, "params">) => {
   const totalUsers = data?.totalUsers || 0;
   return (
     <>
-      <FilterContent
-        fallback={<GridCardsSkeleton className="mt-10" itemClassName="h-51" />}
-        loadingMessage="Loading..."
-      >
-        <DataRenderer
-          data={data?.users ?? []}
-          success={!!data}
-          error={result.error}
-          empty={EMPTY_USERS}
-          render={(users) => (
-            <div className="mt-10 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 2xl:grid-cols-4">
-              {users.map((user) => (
-                <UserCard key={user.id} {...user} />
-              ))}
-            </div>
-          )}
-        />
+      <DataRenderer
+        data={data?.users ?? []}
+        success={!!data}
+        error={result.error}
+        empty={EMPTY_USERS}
+        render={(users) => (
+          <div className="mt-10 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 2xl:grid-cols-4">
+            {users.map((user) => (
+              <UserCard key={user.id} {...user} />
+            ))}
+          </div>
+        )}
+      />
 
-        <NextPagination
-          page={page}
-          pageSize={pageSize || 12}
-          totalCount={totalUsers}
-          className="pb-10"
-        />
-      </FilterContent>
+      <NextPagination
+        page={page}
+        pageSize={pageSize || 12}
+        totalCount={totalUsers}
+        className="pb-10"
+      />
     </>
   );
 };

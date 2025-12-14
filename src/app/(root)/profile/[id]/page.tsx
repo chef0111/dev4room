@@ -12,9 +12,8 @@ import ProfileHeader from "@/components/modules/profile/ProfileHeader";
 import UserStats from "@/components/modules/profile/UserStats";
 import UserTabs from "@/components/modules/profile/UserTabs";
 import UserTopTags from "@/components/modules/profile/UserTopTags";
-import UserTabsSkeleton from "@/components/skeletons/UserTabsSkeleton";
-import UserTopTagsSkeleton from "@/components/skeletons/UserTopTagsSkeleton";
 import EditProfileDialog from "@/components/modules/profile/EditProfileDialog";
+import { UserTabsSkeleton, UserTopTagsSkeleton } from "@/components/skeletons";
 
 export async function generateStaticParams() {
   const users = await db.select({ id: user.id }).from(user);

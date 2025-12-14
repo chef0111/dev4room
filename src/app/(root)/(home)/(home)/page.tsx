@@ -8,8 +8,9 @@ import LocalSearch from "@/components/modules/main/LocalSearch";
 import HomeFilter from "@/components/filters/HomeFilter";
 import Filter from "@/components/filters/Filter";
 import { HomePageFilters } from "@/common/constants/filters";
+import FilterContent from "@/components/filters/FilterContent";
+import { PostCardsSkeleton } from "@/components/skeletons";
 import HomeQuestions from "./questions";
-import PostCardsSkeleton from "@/components/skeletons/PostCardsSkeleton";
 
 export const metadata: Metadata = {
   title: "Dev4Room | Home",
@@ -49,7 +50,12 @@ const HomePage = ({ searchParams }: RouteParams) => {
       </section>
 
       <Suspense fallback={<PostCardsSkeleton className="mt-10" />}>
-        <HomeQuestions searchParams={searchParams} />
+        <FilterContent
+          fallback={<PostCardsSkeleton className="mt-10" />}
+          loadingMessage="Loading..."
+        >
+          <HomeQuestions searchParams={searchParams} />
+        </FilterContent>
       </Suspense>
     </FilterProvider>
   );

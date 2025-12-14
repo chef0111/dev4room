@@ -3,7 +3,8 @@ import { FilterProvider } from "@/context";
 import LocalSearch from "@/components/modules/main/LocalSearch";
 import Filter from "@/components/filters/Filter";
 import { TagFilters } from "@/common/constants/filters";
-import GridCardsSkeleton from "@/components/skeletons/GridCardsSkeleton";
+import FilterContent from "@/components/filters/FilterContent";
+import { GridCardsSkeleton } from "@/components/skeletons";
 import Tags from "./tags";
 
 const TagsPage = ({ searchParams }: RouteParams) => {
@@ -23,7 +24,14 @@ const TagsPage = ({ searchParams }: RouteParams) => {
       <Suspense
         fallback={<GridCardsSkeleton className="mt-10" itemClassName="h-41" />}
       >
-        <Tags searchParams={searchParams} />
+        <FilterContent
+          fallback={
+            <GridCardsSkeleton className="mt-10" itemClassName="h-41" />
+          }
+          loadingMessage="Loading..."
+        >
+          <Tags searchParams={searchParams} />
+        </FilterContent>
       </Suspense>
     </FilterProvider>
   );

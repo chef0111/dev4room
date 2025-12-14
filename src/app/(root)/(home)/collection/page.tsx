@@ -1,13 +1,15 @@
 import { Suspense } from "react";
+import { FilterProvider } from "@/context";
 import LocalSearch from "@/components/modules/main/LocalSearch";
 import { CollectionFilters } from "@/common/constants/filters";
 import Filter from "@/components/filters/Filter";
+import FilterContent from "@/components/filters/FilterContent";
+import { PostCardsSkeleton } from "@/components/skeletons";
 import Collection from "./collection";
-import PostCardsSkeleton from "@/components/skeletons/PostCardsSkeleton";
 
 const CollectionsPage = ({ searchParams }: RouteParams) => {
   return (
-    <>
+    <FilterProvider>
       <h1 className="h1-bold text-dark100_light900">Saved Questions</h1>
 
       <div className="mt-10 flex justify-between gap-4 max-sm:flex-col sm:items-center">
@@ -24,9 +26,14 @@ const CollectionsPage = ({ searchParams }: RouteParams) => {
       </div>
 
       <Suspense fallback={<PostCardsSkeleton className="mt-10" />}>
-        <Collection searchParams={searchParams} />
+        <FilterContent
+          fallback={<PostCardsSkeleton className="mt-10" />}
+          loadingMessage="Loading..."
+        >
+          <Collection searchParams={searchParams} />
+        </FilterContent>
       </Suspense>
-    </>
+    </FilterProvider>
   );
 };
 

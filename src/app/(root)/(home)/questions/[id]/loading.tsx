@@ -1,6 +1,8 @@
 import EditorFallback from "@/components/markdown/EditorFallback";
-import PostCardsSkeleton from "@/components/skeletons/PostCardsSkeleton";
-import QuestionHeaderSkeleton from "@/components/skeletons/QuestionHeaderSkeleton";
+import {
+  PostCardsSkeleton,
+  QuestionHeaderSkeleton,
+} from "@/components/skeletons";
 import { Skeleton, Button } from "@/components/ui";
 import { BsStars } from "react-icons/bs";
 

@@ -2,8 +2,6 @@ import { orpc } from "@/lib/orpc";
 import { getQueryClient } from "@/lib/query/hydration";
 import { getErrorMessage } from "@/lib/handlers/error";
 
-import FilterContent from "@/components/filters/FilterContent";
-import PostCardsSkeleton from "@/components/skeletons/PostCardsSkeleton";
 import DataRenderer from "@/components/shared/DataRenderer";
 import { EMPTY_QUESTION } from "@/common/constants/states";
 import QuestionCard from "@/components/modules/questions/QuestionCard";
@@ -36,24 +34,19 @@ const Collection = async ({ searchParams }: Omit<RouteParams, "params">) => {
 
   return (
     <>
-      <FilterContent
-        fallback={<PostCardsSkeleton className="mt-10" />}
-        loadingMessage="Loading..."
-      >
-        <DataRenderer
-          success={!!data}
-          error={result.error}
-          data={data?.collections}
-          empty={EMPTY_QUESTION}
-          render={(collections) => (
-            <div className="my-10 flex w-full flex-col gap-6">
-              {collections.map((item) => (
-                <QuestionCard key={item.id} question={item.question} />
-              ))}
-            </div>
-          )}
-        />
-      </FilterContent>
+      <DataRenderer
+        success={!!data}
+        error={result.error}
+        data={data?.collections}
+        empty={EMPTY_QUESTION}
+        render={(collections) => (
+          <div className="my-10 flex w-full flex-col gap-6">
+            {collections.map((item) => (
+              <QuestionCard key={item.id} question={item.question} />
+            ))}
+          </div>
+        )}
+      />
 
       <NextPagination
         page={page}
