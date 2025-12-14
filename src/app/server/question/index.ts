@@ -184,6 +184,7 @@ export const deleteQuestion = authorized
       try {
         revalidateTag(`question:${input.questionId}`, "max");
         revalidateTag("questions", "max");
+        revalidateTag("tags", "max");
         revalidateTag(`user:${context.user.id}`, "max");
 
         await createInteraction(

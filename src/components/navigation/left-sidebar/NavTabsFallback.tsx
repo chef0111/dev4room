@@ -2,37 +2,30 @@ import React from "react";
 import Image from "next/image";
 
 import { cn } from "@/lib/utils";
-import { SheetClose } from "@/components/ui";
 
 interface NavTabsProps {
-  userId?: string;
   isMobile?: boolean;
 }
 
 export const sidebarTabs = [
   {
     imgUrl: "/icons/home.svg",
-    route: "/",
     label: "Home",
   },
   {
     imgUrl: "/icons/users.svg",
-    route: "/community",
     label: "Community",
   },
   {
     imgUrl: "/icons/star.svg",
-    route: "/collection",
     label: "Collections",
   },
   {
     imgUrl: "/icons/tag.svg",
-    route: "/tags",
     label: "Tags",
   },
   {
     imgUrl: "/icons/question.svg",
-    route: "/ask-question",
     label: "Ask a question",
   },
 ];
@@ -56,12 +49,8 @@ const NavTabsFallback = ({ isMobile = false }: NavTabsProps) => {
           </div>
         );
 
-        return isMobile ? (
-          <SheetClose asChild key={item.route}>
-            {LinkComponent}
-          </SheetClose>
-        ) : (
-          <React.Fragment key={item.route}>{LinkComponent}</React.Fragment>
+        return (
+          <React.Fragment key={item.label}>{LinkComponent}</React.Fragment>
         );
       })}
     </div>

@@ -1,4 +1,5 @@
-import { Suspense } from "react";
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -7,11 +8,9 @@ import {
   SheetContent,
   SheetTitle,
   SheetTrigger,
-  Skeleton,
 } from "@/components/ui";
 import { Menu } from "lucide-react";
 import NavTabs from "./NavTabs";
-import NavTabsFallback from "./NavTabsFallback";
 import SidebarUser from "./SidebarUser";
 
 const MobileNav = () => {
@@ -36,17 +35,11 @@ const MobileNav = () => {
         <div className="no-scrollbar flex h-[calc(100vh-90px)] flex-col justify-between overflow-y-auto">
           <SheetClose asChild>
             <section className="h-full pt-10">
-              <Suspense fallback={<NavTabsFallback isMobile={true} />}>
-                <NavTabs isMobile={true} />
-              </Suspense>
+              <NavTabs isMobile={true} />
             </section>
           </SheetClose>
           <SheetClose asChild>
-            <Suspense
-              fallback={<Skeleton className="h-10 w-full rounded-lg" />}
-            >
-              <SidebarUser />
-            </Suspense>
+            <SidebarUser />
           </SheetClose>
         </div>
       </SheetContent>

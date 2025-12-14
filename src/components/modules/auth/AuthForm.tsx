@@ -98,7 +98,7 @@ const AuthForm = <T extends FieldValues>({
                 <div className="flex-between w-full">
                   <FieldLabel
                     htmlFor={`auth-form-${fieldName}`}
-                    className="pg-medium flex-grow"
+                    className="pg-medium grow"
                   >
                     {formatFieldName(fieldName)}
                   </FieldLabel>

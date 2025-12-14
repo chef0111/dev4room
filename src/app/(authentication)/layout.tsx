@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@/components/ui";
 import { TextShimmer } from "@/components/ui/dev";
-import { Brand } from "@/components/ui";
+import { Brand } from "@/components/ui/dev";
 import { Suspense } from "react";
 
 interface Props {

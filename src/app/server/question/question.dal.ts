@@ -365,6 +365,11 @@ export class QuestionDAL {
           tx,
           questionTags.map((t) => t.tagId)
         );
+        await TagQuestionService.removeTagsFromQuestion(
+          tx,
+          questionId,
+          questionTags.map((t) => t.tagId)
+        );
       }
 
       const questionAnswers = await tx

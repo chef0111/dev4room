@@ -1,21 +1,22 @@
-import { Suspense } from "react";
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { UserNav } from "@/components/modules/profile/UserNav";
 import { Button, Skeleton } from "@/components/ui";
-import { getServerSession } from "@/lib/session";
+import { authClient } from "@/lib/auth-client";
 
-const SidebarUser = async () => {
-  const session = await getServerSession();
-  const user = session?.user;
+const SidebarUser = () => {
+  const { data, isPending } = authClient.useSession();
+  const user = data?.user;
   const isAdmin = user?.role === "admin";
 
   return (
     <div className="flex flex-col gap-3">
-      {user ? (
-        <Suspense fallback={<Skeleton className="h-10 w-full rounded-lg" />}>
-          <UserNav isAdmin={isAdmin} />
-        </Suspense>
+      {isPending ? (
+        <Skeleton className="h-10 w-full rounded-lg" />
+      ) : user ? (
+        <UserNav isAdmin={isAdmin} />
       ) : (
         <>
           <Button

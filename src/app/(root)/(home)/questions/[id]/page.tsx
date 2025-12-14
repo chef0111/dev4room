@@ -5,8 +5,10 @@ import { question } from "@/database/schema";
 import QuestionContent from "@/components/modules/questions/QuestionContent";
 import AnswerForm from "@/components/modules/answers/AnswerForm";
 import AnswerList from "@/components/modules/answers/AnswerList";
-import QuestionContentSkeleton from "@/components/skeletons/QuestionContentSkeleton";
-import PostCardsSkeleton from "@/components/skeletons/PostCardsSkeleton";
+import {
+  PostCardsSkeleton,
+  QuestionContentSkeleton,
+} from "@/components/skeletons";
 
 export async function generateStaticParams() {
   const questions = await db.select({ id: question.id }).from(question);

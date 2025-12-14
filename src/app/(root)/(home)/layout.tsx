@@ -1,9 +1,4 @@
-import dynamic from "next/dynamic";
-
-const RightSidebar = dynamic(
-  () => import("@/components/navigation/right-sidebar/RightSidebar"),
-  { ssr: true }
-);
+import RightSidebar from "@/components/navigation/right-sidebar";
 
 interface Props {
   children: React.ReactNode;

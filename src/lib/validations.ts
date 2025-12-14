@@ -97,6 +97,10 @@ export const QuestionSchema = z.object({
         .string()
         .min(1, { message: "Tag cannot be empty." })
         .max(20, { message: "Tag cannot exceed 20 characters." })
+        .regex(/^[a-z]+([-.][a-z]+)*$/, {
+          message:
+            "Tags must be in lowercase letters, using only hyphens or dots as separators (e.g., node.js, react-native).",
+        })
     )
     .min(1, { message: "At least one tag is required." })
     .max(5, { message: "You can add a maximum of 5 tags." }),

@@ -1,9 +1,11 @@
+"use client";
+
 import { Suspense } from "react";
 import { cn } from "@/lib/utils";
 import ThemeToggle from "./ThemeToggle";
 import MobileNav from "../left-sidebar/MobileNav";
 import UserSection from "./UserSection";
-import { Brand } from "@/components/ui";
+import { Brand } from "@/components/ui/dev";
 import CommandMenu from "@/components/modules/main/CommandMenu";
 import CommandMenuFallback from "@/components/modules/main/CommandMenuFallback";
 
@@ -30,9 +32,7 @@ const Navbar = ({ className }: NavbarProps) => {
       <div className="flex-between gap-5">
         <ThemeToggle />
 
-        <Suspense fallback={null}>
-          <UserSection />
-        </Suspense>
+        <UserSection />
 
         <Suspense fallback={null}>
           <MobileNav />

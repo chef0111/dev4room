@@ -1,45 +1,13 @@
-import { orpc } from "@/lib/orpc";
-import { getQueryClient } from "@/lib/query/hydration";
-import { getErrorMessage } from "@/lib/handlers/error";
-import LocalSearch from "@/components/modules/main/LocalSearch";
-import Filter from "@/components/filters/Filter";
-import { CollectionFilters } from "@/common/constants/filters";
-import DataRenderer from "@/components/shared/DataRenderer";
-import QuestionCard from "@/components/modules/questions/QuestionCard";
-import { EMPTY_QUESTION } from "@/common/constants/states";
-import { NextPagination } from "@/components/ui/dev";
+import { Suspense } from "react";
 import { FilterProvider } from "@/context";
+import LocalSearch from "@/components/modules/main/LocalSearch";
+import { CollectionFilters } from "@/common/constants/filters";
+import Filter from "@/components/filters/Filter";
 import FilterContent from "@/components/filters/FilterContent";
+import { PostCardsSkeleton } from "@/components/skeletons";
+import Collection from "./collection";
 
-interface SearchParams {
-  searchParams: Promise<{ [key: string]: string }>;
-}
-
-const Collections = async ({ searchParams }: SearchParams) => {
-  const { page, pageSize, query, filter } = await searchParams;
-
-  const queryClient = getQueryClient();
-
-  const queryOptions = orpc.collection.list.queryOptions({
-    input: {
-      page: Number(page) || 1,
-      pageSize: Number(pageSize) || 10,
-      query,
-      filter,
-    },
-  });
-
-  const result = await queryClient
-    .fetchQuery(queryOptions)
-    .then((data) => ({ data, error: undefined }))
-    .catch((e) => ({
-      data: undefined,
-      error: { message: getErrorMessage(e, "Failed to get questions") },
-    }));
-
-  const data = result.data;
-  const totalCollections = data?.totalCollections || 0;
-
+const CollectionsPage = ({ searchParams }: RouteParams) => {
   return (
     <FilterProvider>
       <h1 className="h1-bold text-dark100_light900">Saved Questions</h1>
@@ -57,30 +25,16 @@ const Collections = async ({ searchParams }: SearchParams) => {
         />
       </div>
 
-      <FilterContent loadingMessage="Loading...">
-        <DataRenderer
-          success={!!data}
-          error={result.error}
-          data={data?.collections}
-          empty={EMPTY_QUESTION}
-          render={(collections) => (
-            <div className="my-10 flex w-full flex-col gap-6">
-              {collections.map((item) => (
-                <QuestionCard key={item.id} question={item.question} />
-              ))}
-            </div>
-          )}
-        />
-      </FilterContent>
-
-      <NextPagination
-        page={page}
-        pageSize={pageSize}
-        totalCount={totalCollections}
-        className="pb-10"
-      />
+      <Suspense fallback={<PostCardsSkeleton className="mt-10" />}>
+        <FilterContent
+          fallback={<PostCardsSkeleton className="mt-10" />}
+          loadingMessage="Loading..."
+        >
+          <Collection searchParams={searchParams} />
+        </FilterContent>
+      </Suspense>
     </FilterProvider>
   );
 };
 
-export default Collections;
+export default CollectionsPage;

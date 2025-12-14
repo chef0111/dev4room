@@ -34,13 +34,11 @@ export class TagQuestionService {
       .values({ name: normalizedName, questions: 1 })
       .returning({ id: tag.id });
 
-    // Mark for indexing after transaction commits
     pendingTagIndexing.add(newTag.id);
 
     return newTag.id;
   }
 
-  // Call this after transaction commits to index any new tags
   static getPendingTagIds(): string[] {
     const ids = Array.from(pendingTagIndexing);
     pendingTagIndexing.clear();

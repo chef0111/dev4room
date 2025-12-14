@@ -4,7 +4,7 @@ import { cacheTag, cacheLife } from "next/cache";
 
 import { db } from "@/database/drizzle";
 import { user, question, answer, tagQuestion, tag } from "@/database/schema";
-import { and, or, ilike, desc, asc, sql, eq, inArray } from "drizzle-orm";
+import { and, or, ilike, desc, asc, sql, eq, inArray, not } from "drizzle-orm";
 import { ORPCError } from "@orpc/server";
 import { getPagination, validateArray, validateOne } from "../utils";
 import { TagQuestionService } from "../tag-question/service";
@@ -76,6 +76,7 @@ export class UserDAL {
     // Build where conditions
     const conditions = [
       eq(user.emailVerified, true),
+      not(eq(user.role, "admin")),
       this.buildSearchCondition(query),
     ].filter(Boolean);
 

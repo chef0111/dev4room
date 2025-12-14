@@ -6,6 +6,7 @@ import { Route } from "next";
 import { useHotkeys } from "react-hotkeys-hook";
 import { FileQuestion, MessageSquare, Tag, Search } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
+import { orpc } from "@/lib/orpc";
 
 import {
   CommandDialog,
@@ -15,21 +16,10 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { Brand, Button, Kbd, KbdGroup, Spinner } from "@/components/ui";
+import { Button, Kbd, KbdGroup, Spinner } from "@/components/ui";
+import { Brand } from "@/components/ui/dev";
 import UserAvatar from "@/components/modules/profile/UserAvatar";
-import { orpc } from "@/lib/orpc";
-
-// Hook to debounce a value
-function useDebouncedValue<T>(value: T, delay: number): T {
-  const [debouncedValue, setDebouncedValue] = useState(value);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setDebouncedValue(value), delay);
-    return () => clearTimeout(timer);
-  }, [value, delay]);
-
-  return debouncedValue;
-}
+import { useDebouncedValue } from "@/hooks/use-debounce";
 
 interface SearchResult {
   questions: Array<{
@@ -73,7 +63,6 @@ const CommandMenu = () => {
     },
   });
 
-  // Perform search when debounced query changes
   useEffect(() => {
     if (debouncedQuery.length >= 2) {
       searchMutation.mutate(debouncedQuery);
