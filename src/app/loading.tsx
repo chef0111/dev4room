@@ -1,12 +1,9 @@
-import { Loader } from "@/components/ui/dev";
-import { Suspense } from "react";
+import { Brand } from "@/components/ui/dev";
 
 const Loading = () => {
   return (
-    <div className="flex-center min-h-screen w-full overflow-hidden">
-      <Suspense fallback={null}>
-        <Loader />
-      </Suspense>
+    <div className="flex-center min-h-screen w-screen overflow-hidden">
+      <Brand href={null} size={64} textClassName="h1-bold text-5xl" />
     </div>
   );
 };
