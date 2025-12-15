@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import localFont from "next/font/local";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/next";
 import { ThemeProvider } from "@/context/theme-provider";
 import { Toaster } from "@/components/ui";
 import { Providers } from "./providers";
@@ -52,6 +53,7 @@ const RootLayout: React.FC<Props> = ({ children }: Props) => {
           <Toaster richColors />
         </ThemeProvider>
         <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   );
