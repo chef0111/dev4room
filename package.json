@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next build && next start",
-    "preview": "next start",
+    "start": "next start",
+    "preview": "next build && next start",
     "lint": "eslint",
     "prepare": "husky"
   },
