@@ -45,6 +45,7 @@ const eslintConfig = [
         },
       ],
       "@typescript-eslint/no-explicit-any": "warn",
+      "react/prop-types": "off",
     },
     settings: {
       react: {

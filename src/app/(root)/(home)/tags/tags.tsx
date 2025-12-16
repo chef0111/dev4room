@@ -7,7 +7,7 @@ import { EMPTY_TAGS } from "@/common/constants/states";
 import TagCard from "@/components/modules/tags/TagCard";
 import { NextPagination } from "@/components/ui/dev";
 
-const Tags = async ({ searchParams }: Omit<RouteParams, "params">) => {
+const Tags = async ({ searchParams }: Pick<RouteParams, "searchParams">) => {
   const { page, pageSize, query, filter } = await searchParams;
 
   const queryClient = getQueryClient();
