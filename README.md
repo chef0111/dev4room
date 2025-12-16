@@ -47,7 +47,7 @@ The project uses PostgreSQL with Neon for the database layer, Better-Auth for fl
 
 ## <a name="features">🔋 Features</a>
 
-### 🔐 Authentication & User Management
+### Authentication & User Management
 
 - **Email/Password Authentication** - Secure registration and login with email verification
 - **OAuth Integration** - Sign in with Google or GitHub
@@ -55,7 +55,7 @@ The project uses PostgreSQL with Neon for the database layer, Better-Auth for fl
 - **User Profiles** - Customizable profiles with name, username, portfolio link, location, and bio
 - **User Statistics** - Track questions, answers, reputation points, and badges
 
-### ❓ Questions
+### Questions
 
 - **Create Questions** - Post questions with markdown support and tag association
 - **Edit & Delete** - Full CRUD operations for questions
@@ -64,7 +64,7 @@ The project uses PostgreSQL with Neon for the database layer, Better-Auth for fl
 - **Top Questions** - Discover trending questions sorted by views and upvotes
 - **View Tracking** - Automatic view count tracking for questions
 
-### 💬 Answers
+### Answers
 
 - **Post Answers** - Answer questions with rich markdown formatting
 - **Edit & Delete** - Manage your answers with full editing capabilities
@@ -72,26 +72,26 @@ The project uses PostgreSQL with Neon for the database layer, Better-Auth for fl
 - **Answer Validation** - AI validates answer relevance before enhancement
 - **Pagination** - Navigate through answers with pagination support
 
-### 🏷️ Tags
+### Tags
 
 - **Tag System** - Categorize questions with tags
 - **Tag Pages** - Browse questions by specific tags
 - **Popular Tags** - Discover trending tags in the community
 - **Tag Filtering** - Filter questions by tags
 
-### 👍 Voting System
+### Voting System
 
 - **Upvote/Downvote** - Vote on questions and answers
 - **Vote Status** - Check your voting status on any content
 - **Reputation Impact** - Votes contribute to user reputation
 
-### ⭐ Collections (Bookmarks)
+### Collections (Bookmarks)
 
 - **Save Questions** - Bookmark questions for later reference
 - **Collection Management** - View and manage your saved questions
 - **Toggle Save** - Easily add or remove questions from collections
 
-### 🔍 Search
+### Search
 
 - **Semantic Search** - AI-powered semantic search using pgvector and OpenAI embeddings
 - **Global Command Menu** - Quick search with `Cmd+K` (Mac) or `Ctrl+K` (Windows)
@@ -99,14 +99,14 @@ The project uses PostgreSQL with Neon for the database layer, Better-Auth for fl
 - **Similarity-Based Results** - Results ranked by semantic similarity
 - **Real-time Search** - Debounced search with instant results
 
-### 🤖 AI Features
+### AI Features
 
 - **AI Answer Generation** - Generate answers using OpenAI
 - **Answer Enhancement** - Improve and format your answers with AI assistance
 - **Relevance Validation** - AI validates that answers are related to questions
 - **Markdown Formatting** - AI-generated answers include proper markdown formatting
 
-### 🏆 Reputation & Badges
+### Reputation & Badges
 
 - **Reputation Points** - Earn reputation through questions, answers, and votes
 - **Badge System** - Unlock Gold, Silver, and Bronze badges based on:
@@ -116,7 +116,7 @@ The project uses PostgreSQL with Neon for the database layer, Better-Auth for fl
   - Answer upvotes
   - Total views
 
-### 🎨 User Interface
+### User Interface
 
 - **Responsive Design** - Fully responsive layout for all devices
 - **Dark Mode** - Seamless dark/light theme switching

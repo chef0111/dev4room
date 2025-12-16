@@ -3,7 +3,15 @@
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
-    "source.addMissingImports": "explicit"
+    "source.addMissingImports": "explicit",
+    "editor.codeLens": "explicit"
+  },
+  "editor.quickSuggestions": {
+    "strings": "on"
+  },
+  "tailwindCSS.classFunctions": ["cva", "cn"],
+  "files.associations": {
+    "*.css": "tailwindcss"
   },
   "typescript.tsdk": "node_modules/typescript/lib"
 }

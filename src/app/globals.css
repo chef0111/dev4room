@@ -482,12 +482,6 @@
   @apply flex-center pg-medium text-dark400_light500 h-9 w-fit rounded-sm px-3;
 }
 
-@layer base {
-  :root {
-    --radius: 0.5rem;
-  }
-}
-
 ::-webkit-scrollbar {
   width: 5px;
 }
@@ -799,7 +793,7 @@ code {
   --muted-foreground: oklch(0.704 0.04 256.788);
   --accent: #191c26;
   --accent-foreground: oklch(0.984 0.003 247.858);
-  --destructive: oklch(0.704 0.191 22.216);
+  --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: #0091ff;
