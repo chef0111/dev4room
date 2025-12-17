@@ -1,10 +1,11 @@
-import { ReactNode } from "react";
+import { ReactNode, Suspense, RefObject } from "react";
 import {
   Controller,
   ControllerProps,
   FieldPath,
   FieldValues,
 } from "react-hook-form";
+import { MDXEditorMethods } from "@mdxeditor/editor";
 
 import {
   Field,
@@ -22,6 +23,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import MarkdownEditor from "@/components/markdown/MarkdownEditor";
+import EditorFallback from "@/components/markdown/EditorFallback";
 
 type FormControlProps<
   TFieldValues extends FieldValues = FieldValues,
@@ -29,7 +32,8 @@ type FormControlProps<
   TTransformedValues = TFieldValues,
 > = {
   name: TName;
-  label: ReactNode;
+  label?: ReactNode;
+  placeholder?: string;
   description?: ReactNode;
   control: ControllerProps<TFieldValues, TName, TTransformedValues>["control"];
 };
@@ -81,8 +85,12 @@ function FormBase<
       render={({ field, fieldState }) => {
         const labelElement = (
           <>
-            <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
-            {description && <FieldDescription>{description}</FieldDescription>}
+            {label && <FieldLabel htmlFor={field.name}>{label}</FieldLabel>}
+            {description && (
+              <FieldDescription className="body-regular text-light-500">
+                {description}
+              </FieldDescription>
+            )}
           </>
         );
         const control = children({
@@ -121,12 +129,44 @@ function FormBase<
   );
 }
 
-export const FormInput: FormControlFn = (props) => {
-  return <FormBase {...props}>{(field) => <Input {...field} />}</FormBase>;
+export const FormInput: FormControlFn<{
+  className?: string;
+  children?: ReactNode;
+}> = ({ children, className, ...props }) => {
+  return (
+    <FormBase {...props}>
+      {(field) => (
+        <>
+          <Input
+            {...field}
+            placeholder={props.placeholder}
+            className={className}
+          />
+          {children}
+        </>
+      )}
+    </FormBase>
+  );
 };
 
-export const FormTextarea: FormControlFn = (props) => {
-  return <FormBase {...props}>{(field) => <Textarea {...field} />}</FormBase>;
+export const FormTextarea: FormControlFn<{
+  className?: string;
+  children?: ReactNode;
+}> = ({ children, className, ...props }) => {
+  return (
+    <FormBase {...props}>
+      {(field) => (
+        <>
+          <Textarea
+            {...field}
+            placeholder={props.placeholder}
+            className={className}
+          />
+          {children}
+        </>
+      )}
+    </FormBase>
+  );
 };
 
 export const FormSelect: FormControlFn<{ children: ReactNode }> = ({
@@ -156,6 +196,32 @@ export const FormCheckbox: FormControlFn = (props) => {
     <FormBase {...props} horizontal controlFirst>
       {({ onChange, value, ...field }) => (
         <Checkbox {...field} checked={value} onCheckedChange={onChange} />
+      )}
+    </FormBase>
+  );
+};
+
+export const FormMarkdown: FormControlFn<{
+  editorRef?: RefObject<MDXEditorMethods | null>;
+  editorKey?: number;
+  children?: ReactNode;
+}> = ({ editorRef, editorKey, children, ...props }) => {
+  return (
+    <FormBase {...props}>
+      {(field) => (
+        <>
+          <Suspense fallback={<EditorFallback />}>
+            <MarkdownEditor
+              key={editorKey}
+              id={field.id}
+              editorRef={editorRef ?? null}
+              value={field.value}
+              onChange={field.onChange}
+              isInvalid={field["aria-invalid"]}
+            />
+          </Suspense>
+          {children}
+        </>
       )}
     </FormBase>
   );

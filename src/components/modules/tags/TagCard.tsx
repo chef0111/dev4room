@@ -33,7 +33,7 @@ const TagCard = ({
       <Badge className="subtle-medium bg-light800_dark300 text-light400_light500 flex min-h-8 gap-2 rounded-md px-3 py-2 uppercase">
         <div className="flex-center space-x-2">
           {techIcon === "devicon" ? (
-            <DevIcon className="rounded-1! size-3" />
+            <DevIcon className="rounded-1! size-3!" iconClassName="size-2.5" />
           ) : (
             <Image
               src={`${techIcon}`}
@@ -66,7 +66,7 @@ const TagCard = ({
     return isButton ? (
       <Button
         type="button"
-        className="flex size-fit! justify-between gap-2 bg-transparent! p-0!"
+        className="flex justify-between gap-2 bg-transparent! p-0!"
       >
         {TagContent}
       </Button>
@@ -87,7 +87,10 @@ const TagCard = ({
             </p>
           </div>
           {techIcon === "devicon" ? (
-            <DevIcon className="text-light400_light500" />
+            <DevIcon
+              className="text-light400_light500"
+              iconClassName="size-4.5"
+            />
           ) : (
             <Image
               src={`${techIcon}`}
