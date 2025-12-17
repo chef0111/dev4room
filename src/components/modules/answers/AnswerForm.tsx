@@ -1,18 +1,17 @@
 "use client";
 
 import z from "zod";
-import { Suspense, useRef, useState, useCallback } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useRef, useState, useCallback } from "react";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 
 import { AnswerSchema } from "@/lib/validations";
-import MarkdownEditor from "@/components/markdown/MarkdownEditor";
-import EditorFallback from "@/components/markdown/EditorFallback";
-import { Field, FieldError, Button, Spinner } from "@/components/ui";
+import { Button, Spinner } from "@/components/ui";
 import GenerateAIButton from "./GenerateAIButton";
 import AIValidationAlert from "./AIValidationAlert";
 import { useCreateAnswer, useEditAnswer } from "@/queries/answer.queries";
+import { FormMarkdown } from "@/components/form";
 
 interface Answer {
   id: string;
@@ -109,28 +108,15 @@ const AnswerForm = ({
         className={
           compact
             ? "flex w-full flex-col gap-4"
-            : "mt-6 flex w-full flex-col gap-10 space-y-4"
+            : "mt-2 flex w-full flex-col gap-10 space-y-4"
         }
         onSubmit={form.handleSubmit(handleSubmit)}
       >
-        <Controller
-          name="content"
+        <FormMarkdown
           control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <Suspense fallback={<EditorFallback />}>
-                <MarkdownEditor
-                  key={editorKey}
-                  id="answer-content"
-                  editorRef={editorRef}
-                  value={field.value}
-                  onChange={field.onChange}
-                  isInvalid={fieldState.invalid}
-                />
-              </Suspense>
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
+          name="content"
+          editorKey={editorKey}
+          editorRef={editorRef}
         />
 
         <div className="z-10 flex justify-end gap-2">
