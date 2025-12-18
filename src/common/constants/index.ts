@@ -114,22 +114,22 @@ export const profileTabs = [
 export const profileFields = [
   {
     name: "name" as const,
-    label: "Your name",
+    label: "Your Name",
     description: "Please enter your full name.",
     icon: ShieldUser,
     hint: "Max 50 characters",
   },
   {
     name: "username" as const,
-    label: "Username",
+    label: "Your Username",
     description: "Please enter a display name you are comfortable with.",
     icon: UserIcon,
     hint: "Max 30 characters",
   },
   {
     name: "portfolio" as const,
-    label: "Portfolio",
-    description: "Please enter your portfolio URL.",
+    label: "Your Portfolio",
+    description: "Please enter the link to your portfolio.",
     icon: LinkIcon,
     hint: "Enter a valid URL",
   },
