@@ -40,7 +40,7 @@ const Navbar = ({ className }: NavbarProps) => {
           <UserAvatar
             id={user.id}
             name={user.name}
-            image={user.image ?? ""}
+            image={user.image ?? null}
             className="h-9 w-9 rounded-full"
             aria-label="User avatar"
           />
