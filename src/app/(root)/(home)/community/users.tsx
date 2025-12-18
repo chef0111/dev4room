@@ -7,7 +7,7 @@ import { EMPTY_USERS } from "@/common/constants/states";
 import UserCard from "@/components/modules/profile/UserCard";
 import { NextPagination } from "@/components/ui/dev";
 
-const Users = async ({ searchParams }: Omit<RouteParams, "params">) => {
+const Users = async ({ searchParams }: Pick<RouteParams, "searchParams">) => {
   const { page, pageSize, query, filter } = await searchParams;
 
   const queryClient = getQueryClient();

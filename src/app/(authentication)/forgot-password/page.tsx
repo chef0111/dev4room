@@ -8,6 +8,7 @@ import handleError from "@/lib/handlers/error";
 
 import AuthForm from "@/components/modules/auth/AuthForm";
 import Link from "next/link";
+import { Button } from "@/components/ui";
 
 type ForgotPasswordValues = z.infer<typeof ForgotPasswordSchema>;
 
@@ -69,12 +70,9 @@ const ForgotPassword = () => {
         onSubmit={handleForgotPassword}
       />
 
-      <Link
-        href="/login"
-        className="pg-semibold text-link-100 cursor-pointer text-center transition-all hover:underline"
-      >
-        Back to Login
-      </Link>
+      <Button variant="link" className="text-link-100" asChild>
+        <Link href="/login">Back to Login</Link>
+      </Button>
     </div>
   );
 };

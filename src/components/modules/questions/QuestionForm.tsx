@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
@@ -16,12 +16,11 @@ import {
   Button,
   Spinner,
 } from "@/components/ui";
-import MarkdownEditor from "@/components/markdown/MarkdownEditor";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import TagCard from "../tags/TagCard";
 import { getTechDisplayName } from "@/lib/utils";
-import EditorFallback from "@/components/markdown/EditorFallback";
 import { useCreateQuestion, useEditQuestion } from "@/queries/question.queries";
+import { FormInput, FormMarkdown } from "@/components/form";
 
 interface QuestionFormProps {
   question?: Question;
@@ -139,66 +138,31 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
       onSubmit={form.handleSubmit(handleSubmitQuestion)}
     >
       <FieldGroup>
-        <Controller
-          name="title"
+        <FormInput
           control={form.control}
-          render={({ field, fieldState }) => (
-            <Field
-              data-invalid={fieldState.invalid}
-              className="flex w-full flex-col"
-            >
-              <FieldLabel htmlFor="question-title" className="pg-semibold">
-                Question Title
-                <span className="text-destructive">*</span>
-              </FieldLabel>
-              <Input
-                {...field}
-                id="question-title"
-                aria-invalid={fieldState.invalid}
-                className="base-input placeholder:text-dark300_light800"
-                placeholder="e.g. Is there an R function for finding the index of an element in a vector?"
-                autoComplete="off"
-              />
-              <FieldDescription className="body-regular text-light-500">
-                Be specific and imagine you&apos;re asking a question to another
-                person.
-              </FieldDescription>
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
+          name="title"
+          label={
+            <>
+              Question Title <span className="text-destructive">*</span>
+            </>
+          }
+          className="base-input placeholder:text-dark300_light800"
+          placeholder="e.g. Is there an R function for finding the index of an element in a vector?"
+          description="Be specific and imagine you're asking a question to another person."
         />
 
-        <Controller
-          name="content"
+        <FormMarkdown
           control={form.control}
-          render={({ field, fieldState }) => (
-            <Field
-              data-invalid={fieldState.invalid}
-              className="flex w-full flex-col"
-            >
-              <FieldLabel htmlFor="question-content" className="pg-semibold">
-                Detailed explanation of your problem
-                <span className="text-destructive">*</span>
-              </FieldLabel>
-
-              <Suspense fallback={<EditorFallback />}>
-                <MarkdownEditor
-                  key={editorKey}
-                  id="question-content"
-                  editorRef={editorRef}
-                  value={field.value}
-                  onChange={field.onChange}
-                  isInvalid={fieldState.invalid}
-                />
-              </Suspense>
-
-              <FieldDescription className="body-regular text-light-500">
-                Introduce the problem and expand on what you put in the title.
-                Minimum 20 characters.
-              </FieldDescription>
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
+          editorKey={editorKey}
+          editorRef={editorRef}
+          name="content"
+          label={
+            <>
+              Detailed explanation of your problem
+              <span className="text-destructive">*</span>
+            </>
+          }
+          description="Introduce the problem and expand on what you put in the title. Minimum 20 characters."
         />
 
         <Controller
@@ -213,6 +177,10 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
                 Tags
                 <span className="text-destructive">*</span>
               </FieldLabel>
+              <FieldDescription className="body-regular text-light-500">
+                Add up to 5 tags to describe what your question is about.
+              </FieldDescription>
+
               <Input
                 id="question-tags"
                 name={field.name}
@@ -238,9 +206,6 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
                 </div>
               )}
 
-              <FieldDescription className="body-regular text-light-500">
-                Add up to 5 tags to describe what your question is about.
-              </FieldDescription>
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}

@@ -310,6 +310,10 @@
   @apply shadow-light-100! dark:shadow-dark-200!;
 }
 
+@utility input-otp-group {
+  @apply gap-2 *:data-[slot=input-otp-slot]:rounded-md *:data-[slot=input-otp-slot]:border;
+}
+
 @utility input-otp-slot {
   @apply light-border-2 xs:size-10! bg-light900_dark300 text-dark300_light700 text-2xl! sm:size-12!;
 }
@@ -793,7 +797,7 @@ code {
   --muted-foreground: oklch(0.704 0.04 256.788);
   --accent: #191c26;
   --accent-foreground: oklch(0.984 0.003 247.858);
-  --destructive: oklch(0.577 0.245 27.325);
+  --destructive: oklch(66.78% 0.21944 22.987);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: #0091ff;

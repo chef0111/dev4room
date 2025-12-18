@@ -7,7 +7,9 @@ import { EMPTY_QUESTION } from "@/common/constants/states";
 import QuestionCard from "@/components/modules/questions/QuestionCard";
 import { NextPagination } from "@/components/ui/dev";
 
-const HomeQuestions = async ({ searchParams }: Omit<RouteParams, "params">) => {
+const HomeQuestions = async ({
+  searchParams,
+}: Pick<RouteParams, "searchParams">) => {
   const { page, pageSize, query, filter } = await searchParams;
 
   const queryClient = getQueryClient();
