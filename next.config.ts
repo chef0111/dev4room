@@ -33,6 +33,11 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "t3.storage.dev",
+        port: "",
+      },
+      {
+        protocol: "https",
         hostname: "*",
         port: "",
       },

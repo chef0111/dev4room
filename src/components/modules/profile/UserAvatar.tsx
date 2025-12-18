@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 interface UserAvatarProps {
   id: string | undefined;
   name: string | undefined;
-  image?: string;
+  image?: string | null;
   className?: string;
   fallbackClassName?: string;
   href?: Route | null;
@@ -29,7 +29,11 @@ const UserAvatar = ({
 
   const avatar = (
     <Avatar className={cn("relative", className)}>
-      <AvatarImage src={image} alt={name} className="object-cover" />
+      <AvatarImage
+        src={image ?? (null as unknown as undefined)}
+        alt={name}
+        className="object-cover"
+      />
       <AvatarFallback
         className={cn(
           "primary-gradient font-esbuild no-copy font-bold tracking-wider text-white",

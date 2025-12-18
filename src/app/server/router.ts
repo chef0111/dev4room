@@ -27,6 +27,7 @@ import { createVote, hasVoted } from "./vote";
 import { listCollection, toggleSave, hasSaved } from "./collection";
 import { search } from "./search";
 import { generateAnswer } from "./ai";
+import { getUploadUrl, confirmUpload, removeImage } from "./upload";
 
 export const router = {
   user: {
@@ -70,5 +71,10 @@ export const router = {
   search,
   ai: {
     generateAnswer,
+  },
+  upload: {
+    getUrl: getUploadUrl,
+    confirm: confirmUpload,
+    remove: removeImage,
   },
 };
