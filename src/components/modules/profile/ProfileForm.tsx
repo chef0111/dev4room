@@ -40,11 +40,15 @@ const ProfileForm = ({ user }: ProfileFormProps) => {
     },
   });
 
-  const updateProfile = useUpdateProfile();
+  const updateProfile = useUpdateProfile({
+    onSuccess: () => {
+      // Reset form with the current values
+      form.reset(form.getValues());
+    },
+  });
 
   const handleUpdateProfile = (values: z.infer<typeof ProfileSchema>) => {
     updateProfile.mutate(values);
-    form.reset();
   };
 
   const bioLength = useWatch({ control: form.control, name: "bio" })?.length;

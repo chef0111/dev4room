@@ -1,3 +1,6 @@
+import { orpc } from "@/lib/orpc";
+import { notFound, redirect } from "next/navigation";
+import { getQueryClient } from "@/lib/query/hydration";
 import { getServerSession } from "@/lib/session";
 import {
   FieldDescription,
@@ -7,11 +10,8 @@ import {
   FieldSeparator,
   FieldSet,
 } from "@/components/ui";
-import UserAvatar from "@/components/modules/profile/UserAvatar";
-import ProfileForm from "../../../../components/modules/profile/ProfileForm";
-import { notFound, redirect } from "next/navigation";
-import { orpc } from "@/lib/orpc";
-import { getQueryClient } from "@/lib/query/hydration";
+import ProfileForm from "@/components/modules/profile/ProfileForm";
+import AvatarEditor from "@/components/modules/profile/AvatarEditor";
 
 const EditProfile = async () => {
   const session = await getServerSession();
@@ -38,18 +38,11 @@ const EditProfile = async () => {
         <FieldSeparator />
         <FieldGroup className="mt-4 flex flex-col-reverse items-start gap-10 md:flex-row md:gap-16 xl:gap-24">
           <ProfileForm user={user} />
-          <FieldGroup className="flex flex-col items-center py-0 md:w-64 md:items-start md:pr-32 xl:w-72">
+          <FieldGroup className="flex flex-col items-center py-0 md:w-64 md:items-start md:pr-32">
             <FieldLabel className="h3-bold! text-nowrap">
               Profile picture
             </FieldLabel>
-            <UserAvatar
-              href={null}
-              id={user?.id}
-              name={user?.name}
-              image={user?.image ?? ""}
-              className="size-36 rounded-full object-cover md:size-48"
-              fallbackClassName="text-7xl md:text-8xl font-bold"
-            />
+            <AvatarEditor user={user} />
           </FieldGroup>
         </FieldGroup>
       </FieldSet>

@@ -140,7 +140,7 @@ const Loading = async () => {
               </Button>
             </div>
           </FieldGroup>
-          <FieldGroup className="flex flex-col items-center py-0 md:w-64 md:items-start md:pr-32 xl:w-72">
+          <FieldGroup className="flex flex-col items-center py-0 md:w-64 md:items-start md:pr-32">
             <FieldLabel className="h3-bold! text-nowrap">
               Profile picture
             </FieldLabel>
