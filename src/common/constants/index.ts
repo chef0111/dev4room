@@ -1,3 +1,5 @@
+import { LinkIcon, MapPin, ShieldUser, UserIcon } from "lucide-react";
+
 export const sidebarTabs = [
   {
     imgUrl: "/icons/home.svg",
@@ -112,30 +114,30 @@ export const profileTabs = [
 export const profileFields = [
   {
     name: "name" as const,
-    label: "Name",
-    placeholder: "Your Name",
-    required: true,
-    autoComplete: "name",
+    label: "Your Name",
+    description: "Please enter your full name.",
+    icon: ShieldUser,
+    hint: "Max 50 characters",
   },
   {
     name: "username" as const,
-    label: "Username",
-    placeholder: "Your username",
-    required: true,
-    autoComplete: "username",
+    label: "Your Username",
+    description: "Please enter a display name you are comfortable with.",
+    icon: UserIcon,
+    hint: "Max 30 characters",
   },
   {
     name: "portfolio" as const,
-    label: "Portfolio Link",
-    placeholder: "https://your-portfolio.com",
-    type: "url" as const,
-    autoComplete: "url",
+    label: "Your Portfolio",
+    description: "Please enter the link to your portfolio.",
+    icon: LinkIcon,
+    hint: "Enter a valid URL",
   },
   {
     name: "location" as const,
-    label: "Location",
-    placeholder: "Where do you live?",
-    required: true,
-    autoComplete: "address-level1",
+    label: "Your Location",
+    description: "Please enter your location.",
+    icon: MapPin,
+    hint: "Provide a proper location, max 100 characters",
   },
 ];

@@ -12,9 +12,9 @@ import {
 } from "@/components/ui";
 import { FormInputGroup, FormTextareaGroup } from "@/components/form";
 import { ProfileSchema } from "@/lib/validations";
-import { LinkIcon, MapPin, ShieldUser, UserIcon } from "lucide-react";
 import { useUpdateProfile } from "@/queries/user.queries";
 import { useRouter } from "next/navigation";
+import { profileFields } from "@/common/constants";
 
 interface ProfileFormProps {
   user: {
@@ -55,61 +55,25 @@ const ProfileForm = ({ user }: ProfileFormProps) => {
       onSubmit={form.handleSubmit(handleUpdateProfile)}
     >
       <FieldGroup className="gap-5!">
-        <FormInputGroup
-          name="name"
-          control={form.control}
-          label="Your name"
-          description="Please enter your full name."
-          leftAddon={<ShieldUser />}
-          fieldClassName="form-field-card"
-          orientation="responsive"
-        >
-          <FieldDescription className="body-regular text-light-500">
-            Max 50 characters
-          </FieldDescription>
-        </FormInputGroup>
-
-        <FormInputGroup
-          name="username"
-          control={form.control}
-          label="Username"
-          description="Please enter a display name you are comfortable with."
-          leftAddon={<UserIcon />}
-          fieldClassName="form-field-card"
-          orientation="responsive"
-        >
-          <FieldDescription className="body-regular text-light-500">
-            Max 30 characters
-          </FieldDescription>
-        </FormInputGroup>
-
-        <FormInputGroup
-          name="portfolio"
-          control={form.control}
-          label="Portfolio"
-          description="Please enter your portfolio URL."
-          leftAddon={<LinkIcon />}
-          fieldClassName="form-field-card"
-          orientation="responsive"
-        >
-          <FieldDescription className="body-regular text-light-500">
-            Enter a valid URL
-          </FieldDescription>
-        </FormInputGroup>
-
-        <FormInputGroup
-          name="location"
-          control={form.control}
-          label="Your Location"
-          description="Please enter your location."
-          leftAddon={<MapPin />}
-          fieldClassName="form-field-card"
-          orientation="responsive"
-        >
-          <FieldDescription className="body-regular text-light-500">
-            Provide a proper location, max 100 characters
-          </FieldDescription>
-        </FormInputGroup>
+        {profileFields.map((field) => {
+          const Icon = field.icon;
+          return (
+            <FormInputGroup
+              key={field.name}
+              name={field.name}
+              control={form.control}
+              label={field.label}
+              description={field.description}
+              leftAddon={<Icon />}
+              fieldClassName="form-field-card"
+              orientation="responsive"
+            >
+              <FieldDescription className="body-regular text-light-500">
+                {field.hint}
+              </FieldDescription>
+            </FormInputGroup>
+          );
+        })}
 
         <FormTextareaGroup
           name="bio"
@@ -126,7 +90,7 @@ const ProfileForm = ({ user }: ProfileFormProps) => {
           orientation="responsive"
         >
           <FieldDescription className="body-regular text-light-500">
-            Max 200 characters
+            Min 10 characters, max 200 characters
           </FieldDescription>
         </FormTextareaGroup>
       </FieldGroup>

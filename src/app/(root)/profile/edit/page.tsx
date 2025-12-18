@@ -8,7 +8,7 @@ import {
   FieldSet,
 } from "@/components/ui";
 import UserAvatar from "@/components/modules/profile/UserAvatar";
-import ProfileForm from "./profile-form";
+import ProfileForm from "../../../../components/modules/profile/ProfileForm";
 import { notFound, redirect } from "next/navigation";
 import { orpc } from "@/lib/orpc";
 import { getQueryClient } from "@/lib/query/hydration";
