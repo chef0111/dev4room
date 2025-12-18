@@ -6,10 +6,14 @@ import { QueryParamsSchema } from "@/lib/validations";
 // Base User Schema
 export const UserSchema = z.object({
   id: z.string(),
-  name: z.string().min(1, { message: "Name is required." }),
+  name: z
+    .string()
+    .min(1, { message: "Name is required." })
+    .max(50, { message: "Name cannot exceed 50 characters." }),
   username: z
     .string()
-    .min(3, { message: "Username must be at least 3 characters long." }),
+    .min(3, { message: "Username must be at least 3 characters long." })
+    .max(30, { message: "Username cannot exceed 30 characters." }),
   email: z.email({ message: "Invalid email address." }),
   image: z.string().nullable(),
   bio: z.string().nullable(),
@@ -94,31 +98,33 @@ export const UpdateProfileInputSchema = z.object({
     .optional(),
   image: z.url({ message: "Image must be a valid URL." }).nullable().optional(),
   bio: z
-    .string()
-    .max(500, { message: "Bio cannot exceed 500 characters." })
+    .union([
+      z
+        .string()
+        .min(10, { message: "Bio must have at least 10 characters." })
+        .max(200, { message: "Bio cannot exceed 200 characters." }),
+      z.literal(""),
+    ])
     .nullable()
     .optional(),
   location: z
-    .string()
-    .max(100, { message: "Location cannot exceed 100 characters." })
+    .union([
+      z
+        .string()
+        .min(3, { message: "Please provide proper location" })
+        .max(100, { message: "Location cannot exceed 100 characters." }),
+      z.literal(""),
+    ])
     .nullable()
     .optional(),
   portfolio: z
-    .url({ message: "Porfolio must be a valid URL." })
+    .union([z.url({ message: "Please provide valid URL" }), z.literal("")])
     .nullable()
     .optional(),
 });
 
-export const UserProfileSchema = UserSchema.extend({
-  bio: z.string().nullable(),
-  location: z.string().nullable(),
-  portfolio: z.string().nullable(),
-  reputation: z.number().int().min(0),
-  createdAt: z.date(),
-});
-
 export const UpdateProfileSchema = z.object({
-  user: UserProfileSchema,
+  user: UserSchema,
 });
 
 // Output Schemas
@@ -169,5 +175,4 @@ export type UserPopularTagDTO = z.infer<typeof UserPopularTagSchema>;
 export type Badges = z.infer<typeof BadgesSchema>;
 export type UserStatsDTO = z.infer<typeof UserStatsSchema>;
 export type UpdateProfileInput = z.infer<typeof UpdateProfileInputSchema>;
-export type UserProfileDTO = z.infer<typeof UserProfileSchema>;
 export type UpdateProfileDTO = z.infer<typeof UpdateProfileSchema>;

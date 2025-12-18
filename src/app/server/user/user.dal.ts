@@ -25,8 +25,6 @@ import {
   UserPopularTagSchema,
   UserStatsDTO,
   UpdateProfileInput,
-  UserProfileDTO,
-  UserProfileSchema,
 } from "./user.dto";
 
 type UserFilter = "newest" | "oldest" | "popular";
@@ -411,7 +409,7 @@ export class UserDAL {
   static async update(
     userId: string,
     data: UpdateProfileInput
-  ): Promise<UserProfileDTO> {
+  ): Promise<UserDTO> {
     if (data.username) {
       const existing = await db
         .select({ id: user.id })
@@ -452,7 +450,7 @@ export class UserDAL {
       throw new Error("User not found");
     }
 
-    const validated = UserProfileSchema.safeParse(updated);
+    const validated = UserSchema.safeParse(updated);
     if (!validated.success) {
       throw new Error("Failed to validate updated profile");
     }
