@@ -28,6 +28,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+  InputOTPSeparator,
+} from "@/components/ui/input-otp";
+import { REGEXP_ONLY_DIGITS } from "input-otp";
 import MarkdownEditor from "@/components/markdown/MarkdownEditor";
 import EditorFallback from "@/components/markdown/EditorFallback";
 
@@ -144,9 +151,23 @@ export const FormInput: FormControlFn<
   Omit<ComponentPropsWithoutRef<typeof Input>, "children"> & {
     children?: ReactNode;
   }
-> = ({ children, ...inputProps }) => {
+> = ({
+  children,
+  control,
+  name,
+  label,
+  description,
+  labelAction,
+  ...inputProps
+}) => {
   return (
-    <FormBase {...inputProps}>
+    <FormBase
+      control={control}
+      name={name}
+      label={label}
+      description={description}
+      labelAction={labelAction}
+    >
       {(field) => (
         <>
           <Input {...field} {...inputProps} />
@@ -161,9 +182,23 @@ export const FormTextarea: FormControlFn<
   Omit<ComponentPropsWithoutRef<typeof Textarea>, "children"> & {
     children?: ReactNode;
   }
-> = ({ children, ...textareaProps }) => {
+> = ({
+  children,
+  control,
+  name,
+  label,
+  description,
+  labelAction,
+  ...textareaProps
+}) => {
   return (
-    <FormBase {...textareaProps}>
+    <FormBase
+      control={control}
+      name={name}
+      label={label}
+      description={description}
+      labelAction={labelAction}
+    >
       {(field) => (
         <>
           <Textarea {...field} {...textareaProps} />
@@ -201,6 +236,42 @@ export const FormCheckbox: FormControlFn = (props) => {
     <FormBase {...props} horizontal controlFirst>
       {({ onChange, value, ...field }) => (
         <Checkbox {...field} checked={value} onCheckedChange={onChange} />
+      )}
+    </FormBase>
+  );
+};
+
+export const FormInputOTP: FormControlFn<{ children?: ReactNode }> = ({
+  children,
+  ...props
+}) => {
+  return (
+    <FormBase {...props}>
+      {(field) => (
+        <div className="flex flex-col items-center gap-2.5">
+          <InputOTP
+            {...field}
+            maxLength={6}
+            pattern={REGEXP_ONLY_DIGITS}
+            className="justify-center"
+          >
+            <InputOTPGroup className="input-otp-group">
+              <InputOTPSlot index={0} className="input-otp-slot" />
+              <InputOTPSlot index={1} className="input-otp-slot" />
+            </InputOTPGroup>
+            <InputOTPSeparator className="max-xs:hidden" />
+            <InputOTPGroup className="input-otp-group">
+              <InputOTPSlot index={2} className="input-otp-slot" />
+              <InputOTPSlot index={3} className="input-otp-slot" />
+            </InputOTPGroup>
+            <InputOTPSeparator className="max-xs:hidden" />
+            <InputOTPGroup className="input-otp-group">
+              <InputOTPSlot index={4} className="input-otp-slot" />
+              <InputOTPSlot index={5} className="input-otp-slot" />
+            </InputOTPGroup>
+          </InputOTP>
+          {children}
+        </div>
       )}
     </FormBase>
   );

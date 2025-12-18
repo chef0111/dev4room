@@ -2,30 +2,23 @@
 
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { toast } from "sonner";
 import { AlertCircleIcon } from "lucide-react";
-import { REGEXP_ONLY_DIGITS } from "input-otp";
 
 import { OTPSchema } from "@/lib/validations";
 import {
   Button,
-  Field,
   FieldDescription,
-  FieldError,
-  FieldGroup,
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSeparator,
-  InputOTPSlot,
   Alert,
   AlertDescription,
   AlertTitle,
   Spinner,
 } from "@/components/ui";
 import TextShimmer from "@/components/ui/dev/text-shimmer";
+import { FormInputOTP } from "@/components/form";
 
 type OTPFormValues = z.infer<typeof OTPSchema>;
 
@@ -69,49 +62,11 @@ const OTPForm = ({
       onSubmit={form.handleSubmit(handleSubmit)}
       className="mt-6 space-y-6"
     >
-      <FieldGroup>
-        <Controller
-          name="otp"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field
-              data-invalid={fieldState.invalid}
-              className="flex flex-col items-center gap-2.5"
-            >
-              <div className="flex flex-col items-center gap-2.5">
-                <InputOTP
-                  {...field}
-                  maxLength={6}
-                  pattern={REGEXP_ONLY_DIGITS}
-                  className="justify-center"
-                  aria-invalid={fieldState.invalid}
-                >
-                  <InputOTPGroup className="input-otp-group">
-                    <InputOTPSlot index={0} className="input-otp-slot" />
-                    <InputOTPSlot index={1} className="input-otp-slot" />
-                  </InputOTPGroup>
-                  <InputOTPSeparator className="max-xs:hidden" />
-                  <InputOTPGroup className="input-otp-group">
-                    <InputOTPSlot index={2} className="input-otp-slot" />
-                    <InputOTPSlot index={3} className="input-otp-slot" />
-                  </InputOTPGroup>
-                  <InputOTPSeparator className="max-xs:hidden" />
-                  <InputOTPGroup className="input-otp-group">
-                    <InputOTPSlot index={4} className="input-otp-slot" />
-                    <InputOTPSlot index={5} className="input-otp-slot" />
-                  </InputOTPGroup>
-                </InputOTP>
-                <FieldDescription className="text-dark500_light400 pg-regular text-center">
-                  Enter the 6-digit code sent to your email
-                </FieldDescription>
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </div>
-            </Field>
-          )}
-        />
-      </FieldGroup>
+      <FormInputOTP name="otp" control={form.control}>
+        <FieldDescription className="text-dark500_light400 pg-regular text-center">
+          Enter the 6-digit code sent to your email
+        </FieldDescription>
+      </FormInputOTP>
 
       {!!error && (
         <Alert
