@@ -1,6 +1,5 @@
 import { authorized } from "@/app/middleware/auth";
 import { revalidatePath, revalidateTag } from "next/cache";
-import { writeSecurityMiddleware } from "@/app/middleware/arcjet/write";
 import {
   GetPresignedUrlInputSchema,
   PresignedUrlOutputSchema,
@@ -13,6 +12,7 @@ import {
   deleteObject,
   extractFileKeyFromUrl,
 } from "./upload.dal";
+import { writeSecurityMiddleware } from "@/app/middleware/arcjet/write";
 import { heavyWriteSecurityMiddleware } from "@/app/middleware/arcjet/heavy-write";
 import { auth } from "@/lib/auth";
 
