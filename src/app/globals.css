@@ -419,7 +419,7 @@
 }
 
 @utility base-input {
-  @apply pg-regular bg-light700_dark300 no-focus! text-dark300_light700 light-border-2! min-h-12 border;
+  @apply pg-regular bg-light-850! dark:bg-dark-300! text-dark300_light700 light-border-2 min-h-12 border;
 }
 
 @utility md-editor-fallback {
@@ -460,6 +460,10 @@
 
 @utility btn-tertiary {
   @apply bg-light-700! dark:bg-dark-300!;
+}
+
+@utility form-field-card {
+  @apply bg-card outline-border/50 light-border-2 rounded-xl border p-6 shadow-xs outline outline-offset-1;
 }
 
 @utility no-focus {
@@ -785,7 +789,7 @@ code {
 .dark {
   --background: oklch(0.129 0.042 264.695);
   --foreground: oklch(0.984 0.003 247.858);
-  --card: oklch(0.208 0.042 265.755);
+  --card: var(--color-dark-200);
   --card-foreground: oklch(0.984 0.003 247.858);
   --popover: var(--color-dark-200);
   --popover-foreground: oklch(0.984 0.003 247.858);

@@ -37,6 +37,12 @@ import {
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 import MarkdownEditor from "@/components/markdown/MarkdownEditor";
 import EditorFallback from "@/components/markdown/EditorFallback";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  InputGroupTextarea,
+} from "@/components/ui";
 
 type FormControlProps<
   TFieldValues extends FieldValues = FieldValues,
@@ -47,6 +53,8 @@ type FormControlProps<
   label?: ReactNode;
   description?: ReactNode;
   labelAction?: ReactNode;
+  fieldClassName?: string;
+  orientation?: "horizontal" | "vertical" | "responsive" | null;
   control: ControllerProps<TFieldValues, TName, TTransformedValues>["control"];
 };
 
@@ -57,6 +65,7 @@ type FormBaseProps<
 > = FormControlProps<TFieldValues, TName, TTransformedValues> & {
   horizontal?: boolean;
   controlFirst?: boolean;
+  className?: string;
   children: (
     field: Parameters<
       ControllerProps<TFieldValues, TName, TTransformedValues>["render"]
@@ -87,8 +96,9 @@ function FormBase<
   label,
   name,
   description,
+  className,
   controlFirst,
-  horizontal,
+  orientation,
   labelAction,
 }: FormBaseProps<TFieldValues, TName, TTransformedValues>) {
   return (
@@ -111,11 +121,13 @@ function FormBase<
             )}
           </>
         );
+
         const control = children({
           ...field,
           id: field.name,
           "aria-invalid": fieldState.invalid,
         });
+
         const errorElement = fieldState.invalid && (
           <FieldError errors={[fieldState.error]} />
         );
@@ -123,11 +135,12 @@ function FormBase<
         return (
           <Field
             data-invalid={fieldState.invalid}
-            orientation={horizontal ? "horizontal" : undefined}
+            orientation={orientation}
+            className={className}
           >
             {controlFirst ? (
               <>
-                {control}
+                <FieldContent>{control}</FieldContent>
                 <FieldContent>
                   {labelElement}
                   {errorElement}
@@ -136,8 +149,10 @@ function FormBase<
             ) : (
               <>
                 <FieldContent>{labelElement}</FieldContent>
-                {control}
-                {errorElement}
+                <FieldContent>
+                  {control}
+                  {errorElement}
+                </FieldContent>
               </>
             )}
           </Field>
@@ -158,6 +173,8 @@ export const FormInput: FormControlFn<
   label,
   description,
   labelAction,
+  fieldClassName,
+  orientation,
   ...inputProps
 }) => {
   return (
@@ -167,10 +184,57 @@ export const FormInput: FormControlFn<
       label={label}
       description={description}
       labelAction={labelAction}
+      className={fieldClassName}
+      orientation={orientation}
     >
       {(field) => (
         <>
           <Input {...field} {...inputProps} />
+          {children}
+        </>
+      )}
+    </FormBase>
+  );
+};
+
+export const FormInputGroup: FormControlFn<
+  Omit<ComponentPropsWithoutRef<typeof Input>, "children"> & {
+    children?: ReactNode;
+    leftAddon?: ReactNode;
+    rightAddon?: ReactNode;
+  }
+> = ({
+  children,
+  control,
+  name,
+  label,
+  description,
+  labelAction,
+  fieldClassName,
+  orientation,
+  leftAddon,
+  rightAddon,
+  ...inputProps
+}) => {
+  return (
+    <FormBase
+      control={control}
+      name={name}
+      label={label}
+      description={description}
+      labelAction={labelAction}
+      className={fieldClassName}
+      orientation={orientation}
+    >
+      {(field) => (
+        <>
+          <InputGroup className="base-input min-h-10!">
+            {leftAddon && <InputGroupAddon>{leftAddon}</InputGroupAddon>}
+            <InputGroupInput {...field} {...inputProps} />
+            {rightAddon && (
+              <InputGroupAddon align="inline-end">{rightAddon}</InputGroupAddon>
+            )}
+          </InputGroup>
           {children}
         </>
       )}
@@ -189,6 +253,8 @@ export const FormTextarea: FormControlFn<
   label,
   description,
   labelAction,
+  fieldClassName,
+  orientation,
   ...textareaProps
 }) => {
   return (
@@ -198,6 +264,8 @@ export const FormTextarea: FormControlFn<
       label={label}
       description={description}
       labelAction={labelAction}
+      className={fieldClassName}
+      orientation={orientation}
     >
       {(field) => (
         <>
@@ -209,12 +277,58 @@ export const FormTextarea: FormControlFn<
   );
 };
 
-export const FormSelect: FormControlFn<{ children: ReactNode }> = ({
+export const FormTextareaGroup: FormControlFn<
+  Omit<ComponentPropsWithoutRef<typeof Textarea>, "children"> & {
+    children?: ReactNode;
+    leftAddon?: ReactNode;
+    rightAddon?: ReactNode;
+  }
+> = ({
   children,
-  ...props
+  control,
+  name,
+  label,
+  description,
+  labelAction,
+  fieldClassName,
+  orientation,
+  leftAddon,
+  rightAddon,
+  ...textareaProps
 }) => {
   return (
-    <FormBase {...props}>
+    <FormBase
+      control={control}
+      name={name}
+      label={label}
+      description={description}
+      labelAction={labelAction}
+      className={fieldClassName}
+      orientation={orientation}
+    >
+      {(field) => (
+        <>
+          <InputGroup className="base-input">
+            {leftAddon && <InputGroupAddon>{leftAddon}</InputGroupAddon>}
+            <InputGroupTextarea {...field} {...textareaProps} />
+            {rightAddon && (
+              <InputGroupAddon align="block-end">{rightAddon}</InputGroupAddon>
+            )}
+          </InputGroup>
+          {children}
+        </>
+      )}
+    </FormBase>
+  );
+};
+
+export const FormSelect: FormControlFn<{
+  children: ReactNode;
+  fieldClassName?: string;
+  orientation?: "horizontal" | "vertical" | "responsive" | null;
+}> = ({ children, fieldClassName, orientation, ...props }) => {
+  return (
+    <FormBase {...props} className={fieldClassName} orientation={orientation}>
       {({ onChange, onBlur, ...field }) => (
         <Select {...field} onValueChange={onChange}>
           <SelectTrigger
@@ -231,9 +345,17 @@ export const FormSelect: FormControlFn<{ children: ReactNode }> = ({
   );
 };
 
-export const FormCheckbox: FormControlFn = (props) => {
+export const FormCheckbox: FormControlFn<{
+  fieldClassName?: string;
+  orientation?: "horizontal" | "vertical" | "responsive" | null;
+}> = ({ fieldClassName, orientation = "horizontal", ...props }) => {
   return (
-    <FormBase {...props} horizontal controlFirst>
+    <FormBase
+      {...props}
+      controlFirst
+      className={fieldClassName}
+      orientation={orientation}
+    >
       {({ onChange, value, ...field }) => (
         <Checkbox {...field} checked={value} onCheckedChange={onChange} />
       )}

@@ -1,27 +1,18 @@
 "use client";
 
 import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 import { orpc } from "@/lib/orpc";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
-interface UseUpdateProfileOptions {
-  userId: string;
-  onSuccess?: () => void;
-}
-
-export function useUpdateProfile({
-  userId,
-  onSuccess,
-}: UseUpdateProfileOptions) {
+export function useUpdateProfile() {
   const router = useRouter();
 
   return useMutation(
     orpc.user.update.mutationOptions({
       onSuccess: () => {
         toast.success("Your profile has been updated successfully.");
-        onSuccess?.();
-        router.push(`/profile/${userId}`);
+        router.refresh();
       },
       onError: (error) => {
         toast.error(error.message || "Failed to update profile");

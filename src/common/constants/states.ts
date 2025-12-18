@@ -31,7 +31,7 @@ export const EMPTY_TAGS = {
   title: "No Tags Found",
   message: "The tag cloud is empty. Add some keywords to make it rain 🏷️",
   button: {
-    label: "Create Tag",
+    label: "Show Tags",
     href: "/tags",
   },
 };

@@ -118,15 +118,35 @@ export const ProfileSchema = z.object({
     .min(3, {
       message: "Name must be at least 3 characters.",
     })
-    .max(130, { message: "Name musn't be longer then 130 characters." }),
+    .max(50, { message: "Name cannot exceed 50 characters." }),
   username: z
     .string()
-    .min(3, { message: "username musn't be longer then 100 characters." }),
-  portfolio: z.string().url({ message: "Please provide valid URL" }),
-  location: z.string().min(3, { message: "Please provide proper location" }),
-  bio: z.string().min(3, {
-    message: "Bio must be at least 3 characters.",
-  }),
+    .min(3, { message: "Username must be at least 3 characters." })
+    .max(30, { message: "Username cannot exceed 30 characters." }),
+  portfolio: z
+    .union([z.url({ message: "Please provide valid URL" }), z.literal("")])
+    .nullable()
+    .optional(),
+  location: z
+    .union([
+      z
+        .string()
+        .min(3, { message: "Please provide proper location" })
+        .max(100, { message: "Location cannot exceed 100 characters." }),
+      z.literal(""),
+    ])
+    .nullable()
+    .optional(),
+  bio: z
+    .union([
+      z
+        .string()
+        .min(10, { message: "Bio must have at least 10 characters." })
+        .max(200, { message: "Bio cannot exceed 200 characters." }),
+      z.literal(""),
+    ])
+    .nullable()
+    .optional(),
 });
 
 export const QueryParamsSchema = z.object({

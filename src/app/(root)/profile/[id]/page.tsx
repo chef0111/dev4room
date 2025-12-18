@@ -8,11 +8,13 @@ import { orpc } from "@/lib/orpc";
 import { getQueryClient } from "@/lib/query/hydration";
 import { getErrorMessage } from "@/lib/handlers/error";
 
-import ProfileHeader from "@/components/modules/profile/ProfileHeader";
-import UserStats from "@/components/modules/profile/UserStats";
-import UserTabs from "@/components/modules/profile/UserTabs";
-import UserTopTags from "@/components/modules/profile/UserTopTags";
-import EditProfileDialog from "@/components/modules/profile/EditProfileDialog";
+import Link from "next/link";
+
+import { Button } from "@/components/ui";
+import ProfileHeader from "./header";
+import UserStats from "./user-stats";
+import UserTabs from "./user-tabs";
+import UserTopTags from "./top-tags";
 import { UserTabsSkeleton, UserTopTagsSkeleton } from "@/components/skeletons";
 
 export async function generateStaticParams() {
@@ -73,7 +75,14 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
         />
 
         <div className="flex justify-end max-sm:mb-5 max-sm:w-full">
-          {isAuthor && <EditProfileDialog user={user} />}
+          {isAuthor && (
+            <Button
+              asChild
+              className="pg-medium btn-secondary hover:bg-light700_dark300! text-dark300_light900 min-h-12 min-w-40 px-4 py-3 max-sm:w-full"
+            >
+              <Link href="/profile/edit">Edit Profile</Link>
+            </Button>
+          )}
         </div>
       </section>
 

@@ -146,7 +146,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
               Question Title <span className="text-destructive">*</span>
             </>
           }
-          className="base-input placeholder:text-dark300_light800"
+          className="base-input! no-focus! placeholder:text-dark300_light800"
           placeholder="e.g. Is there an R function for finding the index of an element in a vector?"
           description="Be specific and imagine you're asking a question to another person."
         />
@@ -185,7 +185,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
                 id="question-tags"
                 name={field.name}
                 aria-invalid={fieldState.invalid}
-                className="base-input placeholder:text-dark300_light800"
+                className="base-input! no-focus! placeholder:text-dark300_light800"
                 placeholder="Add tags..."
                 onKeyDown={(e) => handleKeyDown(e, field)}
               />
