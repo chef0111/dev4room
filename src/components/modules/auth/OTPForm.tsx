@@ -86,17 +86,17 @@ const OTPForm = ({
                   className="justify-center"
                   aria-invalid={fieldState.invalid}
                 >
-                  <InputOTPGroup className="gap-2 *:data-[slot=input-otp-slot]:rounded-md *:data-[slot=input-otp-slot]:border">
+                  <InputOTPGroup className="input-otp-group">
                     <InputOTPSlot index={0} className="input-otp-slot" />
                     <InputOTPSlot index={1} className="input-otp-slot" />
                   </InputOTPGroup>
                   <InputOTPSeparator className="max-xs:hidden" />
-                  <InputOTPGroup className="gap-2 *:data-[slot=input-otp-slot]:rounded-md *:data-[slot=input-otp-slot]:border">
+                  <InputOTPGroup className="input-otp-group">
                     <InputOTPSlot index={2} className="input-otp-slot" />
                     <InputOTPSlot index={3} className="input-otp-slot" />
                   </InputOTPGroup>
                   <InputOTPSeparator className="max-xs:hidden" />
-                  <InputOTPGroup className="gap-2 *:data-[slot=input-otp-slot]:rounded-md *:data-[slot=input-otp-slot]:border">
+                  <InputOTPGroup className="input-otp-group">
                     <InputOTPSlot index={4} className="input-otp-slot" />
                     <InputOTPSlot index={5} className="input-otp-slot" />
                   </InputOTPGroup>
@@ -127,7 +127,7 @@ const OTPForm = ({
       <Button
         type="submit"
         disabled={form.formState.isSubmitting}
-        className="primary-gradient pg-semibold text-light-900 hover:primary-gradient-hover min-h-10 w-full cursor-pointer transition-all"
+        className="primary-gradient pg-semibold text-light-900 hover:primary-gradient-hover min-h-10 w-full"
       >
         {form.formState.isSubmitting && (
           <Spinner className="border-primary-foreground/30 border-t-primary-foreground!" />

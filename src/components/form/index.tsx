@@ -1,4 +1,9 @@
-import { ReactNode, Suspense, RefObject } from "react";
+import {
+  ReactNode,
+  Suspense,
+  RefObject,
+  ComponentPropsWithoutRef,
+} from "react";
 import {
   Controller,
   ControllerProps,
@@ -33,8 +38,8 @@ type FormControlProps<
 > = {
   name: TName;
   label?: ReactNode;
-  placeholder?: string;
   description?: ReactNode;
+  labelAction?: ReactNode;
   control: ControllerProps<TFieldValues, TName, TTransformedValues>["control"];
 };
 
@@ -77,6 +82,7 @@ function FormBase<
   description,
   controlFirst,
   horizontal,
+  labelAction,
 }: FormBaseProps<TFieldValues, TName, TTransformedValues>) {
   return (
     <Controller
@@ -85,7 +91,12 @@ function FormBase<
       render={({ field, fieldState }) => {
         const labelElement = (
           <>
-            {label && <FieldLabel htmlFor={field.name}>{label}</FieldLabel>}
+            {label && (
+              <div className="flex-between w-full">
+                <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
+                {labelAction}
+              </div>
+            )}
             {description && (
               <FieldDescription className="body-regular text-light-500">
                 {description}
@@ -129,19 +140,16 @@ function FormBase<
   );
 }
 
-export const FormInput: FormControlFn<{
-  className?: string;
-  children?: ReactNode;
-}> = ({ children, className, ...props }) => {
+export const FormInput: FormControlFn<
+  Omit<ComponentPropsWithoutRef<typeof Input>, "children"> & {
+    children?: ReactNode;
+  }
+> = ({ children, ...inputProps }) => {
   return (
-    <FormBase {...props}>
+    <FormBase {...inputProps}>
       {(field) => (
         <>
-          <Input
-            {...field}
-            placeholder={props.placeholder}
-            className={className}
-          />
+          <Input {...field} {...inputProps} />
           {children}
         </>
       )}
@@ -149,19 +157,16 @@ export const FormInput: FormControlFn<{
   );
 };
 
-export const FormTextarea: FormControlFn<{
-  className?: string;
-  children?: ReactNode;
-}> = ({ children, className, ...props }) => {
+export const FormTextarea: FormControlFn<
+  Omit<ComponentPropsWithoutRef<typeof Textarea>, "children"> & {
+    children?: ReactNode;
+  }
+> = ({ children, ...textareaProps }) => {
   return (
-    <FormBase {...props}>
+    <FormBase {...textareaProps}>
       {(field) => (
         <>
-          <Textarea
-            {...field}
-            placeholder={props.placeholder}
-            className={className}
-          />
+          <Textarea {...field} {...textareaProps} />
           {children}
         </>
       )}

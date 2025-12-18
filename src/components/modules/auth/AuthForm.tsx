@@ -5,7 +5,6 @@ import { z, ZodType } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import {
-  Controller,
   DefaultValues,
   FieldValues,
   Path,
@@ -20,11 +19,7 @@ import { formatFieldName } from "@/lib/utils";
 import { toast } from "sonner";
 import {
   Button,
-  Field,
-  FieldError,
   FieldGroup,
-  FieldLabel,
-  Input,
   Alert,
   AlertDescription,
   AlertTitle,
@@ -32,6 +27,7 @@ import {
 } from "@/components/ui";
 import { TextShimmer } from "@/components/ui/dev";
 import { AlertCircleIcon } from "lucide-react";
+import { FormInput } from "@/components/form";
 
 type AuthFormType = keyof typeof AUTH_FORM_TYPES;
 
@@ -88,54 +84,40 @@ const AuthForm = <T extends FieldValues>({
       className="mt-6 space-y-6"
     >
       <FieldGroup>
-        {Object.keys(defaultValues).map((fieldName) => (
-          <Controller
-            key={fieldName}
-            name={fieldName as Path<T>}
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <div className="flex-between w-full">
-                  <FieldLabel
-                    htmlFor={`auth-form-${fieldName}`}
-                    className="pg-medium grow"
-                  >
-                    {formatFieldName(fieldName)}
-                  </FieldLabel>
+        {Object.keys(defaultValues).map((fieldName) => {
+          const isPasswordField =
+            fieldName === "password" || fieldName === "confirmPassword";
+          const showForgotPassword =
+            fieldName === "password" && formType === "LOGIN";
 
-                  {fieldName === "password" && formType === "LOGIN" && (
-                    <Button
-                      variant="link"
-                      className="text-link-100 ml-auto inline-block size-fit p-0 text-sm"
-                      asChild
-                    >
-                      <Link href="/forgot-password">Forgot your password?</Link>
-                    </Button>
-                  )}
-                </div>
-                <Input
-                  {...field}
-                  id={`auth-form-${fieldName}`}
-                  type={
-                    fieldName === "password" || fieldName === "confirmPassword"
-                      ? "password"
-                      : "text"
-                  }
-                  placeholder={
-                    fieldName === "confirmPassword"
-                      ? "Confirm your password"
-                      : `Enter your ${fieldName}`
-                  }
-                  className="pg-regular light-border-2 bg-light900_dark300 text-dark300_light700 min-h-10 border"
-                  aria-invalid={fieldState.invalid}
-                />
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </Field>
-            )}
-          />
-        ))}
+          return (
+            <FormInput
+              key={fieldName}
+              control={form.control}
+              name={fieldName as Path<T>}
+              label={formatFieldName(fieldName)}
+              type={isPasswordField ? "password" : "text"}
+              placeholder={
+                fieldName === "confirmPassword"
+                  ? "Confirm your password"
+                  : `Enter your ${fieldName}`
+              }
+              className="pg-regular light-border-2 bg-light900_dark300 text-dark300_light700 min-h-10 border"
+              labelAction={
+                showForgotPassword ? (
+                  <Button
+                    variant="link"
+                    className="text-link-100 ml-auto inline-block size-fit p-0 text-sm"
+                    tabIndex={-1}
+                    asChild
+                  >
+                    <Link href="/forgot-password">Forgot your password?</Link>
+                  </Button>
+                ) : null
+              }
+            />
+          );
+        })}
       </FieldGroup>
 
       {!!error && (
@@ -155,7 +137,7 @@ const AuthForm = <T extends FieldValues>({
       <Button
         type="submit"
         disabled={form.formState.isSubmitting}
-        className="primary-gradient pg-semibold text-light-900 hover:primary-gradient-hover min-h-10 w-full cursor-pointer transition-all"
+        className="primary-gradient pg-semibold text-light-900 hover:primary-gradient-hover min-h-10 w-full"
       >
         {form.formState.isSubmitting && (
           <Spinner className="border-primary-foreground/30 border-t-primary-foreground!" />
