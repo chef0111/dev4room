@@ -37,6 +37,7 @@ const eslintConfig = [
       "react-hooks/static-components": "off",
       "react-hooks/purity": "off",
       "react-hooks/use-memo": "off",
+      "react-hooks/incompatible-library": "off",
       "@typescript-eslint/no-unused-vars": [
         "warn",
         {
