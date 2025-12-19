@@ -1,17 +1,17 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useReducer, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Route } from "next";
 import { useHotkeys } from "react-hotkeys-hook";
 import {
   FileQuestion,
+  Flame,
   MessageSquare,
   Tag,
   Search,
   WifiOff,
 } from "lucide-react";
-import { useMutation } from "@tanstack/react-query";
 import { orpc } from "@/lib/orpc";
 import { isNetworkError } from "@/errors/error-utils";
 
@@ -27,6 +27,10 @@ import { Button, Kbd, KbdGroup, Spinner } from "@/components/ui";
 import { Brand } from "@/components/ui/dev";
 import UserAvatar from "@/components/modules/profile/UserAvatar";
 import { useDebouncedValue } from "@/hooks/use-debounce";
+import {
+  useTopQuestions,
+  usePopularTags,
+} from "@/queries/command-menu.queries";
 
 interface SearchResult {
   questions: Array<{
@@ -57,28 +61,82 @@ interface SearchResult {
   }>;
 }
 
+type SearchState = {
+  data: SearchResult | null;
+  error: unknown;
+  isLoading: boolean;
+};
+
+type SearchAction =
+  | { type: "SEARCH_START" }
+  | { type: "SEARCH_SUCCESS"; payload: SearchResult }
+  | { type: "SEARCH_ERROR"; payload: unknown }
+  | { type: "SEARCH_CLEAR" };
+
+function searchReducer(state: SearchState, action: SearchAction): SearchState {
+  switch (action.type) {
+    case "SEARCH_START":
+      return { data: null, error: null, isLoading: true };
+    case "SEARCH_SUCCESS":
+      return { data: action.payload, error: null, isLoading: false };
+    case "SEARCH_ERROR":
+      return { data: null, error: action.payload, isLoading: false };
+    case "SEARCH_CLEAR":
+      return { data: null, error: null, isLoading: false };
+    default:
+      return state;
+  }
+}
+
 const CommandMenu = () => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebouncedValue(query, 300);
-
-  const searchMutation = useMutation({
-    mutationFn: async (searchQuery: string) => {
-      if (searchQuery.length < 2) return null;
-      return orpc.search.call({ query: searchQuery, limit: 5 });
-    },
+  const [searchState, dispatch] = useReducer(searchReducer, {
+    data: null,
+    error: null,
+    isLoading: false,
   });
 
+  const {
+    data: searchData,
+    error: searchError,
+    isLoading: isSearching,
+  } = searchState;
+
+  // Fetch top questions and popular tags when menu is open and no query
+  const showSuggestions = open && query.length === 0 && !isSearching;
+  const { data: topQuestionsData, isLoading: isLoadingTopQuestions } =
+    useTopQuestions(showSuggestions);
+  const { data: popularTagsData, isLoading: isLoadingPopularTags } =
+    usePopularTags(showSuggestions);
+
   // Check network error
-  const hasNetworkError =
-    searchMutation.isError && isNetworkError(searchMutation.error);
+  const hasNetworkError = searchError !== null && isNetworkError(searchError);
+
+  // Immediately clear results when query not valid
+  useEffect(() => {
+    if (query.length < 2) {
+      dispatch({ type: "SEARCH_CLEAR" });
+    }
+  }, [query]);
 
   useEffect(() => {
     if (debouncedQuery.length >= 2) {
-      searchMutation.mutate(debouncedQuery);
+      dispatch({ type: "SEARCH_START" });
+
+      orpc.search
+        .call({ query: debouncedQuery, limit: 5 })
+        .then((result) => {
+          dispatch({ type: "SEARCH_SUCCESS", payload: result });
+        })
+        .catch((error) => {
+          dispatch({ type: "SEARCH_ERROR", payload: error });
+        });
+    } else if (debouncedQuery.length > 0 && debouncedQuery.length < 2) {
+      dispatch({ type: "SEARCH_CLEAR" });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedQuery]);
 
   // Keyboard shortcut to open
@@ -102,13 +160,22 @@ const CommandMenu = () => {
 
   const handleRetry = useCallback(() => {
     if (debouncedQuery.length >= 2) {
-      searchMutation.mutate(debouncedQuery);
+      dispatch({ type: "SEARCH_START" });
+
+      orpc.search
+        .call({ query: debouncedQuery, limit: 5 })
+        .then((result) => {
+          dispatch({ type: "SEARCH_SUCCESS", payload: result });
+        })
+        .catch((error) => {
+          dispatch({ type: "SEARCH_ERROR", payload: error });
+        });
     }
-  }, [debouncedQuery, searchMutation]);
+  }, [debouncedQuery]);
 
-  const MIN_SIMILARITY = 0.4;
+  const MIN_SIMILARITY = 0.35;
 
-  const rawResults = searchMutation.data as SearchResult | null;
+  const rawResults = searchData;
 
   // Filter results to only include items above similarity threshold
   const results = rawResults
@@ -158,7 +225,7 @@ const CommandMenu = () => {
           onValueChange={setQuery}
         />
         <CommandList className="">
-          {searchMutation.isPending && (
+          {isSearching && (
             <div className="flex items-center justify-center gap-2 py-6">
               <Spinner />
               <span className="text-sm">Searching...</span>
@@ -181,15 +248,68 @@ const CommandMenu = () => {
             </div>
           )}
 
-          {!searchMutation.isPending &&
-            !hasNetworkError &&
-            query.length < 2 && (
-              <CommandEmpty>
-                Type at least 2 characters to search...
-              </CommandEmpty>
-            )}
+          {/* Default state: Top Questions & Popular Tags */}
+          {!isSearching && !hasNetworkError && query.length < 2 && (
+            <>
+              {(isLoadingTopQuestions || isLoadingPopularTags) && (
+                <div className="flex items-center justify-center gap-2 py-6">
+                  <Spinner />
+                  <span className="text-sm">Loading suggestions...</span>
+                </div>
+              )}
 
-          {!searchMutation.isPending &&
+              {topQuestionsData?.questions &&
+                topQuestionsData.questions.length > 0 && (
+                  <CommandGroup heading="Top Questions">
+                    {topQuestionsData.questions.map((question) => (
+                      <CommandItem
+                        key={question.id}
+                        value={`top-question-${question.id}`}
+                        className="smooth-hover py-2!"
+                        onSelect={() =>
+                          handleSelect(`/questions/${question.id}`)
+                        }
+                      >
+                        <Flame className="text-orange-500" />
+                        <span className="flex-1 truncate">
+                          {question.title}
+                        </span>
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                )}
+
+              {popularTagsData?.tags && popularTagsData.tags.length > 0 && (
+                <CommandGroup heading="Popular Tags">
+                  {popularTagsData.tags.map((tag) => (
+                    <CommandItem
+                      key={tag.id}
+                      value={`popular-tag-${tag.id}`}
+                      onSelect={() => handleSelect(`/tags/${tag.id}`)}
+                      className="smooth-hover py-2!"
+                    >
+                      <Tag className="text-light-400" />
+                      <span>{tag.name}</span>
+                      <span className="text-muted-foreground ml-auto text-xs">
+                        {tag.questions} questions
+                      </span>
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              )}
+
+              {!isLoadingTopQuestions &&
+                !isLoadingPopularTags &&
+                !topQuestionsData?.questions?.length &&
+                !popularTagsData?.tags?.length && (
+                  <CommandEmpty>
+                    Type at least 2 characters to search...
+                  </CommandEmpty>
+                )}
+            </>
+          )}
+
+          {!isSearching &&
             !hasNetworkError &&
             query.length >= 2 &&
             !hasResults && (
@@ -198,7 +318,7 @@ const CommandMenu = () => {
               </CommandEmpty>
             )}
 
-          {hasResults && (
+          {hasResults && !showSuggestions && (
             <>
               {results.questions.length > 0 && (
                 <CommandGroup heading="Questions">

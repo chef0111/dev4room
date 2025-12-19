@@ -13,13 +13,42 @@ interface ErrorDetails {
   statusCode?: number;
 }
 
+function getStatusCode(error: unknown): number | undefined {
+  if (typeof error === "object" && error !== null) {
+    const err = error as Record<string, unknown>;
+    const response = err.response as Record<string, unknown> | undefined;
+    return (
+      (err.status as number) ||
+      (err.statusCode as number) ||
+      (response?.status as number)
+    );
+  }
+  return undefined;
+}
+
+function getErrorCode(error: unknown): string | undefined {
+  if (typeof error === "object" && error !== null) {
+    const err = error as Record<string, unknown>;
+    return (err.code as string) || (err.errorCode as string);
+  }
+  return undefined;
+}
+
 export function classifyError(
   error: Error | unknown,
   statusCode?: number
 ): ErrorType {
-  if (statusCode === 404) return "not-found";
-  if (statusCode === 401 || statusCode === 403) return "auth-error";
-  if (statusCode && statusCode >= 500) return "server-error";
+  const status = statusCode || getStatusCode(error);
+
+  if (status === 404) return "not-found";
+  if (status === 401 || status === 403) return "auth-error";
+  if (status && status >= 500) return "server-error";
+
+  // Check oRPC error codes
+  const errorCode = getErrorCode(error);
+  if (errorCode === "UNAUTHORIZED") return "auth-error";
+  if (errorCode === "FORBIDDEN") return "permission-error";
+  if (errorCode === "NOT_FOUND") return "not-found";
 
   if (error instanceof Error) {
     const message = error.message.toLowerCase();
@@ -30,7 +59,7 @@ export function classifyError(
     if (message.includes("unauthorized") || message.includes("forbidden")) {
       return "auth-error";
     }
-    if (message.includes("network") || message.includes("fetch")) {
+    if (message.includes("network") || message.includes("fetch failed")) {
       return "network-error";
     }
     if (message.includes("permission") || message.includes("access denied")) {
@@ -105,6 +134,8 @@ export function logError(
     console.error("Error occurred:", {
       error,
       message: formatErrorMessage(error),
+      status: getStatusCode(error),
+      code: getErrorCode(error),
       context,
       timestamp: new Date().toISOString(),
     });
@@ -112,23 +143,62 @@ export function logError(
 }
 
 export function isNetworkError(error: Error | unknown): boolean {
+  // Check for fetch/network errors
   if (error instanceof Error) {
-    return (
+    const message = error.message.toLowerCase();
+    if (
       error.name === "NetworkError" ||
-      error.message.includes("fetch") ||
-      error.message.includes("network")
-    );
+      (error.name === "TypeError" && message.includes("fetch")) ||
+      message.includes("network") ||
+      message.includes("fetch failed") ||
+      message.includes("failed to fetch") ||
+      message.includes("network request failed")
+    ) {
+      return true;
+    }
   }
+
+  // Check for network-related status codes (0 or offline)
+  const status = getStatusCode(error);
+  if (status === 0 || !status) {
+    // No status usually means network error
+    if (typeof error === "object" && error !== null) {
+      const err = error as Record<string, unknown>;
+      if (
+        err.type === "network" ||
+        (typeof err.message === "string" && err.message.includes("fetch"))
+      ) {
+        return true;
+      }
+    }
+  }
+
   return false;
 }
 
 export function isAuthError(error: Error | unknown): boolean {
+  // Check status codes
+  const status = getStatusCode(error);
+  if (status === 401 || status === 403) {
+    return true;
+  }
+
+  // Check oRPC error codes
+  const errorCode = getErrorCode(error);
+  if (errorCode === "UNAUTHORIZED" || errorCode === "FORBIDDEN") {
+    return true;
+  }
+
+  // Check error message
   if (error instanceof Error) {
+    const message = error.message.toLowerCase();
     return (
-      error.message.includes("unauthorized") ||
-      error.message.includes("authentication") ||
-      error.message.includes("sign in")
+      message.includes("unauthorized") ||
+      message.includes("authentication") ||
+      message.includes("sign in") ||
+      message.includes("you are unauthorized")
     );
   }
+
   return false;
 }

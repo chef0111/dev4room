@@ -102,6 +102,11 @@ export function useVote({
         queryClient.setQueryData(statusQueryKey, context.prevData);
       }
 
+      // Debug logging
+      console.log("Vote error:", error);
+      console.log("isNetworkError:", isNetworkError(error));
+      console.log("isAuthError:", isAuthError(error));
+
       if (isNetworkError(error)) {
         toast.error("Network Error", {
           description: "Please check your connection and try again.",
