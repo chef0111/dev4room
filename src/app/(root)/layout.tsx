@@ -3,6 +3,7 @@ import NextTopLoader from "nextjs-toploader";
 import Navbar from "@/components/navigation/navbar";
 import { ScrollToTop } from "@/components/modules/main/ScrollToTop";
 import LeftSidebar from "@/components/navigation/left-sidebar";
+import { ErrorBoundary } from "@/components/shared";
 
 interface Props {
   children: React.ReactNode;
@@ -23,7 +24,7 @@ const DashboardLayout: React.FC<Props> = ({ children }: Props) => {
             <Suspense fallback={null}>
               <ScrollToTop />
             </Suspense>
-            {children}
+            <ErrorBoundary>{children}</ErrorBoundary>
           </div>
         </section>
       </div>

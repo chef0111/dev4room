@@ -1,4 +1,5 @@
 import RightSidebar from "@/components/navigation/right-sidebar";
+import { ErrorBoundary } from "@/components/shared";
 
 interface Props {
   children: React.ReactNode;
@@ -7,7 +8,9 @@ interface Props {
 const HomeLayout = ({ children }: Props) => {
   return (
     <>
-      <div className="xl:pr-74">{children}</div>
+      <ErrorBoundary>
+        <div className="xl:pr-74">{children}</div>
+      </ErrorBoundary>
       <RightSidebar />
     </>
   );

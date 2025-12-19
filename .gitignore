@@ -45,3 +45,4 @@ mcp.json
 
 # code editor
 .cursor/
+src/app/test-errors/

@@ -2,6 +2,7 @@ import { Card, CardContent } from "@/components/ui";
 import { TextShimmer } from "@/components/ui/dev";
 import { Brand } from "@/components/ui/dev";
 import { Suspense } from "react";
+import { ErrorBoundary } from "@/components/shared";
 
 interface Props {
   children: React.ReactNode;
@@ -21,11 +22,13 @@ const AuthLayout: React.FC<Props> = ({ children }: Props) => {
       />
       <Card className="bg-light900_dark200 light-border shadow-light100_dark100 min-w-full rounded-xl border px-2 shadow-md sm:min-w-fit sm:px-4">
         <CardContent>
-          <Suspense
-            fallback={<TextShimmer duration={1}>Loading...</TextShimmer>}
-          >
-            {children}
-          </Suspense>
+          <ErrorBoundary>
+            <Suspense
+              fallback={<TextShimmer duration={1}>Loading...</TextShimmer>}
+            >
+              {children}
+            </Suspense>
+          </ErrorBoundary>
         </CardContent>
       </Card>
     </main>
