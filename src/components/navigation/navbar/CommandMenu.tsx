@@ -4,9 +4,16 @@ import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Route } from "next";
 import { useHotkeys } from "react-hotkeys-hook";
-import { FileQuestion, MessageSquare, Tag, Search } from "lucide-react";
+import {
+  FileQuestion,
+  MessageSquare,
+  Tag,
+  Search,
+  WifiOff,
+} from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { orpc } from "@/lib/orpc";
+import { isNetworkError } from "@/errors/error-utils";
 
 import {
   CommandDialog,
@@ -63,6 +70,10 @@ const CommandMenu = () => {
     },
   });
 
+  // Check network error
+  const hasNetworkError =
+    searchMutation.isError && isNetworkError(searchMutation.error);
+
   useEffect(() => {
     if (debouncedQuery.length >= 2) {
       searchMutation.mutate(debouncedQuery);
@@ -89,7 +100,13 @@ const CommandMenu = () => {
     [router]
   );
 
-  const MIN_SIMILARITY = 0.3;
+  const handleRetry = useCallback(() => {
+    if (debouncedQuery.length >= 2) {
+      searchMutation.mutate(debouncedQuery);
+    }
+  }, [debouncedQuery, searchMutation]);
+
+  const MIN_SIMILARITY = 0.4;
 
   const rawResults = searchMutation.data as SearchResult | null;
 
@@ -148,15 +165,38 @@ const CommandMenu = () => {
             </div>
           )}
 
-          {!searchMutation.isPending && query.length < 2 && (
-            <CommandEmpty>Type at least 2 characters to search...</CommandEmpty>
+          {/* Network Error State */}
+          {hasNetworkError && (
+            <div className="flex flex-col items-center justify-center gap-3 py-6">
+              <WifiOff className="text-destructive size-8" />
+              <div className="text-center">
+                <p className="text-sm font-medium">Network Error</p>
+                <p className="text-muted-foreground text-xs">
+                  Please check your connection
+                </p>
+              </div>
+              <Button variant="outline" size="sm" onClick={handleRetry}>
+                Try Again
+              </Button>
+            </div>
           )}
 
-          {!searchMutation.isPending && query.length >= 2 && !hasResults && (
-            <CommandEmpty>
-              No results found for &ldquo;{query}&rdquo;
-            </CommandEmpty>
-          )}
+          {!searchMutation.isPending &&
+            !hasNetworkError &&
+            query.length < 2 && (
+              <CommandEmpty>
+                Type at least 2 characters to search...
+              </CommandEmpty>
+            )}
+
+          {!searchMutation.isPending &&
+            !hasNetworkError &&
+            query.length >= 2 &&
+            !hasResults && (
+              <CommandEmpty>
+                No results found for &ldquo;{query}&rdquo;
+              </CommandEmpty>
+            )}
 
           {hasResults && (
             <>

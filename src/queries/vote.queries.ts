@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { orpc, client } from "@/lib/orpc";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
+import { isNetworkError, isAuthError } from "@/errors/error-utils";
 
 export type VoteType = "upvote" | "downvote";
 export type TargetType = "question" | "answer";
@@ -96,12 +97,24 @@ export function useVote({
       });
     },
 
-    onError: (_error, _voteType, context) => {
+    onError: (error, _voteType, context) => {
       if (context?.prevData) {
         queryClient.setQueryData(statusQueryKey, context.prevData);
       }
 
-      toast.error("Failed to vote. Please try again.");
+      if (isNetworkError(error)) {
+        toast.error("Network Error", {
+          description: "Please check your connection and try again.",
+        });
+      } else if (isAuthError(error)) {
+        toast.error("Authentication Required", {
+          description: "Your session may have expired. Please log in again.",
+        });
+      } else {
+        toast.error("Failed to vote", {
+          description: "Please try again later.",
+        });
+      }
     },
   });
 

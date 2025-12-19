@@ -4,6 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { orpc } from "@/lib/orpc";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { isNetworkError, isAuthError } from "@/errors/error-utils";
 
 export function useUploadAvatar(options?: { onSuccess?: () => void }) {
   const router = useRouter();
@@ -11,7 +12,17 @@ export function useUploadAvatar(options?: { onSuccess?: () => void }) {
   const getUrlMutation = useMutation(
     orpc.upload.getUrl.mutationOptions({
       onError: (error) => {
-        toast.error(error.message || "Failed to get upload URL");
+        if (isNetworkError(error)) {
+          toast.error("Network Error", {
+            description: "Please check your internet connection and try again.",
+          });
+        } else if (isAuthError(error)) {
+          toast.error("Authentication Required", {
+            description: "Please log in to upload files.",
+          });
+        } else {
+          toast.error(error.message || "Failed to get upload URL");
+        }
       },
     })
   );
@@ -24,7 +35,17 @@ export function useUploadAvatar(options?: { onSuccess?: () => void }) {
         options?.onSuccess?.();
       },
       onError: (error) => {
-        toast.error(error.message || "Failed to update profile picture");
+        if (isNetworkError(error)) {
+          toast.error("Network Error", {
+            description: "Upload confirmation failed. Please try again.",
+          });
+        } else if (isAuthError(error)) {
+          toast.error("Authentication Required", {
+            description: "Your session may have expired. Please log in again.",
+          });
+        } else {
+          toast.error(error.message || "Failed to update profile picture");
+        }
       },
     })
   );
@@ -48,12 +69,17 @@ export function useUploadAvatar(options?: { onSuccess?: () => void }) {
       });
 
       if (!uploadResponse.ok) {
-        throw new Error("Failed to upload file to S3");
+        throw new Error("Failed to upload file to storage");
       }
 
       await confirmUploadMutation.mutateAsync({ imageUrl: publicUrl });
     } catch (error) {
-      console.error("Upload failed:", error);
+      // Check if it's a network error during S3 upload
+      if (isNetworkError(error)) {
+        toast.error("Upload Failed", {
+          description: "Network error during file upload. Please try again.",
+        });
+      }
       throw error;
     }
   };
@@ -76,7 +102,17 @@ export function useRemoveAvatar(options?: { onSuccess?: () => void }) {
         options?.onSuccess?.();
       },
       onError: (error) => {
-        toast.error(error.message || "Failed to remove profile picture");
+        if (isNetworkError(error)) {
+          toast.error("Network Error", {
+            description: "Please check your connection and try again.",
+          });
+        } else if (isAuthError(error)) {
+          toast.error("Authentication Required", {
+            description: "Please log in to remove your profile picture.",
+          });
+        } else {
+          toast.error(error.message || "Failed to remove profile picture");
+        }
       },
     })
   );
