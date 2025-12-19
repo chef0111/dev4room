@@ -2,20 +2,15 @@
 
 import { useEffect } from "react";
 import { ErrorFallback } from "@/components/shared/ErrorFallback";
-import { logError, getErrorDetails } from "@/lib/error-utils";
+import { logError, getErrorDetails } from "@/errors/error-utils";
 
 interface ErrorProps {
   error: Error & { digest?: string };
   reset: () => void;
 }
 
-/**
- * Error boundary for route segments
- * Catches runtime errors and provides recovery mechanism
- */
 export default function Error({ error, reset }: ErrorProps) {
   useEffect(() => {
-    // Log error when component mounts
     logError(error, {
       digest: error.digest,
       page: "root-error-boundary",

@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { ErrorFallback } from "@/components/shared/ErrorFallback";
-import { logError, getErrorDetails } from "@/lib/error-utils";
+import { logError, getErrorDetails } from "@/errors/error-utils";
 import { ThemeProvider } from "@/context/theme-provider";
 
 interface GlobalErrorProps {

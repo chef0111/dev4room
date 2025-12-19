@@ -1,7 +1,7 @@
 "use client";
 
-import React, { Component, ReactNode } from "react";
-import { logError, getErrorDetails } from "@/lib/error-utils";
+import { Component, ReactNode } from "react";
+import { logError, getErrorDetails } from "@/errors/error-utils";
 import { ErrorFallback } from "./ErrorFallback";
 
 interface ErrorBoundaryProps {
