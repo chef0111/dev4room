@@ -3,9 +3,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { SiteHeader } from "@/components/modules/dashboard/site-header";
 import { SectionCards } from "@/components/modules/dashboard/section-cards";
 import { ChartAreaInteractive } from "@/components/modules/dashboard/chart-area-interactive";
-import { DataTable } from "@/components/modules/dashboard/data-table";
-
-import data from "./data.json";
+import { UserManagement } from "@/components/modules/dashboard/user-management";
 
 export default function Page() {
   return (
@@ -27,7 +25,7 @@ export default function Page() {
               <div className="px-4 lg:px-6">
                 <ChartAreaInteractive />
               </div>
-              <DataTable data={data} />
+              <UserManagement />
             </div>
           </div>
         </div>

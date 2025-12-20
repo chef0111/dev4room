@@ -106,7 +106,7 @@ const AvatarEditor = ({ user }: AvatarEditorProps) => {
             Edit
           </div>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="mt-6 min-w-0!">
+        <DropdownMenuContent className="mt-5 min-w-0!">
           <DropdownMenuItem
             className="cursor-pointer"
             onClick={handleUploadClick}

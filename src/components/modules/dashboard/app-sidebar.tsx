@@ -4,14 +4,13 @@ import * as React from "react";
 import {
   IconCamera,
   IconChartBar,
-  IconDashboard,
+  IconLayoutDashboard,
   IconDatabase,
   IconFileAi,
   IconFileDescription,
   IconFileWord,
   IconFolder,
   IconHelp,
-  IconInnerShadowTop,
   IconListDetails,
   IconReport,
   IconSearch,
@@ -32,6 +31,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { Brand } from "@/components/ui/dev";
 
 const data = {
   user: {
@@ -43,7 +43,7 @@ const data = {
     {
       title: "Dashboard",
       url: "#",
-      icon: IconDashboard,
+      icon: IconLayoutDashboard,
     },
     {
       title: "Lifecycle",
@@ -158,12 +158,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild
-              className="data-[slot=sidebar-menu-button]:p-1.5!"
+              className="flex-start data-[slot=sidebar-menu-button]:p-1.5! [&>svg]:size-6"
             >
-              <a href="#">
-                <IconInnerShadowTop className="size-5!" />
-                <span className="text-base font-semibold">Acme Inc.</span>
-              </a>
+              <Brand href={null} />
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

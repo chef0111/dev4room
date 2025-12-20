@@ -28,6 +28,15 @@ import { listCollection, toggleSave, hasSaved } from "./collection";
 import { search } from "./search";
 import { generateAnswer } from "./ai";
 import { getUploadUrl, confirmUpload, removeImage } from "./upload";
+import {
+  getStats as getAdminStats,
+  listUsers as listAdminUsers,
+  banUser,
+  unbanUser,
+  setUserRole,
+  deleteUser,
+  getGrowth,
+} from "./admin";
 
 export const router = {
   user: {
@@ -76,5 +85,14 @@ export const router = {
     getUrl: getUploadUrl,
     confirm: confirmUpload,
     remove: removeImage,
+  },
+  admin: {
+    stats: getAdminStats,
+    users: listAdminUsers,
+    banUser,
+    unbanUser,
+    setRole: setUserRole,
+    deleteUser,
+    growth: getGrowth,
   },
 };
