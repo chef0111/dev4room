@@ -1,8 +1,8 @@
 import { Suspense } from "react";
-import TopQuestionsSkeleton from "@/components/skeletons/TopQuestionsSkeleton";
-import TopQuestions from "./TopQuestions";
-import TopTagsSkeleton from "@/components/skeletons/TopTagsSkeleton";
-import PopularTags from "./PopularTags";
+import TopQuestionsSkeleton from "@/components/skeletons/top-questions";
+import TopQuestions from "./top-questions";
+import TopTagsSkeleton from "@/components/skeletons/top-tags";
+import PopularTags from "./popular-tags";
 
 const RightSidebar = () => {
   return (

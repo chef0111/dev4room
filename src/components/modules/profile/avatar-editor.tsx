@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import UserAvatar from "./UserAvatar";
+import UserAvatar from "./user-avatar";
 import {
   Badge,
   DropdownMenu,

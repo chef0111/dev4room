@@ -34,7 +34,7 @@ export const description = "An interactive area chart";
 const chartConfig = {
   questions: {
     label: "Questions",
-    color: "var(--color-primary)",
+    color: "var(--color-chart-1)",
   },
   answers: {
     label: "Answers",

@@ -3,11 +3,11 @@ import { tag } from "@/database/schema";
 import { TagQuestionsFilters } from "@/common/constants/filters";
 import { EMPTY_QUESTION } from "@/common/constants/states";
 
-import Filter from "@/components/filters/Filter";
-import FilterContent from "@/components/filters/FilterContent";
-import LocalSearch from "@/components/modules/main/LocalSearch";
-import QuestionCard from "@/components/modules/questions/QuestionCard";
-import DataRenderer from "@/components/shared/DataRenderer";
+import Filter from "@/components/filters/filter";
+import FilterContent from "@/components/filters/filter-content";
+import LocalSearch from "@/components/modules/main/local-search";
+import QuestionCard from "@/components/modules/questions/question-card";
+import DataRenderer from "@/components/shared/data-renderer";
 import { NextPagination } from "@/components/ui/dev";
 import { FilterProvider } from "@/context";
 import { getErrorMessage } from "@/lib/handlers/error";

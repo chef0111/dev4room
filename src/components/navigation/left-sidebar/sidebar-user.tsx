@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { UserNav } from "@/components/modules/profile/UserNav";
+import { UserNav } from "@/components/modules/profile/user-nav";
 import { Button, Skeleton } from "@/components/ui";
 import { authClient } from "@/lib/auth-client";
 

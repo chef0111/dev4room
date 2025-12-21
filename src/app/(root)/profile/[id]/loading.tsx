@@ -1,5 +1,5 @@
 import { Skeleton } from "@/components/ui";
-import TopTagsSkeleton from "@/components/skeletons/TopTagsSkeleton";
+import TopTagsSkeleton from "@/components/skeletons/top-tags";
 import {
   PostCardsSkeleton,
   ProfileHeaderSkeleton,

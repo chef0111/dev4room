@@ -1,7 +1,7 @@
 import { orpc } from "@/lib/orpc";
 import { getQueryClient } from "@/lib/query/hydration";
 import { getErrorMessage } from "@/lib/handlers/error";
-import DataRenderer from "@/components/shared/DataRenderer";
+import DataRenderer from "@/components/shared/data-renderer";
 import PendingQuestionsList from "./pending-questions-list";
 
 const EMPTY_PENDING = {

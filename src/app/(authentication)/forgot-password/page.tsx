@@ -6,7 +6,7 @@ import { ForgotPasswordSchema } from "@/lib/validations";
 import { authClient } from "@/lib/auth-client";
 import handleError from "@/lib/handlers/error";
 
-import AuthForm from "@/components/modules/auth/AuthForm";
+import AuthForm from "@/components/modules/auth/auth-form";
 import Link from "next/link";
 import { Button } from "@/components/ui";
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { ErrorFallback } from "@/components/shared/ErrorFallback";
+import { ErrorFallback } from "@/components/shared/error-fallback";
 import { logError, getErrorDetails } from "@/errors/error-utils";
 import { ThemeProvider } from "@/context/theme-provider";
 

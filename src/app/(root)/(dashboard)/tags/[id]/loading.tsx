@@ -1,6 +1,6 @@
 import { Skeleton } from "@/components/ui";
-import SearchInput from "@/components/modules/main/SearchInput";
-import FilterFallback from "@/components/filters/FilterFallback";
+import SearchInput from "@/components/modules/main/search-input";
+import FilterFallback from "@/components/filters/filter-fallback";
 import { PostCardsSkeleton } from "@/components/skeletons";
 
 const Loading = () => {

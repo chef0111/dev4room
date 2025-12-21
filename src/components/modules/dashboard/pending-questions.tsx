@@ -38,7 +38,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import QuestionCard from "@/components/modules/questions/QuestionCard";
+import QuestionCard from "@/components/modules/questions/question-card";
 
 interface PendingQuestion {
   id: string;

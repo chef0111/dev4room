@@ -7,14 +7,14 @@ import { getErrorMessage } from "@/lib/handlers/error";
 import { getAnswerPage } from "@/app/server/answer/answer.dal";
 import { AnswerFilters } from "@/common/constants/filters";
 import { EMPTY_ANSWERS } from "@/common/constants/states";
-import Filter from "@/components/filters/Filter";
-import FilterContent from "@/components/filters/FilterContent";
-import DataRenderer from "@/components/shared/DataRenderer";
+import Filter from "@/components/filters/filter";
+import FilterContent from "@/components/filters/filter-content";
+import DataRenderer from "@/components/shared/data-renderer";
 import { FilterProvider } from "@/context";
 import { NextPagination } from "@/components/ui/dev";
-import AnswerCard from "./AnswerCard";
-import ScrollToAnswer from "./ScrollToAnswer";
-import MarkdownPreview from "@/components/markdown/MarkdownPreview";
+import AnswerCard from "./answer-card";
+import ScrollToAnswer from "./scroll-to-answer";
+import MarkdownPreview from "@/components/markdown/markdown-preview";
 
 interface AnswerListProps {
   questionId: string;

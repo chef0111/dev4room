@@ -2,9 +2,9 @@ import { orpc } from "@/lib/orpc";
 import { getQueryClient } from "@/lib/query/hydration";
 import { getErrorMessage } from "@/lib/handlers/error";
 
-import DataRenderer from "@/components/shared/DataRenderer";
+import DataRenderer from "@/components/shared/data-renderer";
 import { EMPTY_USERS } from "@/common/constants/states";
-import UserCard from "@/components/modules/profile/UserCard";
+import UserCard from "@/components/modules/profile/user-card";
 import { NextPagination } from "@/components/ui/dev";
 
 const Users = async ({ searchParams }: Pick<RouteParams, "searchParams">) => {

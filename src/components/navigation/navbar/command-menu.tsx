@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/command";
 import { Button, Kbd, KbdGroup, Spinner } from "@/components/ui";
 import { Brand } from "@/components/ui/dev";
-import UserAvatar from "@/components/modules/profile/UserAvatar";
+import UserAvatar from "@/components/modules/profile/user-avatar";
 import { useDebouncedValue } from "@/hooks/use-debounce";
 import { useTopQuestions, usePopularTags } from "@/queries/recommend.queries";
 

@@ -10,8 +10,8 @@ import {
   SheetTrigger,
 } from "@/components/ui";
 import { Menu } from "lucide-react";
-import NavTabs from "./NavTabs";
-import SidebarUser from "./SidebarUser";
+import NavTabs from "./nav-tabs";
+import SidebarUser from "./sidebar-user";
 
 const MobileNav = () => {
   return (

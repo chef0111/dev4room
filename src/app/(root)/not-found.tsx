@@ -1,4 +1,4 @@
-import { ErrorFallback } from "@/components/shared/ErrorFallback";
+import { ErrorFallback } from "@/components/shared/error-fallback";
 
 export default function NotFound() {
   return (

@@ -2,9 +2,9 @@ import { orpc } from "@/lib/orpc";
 import { getQueryClient } from "@/lib/query/hydration";
 import { getErrorMessage } from "@/lib/handlers/error";
 
-import DataRenderer from "@/components/shared/DataRenderer";
+import DataRenderer from "@/components/shared/data-renderer";
 import { EMPTY_QUESTION } from "@/common/constants/states";
-import QuestionCard from "@/components/modules/questions/QuestionCard";
+import QuestionCard from "@/components/modules/questions/question-card";
 import { NextPagination } from "@/components/ui/dev";
 
 const Collection = async ({

@@ -1,9 +1,9 @@
 import { Suspense } from "react";
 import { FilterProvider } from "@/context";
-import LocalSearch from "@/components/modules/main/LocalSearch";
+import LocalSearch from "@/components/modules/main/local-search";
 import { CollectionFilters } from "@/common/constants/filters";
-import Filter from "@/components/filters/Filter";
-import FilterContent from "@/components/filters/FilterContent";
+import Filter from "@/components/filters/filter";
+import FilterContent from "@/components/filters/filter-content";
 import { PostCardsSkeleton } from "@/components/skeletons";
 import Collection from "./collection";
 

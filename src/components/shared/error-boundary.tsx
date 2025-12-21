@@ -2,7 +2,7 @@
 
 import { Component, ReactNode } from "react";
 import { logError, getErrorDetails } from "@/errors/error-utils";
-import { ErrorFallback } from "./ErrorFallback";
+import { ErrorFallback } from "./error-fallback";
 
 interface ErrorBoundaryProps {
   children: ReactNode;

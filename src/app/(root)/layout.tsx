@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import NextTopLoader from "nextjs-toploader";
 import Navbar from "@/components/navigation/navbar";
-import { ScrollToTop } from "@/components/modules/main/ScrollToTop";
+import { ScrollToTop } from "@/components/modules/main/scroll-to-top";
 import LeftSidebar from "@/components/navigation/left-sidebar";
 import { ErrorBoundary } from "@/components/shared";
 
