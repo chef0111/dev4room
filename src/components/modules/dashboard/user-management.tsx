@@ -1,29 +1,32 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useMemo } from "react";
 import { toast } from "sonner";
 import {
-  IconSearch,
-  IconBan,
-  IconShield,
-  IconShieldOff,
-  IconDotsVertical,
-  IconChevronLeft,
-  IconChevronRight,
-  IconChevronsLeft,
-  IconChevronsRight,
-  IconUser,
-  IconTrash,
-} from "@tabler/icons-react";
-import {
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  useReactTable,
-  type ColumnDef,
-} from "@tanstack/react-table";
+  useQueryState,
+  parseAsInteger,
+  parseAsBoolean,
+  parseAsString,
+  parseAsArrayOf,
+  useQueryStates,
+} from "nuqs";
+import { FileSpreadsheet, Table2 } from "lucide-react";
 
+import { DataTable } from "@/components/data-table/data-table";
+import { DataTableAdvancedToolbar } from "@/components/data-table/data-table-advanced-toolbar";
+import { DataTableFilterList } from "@/components/data-table/data-table-filter-list";
+import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
+import { DataTableSkeleton } from "@/components/data-table/data-table-skeleton";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { BanUserDialog } from "./ban-user-dialog";
+import { DeleteUserDialog } from "./delete-user-dialog";
+import { getUserColumns } from "./users-columns";
+import { useDataTable } from "@/hooks/use-data-table";
 import {
   useAdminUsers,
   useBanUser,
@@ -31,36 +34,16 @@ import {
   useSetUserRole,
   useDeleteUser,
 } from "@/queries/admin.queries";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { BanUserDialog } from "./ban-user-dialog";
-import { DeleteUserDialog } from "./delete-user-dialog";
-import { cn, formatNumber } from "@/lib/utils";
-import TableContentSkeleton from "@/components/skeletons/TableContentSkeleton";
+import { getFiltersStateParser } from "@/lib/parsers";
+
+// Column IDs that can be filtered
+const FILTERABLE_COLUMNS = [
+  "name",
+  "email",
+  "role",
+  "banned",
+  "createdAt",
+] as const;
 
 interface UserData {
   id: string;
@@ -76,80 +59,15 @@ interface UserData {
   createdAt: Date;
 }
 
-function UserRowActions({
-  user,
-  onBan,
-  onUnban,
-  onSetRole,
-  onDelete,
-}: {
-  user: UserData;
-  onBan: (userId: string) => void;
-  onUnban: (userId: string) => void;
-  onSetRole: (userId: string, role: "admin" | "user" | null) => void;
-  onDelete: (userId: string) => void;
-}) {
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          className="data-[state=open]:bg-muted text-muted-foreground flex size-8"
-          size="icon"
-        >
-          <IconDotsVertical />
-          <span className="sr-only">Open menu</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48">
-        {user.role === "admin" ? (
-          <DropdownMenuItem onClick={() => onSetRole(user.id, "user")}>
-            <IconShieldOff className="mr-2 size-4" />
-            Remove Admin
-          </DropdownMenuItem>
-        ) : (
-          <DropdownMenuItem onClick={() => onSetRole(user.id, "admin")}>
-            <IconShield className="mr-2 size-4" />
-            Make Admin
-          </DropdownMenuItem>
-        )}
-        <DropdownMenuSeparator />
-        {user.banned ? (
-          <DropdownMenuItem onClick={() => onUnban(user.id)}>
-            <IconShieldOff className="mr-2 size-4" />
-            Unban User
-          </DropdownMenuItem>
-        ) : (
-          <DropdownMenuItem
-            className="text-destructive"
-            onClick={() => onBan(user.id)}
-          >
-            <IconBan className="mr-2 size-4" />
-            Ban User
-          </DropdownMenuItem>
-        )}
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
-          className="text-destructive"
-          onClick={() => onDelete(user.id)}
-        >
-          <IconTrash className="mr-2 size-4" />
-          Delete User
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-}
-
 export function UserManagement() {
-  const [search, setSearch] = useState("");
-  const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [roleFilter, setRoleFilter] = useState<string | undefined>(undefined);
-  const [bannedFilter, setBannedFilter] = useState<boolean | undefined>(
-    undefined
+  // Toggle between basic and advanced filter mode
+  const [advancedMode, setAdvancedMode] = useQueryState(
+    "advanced",
+    parseAsBoolean.withDefault(false).withOptions({
+      clearOnDefault: true,
+      shallow: true,
+    })
   );
-  const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
 
   // Ban dialog state
   const [banDialogOpen, setBanDialogOpen] = useState(false);
@@ -163,30 +81,96 @@ export function UserManagement() {
     name: string;
   } | null>(null);
 
-  // Debounce search input
-  useEffect(() => {
-    const timer = setTimeout(() => setDebouncedSearch(search), 300);
-    return () => clearTimeout(timer);
-  }, [search]);
+  // URL state for pagination
+  const [page] = useQueryState("page", parseAsInteger.withDefault(1));
+  const [perPage] = useQueryState("perPage", parseAsInteger.withDefault(10));
 
-  // Reset page when filters change
-  useEffect(() => {
-    setPage(0);
-  }, [debouncedSearch, roleFilter, bannedFilter]);
-
-  const { data, isLoading, error } = useAdminUsers({
-    search: debouncedSearch || undefined,
-    role: roleFilter,
-    banned: bannedFilter,
-    limit: pageSize,
-    offset: page * pageSize,
+  // Read basic filter values from URL
+  const [basicFilterValues] = useQueryStates({
+    name: parseAsString.withDefault(""),
+    email: parseAsString.withDefault(""),
+    role: parseAsArrayOf(parseAsString, ",").withDefault([]),
+    banned: parseAsArrayOf(parseAsString, ",").withDefault([]),
   });
 
+  // Advanced mode filters
+  const [advancedFilters] = useQueryState(
+    "filters",
+    getFiltersStateParser<UserData>(
+      FILTERABLE_COLUMNS as unknown as string[]
+    ).withDefault([])
+  );
+
+  // Convert filters to API parameters
+  const apiParams = useMemo(() => {
+    if (advancedMode) {
+      // Use advanced filters from URL
+      let search: string | undefined;
+      let role: string | undefined;
+      let banned: boolean | undefined;
+
+      for (const filter of advancedFilters) {
+        if (filter.id === "name" || filter.id === "email") {
+          if (typeof filter.value === "string" && filter.value) {
+            search = filter.value;
+          }
+        } else if (filter.id === "role") {
+          // Pass role directly - backend now handles "user" correctly
+          if (Array.isArray(filter.value) && filter.value.length > 0) {
+            role = filter.value[0];
+          } else if (typeof filter.value === "string" && filter.value) {
+            role = filter.value;
+          }
+        } else if (filter.id === "banned") {
+          if (Array.isArray(filter.value) && filter.value.length > 0) {
+            banned = filter.value[0] === "true";
+          } else if (typeof filter.value === "string") {
+            banned = filter.value === "true";
+          }
+        }
+      }
+
+      return {
+        search,
+        role,
+        banned,
+        limit: perPage,
+        offset: (page - 1) * perPage,
+      };
+    } else {
+      // Use basic filters from URL
+      const search =
+        basicFilterValues.name || basicFilterValues.email || undefined;
+      // Pass role filter directly - backend now handles "user" correctly
+      const role =
+        basicFilterValues.role.length > 0
+          ? basicFilterValues.role[0]
+          : undefined;
+      let banned: boolean | undefined;
+      if (basicFilterValues.banned.length > 0) {
+        banned = basicFilterValues.banned[0] === "true";
+      }
+
+      return {
+        search,
+        role,
+        banned,
+        limit: perPage,
+        offset: (page - 1) * perPage,
+      };
+    }
+  }, [advancedMode, advancedFilters, basicFilterValues, page, perPage]);
+
+  // Fetch users with server-side filtering
+  const { data, isLoading, error } = useAdminUsers(apiParams);
+
+  // Mutations
   const banUserMutation = useBanUser();
   const unbanUserMutation = useUnbanUser();
   const setUserRoleMutation = useSetUserRole();
   const deleteUserMutation = useDeleteUser();
 
+  // Action handlers
   const handleBan = (userId: string) => {
     setUserToBan(userId);
     setBanDialogOpen(true);
@@ -252,153 +236,30 @@ export function UserManagement() {
     });
   };
 
-  const columns: ColumnDef<UserData>[] = [
-    {
-      accessorKey: "name",
-      header: "User",
-      id: "user",
-      size: 300,
-      cell: ({ row }) => {
-        const user = row.original;
-        const initials = user.name
-          .split(" ")
-          .map((n) => n[0])
-          .join("")
-          .slice(0, 2)
-          .toUpperCase();
+  // Get columns with action handlers
+  const columns = useMemo(
+    () =>
+      getUserColumns({
+        onBan: handleBan,
+        onUnban: handleUnban,
+        onSetRole: handleSetRole,
+        onDelete: handleDelete,
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [data?.users]
+  );
 
-        return (
-          <div className="flex items-center gap-3">
-            <Avatar className="size-8">
-              <AvatarFallback className="text-xs">{initials}</AvatarFallback>
-            </Avatar>
-            <div className="flex flex-col">
-              <span className="font-medium">{user.name}</span>
-              <span className="text-muted-foreground text-xs">
-                @{user.username}
-              </span>
-            </div>
-          </div>
-        );
-      },
-    },
-    {
-      accessorKey: "email",
-      header: "Email",
-      size: 250,
-      cell: ({ row }) => (
-        <span className="text-muted-foreground">{row.original.email}</span>
-      ),
-    },
-    {
-      accessorKey: "questionCount",
-      header: () => <div className="text-right">Questions</div>,
-      size: 100,
-      cell: ({ row }) => (
-        <div className="text-right font-medium">
-          {formatNumber(row.original.questionCount)}
-        </div>
-      ),
-    },
-    {
-      accessorKey: "answerCount",
-      header: () => <div className="text-right">Answers</div>,
-      size: 100,
-      cell: ({ row }) => (
-        <div className="text-right font-medium">
-          {formatNumber(row.original.answerCount)}
-        </div>
-      ),
-    },
-    {
-      accessorKey: "reputation",
-      header: () => <div className="text-right">Reputation</div>,
-      size: 100,
-      cell: ({ row }) => (
-        <div className="text-right font-medium">
-          {formatNumber(row.original.reputation)}
-        </div>
-      ),
-    },
-    {
-      accessorKey: "role",
-      header: "Status",
-      size: 100,
-      cell: ({ row }) => {
-        const user = row.original;
-        return (
-          <div className="flex-center gap-1.5">
-            {user.role === "admin" && (
-              <Badge
-                variant="default"
-                className="min-h-6 bg-blue-500/10 text-blue-600 dark:text-blue-400"
-              >
-                <IconShield className="mr-1 size-3" />
-                Admin
-              </Badge>
-            )}
-            {user.banned && (
-              <Badge variant="destructive" className="min-h-6">
-                <IconBan className="mr-1 size-3" />
-                Banned
-              </Badge>
-            )}
-            {user.role !== "admin" && !user.banned && (
-              <Badge
-                variant="outline"
-                className="text-muted-foreground border-muted min-h-6"
-              >
-                <IconUser className="mr-1 size-3" />
-                User
-              </Badge>
-            )}
-          </div>
-        );
-      },
-    },
-    {
-      accessorKey: "createdAt",
-      header: "Joined",
-      size: 100,
-      cell: ({ row }) => {
-        const date = new Date(row.original.createdAt);
-        return (
-          <span className="text-muted-foreground text-sm">
-            {date.toLocaleDateString("en-US", {
-              month: "short",
-              day: "numeric",
-              year: "numeric",
-            })}
-          </span>
-        );
-      },
-    },
-    {
-      id: "actions",
-      size: 60,
-      cell: ({ row }) => (
-        <UserRowActions
-          user={row.original}
-          onBan={handleBan}
-          onUnban={handleUnban}
-          onSetRole={handleSetRole}
-          onDelete={handleDelete}
-        />
-      ),
-    },
-  ];
-
-  const table = useReactTable({
+  // Use tablecn's useDataTable hook for table state
+  const { table, shallow, debounceMs, throttleMs } = useDataTable({
     data: data?.users ?? [],
     columns,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    manualPagination: true,
-    pageCount: Math.ceil((data?.total ?? 0) / pageSize),
+    pageCount: Math.ceil((data?.total ?? 0) / perPage),
+    enableAdvancedFilter: advancedMode,
+    initialState: {
+      pagination: { pageSize: perPage, pageIndex: page - 1 },
+      sorting: [{ id: "createdAt", desc: true }],
+    },
   });
-
-  const totalPages = Math.ceil((data?.total ?? 0) / pageSize);
 
   if (error) {
     return (
@@ -410,186 +271,90 @@ export function UserManagement() {
     );
   }
 
+  if (isLoading && !data) {
+    return (
+      <div className="flex flex-col gap-4 px-4 lg:px-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold">User Management</h2>
+        </div>
+        <DataTableSkeleton
+          columnCount={8}
+          rowCount={10}
+          filterCount={2}
+          withPagination
+          withViewOptions
+        />
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="flex flex-col gap-4 px-4 lg:px-6">
-        {/* Header with filters */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <h2 className="text-lg font-semibold">User Management</h2>
-          <div className="flex flex-wrap items-center gap-2">
-            <div className="relative">
-              <IconSearch className="text-muted-foreground absolute top-2.5 left-2.5 size-4" />
-              <Input
-                placeholder="Search users..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-64 pl-8"
-              />
-            </div>
-            <Select
-              value={roleFilter ?? "all"}
-              onValueChange={(v) => setRoleFilter(v === "all" ? undefined : v)}
-            >
-              <SelectTrigger className="w-32">
-                <SelectValue placeholder="All roles" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All roles</SelectItem>
-                <SelectItem value="admin">Admins</SelectItem>
-                <SelectItem value="user">Users</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select
-              value={
-                bannedFilter === undefined
-                  ? "all"
-                  : bannedFilter
-                    ? "banned"
-                    : "active"
-              }
-              onValueChange={(v) =>
-                setBannedFilter(v === "all" ? undefined : v === "banned")
-              }
-            >
-              <SelectTrigger className="w-32">
-                <SelectValue placeholder="All status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All status</SelectItem>
-                <SelectItem value="active">Active</SelectItem>
-                <SelectItem value="banned">Banned</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        {/* Table */}
-        <div className="overflow-hidden rounded-lg border">
-          <Table className="[&_td]:px-4 [&_th]:px-4">
-            <TableHeader className="bg-muted">
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    const userColumn = header.column.id === "User";
-
-                    return (
-                      <TableHead
-                        key={header.id}
-                        style={{ width: header.getSize() }}
-                        className={cn(userColumn && "mx-8")}
-                      >
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                      </TableHead>
-                    );
-                  })}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {isLoading ? (
-                <TableContentSkeleton />
-              ) : table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id} className="smooth-hover">
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell
-                        key={cell.id}
-                        style={{ width: cell.column.getSize() }}
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
-                    No users found.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
-
-        {/* Pagination */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="text-muted-foreground text-sm">Rows per page</span>
-            <Select
-              value={pageSize.toString()}
-              onValueChange={(value) => {
-                setPageSize(Number(value));
-                setPage(0);
-              }}
-            >
-              <SelectTrigger className="h-8 w-16">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="min-w-20">
-                <SelectItem value="10">10</SelectItem>
-                <SelectItem value="20">20</SelectItem>
-                <SelectItem value="30">30</SelectItem>
-                <SelectItem value="40">40</SelectItem>
-                <SelectItem value="50">50</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="flex items-center gap-4">
-            <span className="text-sm">
-              Page {page + 1} of {Math.max(totalPages, 1)}
-            </span>
-            <div className="flex items-center gap-1">
-              <Button
-                variant="outline"
-                size="icon"
-                className="size-8"
-                onClick={() => setPage(0)}
-                disabled={page === 0}
+          <h2 className="text-lg font-semibold">User Management</h2>
+
+          {/* Toggle between basic and advanced filter modes */}
+          <ToggleGroup
+            type="single"
+            variant="outline"
+            size="sm"
+            value={advancedMode ? "advanced" : "basic"}
+            onValueChange={(value) => {
+              if (value) {
+                setAdvancedMode(value === "advanced");
+              }
+            }}
+            className="gap-0"
+          >
+            <Tooltip delayDuration={300}>
+              <ToggleGroupItem
+                value="basic"
+                className="data-[state=on]:bg-accent/70 px-3 text-xs whitespace-nowrap"
+                asChild
               >
-                <IconChevronsLeft className="size-4" />
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                className="size-8"
-                onClick={() => setPage((p) => Math.max(0, p - 1))}
-                disabled={page === 0}
+                <TooltipTrigger>
+                  <Table2 className="mr-1 size-3.5" />
+                  Basic
+                </TooltipTrigger>
+              </ToggleGroupItem>
+              <TooltipContent side="bottom" sideOffset={6}>
+                <p>Quick filters in toolbar</p>
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip delayDuration={300}>
+              <ToggleGroupItem
+                value="advanced"
+                className="data-[state=on]:bg-accent/70 px-3 text-xs whitespace-nowrap"
+                asChild
               >
-                <IconChevronLeft className="size-4" />
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                className="size-8"
-                onClick={() => setPage((p) => p + 1)}
-                disabled={page >= totalPages - 1}
-              >
-                <IconChevronRight className="size-4" />
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                className="size-8"
-                onClick={() => setPage(totalPages - 1)}
-                disabled={page >= totalPages - 1}
-              >
-                <IconChevronsRight className="size-4" />
-              </Button>
-            </div>
-          </div>
+                <TooltipTrigger>
+                  <FileSpreadsheet className="mr-1 size-3.5" />
+                  Advanced
+                </TooltipTrigger>
+              </ToggleGroupItem>
+              <TooltipContent side="bottom" sideOffset={6}>
+                <p>Notion-like filter builder</p>
+              </TooltipContent>
+            </Tooltip>
+          </ToggleGroup>
         </div>
+
+        <DataTable table={table}>
+          {advancedMode ? (
+            <DataTableAdvancedToolbar table={table}>
+              <DataTableFilterList
+                table={table}
+                shallow={shallow}
+                debounceMs={debounceMs}
+                throttleMs={throttleMs}
+                align="start"
+              />
+            </DataTableAdvancedToolbar>
+          ) : (
+            <DataTableToolbar table={table} />
+          )}
+        </DataTable>
       </div>
 
       {/* Ban Dialog */}

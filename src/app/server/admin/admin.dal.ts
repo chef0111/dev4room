@@ -197,7 +197,11 @@ export class AdminDAL {
     }
 
     if (params.role) {
-      conditions.push(eq(user.role, params.role));
+      if (params.role === "user") {
+        conditions.push(or(eq(user.role, "user"), sql`${user.role} IS NULL`));
+      } else {
+        conditions.push(eq(user.role, params.role));
+      }
     }
 
     if (params.banned !== undefined) {

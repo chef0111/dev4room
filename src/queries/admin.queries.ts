@@ -27,6 +27,7 @@ export function useAdminUsers(params: ListUsersParams = {}) {
       input: { search, role, banned, limit, offset },
     }),
     staleTime: 1000 * 60 * 2,
+    placeholderData: (previousData) => previousData,
   });
 }
 

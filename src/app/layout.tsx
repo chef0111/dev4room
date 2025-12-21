@@ -8,6 +8,8 @@ import { Analytics } from "@vercel/analytics/next";
 import { ThemeProvider } from "@/context/theme-provider";
 import { Toaster } from "@/components/ui";
 import { Providers } from "./providers";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
+
 import "./globals.css";
 
 const inter = Inter({
@@ -49,7 +51,9 @@ const RootLayout: React.FC<Props> = ({ children }: Props) => {
         className={`${inter.variable} ${esbuild.variable} bg-light850_dark100 antialiased`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <Providers>{children}</Providers>
+          <Providers>
+            <NuqsAdapter>{children}</NuqsAdapter>
+          </Providers>
           <Toaster richColors />
         </ThemeProvider>
         <SpeedInsights />
