@@ -19,9 +19,13 @@ import QuestionUtilsFallback from "@/components/modules/questions/QuestionUtilsF
 
 interface QuestionContentProps {
   questionId: string;
+  isPending?: boolean;
 }
 
-const QuestionContent = async ({ questionId }: QuestionContentProps) => {
+const QuestionContent = async ({
+  questionId,
+  isPending = false,
+}: QuestionContentProps) => {
   const session = await getServerSession();
   const queryClient = getQueryClient();
 
@@ -36,40 +40,46 @@ const QuestionContent = async ({ questionId }: QuestionContentProps) => {
   const { author, createdAt, answers, views, title, content, tags } = question;
   const isAuthor = session?.user?.id === author.id.toString();
 
-  after(async () => {
-    await ViewService.incrementQuestionViews(questionId);
-  });
+  if (!isPending) {
+    after(async () => {
+      await ViewService.incrementQuestionViews(questionId);
+    });
+  }
 
   return (
     <>
       <div className="flex-start w-full flex-col">
         <div className="flex w-full justify-between">
-          <div className="flex-start gap-1">
+          <div className="flex-start gap-1.5">
             <UserAvatar
               id={author.id}
               name={author.name}
               image={author.image ?? ""}
-              className="size-6"
-              fallbackClassName="text-2.5"
+              className="size-7"
+              fallbackClassName="text-xs"
             />
 
             <Link href={`/profile/${author.id}`}>
-              <p className="pg-semibold text-dark300_light700">{author.name}</p>
+              <p className="pg-semibold text-dark300_light700 text-lg">
+                {author.name}
+              </p>
             </Link>
           </div>
 
-          <div className="flex-end gap-2">
-            <Suspense fallback={<QuestionUtilsFallback />}>
-              <Votes
-                targetType="question"
-                targetId={question.id}
-                upvotes={question.upvotes}
-                downvotes={question.downvotes}
-              />
+          {!isPending && (
+            <div className="flex-end gap-2">
+              <Suspense fallback={<QuestionUtilsFallback />}>
+                <Votes
+                  targetType="question"
+                  targetId={question.id}
+                  upvotes={question.upvotes}
+                  downvotes={question.downvotes}
+                />
 
-              <SaveQuestion questionId={question.id} />
-            </Suspense>
-          </div>
+                <SaveQuestion questionId={question.id} />
+              </Suspense>
+            </div>
+          )}
         </div>
 
         <h2 className="h2-semibold text-dark200_light900 mt-3 w-full">
@@ -110,9 +120,12 @@ const QuestionContent = async ({ questionId }: QuestionContentProps) => {
           ))}
         </div>
 
-        {isAuthor && <EditDelete type="question" itemId={question.id} />}
+        {isAuthor && !isPending && (
+          <EditDelete type="question" itemId={question.id} />
+        )}
       </div>
-      <Separator className="bg-light700_dark400 mt-10 h-1" />
+
+      {!isPending && <Separator className="bg-light700_dark400 mt-10 h-1" />}
     </>
   );
 };

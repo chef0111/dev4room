@@ -1,7 +1,25 @@
 import "server-only";
 import { db } from "@/database/drizzle";
-import { user, question, answer, tag, interaction } from "@/database/schema";
-import { count, gte, eq, and, lt, like, or, desc, sql } from "drizzle-orm";
+import {
+  user,
+  answer,
+  tag,
+  interaction,
+  tagQuestion,
+  question,
+} from "@/database/schema";
+import {
+  count,
+  gte,
+  eq,
+  and,
+  lt,
+  like,
+  or,
+  desc,
+  sql,
+  inArray,
+} from "drizzle-orm";
 
 export interface PlatformStatsResult {
   totalUsers: number;
@@ -322,6 +340,104 @@ export class AdminDAL {
 
     return Array.from(dateMap.values());
   }
+
+  static async getPendingQuestions() {
+    const rows = await db
+      .select({
+        id: question.id,
+        title: question.title,
+        content: question.content,
+        createdAt: question.createdAt,
+        authorId: question.authorId,
+        authorName: user.name,
+        authorUsername: user.username,
+        authorImage: user.image,
+      })
+      .from(question)
+      .leftJoin(user, eq(question.authorId, user.id))
+      .where(eq(question.status, "pending"))
+      .orderBy(desc(question.createdAt));
+
+    // Get tags for each question
+    const questionIds = rows.map((r) => r.id);
+    const tagData =
+      questionIds.length > 0
+        ? await db
+            .select({
+              questionId: tagQuestion.questionId,
+              tagId: tag.id,
+              tagName: tag.name,
+            })
+            .from(tagQuestion)
+            .innerJoin(tag, eq(tagQuestion.tagId, tag.id))
+            .where(inArray(tagQuestion.questionId, questionIds))
+        : [];
+
+    // Group tags by question
+    const tagsByQuestion = new Map<string, { id: string; name: string }[]>();
+    tagData.forEach((row) => {
+      if (!tagsByQuestion.has(row.questionId)) {
+        tagsByQuestion.set(row.questionId, []);
+      }
+      tagsByQuestion.get(row.questionId)!.push({
+        id: row.tagId,
+        name: row.tagName,
+      });
+    });
+
+    return rows.map((row) => ({
+      id: row.id,
+      title: row.title,
+      content: row.content,
+      createdAt: row.createdAt,
+      author: {
+        id: row.authorId,
+        name: row.authorName ?? "Unknown",
+        username: row.authorUsername ?? "unknown",
+        image: row.authorImage,
+      },
+      tags: tagsByQuestion.get(row.id) ?? [],
+    }));
+  }
+
+  static async approveQuestion(questionId: string): Promise<void> {
+    const [existing] = await db
+      .select({ id: question.id, status: question.status })
+      .from(question)
+      .where(eq(question.id, questionId))
+      .limit(1);
+
+    if (!existing) {
+      throw new Error("Question not found");
+    }
+
+    if (existing.status !== "pending") {
+      throw new Error("Question is not pending");
+    }
+
+    await db
+      .update(question)
+      .set({ status: "approved" })
+      .where(eq(question.id, questionId));
+  }
+
+  static async rejectQuestion(questionId: string): Promise<void> {
+    const [existing] = await db
+      .select({ id: question.id, status: question.status })
+      .from(question)
+      .where(eq(question.id, questionId))
+      .limit(1);
+
+    if (!existing) {
+      throw new Error("Question not found");
+    }
+
+    if (existing.status !== "pending") {
+      throw new Error("Question is not pending");
+    }
+
+    await db.delete(question).where(eq(question.id, questionId));
+  }
 }
 
 export const getPlatformStats = AdminDAL.getPlatformStats.bind(AdminDAL);
@@ -331,3 +447,6 @@ export const unbanUserById = AdminDAL.unbanUserById.bind(AdminDAL);
 export const updateUserRole = AdminDAL.updateUserRole.bind(AdminDAL);
 export const deleteUserById = AdminDAL.deleteUserById.bind(AdminDAL);
 export const getGrowthAnalytics = AdminDAL.getGrowthAnalytics.bind(AdminDAL);
+export const getPendingQuestions = AdminDAL.getPendingQuestions.bind(AdminDAL);
+export const approveQuestion = AdminDAL.approveQuestion.bind(AdminDAL);
+export const rejectQuestion = AdminDAL.rejectQuestion.bind(AdminDAL);

@@ -14,6 +14,8 @@ import {
   editQuestion,
   getTopQuestions,
   deleteQuestion,
+  getUserPendingQuestions,
+  cancelPendingQuestion,
 } from "./question";
 import {
   listAnswers,
@@ -36,6 +38,9 @@ import {
   setUserRole,
   deleteUser,
   getGrowth,
+  listPendingQuestions,
+  approveQuestion,
+  rejectQuestion,
 } from "./admin";
 
 export const router = {
@@ -55,6 +60,8 @@ export const router = {
     edit: editQuestion,
     getTop: getTopQuestions,
     delete: deleteQuestion,
+    pending: getUserPendingQuestions,
+    cancelPending: cancelPendingQuestion,
   },
   answer: {
     list: listAnswers,
@@ -94,5 +101,8 @@ export const router = {
     setRole: setUserRole,
     deleteUser,
     growth: getGrowth,
+    pendingQuestions: listPendingQuestions,
+    approveQuestion,
+    rejectQuestion,
   },
 };

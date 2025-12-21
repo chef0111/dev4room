@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { ReactNode, useMemo } from "react";
 import Link from "next/link";
 
 import { getTimeStamp } from "@/lib/utils";
@@ -11,11 +11,13 @@ import { Route } from "next";
 interface QuestionCardProps {
   question: Question;
   actionButtons?: boolean;
+  customActions?: ReactNode;
 }
 
 const QuestionCard = ({
   question: { id, title, tags, author, createdAt, upvotes, answers, views },
   actionButtons = false,
+  customActions,
 }: QuestionCardProps) => {
   const renderTags = useMemo(
     () =>
@@ -40,7 +42,9 @@ const QuestionCard = ({
           </Link>
         </div>
 
-        {actionButtons && <EditDelete type="question" itemId={id} />}
+        {customActions
+          ? customActions
+          : actionButtons && <EditDelete type="question" itemId={id} />}
       </div>
 
       <div className="my-3 flex w-full flex-wrap gap-2">{renderTags}</div>

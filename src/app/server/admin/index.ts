@@ -10,6 +10,9 @@ import {
   updateUserRole,
   deleteUserById,
   getGrowthAnalytics,
+  getPendingQuestions,
+  approveQuestion as approveQuestionDAL,
+  rejectQuestion as rejectQuestionDAL,
 } from "./admin.dal";
 import {
   PlatformStatsSchema,
@@ -128,4 +131,65 @@ export const getGrowth = admin
   .handler(async ({ input }) => {
     const data = await getGrowthAnalytics(input.days);
     return { data };
+  });
+
+export const listPendingQuestions = admin
+  .use(standardSecurityMiddleware)
+  .route({
+    method: "GET",
+    path: "/admin/questions/pending",
+    summary: "List Pending Questions (Admin Only)",
+    tags: ["Admin"],
+  })
+  .output(
+    z.array(
+      z.object({
+        id: z.string(),
+        title: z.string(),
+        content: z.string(),
+        createdAt: z.date(),
+        author: z.object({
+          id: z.string(),
+          name: z.string(),
+          username: z.string(),
+          image: z.string().nullable(),
+        }),
+        tags: z.array(z.object({ id: z.string(), name: z.string() })),
+      })
+    )
+  )
+  .handler(async () => {
+    return getPendingQuestions();
+  });
+
+export const approveQuestion = admin
+  .use(writeSecurityMiddleware)
+  .route({
+    method: "POST",
+    path: "/admin/questions/{questionId}/approve",
+    summary: "Approve Pending Question (Admin Only)",
+    tags: ["Admin"],
+  })
+  .input(z.object({ questionId: z.string() }))
+  .output(z.object({ success: z.boolean() }))
+  .handler(async ({ input }) => {
+    await approveQuestionDAL(input.questionId);
+    revalidatePath("/dashboard");
+    return { success: true };
+  });
+
+export const rejectQuestion = admin
+  .use(writeSecurityMiddleware)
+  .route({
+    method: "POST",
+    path: "/admin/questions/{questionId}/reject",
+    summary: "Reject Pending Question (Admin Only)",
+    tags: ["Admin"],
+  })
+  .input(z.object({ questionId: z.string() }))
+  .output(z.object({ success: z.boolean() }))
+  .handler(async ({ input }) => {
+    await rejectQuestionDAL(input.questionId);
+    revalidatePath("/dashboard");
+    return { success: true };
   });

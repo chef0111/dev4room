@@ -26,6 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Spinner } from "@/components/ui";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 export const description = "An interactive area chart";
@@ -107,7 +108,7 @@ export function ChartAreaInteractive() {
         {isLoading ? (
           <div className="flex h-62.5 w-full items-center justify-center">
             <div className="flex flex-col items-center gap-2">
-              <div className="border-primary size-8 animate-spin rounded-full border-4 border-t-transparent" />
+              <Spinner className="size-8 border-5 border-white/30 border-t-white" />
               <p className="text-muted-foreground text-sm">
                 Loading analytics...
               </p>

@@ -10,6 +10,8 @@ import {
   editQuestion as editQuestionDAL,
   getTopQuestions as getTopQuestionsDAL,
   deleteQuestion as deleteQuestionDAL,
+  getUserPendingQuestions as getUserPendingQuestionsDAL,
+  cancelPendingQuestion as cancelPendingQuestionDAL,
 } from "@/app/server/question/question.dal";
 import {
   CreateQuestionSchema,
@@ -70,9 +72,13 @@ export const createQuestion = authorized
     tags: ["Questions"],
   })
   .input(CreateQuestionSchema)
-  .output(z.object({ id: z.string() }))
+  .output(z.object({ id: z.string(), status: z.string() }))
   .handler(async ({ input, context }) => {
-    const question = await createQuestionDAL(input, context.user.id);
+    const question = await createQuestionDAL(
+      input,
+      context.user.id,
+      context.user.reputation ?? 0
+    );
 
     // Get any newly created tags for indexing
     const newTagIds = TagQuestionService.getPendingTagIds();
@@ -82,20 +88,23 @@ export const createQuestion = authorized
         revalidateTag("questions", "max");
         revalidateTag(`user:${context.user.id}`, "max");
 
-        await Promise.all([
-          createInteraction(
-            {
-              action: "post",
-              actionType: "question",
-              actionId: question.id,
-              authorId: context.user.id,
-            },
-            context.user.id
-          ),
-          indexQuestion(question.id),
-          // Index any new tags that were created
-          ...newTagIds.map((tagId) => indexTag(tagId)),
-        ]);
+        // Only index approved questions
+        if (question.status === "approved") {
+          await Promise.all([
+            createInteraction(
+              {
+                action: "post",
+                actionType: "question",
+                actionId: question.id,
+                authorId: context.user.id,
+              },
+              context.user.id
+            ),
+            indexQuestion(question.id),
+            // Index any new tags that were created
+            ...newTagIds.map((tagId) => indexTag(tagId)),
+          ]);
+        }
       } catch (error) {
         console.error(
           "Failed to create interaction/index after create question:",
@@ -106,7 +115,7 @@ export const createQuestion = authorized
 
     revalidatePath(`/profile/${context.user.id}`);
 
-    return { id: question.id };
+    return { id: question.id, status: question.status };
   });
 
 export const editQuestion = authorized
@@ -205,6 +214,56 @@ export const deleteQuestion = authorized
     });
 
     revalidatePath(`/profile/${context.user.id}`);
+
+    return { success: true };
+  });
+
+export const getUserPendingQuestions = authorized
+  .use(standardSecurityMiddleware)
+  .route({
+    method: "GET",
+    path: "/question/pending",
+    summary: "Get User's Pending Questions",
+    tags: ["Questions"],
+  })
+  .output(
+    z.array(
+      z.object({
+        id: z.string(),
+        title: z.string(),
+        content: z.string(),
+        createdAt: z.date(),
+        upvotes: z.number(),
+        answers: z.number(),
+        views: z.number(),
+        authorId: z.string(),
+        authorName: z.string(),
+        authorImage: z.string().nullable(),
+        tags: z.array(z.object({ id: z.string(), name: z.string() })),
+      })
+    )
+  )
+  .handler(async ({ context }) => {
+    return getUserPendingQuestionsDAL(context.user.id);
+  });
+
+export const cancelPendingQuestion = authorized
+  .use(standardSecurityMiddleware)
+  .use(writeSecurityMiddleware)
+  .route({
+    method: "DELETE",
+    path: "/question/pending/{questionId}",
+    summary: "Cancel Pending Question",
+    tags: ["Questions"],
+  })
+  .input(z.object({ questionId: z.string() }))
+  .output(z.object({ success: z.boolean() }))
+  .handler(async ({ input, context }) => {
+    await cancelPendingQuestionDAL(input.questionId, context.user.id);
+
+    after(async () => {
+      revalidateTag(`user:${context.user.id}`, "max");
+    });
 
     return { success: true };
   });

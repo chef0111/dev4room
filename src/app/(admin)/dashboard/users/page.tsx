@@ -1,11 +1,9 @@
 import { AppSidebar } from "@/components/modules/dashboard/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { SiteHeader } from "@/components/modules/dashboard/site-header";
-import { SectionCards } from "@/components/modules/dashboard/section-cards";
-import { ChartAreaInteractive } from "@/components/modules/dashboard/chart-area-interactive";
-import { PendingQuestions } from "@/components/modules/dashboard/pending-questions";
+import { UserManagement } from "@/components/modules/dashboard/user-management";
 
-export default function Page() {
+export default function UsersPage() {
   return (
     <SidebarProvider
       style={
@@ -21,11 +19,7 @@ export default function Page() {
         <div className="flex flex-1 flex-col">
           <div className="@container/main flex flex-1 flex-col gap-2">
             <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-              <SectionCards />
-              <div className="px-4 lg:px-6">
-                <ChartAreaInteractive />
-              </div>
-              <PendingQuestions />
+              <UserManagement />
             </div>
           </div>
         </div>

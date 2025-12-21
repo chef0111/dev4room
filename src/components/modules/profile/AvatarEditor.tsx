@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import UserAvatar from "./UserAvatar";
 import {
+  Badge,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -47,12 +48,13 @@ const AvatarEditor = ({ user }: AvatarEditorProps) => {
 
     try {
       await uploadAvatar(file);
-    } catch {
-      // Error handled in mutation hook
-    }
-
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
+    } catch (error) {
+      if (process.env.NODE_ENV === "development")
+        console.error("Avatar upload failed:", error);
+    } finally {
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
     }
   };
 
@@ -83,7 +85,7 @@ const AvatarEditor = ({ user }: AvatarEditorProps) => {
 
       <DropdownMenu>
         <DropdownMenuTrigger
-          className="rounded-full focus:outline-none"
+          className="box-border rounded-full focus:outline-none"
           disabled={isLoading}
         >
           <div className="relative">
@@ -101,12 +103,12 @@ const AvatarEditor = ({ user }: AvatarEditorProps) => {
               </div>
             )}
           </div>
-          <div className="flex-between btn-tertiary hover:bg-accent! text-dark200_light800 light-border-2 absolute top-35 ml-9.5 gap-2.5 rounded-md border px-4 py-2 text-sm font-medium md:top-43 md:ml-13.25">
+          <Badge className="flex-between btn-tertiary hover:bg-accent! text-dark200_light800 light-border-2 absolute -mt-4.5 -ml-10.5 gap-2.5 rounded-md border px-4 py-2 text-sm font-medium md:-mt-4">
             <Edit2 size={16} />
             Edit
-          </div>
+          </Badge>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="mt-5 min-w-0!">
+        <DropdownMenuContent className="mt-5 min-w-0! md:mt-5.5">
           <DropdownMenuItem
             className="cursor-pointer"
             onClick={handleUploadClick}

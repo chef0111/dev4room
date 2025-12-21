@@ -128,6 +128,9 @@ export const question = pgTable(
     id: text("id").primaryKey().$defaultFn(generateId),
     title: text("title").notNull(),
     content: text("content").notNull(),
+    status: text("status", { enum: ["pending", "approved", "rejected"] })
+      .default("approved")
+      .notNull(),
     views: integer("views").default(0).notNull(),
     upvotes: integer("upvotes").default(0).notNull(),
     downvotes: integer("downvotes").default(0).notNull(),

@@ -1,6 +1,12 @@
 "use client";
 
-import { Bell, ChevronsUpDown, LayoutDashboard, LogOut } from "lucide-react";
+import {
+  Bell,
+  ChevronsUpDown,
+  Clock,
+  LayoutDashboard,
+  LogOut,
+} from "lucide-react";
 
 import {
   DropdownMenu,
@@ -80,6 +86,7 @@ export function UserNav({ isAdmin = false }: UserNavProps) {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           {isAdmin && <AdminItem />}
+          <PendingQuestionsItem />
           <DropdownMenuItem className="hover:bg-light800_dark300">
             <Bell />
             Notifications
@@ -97,6 +104,16 @@ function AdminItem() {
     <DropdownMenuItem className="hover:bg-light800_dark300" asChild>
       <Link href="/dashboard">
         <LayoutDashboard className="size-4" /> <span>Dashboard</span>
+      </Link>
+    </DropdownMenuItem>
+  );
+}
+
+function PendingQuestionsItem() {
+  return (
+    <DropdownMenuItem className="hover:bg-light800_dark300" asChild>
+      <Link href="/pending-questions">
+        <Clock className="size-4" /> <span>My Pending Questions</span>
       </Link>
     </DropdownMenuItem>
   );

@@ -85,3 +85,40 @@ export function useAdminGrowth(days: number = 90) {
     refetchOnWindowFocus: false,
   });
 }
+
+export function useAdminPendingQuestions() {
+  return useQuery({
+    ...orpc.admin.pendingQuestions.queryOptions({
+      input: undefined,
+    }),
+    staleTime: 1000 * 30,
+  });
+}
+
+export function useApproveQuestion() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (questionId: string) =>
+      client.admin.approveQuestion({ questionId }),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["admin", "pendingQuestions"],
+      });
+    },
+  });
+}
+
+export function useRejectQuestion() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (questionId: string) =>
+      client.admin.rejectQuestion({ questionId }),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["admin", "pendingQuestions"],
+      });
+    },
+  });
+}
