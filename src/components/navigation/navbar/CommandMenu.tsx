@@ -27,10 +27,7 @@ import { Button, Kbd, KbdGroup, Spinner } from "@/components/ui";
 import { Brand } from "@/components/ui/dev";
 import UserAvatar from "@/components/modules/profile/UserAvatar";
 import { useDebouncedValue } from "@/hooks/use-debounce";
-import {
-  useTopQuestions,
-  usePopularTags,
-} from "@/queries/command-menu.queries";
+import { useTopQuestions, usePopularTags } from "@/queries/recommend.queries";
 
 interface SearchResult {
   questions: Array<{

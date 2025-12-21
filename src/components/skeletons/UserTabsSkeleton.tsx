@@ -6,12 +6,12 @@ const UserTabsSkeleton = () => {
     <div className="flex-2">
       {/* Tabs skeleton */}
       <div className="flex justify-between gap-4 max-sm:flex-col sm:items-center">
-        <div className="bg-light800_dark400 flex h-12 gap-1 rounded-md p-1 max-sm:w-full">
+        <div className="bg-light800_dark400 flex h-11 gap-1 rounded-md p-1 max-sm:w-full">
           <div className="tab-panel">Questions</div>
           <div className="tab-panel">Answers</div>
         </div>
 
-        <FilterFallback />
+        <FilterFallback className="h-11!" />
       </div>
 
       {/* Content skeleton */}

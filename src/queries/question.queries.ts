@@ -9,6 +9,7 @@ import { toast } from "sonner";
 interface UseCreateQuestionOptions {
   onFormReset?: () => void;
   onEditorReset?: () => void;
+  onPending?: () => void;
 }
 
 export function useCreateQuestion(options?: UseCreateQuestionOptions) {
@@ -17,10 +18,16 @@ export function useCreateQuestion(options?: UseCreateQuestionOptions) {
   return useMutation(
     orpc.question.create.mutationOptions({
       onSuccess: (data) => {
-        toast.success("Question created successfully!");
+        if (data.status === "pending") {
+          options?.onPending?.();
+        } else {
+          toast.success("Question created successfully!");
+        }
         options?.onFormReset?.();
         options?.onEditorReset?.();
-        router.push(`/questions/${data.id}`);
+        if (data.status === "approved") {
+          router.push(`/questions/${data.id}`);
+        }
       },
       onError: (error) => {
         toast.error(error.message || "Failed to create question");
@@ -43,7 +50,11 @@ export function useEditQuestion(options?: UseEditQuestionOptions) {
         toast.success("Question updated successfully!");
         options?.onFormReset?.();
         options?.onEditorReset?.();
-        router.push(`/questions/${data.id}`);
+        if (data.status === "pending") {
+          router.push("/pending-questions");
+        } else {
+          router.push(`/questions/${data.id}`);
+        }
       },
       onError: (error) => {
         toast.error(error.message || "Failed to update question");
@@ -64,7 +75,6 @@ export function useDeleteQuestion(options?: UseDeleteQuestionOptions) {
     orpc.question.delete.mutationOptions({
       onSuccess: () => {
         toast.success("Question deleted successfully");
-        options?.onSuccess?.();
         if (options?.redirectTo) {
           router.push(options.redirectTo as Route);
         }
@@ -72,6 +82,22 @@ export function useDeleteQuestion(options?: UseDeleteQuestionOptions) {
       },
       onError: (error: Error) => {
         toast.error(error.message || "Failed to delete question");
+      },
+    })
+  );
+}
+
+export function useCancelPendingQuestion() {
+  const router = useRouter();
+
+  return useMutation(
+    orpc.question.cancelPending.mutationOptions({
+      onSuccess: () => {
+        toast.success("Question cancelled successfully");
+        router.refresh();
+      },
+      onError: (error) => {
+        toast.error(error.message || "Failed to cancel question");
       },
     })
   );

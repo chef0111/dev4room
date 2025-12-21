@@ -5,10 +5,7 @@ import { question } from "@/database/schema";
 import QuestionContent from "@/components/modules/questions/QuestionContent";
 import AnswerForm from "@/components/modules/answers/AnswerForm";
 import AnswerList from "@/components/modules/answers/AnswerList";
-import {
-  PostCardsSkeleton,
-  QuestionContentSkeleton,
-} from "@/components/skeletons";
+import { PostCardsSkeleton } from "@/components/skeletons";
 
 export async function generateStaticParams() {
   const questions = await db.select({ id: question.id }).from(question);
@@ -23,9 +20,7 @@ const QuestionDetails = async ({ params, searchParams }: RouteParams) => {
 
   return (
     <>
-      <Suspense fallback={<QuestionContentSkeleton />}>
-        <QuestionContent questionId={id} />
-      </Suspense>
+      <QuestionContent questionId={id} />
 
       <Suspense fallback={<PostCardsSkeleton />}>
         <AnswerList

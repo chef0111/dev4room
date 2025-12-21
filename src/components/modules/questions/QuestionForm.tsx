@@ -5,7 +5,6 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { QuestionSchema } from "@/lib/validations";
-
 import {
   Field,
   FieldDescription,
@@ -16,6 +15,7 @@ import {
   Button,
   Spinner,
 } from "@/components/ui";
+import PendingDialog from "./PendingDialog";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import TagCard from "../tags/TagCard";
 import { getTechDisplayName } from "@/lib/utils";
@@ -30,6 +30,7 @@ interface QuestionFormProps {
 const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
   const editorRef = useRef<MDXEditorMethods>(null);
   const [editorKey, setEditorKey] = useState(0);
+  const [showPendingDialog, setShowPendingDialog] = useState(false);
 
   const form = useForm<z.infer<typeof QuestionSchema>>({
     resolver: zodResolver(QuestionSchema),
@@ -49,6 +50,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
   const createQuestion = useCreateQuestion({
     onFormReset: handleFormReset,
     onEditorReset: handleEditorReset,
+    onPending: () => setShowPendingDialog(true),
   });
 
   const editQuestion = useEditQuestion({
@@ -133,102 +135,111 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
   };
 
   return (
-    <form
-      className="flex w-full flex-col gap-10"
-      onSubmit={form.handleSubmit(handleSubmitQuestion)}
-    >
-      <FieldGroup>
-        <FormInput
-          control={form.control}
-          name="title"
-          label={
-            <>
-              Question Title <span className="text-destructive">*</span>
-            </>
-          }
-          className="base-input! no-focus! placeholder:text-dark300_light800"
-          placeholder="e.g. Is there an R function for finding the index of an element in a vector?"
-          description="Be specific and imagine you're asking a question to another person."
-        />
-
-        <FormMarkdown
-          control={form.control}
-          editorKey={editorKey}
-          editorRef={editorRef}
-          name="content"
-          label={
-            <>
-              Detailed explanation of your problem
-              <span className="text-destructive">*</span>
-            </>
-          }
-          description="Introduce the problem and expand on what you put in the title. Minimum 20 characters."
-        />
-
-        <Controller
-          name="tags"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field
-              data-invalid={fieldState.invalid}
-              className="flex w-full flex-col"
-            >
-              <FieldLabel htmlFor="question-tags" className="pg-semibold">
-                Tags
-                <span className="text-destructive">*</span>
-              </FieldLabel>
-              <FieldDescription className="body-regular text-light-500">
-                Add up to 5 tags to describe what your question is about.
-              </FieldDescription>
-
-              <Input
-                id="question-tags"
-                name={field.name}
-                aria-invalid={fieldState.invalid}
-                className="base-input! no-focus! placeholder:text-dark300_light800"
-                placeholder="Add tags..."
-                onKeyDown={(e) => handleKeyDown(e, field)}
-              />
-
-              {field.value.length > 0 && (
-                <div className="flex-start mt-2 flex-wrap gap-2">
-                  {field?.value?.map((tag, index) => (
-                    <TagCard
-                      key={index}
-                      id={index.toString()}
-                      name={tag}
-                      compact
-                      isButton
-                      remove
-                      handleRemove={() => handleRemoveTag(tag, field)}
-                    />
-                  ))}
-                </div>
-              )}
-
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
-
-        <div className="my-6 flex justify-end">
-          <Button
-            type="submit"
-            disabled={isPending}
-            className="primary-gradient hover:primary-gradient-hover text-light-900! cursor-pointer transition-colors"
-          >
-            {isPending ? (
+    <>
+      <form
+        className="flex w-full flex-col gap-10"
+        onSubmit={form.handleSubmit(handleSubmitQuestion)}
+      >
+        <FieldGroup>
+          <FormInput
+            control={form.control}
+            name="title"
+            label={
               <>
-                <Spinner className="border-primary-foreground/30 border-t-primary-foreground!" />
-                <span>Submitting</span>
+                Question Title <span className="text-destructive">*</span>
               </>
-            ) : (
-              <span>{isEdit ? "Edit Question" : "Ask Question"}</span>
+            }
+            className="base-input! no-focus! placeholder:text-dark300_light800"
+            placeholder="e.g. Is there an R function for finding the index of an element in a vector?"
+            description="Be specific and imagine you're asking a question to another person."
+          />
+
+          <FormMarkdown
+            control={form.control}
+            editorKey={editorKey}
+            editorRef={editorRef}
+            name="content"
+            label={
+              <>
+                Detailed explanation of your problem
+                <span className="text-destructive">*</span>
+              </>
+            }
+            description="Introduce the problem and expand on what you put in the title. Minimum 20 characters."
+          />
+
+          <Controller
+            name="tags"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field
+                data-invalid={fieldState.invalid}
+                className="flex w-full flex-col"
+              >
+                <FieldLabel htmlFor="question-tags" className="pg-semibold">
+                  Tags
+                  <span className="text-destructive">*</span>
+                </FieldLabel>
+                <FieldDescription className="body-regular text-light-500">
+                  Add up to 5 tags to describe what your question is about.
+                </FieldDescription>
+
+                <Input
+                  id="question-tags"
+                  name={field.name}
+                  aria-invalid={fieldState.invalid}
+                  className="base-input! no-focus! placeholder:text-dark300_light800"
+                  placeholder="Add tags..."
+                  onKeyDown={(e) => handleKeyDown(e, field)}
+                />
+
+                {field.value.length > 0 && (
+                  <div className="flex-start mt-2 flex-wrap gap-2">
+                    {field?.value?.map((tag, index) => (
+                      <TagCard
+                        key={index}
+                        id={index.toString()}
+                        name={tag}
+                        compact
+                        isButton
+                        remove
+                        handleRemove={() => handleRemoveTag(tag, field)}
+                      />
+                    ))}
+                  </div>
+                )}
+
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
             )}
-          </Button>
-        </div>
-      </FieldGroup>
-    </form>
+          />
+
+          <div className="my-6 flex justify-end">
+            <Button
+              type="submit"
+              disabled={isPending}
+              className="primary-gradient hover:primary-gradient-hover text-light-900! cursor-pointer transition-colors"
+            >
+              {isPending ? (
+                <>
+                  <Spinner className="border-primary-foreground/30 border-t-primary-foreground!" />
+                  <span>Submitting</span>
+                </>
+              ) : (
+                <span>{isEdit ? "Edit Question" : "Ask Question"}</span>
+              )}
+            </Button>
+          </div>
+        </FieldGroup>
+      </form>
+
+      <PendingDialog
+        open={showPendingDialog}
+        onOpenChange={setShowPendingDialog}
+      />
+    </>
   );
 };
 

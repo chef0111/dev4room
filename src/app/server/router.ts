@@ -14,6 +14,8 @@ import {
   editQuestion,
   getTopQuestions,
   deleteQuestion,
+  getUserPendingQuestions,
+  cancelPendingQuestion,
 } from "./question";
 import {
   listAnswers,
@@ -28,6 +30,18 @@ import { listCollection, toggleSave, hasSaved } from "./collection";
 import { search } from "./search";
 import { generateAnswer } from "./ai";
 import { getUploadUrl, confirmUpload, removeImage } from "./upload";
+import {
+  getStats as getAdminStats,
+  listUsers as listAdminUsers,
+  banUser,
+  unbanUser,
+  setUserRole,
+  deleteUser,
+  getGrowth,
+  listPendingQuestions,
+  approveQuestion,
+  rejectQuestion,
+} from "./admin";
 
 export const router = {
   user: {
@@ -46,6 +60,8 @@ export const router = {
     edit: editQuestion,
     getTop: getTopQuestions,
     delete: deleteQuestion,
+    pending: getUserPendingQuestions,
+    cancelPending: cancelPendingQuestion,
   },
   answer: {
     list: listAnswers,
@@ -76,5 +92,17 @@ export const router = {
     getUrl: getUploadUrl,
     confirm: confirmUpload,
     remove: removeImage,
+  },
+  admin: {
+    stats: getAdminStats,
+    users: listAdminUsers,
+    banUser,
+    unbanUser,
+    setRole: setUserRole,
+    deleteUser,
+    growth: getGrowth,
+    pendingQuestions: listPendingQuestions,
+    approveQuestion,
+    rejectQuestion,
   },
 };

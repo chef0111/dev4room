@@ -25,6 +25,9 @@ import {
   EditQuestionInput,
 } from "./question.dto";
 
+const REPUTATION_THRESHOLD = 1000;
+const MAX_PENDING_QUESTIONS = 3;
+
 type QuestionFilter =
   | "newest"
   | "oldest"
@@ -44,6 +47,7 @@ interface QuestionRow {
   authorId: string;
   authorName: string | null;
   authorImage: string | null;
+  status: "pending" | "approved" | "rejected";
 }
 
 export class QuestionDAL {
@@ -59,6 +63,7 @@ export class QuestionDAL {
     authorId: question.authorId,
     authorName: user.name,
     authorImage: user.image,
+    status: question.status,
   } as const;
 
   private static getSortCriteria(filter?: QuestionFilter) {
@@ -103,6 +108,7 @@ export class QuestionDAL {
         name: row.authorName ?? "Unknown",
         image: row.authorImage,
       },
+      status: row.status,
       tags,
     };
   }
@@ -113,8 +119,9 @@ export class QuestionDAL {
     const { query, filter } = params;
     const { offset, limit } = getPagination(params);
 
-    // Build where conditions
+    // Build where conditions - only show approved questions
     const conditions = [
+      eq(question.status, "approved"),
       this.buildSearchCondition(query),
       filter === "unanswered" ? eq(question.answers, 0) : undefined,
     ].filter(Boolean);
@@ -168,6 +175,7 @@ export class QuestionDAL {
       authorId: question.authorId,
       authorName: user.name,
       authorImage: user.image,
+      status: question.status,
     };
 
     const [row] = await db
@@ -198,6 +206,7 @@ export class QuestionDAL {
         name: row.authorName ?? "Unknown",
         image: row.authorImage,
       },
+      status: row.status,
       tags,
     };
 
@@ -206,15 +215,35 @@ export class QuestionDAL {
 
   static async create(
     input: CreateQuestionInput,
-    authorId: string
-  ): Promise<{ id: string }> {
+    authorId: string,
+    authorReputation: number
+  ): Promise<{ id: string; status: string }> {
     const { title, content, tags: tagNames } = input;
+
+    // Check pending count for low-rep users
+    if (authorReputation < REPUTATION_THRESHOLD) {
+      const [pendingCount] = await db
+        .select({ count: sql<number>`count(*)::int` })
+        .from(question)
+        .where(
+          and(eq(question.authorId, authorId), eq(question.status, "pending"))
+        );
+
+      if ((pendingCount?.count ?? 0) >= MAX_PENDING_QUESTIONS) {
+        throw new ORPCError("BAD_REQUEST", {
+          message: `You can only have ${MAX_PENDING_QUESTIONS} pending questions at a time. Please wait for admin approval.`,
+        });
+      }
+    }
+
+    const status =
+      authorReputation >= REPUTATION_THRESHOLD ? "approved" : "pending";
 
     return db.transaction(async (tx) => {
       const [newQuestion] = await tx
         .insert(question)
-        .values({ title, content, authorId })
-        .returning({ id: question.id });
+        .values({ title, content, authorId, status })
+        .returning({ id: question.id, status: question.status });
 
       // Find or create tags and associate with question
       const tagIds = await Promise.all(
@@ -223,14 +252,20 @@ export class QuestionDAL {
 
       await TagQuestionService.addTagsToQuestion(tx, newQuestion.id, tagIds);
 
-      return { id: newQuestion.id };
+      return { id: newQuestion.id, status: newQuestion.status };
     });
   }
 
   static async update(
     input: EditQuestionInput,
     userId: string
-  ): Promise<{ id: string; title: string; content: string; tags: TagDTO[] }> {
+  ): Promise<{
+    id: string;
+    title: string;
+    content: string;
+    tags: TagDTO[];
+    status: "pending" | "approved" | "rejected";
+  }> {
     const { questionId, title, content, tags: tagNames } = input;
 
     return db.transaction(async (tx) => {
@@ -240,6 +275,7 @@ export class QuestionDAL {
           title: question.title,
           content: question.content,
           authorId: question.authorId,
+          status: question.status,
         })
         .from(question)
         .where(eq(question.id, questionId))
@@ -312,7 +348,13 @@ export class QuestionDAL {
         .innerJoin(tag, eq(tagQuestion.tagId, tag.id))
         .where(eq(tagQuestion.questionId, questionId));
 
-      return { id: questionId, title, content, tags: updatedTags };
+      return {
+        id: questionId,
+        title,
+        content,
+        tags: updatedTags,
+        status: existing.status,
+      };
     });
   }
 
@@ -327,6 +369,7 @@ export class QuestionDAL {
         title: question.title,
       })
       .from(question)
+      .where(eq(question.status, "approved"))
       .orderBy(desc(question.views), desc(question.upvotes))
       .limit(limit);
 
@@ -400,6 +443,78 @@ export class QuestionDAL {
       await tx.delete(question).where(eq(question.id, questionId));
     });
   }
+
+  static async getUserPendingQuestions(userId: string) {
+    const rows = await db
+      .select({
+        id: question.id,
+        title: question.title,
+        content: question.content,
+        createdAt: question.createdAt,
+        upvotes: question.upvotes,
+        answers: question.answers,
+        views: question.views,
+        authorId: user.id,
+        authorName: user.name,
+        authorImage: user.image,
+      })
+      .from(question)
+      .innerJoin(user, eq(question.authorId, user.id))
+      .where(and(eq(question.authorId, userId), eq(question.status, "pending")))
+      .orderBy(desc(question.createdAt));
+
+    // Fetch tags for all pending questions
+    const tagsByQuestion = await TagQuestionService.getTagsQuestions(
+      rows.map((r) => r.id)
+    );
+
+    return rows.map((row) => ({
+      id: row.id,
+      title: row.title,
+      content: row.content,
+      createdAt: row.createdAt,
+      upvotes: row.upvotes,
+      answers: row.answers,
+      views: row.views,
+      authorId: row.authorId,
+      authorName: row.authorName ?? "Unknown",
+      authorImage: row.authorImage,
+      tags: tagsByQuestion[row.id] ?? [],
+    }));
+  }
+
+  static async cancelPendingQuestion(
+    questionId: string,
+    userId: string
+  ): Promise<void> {
+    const [existing] = await db
+      .select({
+        id: question.id,
+        authorId: question.authorId,
+        status: question.status,
+      })
+      .from(question)
+      .where(eq(question.id, questionId))
+      .limit(1);
+
+    if (!existing) {
+      throw new ORPCError("NOT_FOUND", { message: "Question not found" });
+    }
+
+    if (existing.authorId !== userId) {
+      throw new ORPCError("FORBIDDEN", {
+        message: "You are not authorized to cancel this question",
+      });
+    }
+
+    if (existing.status !== "pending") {
+      throw new ORPCError("BAD_REQUEST", {
+        message: "Only pending questions can be cancelled",
+      });
+    }
+
+    await db.delete(question).where(eq(question.id, questionId));
+  }
 }
 
 export const getQuestions = QuestionDAL.findMany.bind(QuestionDAL);
@@ -408,3 +523,7 @@ export const createQuestion = QuestionDAL.create.bind(QuestionDAL);
 export const editQuestion = QuestionDAL.update.bind(QuestionDAL);
 export const getTopQuestions = QuestionDAL.findTop.bind(QuestionDAL);
 export const deleteQuestion = QuestionDAL.delete.bind(QuestionDAL);
+export const getUserPendingQuestions =
+  QuestionDAL.getUserPendingQuestions.bind(QuestionDAL);
+export const cancelPendingQuestion =
+  QuestionDAL.cancelPendingQuestion.bind(QuestionDAL);
