@@ -113,8 +113,8 @@ export function useRejectQuestion() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (questionId: string) =>
-      client.admin.rejectQuestion({ questionId }),
+    mutationFn: (params: { questionId: string; reason: string }) =>
+      client.admin.rejectQuestion(params),
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ["admin", "pendingQuestions"],

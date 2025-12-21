@@ -347,6 +347,8 @@ export class AdminDAL {
         id: question.id,
         title: question.title,
         content: question.content,
+        status: question.status,
+        rejectReason: question.rejectReason,
         createdAt: question.createdAt,
         authorId: question.authorId,
         authorName: user.name,
@@ -355,7 +357,9 @@ export class AdminDAL {
       })
       .from(question)
       .leftJoin(user, eq(question.authorId, user.id))
-      .where(eq(question.status, "pending"))
+      .where(
+        or(eq(question.status, "pending"), eq(question.status, "rejected"))
+      )
       .orderBy(desc(question.createdAt));
 
     // Get tags for each question
@@ -389,6 +393,8 @@ export class AdminDAL {
       id: row.id,
       title: row.title,
       content: row.content,
+      status: row.status,
+      rejectReason: row.rejectReason,
       createdAt: row.createdAt,
       author: {
         id: row.authorId,
@@ -421,7 +427,10 @@ export class AdminDAL {
       .where(eq(question.id, questionId));
   }
 
-  static async rejectQuestion(questionId: string): Promise<void> {
+  static async rejectQuestion(
+    questionId: string,
+    reason: string
+  ): Promise<void> {
     const [existing] = await db
       .select({ id: question.id, status: question.status })
       .from(question)
@@ -436,7 +445,10 @@ export class AdminDAL {
       throw new Error("Question is not pending");
     }
 
-    await db.delete(question).where(eq(question.id, questionId));
+    await db
+      .update(question)
+      .set({ status: "rejected", rejectReason: reason })
+      .where(eq(question.id, questionId));
   }
 }
 

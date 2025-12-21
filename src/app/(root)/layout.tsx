@@ -9,7 +9,7 @@ interface Props {
   children: React.ReactNode;
 }
 
-const DashboardLayout: React.FC<Props> = ({ children }: Props) => {
+const HomeLayout: React.FC<Props> = ({ children }: Props) => {
   return (
     <main className="bg-light850_dark100 relative">
       <NextTopLoader showSpinner={false} />
@@ -32,4 +32,4 @@ const DashboardLayout: React.FC<Props> = ({ children }: Props) => {
   );
 };
 
-export default DashboardLayout;
+export default HomeLayout;

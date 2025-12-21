@@ -54,7 +54,7 @@ export function NavMain({
                 tooltip={item.title}
                 asChild
                 isActive={pathname === item.url}
-                className="data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground"
+                className="data-[active=true]:bg-light800_dark400 data-[active=true]:text-sidebar-accent-foreground"
               >
                 <Link href={item.url as Route}>
                   {item.icon && <item.icon />}

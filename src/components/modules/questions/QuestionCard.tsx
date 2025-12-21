@@ -1,4 +1,5 @@
 import { ReactNode, useMemo } from "react";
+import { type Route } from "next";
 import Link from "next/link";
 
 import { getTimeStamp } from "@/lib/utils";
@@ -6,10 +7,10 @@ import TagCard from "../tags/TagCard";
 import Metric from "@/components/shared/Metric";
 import { Card } from "@/components/ui";
 import EditDelete from "@/components/shared/EditDelete";
-import { Route } from "next";
 
 interface QuestionCardProps {
   question: Question;
+  href?: string | null;
   isPending?: boolean;
   actionButtons?: boolean;
   customActions?: ReactNode;
@@ -17,7 +18,7 @@ interface QuestionCardProps {
 
 const QuestionCard = ({
   question: { id, title, tags, author, createdAt, upvotes, answers, views },
-  isPending = false,
+  href = `/questions/${id}`,
   actionButtons = false,
   customActions,
 }: QuestionCardProps) => {
@@ -29,10 +30,6 @@ const QuestionCard = ({
     [tags]
   );
 
-  const questionUrl = isPending
-    ? `/pending-questions/${id}`
-    : `/questions/${id}`;
-
   return (
     <Card className="card-wrapper gap-0 rounded-lg border-none p-6 sm:px-10">
       <div className="flex flex-col-reverse items-start justify-between gap-5 sm:flex-row">
@@ -41,7 +38,7 @@ const QuestionCard = ({
             {getTimeStamp(createdAt)}
           </span>
 
-          <Link href={questionUrl as Route}>
+          <Link href={href as Route}>
             <h2 className="sm:h3-semibold base-semibold text-dark200_light900 line-clamp-1 flex-1">
               {title}
             </h2>

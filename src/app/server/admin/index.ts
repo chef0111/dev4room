@@ -147,6 +147,8 @@ export const listPendingQuestions = admin
         id: z.string(),
         title: z.string(),
         content: z.string(),
+        status: z.enum(["pending", "approved", "rejected"]),
+        rejectReason: z.string().nullable(),
         createdAt: z.date(),
         author: z.object({
           id: z.string(),
@@ -186,10 +188,12 @@ export const rejectQuestion = admin
     summary: "Reject Pending Question (Admin Only)",
     tags: ["Admin"],
   })
-  .input(z.object({ questionId: z.string() }))
+  .input(
+    z.object({ questionId: z.string(), reason: z.string().min(1).max(500) })
+  )
   .output(z.object({ success: z.boolean() }))
   .handler(async ({ input }) => {
-    await rejectQuestionDAL(input.questionId);
+    await rejectQuestionDAL(input.questionId, input.reason);
     revalidatePath("/dashboard");
     return { success: true };
   });
