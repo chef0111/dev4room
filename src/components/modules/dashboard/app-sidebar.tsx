@@ -29,7 +29,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Brand } from "@/components/ui/dev";
-import { UserNav } from "../profile/UserNav";
+import { UserNav } from "../profile/user-nav";
 
 const data = {
   user: {

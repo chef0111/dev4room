@@ -15,9 +15,9 @@ import {
   Button,
   Spinner,
 } from "@/components/ui";
-import PendingDialog from "./PendingDialog";
+import PendingDialog from "./pending-dialog";
 import { MDXEditorMethods } from "@mdxeditor/editor";
-import TagCard from "../tags/TagCard";
+import TagCard from "../tags/tag-card";
 import { getTechDisplayName } from "@/lib/utils";
 import { useCreateQuestion, useEditQuestion } from "@/queries/question.queries";
 import { FormInput, FormMarkdown } from "@/components/form";

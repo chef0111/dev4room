@@ -6,12 +6,12 @@ import { ReactNode } from "react";
 
 import { cn, getTimeStamp } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
-import UserAvatar from "@/components/modules/profile/UserAvatar";
-import EditorFallback from "@/components/markdown/EditorFallback";
-import EditDelete from "@/components/shared/EditDelete";
-import Votes from "@/components/shared/Votes";
-import AnswerForm from "./AnswerForm";
-import AnswerCardContent from "./AnswerCardContent";
+import UserAvatar from "@/components/modules/profile/user-avatar";
+import EditorFallback from "@/components/markdown/editor-fallback";
+import EditDelete from "@/components/shared/edit-delete";
+import Votes from "@/components/modules/vote/votes";
+import AnswerForm from "./answer-form";
+import AnswerCardContent from "./answer-card-content";
 
 interface Author {
   id: string;

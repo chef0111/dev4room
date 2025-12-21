@@ -1,5 +1,5 @@
-import TagCard from "@/components/modules/tags/TagCard";
-import DataRenderer from "@/components/shared/DataRenderer";
+import TagCard from "@/components/modules/tags/tag-card";
+import DataRenderer from "@/components/shared/data-renderer";
 import { getErrorMessage } from "@/lib/handlers/error";
 import { orpc } from "@/lib/orpc";
 import { getQueryClient } from "@/lib/query/hydration";

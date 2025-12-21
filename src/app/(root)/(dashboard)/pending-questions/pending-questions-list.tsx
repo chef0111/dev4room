@@ -6,7 +6,7 @@ import { useCancelPendingQuestion } from "@/queries/question.queries";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import QuestionCard from "@/components/modules/questions/QuestionCard";
+import QuestionCard from "@/components/modules/questions/question-card";
 import Link from "next/link";
 import {
   AlertDialog,
@@ -26,7 +26,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import EditDelete from "@/components/shared/EditDelete";
+import EditDelete from "@/components/shared/edit-delete";
 import { AlertCircleIcon } from "lucide-react";
 
 interface PendingQuestion {

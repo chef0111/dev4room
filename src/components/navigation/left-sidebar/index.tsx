@@ -1,5 +1,5 @@
-import NavTabs from "./NavTabs";
-import SidebarUser from "./SidebarUser";
+import NavTabs from "./nav-tabs";
+import SidebarUser from "./sidebar-user";
 
 const LeftSidebar = () => {
   return (

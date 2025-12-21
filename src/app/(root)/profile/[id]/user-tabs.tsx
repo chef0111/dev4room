@@ -5,14 +5,14 @@ import { getErrorMessage } from "@/lib/handlers/error";
 import { profileTabs } from "@/common/constants";
 import { EMPTY_ANSWERS, EMPTY_QUESTION } from "@/common/constants/states";
 
-import DataRenderer from "@/components/shared/DataRenderer";
+import DataRenderer from "@/components/shared/data-renderer";
 import { AnimatedTab, NextPagination } from "@/components/ui/dev";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui";
-import AnswerCard from "@/components/modules/answers/AnswerCard";
-import QuestionCard from "@/components/modules/questions/QuestionCard";
-import Filter from "@/components/filters/Filter";
-import FilterContent from "@/components/filters/FilterContent";
-import MarkdownPreview from "@/components/markdown/MarkdownPreview";
+import AnswerCard from "@/components/modules/answers/answer-card";
+import QuestionCard from "@/components/modules/questions/question-card";
+import Filter from "@/components/filters/filter";
+import FilterContent from "@/components/filters/filter-content";
+import MarkdownPreview from "@/components/markdown/markdown-preview";
 import { UserFilters } from "@/common/constants/filters";
 import { FilterProvider } from "@/context";
 

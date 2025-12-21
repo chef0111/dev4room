@@ -4,11 +4,11 @@ import Link from "next/link";
 
 import { FilterProvider } from "@/context";
 import { Button } from "@/components/ui";
-import LocalSearch from "@/components/modules/main/LocalSearch";
-import HomeFilter from "@/components/filters/HomeFilter";
-import Filter from "@/components/filters/Filter";
+import LocalSearch from "@/components/modules/main/local-search";
+import HomeFilter from "@/components/filters/home-filter";
+import Filter from "@/components/filters/filter";
 import { HomePageFilters } from "@/common/constants/filters";
-import FilterContent from "@/components/filters/FilterContent";
+import FilterContent from "@/components/filters/filter-content";
 import { PostCardsSkeleton } from "@/components/skeletons";
 import HomeQuestions from "./questions";
 

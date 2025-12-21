@@ -4,11 +4,11 @@ import { Suspense } from "react";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import { Brand } from "@/components/ui/dev";
-import ThemeToggle from "./ThemeToggle";
-import CommandMenu from "@/components/navigation/navbar/CommandMenu";
-import CommandMenuFallback from "@/components/navigation/navbar/CommandMenuFallback";
-import UserAvatar from "@/components/modules/profile/UserAvatar";
-import MobileNav from "../left-sidebar/MobileNav";
+import ThemeToggle from "./theme-toggle";
+import CommandMenu from "@/components/navigation/navbar/command-menu";
+import CommandMenuFallback from "@/components/navigation/navbar/command-menu-fallback";
+import UserAvatar from "@/components/modules/profile/user-avatar";
+import MobileNav from "../left-sidebar/mobile-nav";
 
 interface NavbarProps {
   className?: string;

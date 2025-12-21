@@ -10,8 +10,8 @@ import {
   FieldSeparator,
   FieldSet,
 } from "@/components/ui";
-import ProfileForm from "@/components/modules/profile/ProfileForm";
-import AvatarEditor from "@/components/modules/profile/AvatarEditor";
+import ProfileForm from "@/components/modules/profile/profile-form";
+import AvatarEditor from "@/components/modules/profile/avatar-editor";
 
 const EditProfile = async () => {
   const session = await getServerSession();

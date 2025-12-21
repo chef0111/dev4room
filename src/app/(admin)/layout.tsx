@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { ScrollToTop } from "@/components/modules/main/ScrollToTop";
+import { ScrollToTop } from "@/components/modules/main/scroll-to-top";
 import { ErrorBoundary } from "@/components/shared";
 import { AppSidebar } from "@/components/modules/dashboard/app-sidebar";
 import { SiteHeader } from "@/components/modules/dashboard/site-header";

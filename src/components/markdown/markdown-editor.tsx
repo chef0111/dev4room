@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 
 import { useDebounce } from "@/hooks/use-debounce";
-import EditorFallback from "./EditorFallback";
+import EditorFallback from "./editor-fallback";
 
 interface MarkdownProps {
   id?: string;

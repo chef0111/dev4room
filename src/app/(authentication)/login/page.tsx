@@ -9,9 +9,9 @@ import Link from "next/link";
 
 import { toast } from "sonner";
 import handleError from "@/lib/handlers/error";
-import AuthForm from "@/components/modules/auth/AuthForm";
-import SocialAuthForm from "@/components/modules/auth/SocialAuthForm";
-import VerifyDialog from "@/components/modules/auth/VerifyDialog";
+import AuthForm from "@/components/modules/auth/auth-form";
+import SocialAuthForm from "@/components/modules/auth/social-auth-form";
+import VerifyDialog from "@/components/modules/auth/verify-dialog";
 import { Button } from "@/components/ui";
 
 type LoginValues = z.infer<typeof LoginSchema>;

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { orpc } from "@/lib/orpc";
 import { getQueryClient } from "@/lib/query/hydration";
 import { getErrorMessage } from "@/lib/handlers/error";
-import DataRenderer from "@/components/shared/DataRenderer";
+import DataRenderer from "@/components/shared/data-renderer";
 import { ChevronRight } from "lucide-react";
 
 const DEFAULT_LIMIT = 5;

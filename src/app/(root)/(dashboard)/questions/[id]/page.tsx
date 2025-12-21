@@ -2,9 +2,9 @@ import { Suspense } from "react";
 import { db } from "@/database/drizzle";
 import { question } from "@/database/schema";
 
-import QuestionContent from "@/components/modules/questions/QuestionContent";
-import AnswerForm from "@/components/modules/answers/AnswerForm";
-import AnswerList from "@/components/modules/answers/AnswerList";
+import QuestionContent from "@/components/modules/questions/question-content";
+import AnswerForm from "@/components/modules/answers/answer-form";
+import AnswerList from "@/components/modules/answers/answer-list";
 import { PostCardsSkeleton } from "@/components/skeletons";
 
 export async function generateStaticParams() {

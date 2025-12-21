@@ -17,7 +17,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui";
-import UserAvatar from "./UserAvatar";
+import UserAvatar from "./user-avatar";
 import Link from "next/link";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";

@@ -35,8 +35,8 @@ import {
   InputOTPSeparator,
 } from "@/components/ui/input-otp";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
-import MarkdownEditor from "@/components/markdown/MarkdownEditor";
-import EditorFallback from "@/components/markdown/EditorFallback";
+import MarkdownEditor from "@/components/markdown/markdown-editor";
+import EditorFallback from "@/components/markdown/editor-fallback";
 import {
   InputGroup,
   InputGroupAddon,

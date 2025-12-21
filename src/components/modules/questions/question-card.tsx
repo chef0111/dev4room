@@ -3,10 +3,10 @@ import { type Route } from "next";
 import Link from "next/link";
 
 import { getTimeStamp } from "@/lib/utils";
-import TagCard from "../tags/TagCard";
-import Metric from "@/components/shared/Metric";
+import TagCard from "../tags/tag-card";
+import Metric from "@/components/shared/metric";
 import { Card } from "@/components/ui";
-import EditDelete from "@/components/shared/EditDelete";
+import EditDelete from "@/components/shared/edit-delete";
 
 interface QuestionCardProps {
   question: Question;

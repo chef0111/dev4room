@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { Route } from "next";
-import UserAvatar from "@/components/modules/profile/UserAvatar";
-import ProfileLink from "@/components/modules/profile/ProfileLink";
+import UserAvatar from "@/components/modules/profile/user-avatar";
+import ProfileLink from "@/components/modules/profile/profile-link";
 
 interface ProfileHeaderProps {
   id: string;

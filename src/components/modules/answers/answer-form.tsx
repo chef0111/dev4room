@@ -8,8 +8,8 @@ import { MDXEditorMethods } from "@mdxeditor/editor";
 
 import { AnswerSchema } from "@/lib/validations";
 import { Button, Spinner } from "@/components/ui";
-import GenerateAIButton from "./GenerateAIButton";
-import AIValidationAlert from "./AIValidationAlert";
+import GenerateAIButton from "./generate-ai-button";
+import AIValidationAlert from "./ai-validation-alert";
 import { useCreateAnswer, useEditAnswer } from "@/queries/answer.queries";
 import { FormMarkdown } from "@/components/form";
 

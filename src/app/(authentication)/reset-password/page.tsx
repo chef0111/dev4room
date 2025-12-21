@@ -5,7 +5,7 @@ import { ResetPasswordSchema } from "@/lib/validations";
 import { authClient } from "@/lib/auth-client";
 import handleError from "@/lib/handlers/error";
 
-import AuthForm from "@/components/modules/auth/AuthForm";
+import AuthForm from "@/components/modules/auth/auth-form";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";

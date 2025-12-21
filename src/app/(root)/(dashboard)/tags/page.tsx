@@ -1,9 +1,9 @@
 import { Suspense } from "react";
 import { FilterProvider } from "@/context";
-import LocalSearch from "@/components/modules/main/LocalSearch";
-import Filter from "@/components/filters/Filter";
+import LocalSearch from "@/components/modules/main/local-search";
+import Filter from "@/components/filters/filter";
 import { TagFilters } from "@/common/constants/filters";
-import FilterContent from "@/components/filters/FilterContent";
+import FilterContent from "@/components/filters/filter-content";
 import { GridCardsSkeleton } from "@/components/skeletons";
 import Tags from "./tags";
 

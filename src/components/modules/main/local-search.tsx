@@ -6,7 +6,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 import { formUrlQuery, removeKeysFromUrlQuery } from "@/lib/url";
 import { Field } from "@/components/ui";
-import SearchInput from "./SearchInput";
+import SearchInput from "./search-input";
 
 interface LocalSearchProps {
   route: string;

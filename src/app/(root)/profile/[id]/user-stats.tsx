@@ -1,4 +1,4 @@
-import StatsCard from "@/components/shared/StatsCard";
+import StatsCard from "@/components/modules/profile/stats-card";
 import { Card, CardContent } from "@/components/ui/card";
 import { formatNumber } from "@/lib/utils";
 import NumberFlow from "@number-flow/react";
