@@ -14,7 +14,7 @@ import TagCard from "@/components/modules/tags/tag-card";
 import EditDelete from "@/components/shared/edit-delete";
 import { Separator } from "@/components/ui/separator";
 import MarkdownPreview from "@/components/markdown/markdown-preview";
-import Metric from "@/components/shared/metric";
+import { Metric } from "@/components/shared";
 import QuestionUtilsFallback from "@/components/modules/questions/question-utils-fallback";
 
 interface QuestionContentProps {
