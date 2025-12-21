@@ -17,6 +17,7 @@ import {
   CreateQuestionSchema,
   DeleteQuestionSchema,
   EditQuestionSchema,
+  PendingQuestionsSchema,
   QuestionListOutputSchema,
   QuestionSchema,
   TagSchema,
@@ -227,23 +228,7 @@ export const getUserPendingQuestions = authorized
     summary: "Get User's Pending Questions",
     tags: ["Questions"],
   })
-  .output(
-    z.array(
-      z.object({
-        id: z.string(),
-        title: z.string(),
-        content: z.string(),
-        createdAt: z.date(),
-        upvotes: z.number(),
-        answers: z.number(),
-        views: z.number(),
-        authorId: z.string(),
-        authorName: z.string(),
-        authorImage: z.string().nullable(),
-        tags: z.array(z.object({ id: z.string(), name: z.string() })),
-      })
-    )
-  )
+  .output(PendingQuestionsSchema)
   .handler(async ({ context }) => {
     return getUserPendingQuestionsDAL(context.user.id);
   });

@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { after } from "next/server";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import Link from "next/link";
 import { orpc } from "@/lib/orpc";
 import { getServerSession } from "@/lib/session";
@@ -35,8 +35,11 @@ const QuestionContent = async ({
     .catch(() => ({ data: undefined, error: true }));
 
   if (!result.data) return notFound();
-  if (result.data.status === "pending" && !isPending) {
-    return redirect(`/pending-questions/${questionId}`);
+  if (
+    (result.data.status === "approved" && isPending) ||
+    (result.data.status === "pending" && !isPending)
+  ) {
+    return notFound();
   }
 
   const question = result.data;

@@ -8,9 +8,9 @@ interface Props {
 const HomeLayout = ({ children }: Props) => {
   return (
     <>
-      <ErrorBoundary>
-        <div className="xl:pr-74">{children}</div>
-      </ErrorBoundary>
+      <div className="xl:pr-74">
+        <ErrorBoundary>{children}</ErrorBoundary>
+      </div>
       <RightSidebar />
     </>
   );

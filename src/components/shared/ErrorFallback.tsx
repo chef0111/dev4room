@@ -80,9 +80,10 @@ export function ErrorFallback({
 
           {showResetButton && (
             <Button
+              variant="outline"
               size="lg"
               onClick={handleReset}
-              className="primary-gradient hover:primary-gradient-hover gap-2"
+              className="gap-2"
             >
               <RefreshCw className="size-4" />
               Try Again
