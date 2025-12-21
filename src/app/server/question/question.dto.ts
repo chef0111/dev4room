@@ -66,6 +66,22 @@ export const TopQuestionsOutputSchema = z.object({
   questions: z.array(QuestionSchema.pick({ id: true, title: true })),
 });
 
+export const PendingQuestionsSchema = z.array(
+  z.object({
+    id: z.string(),
+    title: z.string(),
+    content: z.string(),
+    createdAt: z.date(),
+    upvotes: z.number(),
+    answers: z.number(),
+    views: z.number(),
+    authorId: z.string(),
+    authorName: z.string(),
+    authorImage: z.string().nullable(),
+    tags: z.array(z.object({ id: z.string(), name: z.string() })),
+  })
+);
+
 // Types
 export type Author = z.infer<typeof AuthorSchema>;
 export type TagDTO = z.infer<typeof TagSchema>;
@@ -76,3 +92,4 @@ export type CreateQuestionInput = z.infer<typeof CreateQuestionSchema>;
 export type EditQuestionInput = z.infer<typeof EditQuestionSchema>;
 export type QuestionListOutput = z.infer<typeof QuestionListOutputSchema>;
 export type TopQuestionsOutput = z.infer<typeof TopQuestionsOutputSchema>;
+export type PendingQuestionDTO = z.infer<typeof PendingQuestionsSchema>;

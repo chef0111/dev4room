@@ -2,7 +2,6 @@ import { db } from "@/database/drizzle";
 import { question } from "@/database/schema";
 
 import QuestionContent from "@/components/modules/questions/QuestionContent";
-
 export async function generateStaticParams() {
   const questions = await db.select({ id: question.id }).from(question);
   return questions.map((q) => ({ id: q.id }));

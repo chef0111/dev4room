@@ -96,6 +96,7 @@ export default function PendingQuestionsList({
                 image: question.authorImage,
               },
             }}
+            isPending
             customActions={
               <div className="flex items-center gap-2">
                 <Button
