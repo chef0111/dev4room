@@ -133,7 +133,12 @@ export class UserDAL {
       db
         .select({ count: sql<number>`count(*)::int` })
         .from(question)
-        .where(eq(question.authorId, userId)),
+        .where(
+          and(
+            eq(question.authorId, userId),
+            not(eq(question.status, "pending"))
+          )
+        ),
       db
         .select({ count: sql<number>`count(*)::int` })
         .from(answer)
@@ -184,11 +189,16 @@ export class UserDAL {
       }
     };
 
+    const where = and(
+      eq(question.authorId, userId),
+      not(eq(question.status, "pending"))
+    );
+
     // Get total count
     const [{ count }] = await db
       .select({ count: sql<number>`count(*)::int` })
       .from(question)
-      .where(eq(question.authorId, userId));
+      .where(where);
 
     const rows = await db
       .select({
@@ -202,7 +212,7 @@ export class UserDAL {
         createdAt: question.createdAt,
       })
       .from(question)
-      .where(eq(question.authorId, userId))
+      .where(where)
       .orderBy(getSortCriteria(filter))
       .limit(limit)
       .offset(offset);
@@ -377,7 +387,12 @@ export class UserDAL {
           views: sql<number>`coalesce(sum(${question.views}), 0)::int`,
         })
         .from(question)
-        .where(eq(question.authorId, userId)),
+        .where(
+          and(
+            eq(question.authorId, userId),
+            not(eq(question.status, "pending"))
+          )
+        ),
       db
         .select({
           count: sql<number>`count(*)::int`,
