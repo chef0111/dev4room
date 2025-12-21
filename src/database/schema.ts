@@ -131,6 +131,7 @@ export const question = pgTable(
     status: text("status", { enum: ["pending", "approved", "rejected"] })
       .default("approved")
       .notNull(),
+    rejectReason: text("reject_reason"),
     views: integer("views").default(0).notNull(),
     upvotes: integer("upvotes").default(0).notNull(),
     downvotes: integer("downvotes").default(0).notNull(),

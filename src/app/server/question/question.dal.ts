@@ -292,9 +292,17 @@ export class QuestionDAL {
       }
 
       if (existing.title !== title || existing.content !== content) {
+        // If question was rejected, reset to pending
+        const newStatus =
+          existing.status === "rejected" ? "pending" : existing.status;
         await tx
           .update(question)
-          .set({ title, content })
+          .set({
+            title,
+            content,
+            status: newStatus,
+            rejectReason: existing.status === "rejected" ? null : undefined,
+          })
           .where(eq(question.id, questionId));
       }
 
@@ -348,12 +356,19 @@ export class QuestionDAL {
         .innerJoin(tag, eq(tagQuestion.tagId, tag.id))
         .where(eq(tagQuestion.questionId, questionId));
 
+      // Return the new status (pending if was rejected and edited)
+      const finalStatus =
+        existing.status === "rejected" &&
+        (existing.title !== title || existing.content !== content)
+          ? "pending"
+          : existing.status;
+
       return {
         id: questionId,
         title,
         content,
         tags: updatedTags,
-        status: existing.status,
+        status: finalStatus,
       };
     });
   }
@@ -450,6 +465,8 @@ export class QuestionDAL {
         id: question.id,
         title: question.title,
         content: question.content,
+        status: question.status,
+        rejectReason: question.rejectReason,
         createdAt: question.createdAt,
         upvotes: question.upvotes,
         answers: question.answers,
@@ -460,7 +477,12 @@ export class QuestionDAL {
       })
       .from(question)
       .innerJoin(user, eq(question.authorId, user.id))
-      .where(and(eq(question.authorId, userId), eq(question.status, "pending")))
+      .where(
+        and(
+          eq(question.authorId, userId),
+          or(eq(question.status, "pending"), eq(question.status, "rejected"))
+        )
+      )
       .orderBy(desc(question.createdAt));
 
     // Fetch tags for all pending questions
@@ -472,6 +494,8 @@ export class QuestionDAL {
       id: row.id,
       title: row.title,
       content: row.content,
+      status: row.status,
+      rejectReason: row.rejectReason,
       createdAt: row.createdAt,
       upvotes: row.upvotes,
       answers: row.answers,
@@ -507,9 +531,9 @@ export class QuestionDAL {
       });
     }
 
-    if (existing.status !== "pending") {
+    if (existing.status !== "pending" && existing.status !== "rejected") {
       throw new ORPCError("BAD_REQUEST", {
-        message: "Only pending questions can be cancelled",
+        message: "Only pending or rejected questions can be cancelled",
       });
     }
 

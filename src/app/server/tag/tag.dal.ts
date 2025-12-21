@@ -28,6 +28,7 @@ interface QuestionRow {
   upvotes: number;
   downvotes: number;
   answers: number;
+  status: "pending" | "approved" | "rejected";
   createdAt: Date;
   authorId: string;
   authorName: string | null;
@@ -38,7 +39,11 @@ export class TagDAL {
   private static readonly tagSelectFields = {
     id: tag.id,
     name: tag.name,
-    questions: tag.questions,
+    questions: sql<number>`(
+      SELECT COUNT(*)::int FROM "tag_question" tq
+      INNER JOIN "question" q ON tq."question_id" = q."id"
+      WHERE tq."tag_id" = "tag"."id" AND q."status" = 'approved'
+    )`.as("questions"),
     createdAt: tag.createdAt,
   } as const;
 
@@ -50,6 +55,7 @@ export class TagDAL {
     upvotes: question.upvotes,
     downvotes: question.downvotes,
     answers: question.answers,
+    status: question.status,
     createdAt: question.createdAt,
     authorId: question.authorId,
     authorName: user.name,
@@ -66,7 +72,11 @@ export class TagDAL {
         return asc(tag.name);
       case "popular":
       default:
-        return desc(tag.questions);
+        return sql`(
+          SELECT COUNT(*)::int FROM "tag_question" tq
+          INNER JOIN "question" q ON tq."question_id" = q."id"
+          WHERE tq."tag_id" = "tag"."id" AND q."status" = 'approved'
+        ) DESC`;
     }
   }
 
@@ -107,6 +117,7 @@ export class TagDAL {
       upvotes: row.upvotes,
       downvotes: row.downvotes,
       answers: row.answers,
+      status: row.status,
       createdAt: row.createdAt,
       author: {
         id: row.authorId,
@@ -172,6 +183,7 @@ export class TagDAL {
 
     const conditions = [
       inArray(question.id, questionIdsWithTag),
+      eq(question.status, "approved"),
       this.buildQuestionSearchCondition(query),
     ].filter(Boolean);
 
@@ -222,10 +234,20 @@ export class TagDAL {
       .select({
         id: tag.id,
         name: tag.name,
-        questions: tag.questions,
+        questions: sql<number>`(
+          SELECT COUNT(*)::int FROM "tag_question" tq
+          INNER JOIN "question" q ON tq."question_id" = q."id"
+          WHERE tq."tag_id" = "tag"."id" AND q."status" = 'approved'
+        )`.as("questions"),
       })
       .from(tag)
-      .orderBy(desc(tag.questions))
+      .orderBy(
+        sql`(
+        SELECT COUNT(*)::int FROM "tag_question" tq
+        INNER JOIN "question" q ON tq."question_id" = q."id"
+        WHERE tq."tag_id" = "tag"."id" AND q."status" = 'approved'
+      ) DESC`
+      )
       .limit(limit);
 
     return rows;

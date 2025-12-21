@@ -19,7 +19,6 @@ import {
 import { NavDocuments } from "@/components/modules/dashboard/nav-documents";
 import { NavMain } from "@/components/modules/dashboard/nav-main";
 import { NavSecondary } from "@/components/modules/dashboard/nav-secondary";
-import { NavUser } from "@/components/modules/dashboard/nav-user";
 import {
   Sidebar,
   SidebarContent,
@@ -30,6 +29,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Brand } from "@/components/ui/dev";
+import { UserNav } from "../profile/UserNav";
 
 const data = {
   user: {
@@ -159,7 +159,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <UserNav
+          isAdmin
+          className="hover:bg-light800_dark400 active:bg-light800_dark400"
+        />
       </SidebarFooter>
     </Sidebar>
   );

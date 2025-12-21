@@ -71,6 +71,8 @@ export const PendingQuestionsSchema = z.array(
     id: z.string(),
     title: z.string(),
     content: z.string(),
+    status: z.enum(["pending", "approved", "rejected"]),
+    rejectReason: z.string().nullable(),
     createdAt: z.date(),
     upvotes: z.number(),
     answers: z.number(),

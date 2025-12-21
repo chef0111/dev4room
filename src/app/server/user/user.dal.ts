@@ -134,10 +134,7 @@ export class UserDAL {
         .select({ count: sql<number>`count(*)::int` })
         .from(question)
         .where(
-          and(
-            eq(question.authorId, userId),
-            not(eq(question.status, "pending"))
-          )
+          and(eq(question.authorId, userId), eq(question.status, "approved"))
         ),
       db
         .select({ count: sql<number>`count(*)::int` })
@@ -191,7 +188,7 @@ export class UserDAL {
 
     const where = and(
       eq(question.authorId, userId),
-      not(eq(question.status, "pending"))
+      eq(question.status, "approved")
     );
 
     // Get total count
@@ -388,10 +385,7 @@ export class UserDAL {
         })
         .from(question)
         .where(
-          and(
-            eq(question.authorId, userId),
-            not(eq(question.status, "pending"))
-          )
+          and(eq(question.authorId, userId), eq(question.status, "approved"))
         ),
       db
         .select({

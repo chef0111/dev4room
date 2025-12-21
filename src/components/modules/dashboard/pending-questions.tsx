@@ -1,13 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   IconCheck,
   IconX,
   IconEye,
   IconClock,
-  IconUser,
-  IconTags,
+  IconBan,
 } from "@tabler/icons-react";
 import { toast } from "sonner";
 import {
@@ -19,6 +18,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import {
   Dialog,
   DialogContent,
@@ -36,13 +38,14 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { formatDistanceToNow } from "date-fns";
+import QuestionCard from "@/components/modules/questions/QuestionCard";
 
 interface PendingQuestion {
   id: string;
   title: string;
   content: string;
+  status: "pending" | "approved" | "rejected";
+  rejectReason: string | null;
   createdAt: Date;
   author: {
     id: string;
@@ -58,11 +61,26 @@ export function PendingQuestions() {
   const approveMutation = useApproveQuestion();
   const rejectMutation = useRejectQuestion();
 
+  const [activeTab, setActiveTab] = useState<"all" | "pending" | "rejected">(
+    "all"
+  );
   const [previewQuestion, setPreviewQuestion] =
     useState<PendingQuestion | null>(null);
   const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
   const [questionToReject, setQuestionToReject] =
     useState<PendingQuestion | null>(null);
+  const [rejectReason, setRejectReason] = useState("");
+
+  const filteredQuestions = useMemo(() => {
+    if (!questions) return [];
+    if (activeTab === "all") return questions;
+    return questions.filter((q) => q.status === activeTab);
+  }, [questions, activeTab]);
+
+  const pendingCount =
+    questions?.filter((q) => q.status === "pending").length ?? 0;
+  const rejectedCount =
+    questions?.filter((q) => q.status === "rejected").length ?? 0;
 
   const handleApprove = async (question: PendingQuestion) => {
     try {
@@ -74,12 +92,16 @@ export function PendingQuestions() {
   };
 
   const handleReject = async () => {
-    if (!questionToReject) return;
+    if (!questionToReject || !rejectReason.trim()) return;
     try {
-      await rejectMutation.mutateAsync(questionToReject.id);
+      await rejectMutation.mutateAsync({
+        questionId: questionToReject.id,
+        reason: rejectReason,
+      });
       toast.success(`Question "${questionToReject.title}" rejected`);
       setRejectDialogOpen(false);
       setQuestionToReject(null);
+      setRejectReason("");
     } catch {
       toast.error("Failed to reject question");
     }
@@ -87,6 +109,7 @@ export function PendingQuestions() {
 
   const openRejectDialog = (question: PendingQuestion) => {
     setQuestionToReject(question);
+    setRejectReason("");
     setRejectDialogOpen(true);
   };
 
@@ -149,93 +172,92 @@ export function PendingQuestions() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="divide-y">
-            {questions.map((question) => (
-              <div
-                key={question.id}
-                className="flex items-start justify-between gap-4 py-4 first:pt-0 last:pb-0"
-              >
-                <div className="flex-1 space-y-2">
-                  <div className="flex items-center gap-2">
-                    <Avatar className="size-8">
-                      <AvatarImage src={question.author.image ?? undefined} />
-                      <AvatarFallback>
-                        <IconUser className="size-4" />
-                      </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className="text-sm font-medium">
-                        {question.author.name}
-                      </p>
-                      <p className="text-muted-foreground text-xs">
-                        @{question.author.username}
-                      </p>
-                    </div>
-                    <span className="text-muted-foreground text-xs">
-                      •{" "}
-                      {formatDistanceToNow(new Date(question.createdAt), {
-                        addSuffix: true,
-                      })}
-                    </span>
-                  </div>
+          <Tabs
+            value={activeTab}
+            onValueChange={(v) =>
+              setActiveTab(v as "all" | "pending" | "rejected")
+            }
+          >
+            <TabsList className="mb-4">
+              <TabsTrigger value="all">All ({questions.length})</TabsTrigger>
+              <TabsTrigger value="pending">
+                Pending ({pendingCount})
+              </TabsTrigger>
+              <TabsTrigger value="rejected">
+                Rejected ({rejectedCount})
+              </TabsTrigger>
+            </TabsList>
 
-                  <h4 className="line-clamp-2 font-medium">{question.title}</h4>
-
-                  {question.tags.length > 0 && (
-                    <div className="flex flex-wrap items-center gap-1">
-                      <IconTags className="text-muted-foreground size-3" />
-                      {question.tags.slice(0, 3).map((tag) => (
-                        <Badge
-                          key={tag.id}
+            <TabsContent value={activeTab} className="mt-0">
+              <div className="flex flex-col gap-4">
+                {filteredQuestions.map((question) => (
+                  <QuestionCard
+                    key={question.id}
+                    question={{
+                      id: question.id,
+                      title: question.title,
+                      content: question.content,
+                      tags: question.tags,
+                      author: {
+                        id: question.author.id,
+                        name: question.author.name,
+                        image: question.author.image,
+                      },
+                      createdAt: question.createdAt,
+                      upvotes: 0,
+                      downvotes: 0,
+                      answers: 0,
+                      views: 0,
+                    }}
+                    href={"#"}
+                    customActions={
+                      <div className="flex items-center gap-2">
+                        {question.status === "rejected" && (
+                          <Badge variant="destructive">
+                            <IconBan className="size-4" />
+                            Rejected
+                          </Badge>
+                        )}
+                        <Button
                           variant="outline"
-                          className="text-xs"
+                          size="sm"
+                          onClick={() => setPreviewQuestion(question)}
                         >
-                          {tag.name}
-                        </Badge>
-                      ))}
-                      {question.tags.length > 3 && (
-                        <span className="text-muted-foreground text-xs">
-                          +{question.tags.length - 3} more
-                        </span>
-                      )}
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setPreviewQuestion(question)}
-                  >
-                    <IconEye className="size-4" />
-                  </Button>
-                  <Button
-                    variant="default"
-                    size="sm"
-                    onClick={() => handleApprove(question)}
-                    disabled={approveMutation.isPending}
-                  >
-                    <IconCheck className="size-4" />
-                    <span className="sr-only sm:not-sr-only sm:ml-1">
-                      Approve
-                    </span>
-                  </Button>
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => openRejectDialog(question)}
-                    disabled={rejectMutation.isPending}
-                  >
-                    <IconX className="size-4" />
-                    <span className="sr-only sm:not-sr-only sm:ml-1">
-                      Reject
-                    </span>
-                  </Button>
-                </div>
+                          <IconEye className="size-4" />
+                        </Button>
+                        {question.status === "pending" && (
+                          <>
+                            <Button
+                              variant="default"
+                              size="sm"
+                              onClick={() => handleApprove(question)}
+                              disabled={approveMutation.isPending}
+                            >
+                              <IconCheck className="size-4" />
+                              <span className="sr-only sm:not-sr-only sm:ml-1">
+                                Approve
+                              </span>
+                            </Button>
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              onClick={() => openRejectDialog(question)}
+                              disabled={rejectMutation.isPending}
+                            >
+                              <IconBan className="size-4" />
+                              <span className="sr-only sm:not-sr-only sm:ml-1">
+                                Reject
+                              </span>
+                            </Button>
+                          </>
+                        )}
+                      </div>
+                    }
+                  />
+                ))}
               </div>
-            ))}
-          </div>
+            </TabsContent>
+          </Tabs>
         </CardContent>
       </Card>
 
@@ -246,12 +268,24 @@ export function PendingQuestions() {
       >
         <DialogContent className="max-h-[80vh] max-w-5xl overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>{previewQuestion?.title}</DialogTitle>
+            <DialogTitle className="flex items-center gap-2">
+              {previewQuestion?.title}
+              {previewQuestion?.status === "rejected" && (
+                <Badge variant="destructive">Rejected</Badge>
+              )}
+            </DialogTitle>
             <DialogDescription>
               By {previewQuestion?.author.name} (@
               {previewQuestion?.author.username})
             </DialogDescription>
           </DialogHeader>
+          {previewQuestion?.status === "rejected" &&
+            previewQuestion.rejectReason && (
+              <div className="bg-destructive/10 text-destructive rounded-md p-3 text-sm">
+                <strong>Rejection Reason:</strong>{" "}
+                {previewQuestion.rejectReason}
+              </div>
+            )}
           <div className="prose dark:prose-invert mt-4 max-w-none">
             <div className="whitespace-pre-wrap">
               {previewQuestion?.content}
@@ -266,49 +300,66 @@ export function PendingQuestions() {
               ))}
             </div>
           )}
-          <div className="mt-4 flex justify-end gap-2">
-            <Button
-              variant="default"
-              onClick={() => {
-                handleApprove(previewQuestion!);
-                setPreviewQuestion(null);
-              }}
-              disabled={approveMutation.isPending}
-            >
-              <IconCheck className="mr-1 size-4" />
-              Approve
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={() => {
-                openRejectDialog(previewQuestion!);
-                setPreviewQuestion(null);
-              }}
-            >
-              <IconX className="mr-1 size-4" />
-              Reject
-            </Button>
-          </div>
+          {previewQuestion?.status === "pending" && (
+            <div className="mt-4 flex justify-end gap-2">
+              <Button
+                variant="default"
+                onClick={() => {
+                  handleApprove(previewQuestion!);
+                  setPreviewQuestion(null);
+                }}
+                disabled={approveMutation.isPending}
+              >
+                <IconCheck className="size-4" />
+                Approve
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={() => {
+                  openRejectDialog(previewQuestion!);
+                  setPreviewQuestion(null);
+                }}
+              >
+                <IconX className="size-4" />
+                Reject
+              </Button>
+            </div>
+          )}
         </DialogContent>
       </Dialog>
 
-      {/* Reject Confirmation Dialog */}
+      {/* Reject Dialog with Reason Input */}
       <AlertDialog open={rejectDialogOpen} onOpenChange={setRejectDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Reject Question?</AlertDialogTitle>
+            <AlertDialogTitle>Reject Question</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete the question &quot;
-              {questionToReject?.title}&quot;. This action cannot be undone.
+              Provide a reason for rejecting &quot;{questionToReject?.title}
+              &quot;. The author will see this reason and can edit their
+              question.
             </AlertDialogDescription>
           </AlertDialogHeader>
+          <div className="py-4">
+            <Label htmlFor="reject-reason">Rejection Reason</Label>
+            <Textarea
+              id="reject-reason"
+              placeholder="Explain why this question is being rejected..."
+              value={rejectReason}
+              onChange={(e) => setRejectReason(e.target.value)}
+              className="mt-2"
+              rows={4}
+            />
+          </div>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel onClick={() => setRejectReason("")}>
+              Cancel
+            </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleReject}
+              disabled={!rejectReason.trim() || rejectMutation.isPending}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              Reject
+              Reject Question
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

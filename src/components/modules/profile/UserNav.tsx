@@ -23,12 +23,14 @@ import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 
 interface UserNavProps {
   isAdmin?: boolean;
+  className?: string;
 }
 
-export function UserNav({ isAdmin = false }: UserNavProps) {
+export function UserNav({ isAdmin = false, className }: UserNavProps) {
   const { data } = authClient.useSession();
   const user = data?.user;
   const isMobile = useIsMobile();
@@ -36,12 +38,15 @@ export function UserNav({ isAdmin = false }: UserNavProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        className="hover:bg-light800_dark300 transition-all duration-150"
+        className={cn(
+          "hover:bg-light800_dark300 transition-all duration-150",
+          className
+        )}
         aria-label="User navigation"
         asChild
       >
         <div
-          className="flex-between data-[state=open]:bg-accent data-[state=open]:text-sidebar-accent-foreground w-full gap-2 rounded-lg p-0 focus:border-none! focus:ring-0! max-sm:p-2 lg:p-2"
+          className="flex-between data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground w-full gap-2 rounded-lg p-0 focus:border-none! focus:ring-0! max-sm:p-2 lg:p-2"
           aria-label="User navigation"
         >
           <div className="flex-start grow gap-2">
