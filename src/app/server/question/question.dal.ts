@@ -47,6 +47,7 @@ interface QuestionRow {
   authorId: string;
   authorName: string | null;
   authorImage: string | null;
+  status: "pending" | "approved" | "rejected";
 }
 
 export class QuestionDAL {
@@ -62,6 +63,7 @@ export class QuestionDAL {
     authorId: question.authorId,
     authorName: user.name,
     authorImage: user.image,
+    status: question.status,
   } as const;
 
   private static getSortCriteria(filter?: QuestionFilter) {
@@ -106,6 +108,7 @@ export class QuestionDAL {
         name: row.authorName ?? "Unknown",
         image: row.authorImage,
       },
+      status: row.status,
       tags,
     };
   }
@@ -172,6 +175,7 @@ export class QuestionDAL {
       authorId: question.authorId,
       authorName: user.name,
       authorImage: user.image,
+      status: question.status,
     };
 
     const [row] = await db
@@ -202,6 +206,7 @@ export class QuestionDAL {
         name: row.authorName ?? "Unknown",
         image: row.authorImage,
       },
+      status: row.status,
       tags,
     };
 
@@ -254,7 +259,13 @@ export class QuestionDAL {
   static async update(
     input: EditQuestionInput,
     userId: string
-  ): Promise<{ id: string; title: string; content: string; tags: TagDTO[] }> {
+  ): Promise<{
+    id: string;
+    title: string;
+    content: string;
+    tags: TagDTO[];
+    status: "pending" | "approved" | "rejected";
+  }> {
     const { questionId, title, content, tags: tagNames } = input;
 
     return db.transaction(async (tx) => {
@@ -264,6 +275,7 @@ export class QuestionDAL {
           title: question.title,
           content: question.content,
           authorId: question.authorId,
+          status: question.status,
         })
         .from(question)
         .where(eq(question.id, questionId))
@@ -336,7 +348,13 @@ export class QuestionDAL {
         .innerJoin(tag, eq(tagQuestion.tagId, tag.id))
         .where(eq(tagQuestion.questionId, questionId));
 
-      return { id: questionId, title, content, tags: updatedTags };
+      return {
+        id: questionId,
+        title,
+        content,
+        tags: updatedTags,
+        status: existing.status,
+      };
     });
   }
 

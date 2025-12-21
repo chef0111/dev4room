@@ -18,6 +18,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import EditDelete from "@/components/shared/EditDelete";
 
 interface PendingQuestion {
   id: string;
@@ -108,6 +109,7 @@ export default function PendingQuestionsList({
                     <span className="hidden sm:inline">Preview</span>
                   </Link>
                 </Button>
+
                 <Button
                   variant="destructive"
                   size="sm"
@@ -117,6 +119,12 @@ export default function PendingQuestionsList({
                   <IconX className="size-4" />
                   <span className="hidden sm:inline">Cancel</span>
                 </Button>
+
+                <EditDelete
+                  type="question"
+                  itemId={question.id}
+                  showDelete={false}
+                />
               </div>
             }
           />

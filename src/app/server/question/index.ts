@@ -134,6 +134,7 @@ export const editQuestion = authorized
       title: z.string(),
       content: z.string(),
       tags: z.array(TagSchema),
+      status: z.enum(["pending", "approved", "rejected"]),
     })
   )
   .handler(async ({ input, context }) => {

@@ -24,6 +24,7 @@ export const QuestionSchema = z.object({
   tags: z.array(TagSchema),
   createdAt: z.date(),
   updatedAt: z.date(),
+  status: z.enum(["pending", "approved", "rejected"]),
 });
 
 // Input Schemas

@@ -9,6 +9,7 @@ import { toast } from "sonner";
 interface UseCreateQuestionOptions {
   onFormReset?: () => void;
   onEditorReset?: () => void;
+  onPending?: () => void;
 }
 
 export function useCreateQuestion(options?: UseCreateQuestionOptions) {
@@ -18,10 +19,7 @@ export function useCreateQuestion(options?: UseCreateQuestionOptions) {
     orpc.question.create.mutationOptions({
       onSuccess: (data) => {
         if (data.status === "pending") {
-          toast.info(
-            "Question submitted for review! An admin will review your question before it's published.",
-            { duration: 5000 }
-          );
+          options?.onPending?.();
         } else {
           toast.success("Question created successfully!");
         }
@@ -29,8 +27,6 @@ export function useCreateQuestion(options?: UseCreateQuestionOptions) {
         options?.onEditorReset?.();
         if (data.status === "approved") {
           router.push(`/questions/${data.id}`);
-        } else {
-          router.push("/");
         }
       },
       onError: (error) => {
@@ -54,7 +50,11 @@ export function useEditQuestion(options?: UseEditQuestionOptions) {
         toast.success("Question updated successfully!");
         options?.onFormReset?.();
         options?.onEditorReset?.();
-        router.push(`/questions/${data.id}`);
+        if (data.status === "pending") {
+          router.push("/pending-questions");
+        } else {
+          router.push(`/questions/${data.id}`);
+        }
       },
       onError: (error) => {
         toast.error(error.message || "Failed to update question");
