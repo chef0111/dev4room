@@ -217,7 +217,7 @@ export class AdminDAL {
           banned: user.banned,
           banReason: user.banReason,
           reputation: user.reputation,
-          questionCount: sql<number>`(SELECT COUNT(*)::int FROM "question" WHERE "question"."author_id" = "user"."id")`,
+          questionCount: sql<number>`(SELECT COUNT(*)::int FROM "question" WHERE "question"."author_id" = "user"."id" AND "question"."status" != 'pending')`,
           answerCount: sql<number>`(SELECT COUNT(*)::int FROM "answer" WHERE "answer"."author_id" = "user"."id")`,
           createdAt: user.createdAt,
         })
