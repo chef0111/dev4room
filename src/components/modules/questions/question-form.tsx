@@ -11,13 +11,13 @@ import {
   FieldError,
   FieldGroup,
   FieldLabel,
-  Input,
-  Button,
-  Spinner,
-} from "@/components/ui";
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import PendingDialog from "./pending-dialog";
 import { MDXEditorMethods } from "@mdxeditor/editor";
-import TagCard from "../tags/tag-card";
+import TagCard from "@/components/modules/tags/tag-card";
 import { getTechDisplayName } from "@/lib/utils";
 import { useCreateQuestion, useEditQuestion } from "@/queries/question.queries";
 import { FormInput, FormMarkdown } from "@/components/form";

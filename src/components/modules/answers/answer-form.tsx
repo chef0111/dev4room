@@ -7,7 +7,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 
 import { AnswerSchema } from "@/lib/validations";
-import { Button, Spinner } from "@/components/ui";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import GenerateAIButton from "./generate-ai-button";
 import AIValidationAlert from "./ai-validation-alert";
 import { useCreateAnswer, useEditAnswer } from "@/queries/answer.queries";

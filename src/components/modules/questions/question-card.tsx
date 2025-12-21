@@ -3,9 +3,9 @@ import { type Route } from "next";
 import Link from "next/link";
 
 import { getTimeStamp } from "@/lib/utils";
-import TagCard from "../tags/tag-card";
+import TagCard from "@/components/modules/tags/tag-card";
 import Metric from "@/components/shared/metric";
-import { Card } from "@/components/ui";
+import { Card } from "@/components/ui/card";
 import EditDelete from "@/components/shared/edit-delete";
 
 interface QuestionCardProps {

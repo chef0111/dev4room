@@ -1,7 +1,8 @@
 "use client";
 
 import { Search } from "lucide-react";
-import { Button, Kbd, KbdGroup } from "@/components/ui";
+import { Button } from "@/components/ui/button";
+import { Kbd, KbdGroup } from "@/components/ui/kbd";
 
 const CommandMenuFallback = () => {
   return (

@@ -9,14 +9,10 @@ import { toast } from "sonner";
 import { AlertCircleIcon } from "lucide-react";
 
 import { OTPSchema } from "@/lib/validations";
-import {
-  Button,
-  FieldDescription,
-  Alert,
-  AlertDescription,
-  AlertTitle,
-  Spinner,
-} from "@/components/ui";
+import { Button } from "@/components/ui/button";
+import { FieldDescription } from "@/components/ui/field";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Spinner } from "@/components/ui/spinner";
 import TextShimmer from "@/components/ui/dev/text-shimmer";
 import { FormInputOTP } from "@/components/form";
 

@@ -1,5 +1,5 @@
+import { Button } from "@/components/ui/button";
 import {
-  Button,
   Field,
   FieldContent,
   FieldDescription,
@@ -8,13 +8,15 @@ import {
   FieldLegend,
   FieldSeparator,
   FieldSet,
+} from "@/components/ui/field";
+import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
   InputGroupText,
   InputGroupTextarea,
-  Skeleton,
-} from "@/components/ui";
+} from "@/components/ui/input-group";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Link, MapPin, ShieldUser, UserIcon } from "lucide-react";
 
 const Loading = async () => {

@@ -1,5 +1,5 @@
 import QuestionUtilsFallback from "@/components/modules/questions/question-utils-fallback";
-import { Skeleton } from "@/components/ui";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Loading = () => {
   return (

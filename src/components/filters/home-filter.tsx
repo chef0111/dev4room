@@ -1,7 +1,7 @@
 "use client";
 
 import { Route } from "next";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import { useRouter, useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { formUrlQuery, removeKeysFromUrlQuery } from "@/lib/url";

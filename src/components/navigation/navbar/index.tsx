@@ -8,7 +8,7 @@ import ThemeToggle from "./theme-toggle";
 import CommandMenu from "@/components/navigation/navbar/command-menu";
 import CommandMenuFallback from "@/components/navigation/navbar/command-menu-fallback";
 import UserAvatar from "@/components/modules/profile/user-avatar";
-import MobileNav from "../left-sidebar/mobile-nav";
+import MobileNav from "@/components/navigation/left-sidebar/mobile-nav";
 
 interface NavbarProps {
   className?: string;

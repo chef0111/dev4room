@@ -3,7 +3,7 @@ import { ScrollToTop } from "@/components/modules/main/scroll-to-top";
 import { ErrorBoundary } from "@/components/shared";
 import { AppSidebar } from "@/components/modules/dashboard/app-sidebar";
 import { SiteHeader } from "@/components/modules/dashboard/site-header";
-import { SidebarProvider, SidebarInset } from "@/components/ui";
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 
 interface Props {
   children: React.ReactNode;

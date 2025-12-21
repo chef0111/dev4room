@@ -16,7 +16,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui";
+} from "@/components/ui/dropdown-menu";
 import UserAvatar from "./user-avatar";
 import Link from "next/link";
 import { toast } from "sonner";

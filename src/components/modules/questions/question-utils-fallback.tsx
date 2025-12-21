@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui";
+import { Button } from "@/components/ui/button";
 import { TbArrowBigDown, TbArrowBigUp, TbBookmark } from "react-icons/tb";
 
 const QuestionUtilsFallback = () => {

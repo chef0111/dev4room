@@ -8,7 +8,7 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogAction,
-} from "@/components/ui";
+} from "@/components/ui/alert-dialog";
 import { AlertTriangle } from "lucide-react";
 
 interface AIValidationAlertProps {

@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Button } from "@/components/ui";
+import { Button } from "@/components/ui/button";
 import { TbBookmark, TbBookmarkFilled } from "react-icons/tb";
 import { cn } from "@/lib/utils";
 import { useDebounce } from "@/hooks/use-debounce";

@@ -9,7 +9,7 @@ import handleError from "@/lib/handlers/error";
 import { toast } from "sonner";
 
 import OTPForm from "@/components/modules/auth/otp-form";
-import { Button } from "@/components/ui";
+import { Button } from "@/components/ui/button";
 
 type OTPValues = z.infer<typeof OTPSchema>;
 

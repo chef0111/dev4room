@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Route } from "next";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 
 interface UserAvatarProps {

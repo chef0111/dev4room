@@ -6,7 +6,7 @@ import localFont from "next/font/local";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
 import { ThemeProvider } from "@/context/theme-provider";
-import { Toaster } from "@/components/ui";
+import { Toaster } from "@/components/ui/sonner";
 import { Providers } from "./providers";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 

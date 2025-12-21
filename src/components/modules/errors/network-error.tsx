@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useTheme } from "next-themes";
 import { RefreshCw, Home, WifiOff } from "lucide-react";
-import { Button } from "@/components/ui";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 interface NetworkErrorProps {

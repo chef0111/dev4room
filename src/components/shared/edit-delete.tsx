@@ -12,9 +12,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-  Button,
-  Spinner,
-} from "@/components/ui";
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { Edit, Trash } from "lucide-react";
 import { useDeleteQuestion } from "@/queries/question.queries";
 import { useDeleteAnswer } from "@/queries/answer.queries";

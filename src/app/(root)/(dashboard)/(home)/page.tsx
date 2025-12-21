@@ -3,7 +3,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 import { FilterProvider } from "@/context";
-import { Button } from "@/components/ui";
+import { Button } from "@/components/ui/button";
 import LocalSearch from "@/components/modules/main/local-search";
 import HomeFilter from "@/components/filters/home-filter";
 import Filter from "@/components/filters/filter";

@@ -7,7 +7,7 @@ import {
   AlertDialogHeader,
   AlertDialogDescription,
   AlertDialogTitle,
-} from "@/components/ui";
+} from "@/components/ui/alert-dialog";
 
 interface DialogProps {
   open: boolean;

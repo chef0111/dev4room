@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Skeleton } from "@/components/ui";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const TopTagsSkeleton = ({ className }: { className?: string }) => {
   return (

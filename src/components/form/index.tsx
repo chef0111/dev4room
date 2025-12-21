@@ -42,7 +42,7 @@ import {
   InputGroupAddon,
   InputGroupInput,
   InputGroupTextarea,
-} from "@/components/ui";
+} from "@/components/ui/input-group";
 
 type FormControlProps<
   TFieldValues extends FieldValues = FieldValues,

@@ -2,7 +2,8 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { orpc, client } from "@/lib/orpc";
-import { Button, Spinner } from "@/components/ui";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { BsStars } from "react-icons/bs";
 import { TextShimmer } from "@/components/ui/dev";
 import { toast } from "sonner";

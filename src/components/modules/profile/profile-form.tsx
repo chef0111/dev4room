@@ -3,13 +3,10 @@
 import z from "zod";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Button,
-  FieldDescription,
-  FieldGroup,
-  InputGroupText,
-  Spinner,
-} from "@/components/ui";
+import { Button } from "@/components/ui/button";
+import { FieldDescription, FieldGroup } from "@/components/ui/field";
+import { InputGroupText } from "@/components/ui/input-group";
+import { Spinner } from "@/components/ui/spinner";
 import { FormInputGroup, FormTextareaGroup } from "@/components/form";
 import { ProfileSchema } from "@/lib/validations";
 import { useUpdateProfile } from "@/queries/user.queries";

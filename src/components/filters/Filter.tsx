@@ -11,7 +11,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui";
+} from "@/components/ui/select";
 import { formUrlQuery } from "@/lib/url";
 import { ListFilter } from "lucide-react";
 import { useFilterTransition } from "@/context/filter-provider";

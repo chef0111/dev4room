@@ -1,4 +1,4 @@
-import { Skeleton } from "@/components/ui";
+import { Skeleton } from "@/components/ui/skeleton";
 import TopTagsSkeleton from "@/components/skeletons/top-tags";
 import {
   PostCardsSkeleton,

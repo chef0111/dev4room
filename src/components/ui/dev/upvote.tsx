@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "motion/react";
-import { Button } from "@/components/ui";
+import { Button } from "@/components/ui/button";
 import { TbArrowBigUp, TbArrowBigUpFilled } from "react-icons/tb";
 import { cn } from "@/lib/utils";
 

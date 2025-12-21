@@ -8,7 +8,7 @@ import {
   SheetContent,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui";
+} from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import NavTabs from "./nav-tabs";
 import SidebarUser from "./sidebar-user";

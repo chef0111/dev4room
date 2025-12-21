@@ -9,7 +9,7 @@ import {
   FieldLegend,
   FieldSeparator,
   FieldSet,
-} from "@/components/ui";
+} from "@/components/ui/field";
 import ProfileForm from "@/components/modules/profile/profile-form";
 import AvatarEditor from "@/components/modules/profile/avatar-editor";
 

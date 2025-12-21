@@ -17,14 +17,10 @@ import Link from "next/link";
 import { AUTH_FORM_TYPES } from "@/common/constants";
 import { formatFieldName } from "@/lib/utils";
 import { toast } from "sonner";
-import {
-  Button,
-  FieldGroup,
-  Alert,
-  AlertDescription,
-  AlertTitle,
-  Spinner,
-} from "@/components/ui";
+import { Button } from "@/components/ui/button";
+import { FieldGroup } from "@/components/ui/field";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Spinner } from "@/components/ui/spinner";
 import { TextShimmer } from "@/components/ui/dev";
 import { AlertCircleIcon } from "lucide-react";
 import { FormInput } from "@/components/form";

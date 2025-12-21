@@ -2,16 +2,16 @@
 
 import { useRef } from "react";
 import UserAvatar from "./user-avatar";
+import { Badge } from "@/components/ui/badge";
 import {
-  Badge,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  Input,
-  Spinner,
-} from "@/components/ui";
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
 import { Edit2 } from "lucide-react";
 import { useUploadAvatar, useRemoveAvatar } from "@/queries/upload.queries";
 import { toast } from "sonner";

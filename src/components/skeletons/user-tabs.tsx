@@ -1,5 +1,5 @@
-import { Skeleton } from "@/components/ui";
-import FilterFallback from "../filters/filter-fallback";
+import { Skeleton } from "@/components/ui/skeleton";
+import FilterFallback from "@/components/filters/filter-fallback";
 
 const UserTabsSkeleton = () => {
   return (

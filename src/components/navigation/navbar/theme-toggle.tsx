@@ -2,7 +2,7 @@
 
 import { useCallback } from "react";
 import { useTheme } from "next-themes";
-import { Button } from "@/components/ui";
+import { Button } from "@/components/ui/button";
 import { Moon, Sun } from "lucide-react";
 
 export default function ThemeToggle() {

@@ -7,7 +7,7 @@ import { EMPTY_ANSWERS, EMPTY_QUESTION } from "@/common/constants/states";
 
 import DataRenderer from "@/components/shared/data-renderer";
 import { AnimatedTab, NextPagination } from "@/components/ui/dev";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AnswerCard from "@/components/modules/answers/answer-card";
 import QuestionCard from "@/components/modules/questions/question-card";
 import Filter from "@/components/filters/filter";

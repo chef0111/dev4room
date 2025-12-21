@@ -3,7 +3,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { UserNav } from "@/components/modules/profile/user-nav";
-import { Button, Skeleton } from "@/components/ui";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { authClient } from "@/lib/auth-client";
 
 const SidebarUser = () => {

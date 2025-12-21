@@ -10,7 +10,7 @@ import { getErrorMessage } from "@/lib/handlers/error";
 
 import Link from "next/link";
 
-import { Button } from "@/components/ui";
+import { Button } from "@/components/ui/button";
 import ProfileHeader from "./header";
 import UserStats from "./user-stats";
 import UserTabs from "./user-tabs";

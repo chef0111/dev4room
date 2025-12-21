@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import { LogIn, Home } from "lucide-react";
-import { Button } from "@/components/ui";
+import { Button } from "@/components/ui/button";
 import { Route } from "next";
 
 interface AuthErrorProps {

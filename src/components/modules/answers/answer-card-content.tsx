@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Route } from "next";
 import { ChevronDownIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui";
+import { Button } from "@/components/ui/button";
 
 interface AnswerCardContentProps {
   previewContent: ReactNode;

@@ -23,7 +23,9 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { Button, Kbd, KbdGroup, Spinner } from "@/components/ui";
+import { Button } from "@/components/ui/button";
+import { Kbd, KbdGroup } from "@/components/ui/kbd";
+import { Spinner } from "@/components/ui/spinner";
 import { Brand } from "@/components/ui/dev";
 import UserAvatar from "@/components/modules/profile/user-avatar";
 import { useDebouncedValue } from "@/hooks/use-debounce";

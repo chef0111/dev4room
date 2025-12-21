@@ -8,7 +8,7 @@ import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
 import { authClient } from "@/lib/auth-client";
-import { SheetClose } from "@/components/ui";
+import { SheetClose } from "@/components/ui/sheet";
 import { sidebarTabs } from "@/common/constants";
 
 interface NavTabsProps {

@@ -8,7 +8,7 @@ import handleError from "@/lib/handlers/error";
 
 import AuthForm from "@/components/modules/auth/auth-form";
 import Link from "next/link";
-import { Button } from "@/components/ui";
+import { Button } from "@/components/ui/button";
 
 type ForgotPasswordValues = z.infer<typeof ForgotPasswordSchema>;
 

@@ -3,7 +3,8 @@ import {
   PostCardsSkeleton,
   QuestionHeaderSkeleton,
 } from "@/components/skeletons";
-import { Skeleton, Button } from "@/components/ui";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 import { BsStars } from "react-icons/bs";
 
 const Loading = () => {

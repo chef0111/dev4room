@@ -1,4 +1,4 @@
-import { Card, CardContent } from "@/components/ui";
+import { Card, CardContent } from "@/components/ui/card";
 import { TextShimmer } from "@/components/ui/dev";
 import { Brand } from "@/components/ui/dev";
 import { Suspense } from "react";
