@@ -16,13 +16,16 @@ import { DataTable } from "@/components/data-table/data-table";
 import { DataTableAdvancedToolbar } from "@/components/data-table/data-table-advanced-toolbar";
 import { DataTableFilterList } from "@/components/data-table/data-table-filter-list";
 import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
-import { DataTableSkeleton } from "@/components/data-table/data-table-skeleton";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  parseAdvancedFilters,
+  parseBasicFilters,
+} from "@/lib/table/user-filters";
 import { BanUserDialog } from "./ban-user-dialog";
 import { DeleteUserDialog } from "./delete-user-dialog";
 import { getUserColumns } from "./users-columns";
@@ -34,7 +37,8 @@ import {
   useSetUserRole,
   useDeleteUser,
 } from "@/queries/admin.queries";
-import { getFiltersStateParser } from "@/lib/parsers";
+import { getFiltersStateParser } from "@/lib/table/parsers";
+import Loading from "@/app/(admin)/dashboard/users/loading";
 
 // Column IDs that can be filtered
 const FILTERABLE_COLUMNS = [
@@ -91,6 +95,7 @@ export function UserManagement() {
     email: parseAsString.withDefault(""),
     role: parseAsArrayOf(parseAsString, ",").withDefault([]),
     banned: parseAsArrayOf(parseAsString, ",").withDefault([]),
+    createdAt: parseAsString.withDefault(""),
   });
 
   // Advanced mode filters
@@ -103,74 +108,24 @@ export function UserManagement() {
 
   // Convert filters to API parameters
   const apiParams = useMemo(() => {
-    if (advancedMode) {
-      // Use advanced filters from URL
-      let search: string | undefined;
-      let role: string | undefined;
-      let banned: boolean | undefined;
+    const baseParams = advancedMode
+      ? parseAdvancedFilters(advancedFilters)
+      : parseBasicFilters(basicFilterValues);
 
-      for (const filter of advancedFilters) {
-        if (filter.id === "name" || filter.id === "email") {
-          if (typeof filter.value === "string" && filter.value) {
-            search = filter.value;
-          }
-        } else if (filter.id === "role") {
-          // Pass role directly - backend now handles "user" correctly
-          if (Array.isArray(filter.value) && filter.value.length > 0) {
-            role = filter.value[0];
-          } else if (typeof filter.value === "string" && filter.value) {
-            role = filter.value;
-          }
-        } else if (filter.id === "banned") {
-          if (Array.isArray(filter.value) && filter.value.length > 0) {
-            banned = filter.value[0] === "true";
-          } else if (typeof filter.value === "string") {
-            banned = filter.value === "true";
-          }
-        }
-      }
-
-      return {
-        search,
-        role,
-        banned,
-        limit: perPage,
-        offset: (page - 1) * perPage,
-      };
-    } else {
-      // Use basic filters from URL
-      const search =
-        basicFilterValues.name || basicFilterValues.email || undefined;
-      // Pass role filter directly - backend now handles "user" correctly
-      const role =
-        basicFilterValues.role.length > 0
-          ? basicFilterValues.role[0]
-          : undefined;
-      let banned: boolean | undefined;
-      if (basicFilterValues.banned.length > 0) {
-        banned = basicFilterValues.banned[0] === "true";
-      }
-
-      return {
-        search,
-        role,
-        banned,
-        limit: perPage,
-        offset: (page - 1) * perPage,
-      };
-    }
+    return {
+      ...baseParams,
+      limit: perPage,
+      offset: (page - 1) * perPage,
+    };
   }, [advancedMode, advancedFilters, basicFilterValues, page, perPage]);
 
-  // Fetch users with server-side filtering
   const { data, isLoading, error } = useAdminUsers(apiParams);
 
-  // Mutations
   const banUserMutation = useBanUser();
   const unbanUserMutation = useUnbanUser();
   const setUserRoleMutation = useSetUserRole();
   const deleteUserMutation = useDeleteUser();
 
-  // Action handlers
   const handleBan = (userId: string) => {
     setUserToBan(userId);
     setBanDialogOpen(true);
@@ -236,7 +191,6 @@ export function UserManagement() {
     });
   };
 
-  // Get columns with action handlers
   const columns = useMemo(
     () =>
       getUserColumns({
@@ -249,7 +203,6 @@ export function UserManagement() {
     [data?.users]
   );
 
-  // Use tablecn's useDataTable hook for table state
   const { table, shallow, debounceMs, throttleMs } = useDataTable({
     data: data?.users ?? [],
     columns,
@@ -272,20 +225,7 @@ export function UserManagement() {
   }
 
   if (isLoading && !data) {
-    return (
-      <div className="flex flex-col gap-4 px-4 lg:px-6">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold">User Management</h2>
-        </div>
-        <DataTableSkeleton
-          columnCount={8}
-          rowCount={10}
-          filterCount={2}
-          withPagination
-          withViewOptions
-        />
-      </div>
-    );
+    return <Loading />;
   }
 
   return (

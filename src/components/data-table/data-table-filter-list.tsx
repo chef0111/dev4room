@@ -57,16 +57,19 @@ import {
 } from "@/components/ui/sortable";
 import { dataTableConfig } from "@/config/data-table";
 import { useDebouncedCallback } from "@/hooks/use-debounced-callback";
-import { getDefaultFilterOperator, getFilterOperators } from "@/lib/data-table";
-import { formatDate } from "@/lib/format";
-import { generateId } from "@/lib/id";
-import { getFiltersStateParser } from "@/lib/parsers";
+import {
+  getDefaultFilterOperator,
+  getFilterOperators,
+} from "@/lib/table/data-table";
+import { formatDate } from "@/lib/table/format";
+import { generateId } from "@/lib/table/id";
+import { getFiltersStateParser } from "@/lib/table/parsers";
 import { cn } from "@/lib/utils";
 import type {
   ExtendedColumnFilter,
   FilterOperator,
   JoinOperator,
-} from "@/types/data-table";
+} from "@/common/types/data-table";
 
 const DEBOUNCE_MS = 300;
 const THROTTLE_MS = 50;

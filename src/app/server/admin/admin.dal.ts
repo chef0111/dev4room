@@ -57,6 +57,8 @@ export interface ListUsersParams {
   search?: string;
   role?: string;
   banned?: boolean;
+  createdAfter?: Date;
+  createdBefore?: Date;
   limit: number;
   offset: number;
 }
@@ -206,6 +208,14 @@ export class AdminDAL {
 
     if (params.banned !== undefined) {
       conditions.push(eq(user.banned, params.banned));
+    }
+
+    if (params.createdAfter) {
+      conditions.push(gte(user.createdAt, params.createdAfter));
+    }
+
+    if (params.createdBefore) {
+      conditions.push(lt(user.createdAt, params.createdBefore));
     }
 
     const where = conditions.length > 0 ? and(...conditions) : undefined;

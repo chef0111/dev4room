@@ -30,8 +30,8 @@ import {
 import * as React from "react";
 
 import { useDebouncedCallback } from "@/hooks/use-debounced-callback";
-import { getSortingStateParser } from "@/lib/parsers";
-import type { ExtendedColumnSort, QueryKeys } from "@/types/data-table";
+import { getSortingStateParser } from "@/lib/table/parsers";
+import type { ExtendedColumnSort, QueryKeys } from "@/common/types/data-table";
 
 const PAGE_KEY = "page";
 const PER_PAGE_KEY = "perPage";
