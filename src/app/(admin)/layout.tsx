@@ -1,6 +1,9 @@
 import { Suspense } from "react";
 import { ScrollToTop } from "@/components/modules/main/ScrollToTop";
 import { ErrorBoundary } from "@/components/shared";
+import { AppSidebar } from "@/components/modules/dashboard/app-sidebar";
+import { SiteHeader } from "@/components/modules/dashboard/site-header";
+import { SidebarProvider, SidebarInset } from "@/components/ui";
 
 interface Props {
   children: React.ReactNode;
@@ -12,7 +15,26 @@ const DashboardLayout: React.FC<Props> = ({ children }: Props) => {
       <Suspense fallback={null}>
         <ScrollToTop />
       </Suspense>
-      <ErrorBoundary>{children}</ErrorBoundary>
+      <SidebarProvider
+        style={
+          {
+            "--sidebar-width": "calc(var(--spacing) * 72)",
+            "--header-height": "calc(var(--spacing) * 12)",
+          } as React.CSSProperties
+        }
+      >
+        <AppSidebar variant="inset" />
+        <SidebarInset>
+          <SiteHeader />
+          <div className="flex flex-1 flex-col">
+            <div className="@container/main flex flex-1 flex-col gap-2">
+              <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+                <ErrorBoundary>{children}</ErrorBoundary>
+              </div>
+            </div>
+          </div>
+        </SidebarInset>
+      </SidebarProvider>
     </main>
   );
 };

@@ -30,6 +30,8 @@ export const ListUsersInputSchema = z.object({
   search: z.string().optional(),
   role: z.string().optional(),
   banned: z.boolean().optional(),
+  createdAfter: z.date().optional(),
+  createdBefore: z.date().optional(),
   limit: z.number().int().min(1).max(100).default(20),
   offset: z.number().int().nonnegative().default(0),
 });

@@ -15,18 +15,37 @@ interface ListUsersParams {
   search?: string;
   role?: string;
   banned?: boolean;
+  createdAfter?: Date;
+  createdBefore?: Date;
   limit?: number;
   offset?: number;
 }
 
 export function useAdminUsers(params: ListUsersParams = {}) {
-  const { search, role, banned, limit = 20, offset = 0 } = params;
+  const {
+    search,
+    role,
+    banned,
+    createdAfter,
+    createdBefore,
+    limit = 20,
+    offset = 0,
+  } = params;
 
   return useQuery({
     ...orpc.admin.users.queryOptions({
-      input: { search, role, banned, limit, offset },
+      input: {
+        search,
+        role,
+        banned,
+        createdAfter,
+        createdBefore,
+        limit,
+        offset,
+      },
     }),
     staleTime: 1000 * 60 * 2,
+    placeholderData: (previousData) => previousData,
   });
 }
 
