@@ -132,7 +132,7 @@ const AuthForm = <T extends FieldValues>({
 
       <Button
         type="submit"
-        disabled={form.formState.isSubmitting}
+        disabled={form.formState.isSubmitting || !form.formState.isDirty}
         className="primary-gradient pg-semibold text-light-900 hover:primary-gradient-hover min-h-10 w-full"
       >
         {form.formState.isSubmitting && (

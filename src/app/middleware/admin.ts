@@ -5,6 +5,9 @@ import { ORPCError } from "@orpc/server";
 export const adminMiddleware = base.middleware(async ({ context, next }) => {
   const sessionData = await auth.api.getSession({
     headers: context.headers,
+    query: {
+      disableCookieCache: true,
+    },
   });
 
   if (!sessionData?.session || !sessionData?.user) {

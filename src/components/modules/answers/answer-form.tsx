@@ -100,7 +100,7 @@ const AnswerForm = ({
               setAlertMessage(msg);
               setAlertOpen(true);
             }}
-            disabled={isSubmitting}
+            disabled={isSubmitting || !form.formState.isDirty}
           />
         </div>
       )}
@@ -134,7 +134,7 @@ const AnswerForm = ({
           )}
           <Button
             type="submit"
-            disabled={isSubmitting}
+            disabled={isSubmitting || !form.formState.isDirty}
             className="primary-gradient hover:primary-gradient-hover text-light-900 w-fit cursor-pointer"
           >
             {isSubmitting ? (

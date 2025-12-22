@@ -5,7 +5,6 @@ import Link from "next/link";
 import { ShieldX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
-  Card,
   CardContent,
   CardFooter,
   CardHeader,
@@ -23,51 +22,49 @@ const BannedPage = () => {
     true;
 
   return (
-    <div className="flex-center min-h-screen p-4">
-      <Card className="bg-light900_dark200 w-full max-w-md text-center">
-        <CardHeader className="flex flex-col items-center">
-          <div className="mb-4 flex size-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
-            <ShieldX className="size-8 text-red-600 dark:text-red-400" />
+    <div className="w-full max-w-md space-y-6 text-center">
+      <CardHeader className="flex flex-col items-center">
+        <div className="mb-4 flex size-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
+          <ShieldX className="size-8 text-red-600 dark:text-red-400" />
+        </div>
+        <CardTitle className="text-dark100_light900 text-2xl">
+          Account Suspended
+        </CardTitle>
+      </CardHeader>
+
+      <CardContent className="space-y-4">
+        <p className="text-dark500_light400">
+          Your account has been suspended and you cannot access this platform.
+        </p>
+
+        {reason && (
+          <div className="rounded-md bg-red-50 p-4 text-left text-sm text-red-800 dark:bg-red-900/20 dark:text-red-200">
+            <p className="font-semibold">Reason:</p>
+            <p>{reason}</p>
           </div>
-          <CardTitle className="text-dark100_light900 text-2xl">
-            Account Suspended
-          </CardTitle>
-        </CardHeader>
+        )}
 
-        <CardContent className="space-y-4">
-          <p className="text-dark500_light400">
-            Your account has been suspended and you cannot access this platform.
-          </p>
+        {error && !isBanned && (
+          <div className="rounded-md bg-yellow-50 p-4 text-left text-sm text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-200">
+            <p className="font-semibold">Error:</p>
+            <p>{error}</p>
+          </div>
+        )}
 
-          {reason && (
-            <div className="rounded-md bg-red-50 p-4 text-left text-sm text-red-800 dark:bg-red-900/20 dark:text-red-200">
-              <p className="font-semibold">Reason:</p>
-              <p>{reason}</p>
-            </div>
-          )}
+        <p className="text-dark500_light400 text-sm">
+          If you believe this is a mistake, please contact support.
+        </p>
+      </CardContent>
 
-          {error && !isBanned && (
-            <div className="rounded-md bg-yellow-50 p-4 text-left text-sm text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-200">
-              <p className="font-semibold">Error:</p>
-              <p>{error}</p>
-            </div>
-          )}
-
-          <p className="text-dark500_light400 text-sm">
-            If you believe this is a mistake, please contact support.
-          </p>
-        </CardContent>
-
-        <CardFooter className="flex justify-center">
-          <Button
-            asChild
-            variant="outline"
-            className="bg-light800_dark400 text-dark300_light700 hover:bg-light700_dark300"
-          >
-            <Link href="/login">Return to Login</Link>
-          </Button>
-        </CardFooter>
-      </Card>
+      <CardFooter className="flex justify-center">
+        <Button
+          asChild
+          variant="outline"
+          className="text-dark300_light700 light-border-2! hover:bg-light700_dark300 border-[0.1rem]"
+        >
+          <Link href="/login">Return to Login</Link>
+        </Button>
+      </CardFooter>
     </div>
   );
 };
