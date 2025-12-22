@@ -106,3 +106,11 @@ export function assignBadges(params: {
 
   return badgeCounts;
 }
+
+export function normalizeText(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[.,;:!?'"()[\]{}\\/<>@#$%^&*+=|`~_-]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}

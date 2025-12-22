@@ -16,10 +16,15 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import PendingDialog from "./pending-dialog";
+import DuplicateDialog from "./duplicate-dialog";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import TagCard from "@/components/modules/tags/tag-card";
 import { getTechDisplayName } from "@/lib/utils";
-import { useCreateQuestion, useEditQuestion } from "@/queries/question.queries";
+import {
+  useCreateQuestion,
+  useEditQuestion,
+  useCheckDuplicateQuestion,
+} from "@/queries/question.queries";
 import { FormInput, FormMarkdown } from "@/components/form";
 
 interface QuestionFormProps {
@@ -31,6 +36,13 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
   const editorRef = useRef<MDXEditorMethods>(null);
   const [editorKey, setEditorKey] = useState(0);
   const [showPendingDialog, setShowPendingDialog] = useState(false);
+  const [showDuplicateDialog, setShowDuplicateDialog] = useState(false);
+  const [duplicates, setDuplicates] = useState<
+    Array<{ id: string; title: string; matchType: "title" | "content" }>
+  >([]);
+  const [pendingFormData, setPendingFormData] = useState<z.infer<
+    typeof QuestionSchema
+  > | null>(null);
 
   const form = useForm<z.infer<typeof QuestionSchema>>({
     resolver: zodResolver(QuestionSchema),
@@ -58,9 +70,14 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
     onEditorReset: handleEditorReset,
   });
 
-  const isPending = createQuestion.isPending || editQuestion.isPending;
+  const checkDuplicate = useCheckDuplicateQuestion();
 
-  const handleSubmitQuestion = (data: z.infer<typeof QuestionSchema>) => {
+  const isPending =
+    createQuestion.isPending ||
+    editQuestion.isPending ||
+    checkDuplicate.isPending;
+
+  const submitQuestion = (data: z.infer<typeof QuestionSchema>) => {
     if (isEdit && question?.id) {
       editQuestion.mutate({
         questionId: question.id,
@@ -68,6 +85,32 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
       });
     } else {
       createQuestion.mutate(data);
+    }
+  };
+
+  const handleSubmitQuestion = async (data: z.infer<typeof QuestionSchema>) => {
+    // Check for duplication
+    const result = await checkDuplicate.mutateAsync({
+      title: data.title,
+      content: data.content,
+      excludeQuestionId: isEdit ? question?.id : undefined,
+    });
+
+    if (result.hasDuplicate) {
+      setDuplicates(result.duplicates);
+      setPendingFormData(data);
+      setShowDuplicateDialog(true);
+    } else {
+      submitQuestion(data);
+    }
+  };
+
+  const handleSubmitAnyway = () => {
+    if (pendingFormData) {
+      submitQuestion(pendingFormData);
+      setShowDuplicateDialog(false);
+      setPendingFormData(null);
+      setDuplicates([]);
     }
   };
 
@@ -238,6 +281,14 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
       <PendingDialog
         open={showPendingDialog}
         onOpenChange={setShowPendingDialog}
+      />
+
+      <DuplicateDialog
+        open={showDuplicateDialog}
+        onOpenChange={setShowDuplicateDialog}
+        duplicates={duplicates}
+        onSubmitAnyway={handleSubmitAnyway}
+        isSubmitting={createQuestion.isPending || editQuestion.isPending}
       />
     </>
   );

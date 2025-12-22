@@ -12,6 +12,7 @@ import {
   deleteQuestion as deleteQuestionDAL,
   getUserPendingQuestions as getUserPendingQuestionsDAL,
   cancelPendingQuestion as cancelPendingQuestionDAL,
+  checkDuplicateQuestion as checkDuplicateQuestionDAL,
 } from "@/app/server/question/question.dal";
 import {
   CreateQuestionSchema,
@@ -22,6 +23,8 @@ import {
   QuestionSchema,
   TagSchema,
   TopQuestionsOutputSchema,
+  CheckDuplicateInputSchema,
+  CheckDuplicateOutputSchema,
 } from "@/app/server/question/question.dto";
 import { QueryParamsSchema } from "@/lib/validations";
 import { createInteraction } from "../interaction/interaction.dal";
@@ -252,4 +255,18 @@ export const cancelPendingQuestion = authorized
     });
 
     return { success: true };
+  });
+
+export const checkDuplicateQuestion = authorized
+  .use(standardSecurityMiddleware)
+  .route({
+    method: "POST",
+    path: "/question/check-duplicate",
+    summary: "Check for Duplicate Questions",
+    tags: ["Questions"],
+  })
+  .input(CheckDuplicateInputSchema)
+  .output(CheckDuplicateOutputSchema)
+  .handler(async ({ input }) => {
+    return await checkDuplicateQuestionDAL(input);
   });

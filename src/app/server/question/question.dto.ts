@@ -84,6 +84,24 @@ export const PendingQuestionsSchema = z.array(
   })
 );
 
+// Duplicate Check Schemas
+export const CheckDuplicateInputSchema = z.object({
+  title: z.string(),
+  content: z.string(),
+  excludeQuestionId: z.string().optional(),
+});
+
+export const CheckDuplicateOutputSchema = z.object({
+  hasDuplicate: z.boolean(),
+  duplicates: z.array(
+    z.object({
+      id: z.string(),
+      title: z.string(),
+      matchType: z.enum(["title", "content"]),
+    })
+  ),
+});
+
 // Types
 export type Author = z.infer<typeof AuthorSchema>;
 export type TagDTO = z.infer<typeof TagSchema>;
@@ -95,3 +113,5 @@ export type EditQuestionInput = z.infer<typeof EditQuestionSchema>;
 export type QuestionListOutput = z.infer<typeof QuestionListOutputSchema>;
 export type TopQuestionsOutput = z.infer<typeof TopQuestionsOutputSchema>;
 export type PendingQuestionDTO = z.infer<typeof PendingQuestionsSchema>;
+export type CheckDuplicateInput = z.infer<typeof CheckDuplicateInputSchema>;
+export type CheckDuplicateOutput = z.infer<typeof CheckDuplicateOutputSchema>;

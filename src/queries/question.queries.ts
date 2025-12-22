@@ -102,3 +102,7 @@ export function useCancelPendingQuestion() {
     })
   );
 }
+
+export function useCheckDuplicateQuestion() {
+  return useMutation(orpc.question.checkDuplicate.mutationOptions());
+}

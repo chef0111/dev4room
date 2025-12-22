@@ -43,7 +43,7 @@ const OTPForm = ({
 
     if (response?.handled) {
       form.reset();
-      router.refresh();
+      router.push("/");
       return;
     }
 

@@ -21,7 +21,6 @@ const VerifyEmail = () => {
   const email = searchParams.get("email") as string;
   const type = searchParams.get("type") as EmailOtpType;
   const [isResending, setIsResending] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
   const [countdown, setCountdown] = useState(RESEND_COOLDOWN);
 
   useEffect(() => {
@@ -60,15 +59,10 @@ const VerifyEmail = () => {
             toast.success("Success", {
               description: "Email verified! Logging you in...",
             });
-            router.push("/");
             return { success: true, handled: true };
           }
         }
-        // Fallback to login page if auto sign-in fails
-        setSuccessMessage("Logged in successfully!");
-        router.push("/login");
       } else if (success && type === "forget-password") {
-        setSuccessMessage("Email verified successfully!");
         router.push(
           `/reset-password?email=${encodeURIComponent(email)}&id=${encodeURIComponent(otp)}`
         );
@@ -131,7 +125,10 @@ const VerifyEmail = () => {
         </p>
       </div>
 
-      <OTPForm onSubmit={handleVerifyEmail} successMessage={successMessage} />
+      <OTPForm
+        onSubmit={handleVerifyEmail}
+        successMessage="Email verified successfully!"
+      />
 
       <div className="flex-center text-dark500_light400 w-full px-0">
         Didn&apos;t receive the code?

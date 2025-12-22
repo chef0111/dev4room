@@ -24,6 +24,7 @@ import {
   CreateQuestionInput,
   EditQuestionInput,
 } from "./question.dto";
+import { normalizeText } from "@/lib/utils";
 
 const REPUTATION_THRESHOLD = 1000;
 const MAX_PENDING_QUESTIONS = 3;
@@ -539,6 +540,61 @@ export class QuestionDAL {
 
     await db.delete(question).where(eq(question.id, questionId));
   }
+
+  static async checkDuplicate(params: {
+    title: string;
+    content: string;
+    excludeQuestionId?: string;
+  }): Promise<{
+    hasDuplicate: boolean;
+    duplicates: Array<{
+      id: string;
+      title: string;
+      matchType: "title" | "content";
+    }>;
+  }> {
+    const normalizedTitle = normalizeText(params.title);
+    const normalizedContent = normalizeText(params.content);
+
+    // Query all approved questions
+    const allQuestions = await db
+      .select({
+        id: question.id,
+        title: question.title,
+        content: question.content,
+      })
+      .from(question)
+      .where(
+        params.excludeQuestionId
+          ? and(
+              eq(question.status, "approved"),
+              sql`${question.id} != ${params.excludeQuestionId}`
+            )
+          : eq(question.status, "approved")
+      );
+
+    const duplicates: Array<{
+      id: string;
+      title: string;
+      matchType: "title" | "content";
+    }> = [];
+
+    for (const q of allQuestions) {
+      const qNormalizedTitle = normalizeText(q.title);
+      const qNormalizedContent = normalizeText(q.content);
+
+      if (qNormalizedTitle === normalizedTitle) {
+        duplicates.push({ id: q.id, title: q.title, matchType: "title" });
+      } else if (qNormalizedContent === normalizedContent) {
+        duplicates.push({ id: q.id, title: q.title, matchType: "content" });
+      }
+    }
+
+    return {
+      hasDuplicate: duplicates.length > 0,
+      duplicates: duplicates.slice(0, 5), // Limit to 5 duplicates
+    };
+  }
 }
 
 export const getQuestions = (
@@ -564,3 +620,6 @@ export const getUserPendingQuestions = (
 export const cancelPendingQuestion = (
   ...args: Parameters<typeof QuestionDAL.cancelPendingQuestion>
 ) => QuestionDAL.cancelPendingQuestion(...args);
+export const checkDuplicateQuestion = (
+  ...args: Parameters<typeof QuestionDAL.checkDuplicate>
+) => QuestionDAL.checkDuplicate(...args);

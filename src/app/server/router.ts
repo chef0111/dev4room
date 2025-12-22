@@ -16,6 +16,7 @@ import {
   deleteQuestion,
   getUserPendingQuestions,
   cancelPendingQuestion,
+  checkDuplicateQuestion,
 } from "./question";
 import {
   listAnswers,
@@ -62,6 +63,7 @@ export const router = {
     delete: deleteQuestion,
     pending: getUserPendingQuestions,
     cancelPending: cancelPendingQuestion,
+    checkDuplicate: checkDuplicateQuestion,
   },
   answer: {
     list: listAnswers,
