@@ -49,6 +49,20 @@ export const listUsers = authorized
   .input(ListUsersInputSchema)
   .output(ListUsersOutputSchema)
   .handler(async ({ input, context }) => {
+    let filterField: string | undefined;
+    let filterValue: string | boolean | undefined;
+
+    if (input.banned !== undefined) {
+      filterField = "banned";
+      filterValue = input.banned;
+    } else if (input.emailVerified !== undefined) {
+      filterField = "emailVerified";
+      filterValue = input.emailVerified;
+    } else if (input.role) {
+      filterField = "role";
+      filterValue = input.role;
+    }
+
     const response = await auth.api.listUsers({
       headers: context.headers,
       query: {
@@ -59,11 +73,7 @@ export const listUsers = authorized
         offset: input.offset,
         sortBy: "createdAt",
         sortDirection: "desc" as const,
-        ...(input.role && { filterField: "role", filterValue: input.role }),
-        ...(input.banned !== undefined && {
-          filterField: "banned",
-          filterValue: input.banned,
-        }),
+        ...(filterField && { filterField, filterValue }),
       },
     });
 
@@ -86,6 +96,14 @@ export const banUser = authorized
   .input(BanUserInputSchema)
   .output(z.object({ success: z.boolean() }))
   .handler(async ({ input, context }) => {
+    await auth.api.setRole({
+      headers: context.headers,
+      body: {
+        userId: input.userId,
+        role: "user",
+      },
+    });
+
     await auth.api.banUser({
       headers: context.headers,
       body: {

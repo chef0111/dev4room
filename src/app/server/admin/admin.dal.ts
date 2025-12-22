@@ -33,6 +33,7 @@ export interface UserListItem {
   name: string;
   username: string;
   email: string;
+  emailVerified: boolean;
   role: string | null;
   banned: boolean | null;
   banReason: string | null;
@@ -167,6 +168,7 @@ export class AdminDAL {
       id: string;
       name: string;
       email: string;
+      emailVerified: boolean;
       role?: string | null;
       banned?: boolean | null;
       banReason?: string | null;
@@ -197,6 +199,7 @@ export class AdminDAL {
         name: u.name,
         username: extra?.username ?? "",
         email: u.email,
+        emailVerified: u.emailVerified,
         role: u.role ?? null,
         banned: u.banned ?? null,
         banReason: u.banReason ?? null,
