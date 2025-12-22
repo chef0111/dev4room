@@ -7,6 +7,7 @@ import TagCard from "@/components/modules/tags/tag-card";
 import { Metric } from "@/components/shared";
 import { Card } from "@/components/ui/card";
 import EditDelete from "@/components/shared/edit-delete";
+import UserAvatar from "../profile/user-avatar";
 
 interface QuestionCardProps {
   question: Question;
@@ -53,15 +54,22 @@ const QuestionCard = ({
       <div className="my-3 flex w-full flex-wrap gap-2">{renderTags}</div>
 
       <div className="flex-between mt-6 w-full flex-wrap gap-3">
-        <Metric
-          href={`/profile/${author.id}` as Route}
-          imgUrl={author.image ?? ""}
-          alt={author.name}
-          value={author.name}
-          title={`• asked ${getTimeStamp(createdAt)}`}
-          textStyles="body-medium text-dark400_light700"
-          titleStyles="max-sm:hidden"
-        />
+        <div className="flex-center gap-1">
+          <UserAvatar
+            id={author.id}
+            name={author.name}
+            image={author.image ?? ""}
+            className="size-5"
+            fallbackClassName="text-xs"
+          />
+
+          <Link href={`/profile/${author.id}`}>
+            <p className="small-regular text-dark300_light700">
+              <span className="small-medium">{author.name}</span> • asked{" "}
+              {getTimeStamp(createdAt)}
+            </p>
+          </Link>
+        </div>
 
         <div className="flex items-center gap-3 max-sm:flex-wrap max-sm:justify-start">
           <Metric

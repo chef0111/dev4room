@@ -24,7 +24,7 @@ const Metric = ({
   imgStyles,
   titleStyles,
 }: MetricsProps) => {
-  const avatar = imgUrl || "/images/default-avatar.png";
+  const avatar = imgUrl || "/images/brand.svg";
   const content = (
     <div className="flex items-center gap-1">
       <Image

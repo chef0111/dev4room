@@ -54,11 +54,7 @@ const TagQuestions = async ({ params, searchParams }: RouteParams) => {
       </section>
 
       <section className="mt-10 flex justify-between gap-4 max-sm:flex-col sm:items-center">
-        <LocalSearch
-          route={`/tags/${id}`}
-          placeholder="Search questions..."
-          className="flex-1"
-        />
+        <LocalSearch placeholder="Search questions..." className="flex-1" />
 
         <Filter
           filters={TagQuestionsFilters}

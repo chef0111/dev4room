@@ -12,15 +12,11 @@ import { toast } from "sonner";
 import {
   useAdminPendingQuestions,
   useApproveQuestion,
-  useRejectQuestion,
 } from "@/queries/admin.queries";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
 import {
   Dialog,
   DialogContent,
@@ -28,17 +24,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import QuestionCard from "@/components/modules/questions/question-card";
+import { RejectQuestionDialog } from "./reject-question-dialog";
+import WaitlistFallback from "./waitlist-fallback";
+import WaitlistEmpty from "./waitlist-empty";
 
 interface PendingQuestion {
   id: string;
@@ -59,7 +48,6 @@ interface PendingQuestion {
 export function PendingQuestions() {
   const { data: questions, isLoading } = useAdminPendingQuestions();
   const approveMutation = useApproveQuestion();
-  const rejectMutation = useRejectQuestion();
 
   const [activeTab, setActiveTab] = useState<"all" | "pending" | "rejected">(
     "all"
@@ -69,7 +57,6 @@ export function PendingQuestions() {
   const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
   const [questionToReject, setQuestionToReject] =
     useState<PendingQuestion | null>(null);
-  const [rejectReason, setRejectReason] = useState("");
 
   const filteredQuestions = useMemo(() => {
     if (!questions) return [];
@@ -91,73 +78,19 @@ export function PendingQuestions() {
     }
   };
 
-  const handleReject = async () => {
-    if (!questionToReject || !rejectReason.trim()) return;
-    try {
-      await rejectMutation.mutateAsync({
-        questionId: questionToReject.id,
-        reason: rejectReason,
-      });
-      toast.success(`Question "${questionToReject.title}" rejected`);
-      setRejectDialogOpen(false);
-      setQuestionToReject(null);
-      setRejectReason("");
-    } catch {
-      toast.error("Failed to reject question");
-    }
-  };
-
   const openRejectDialog = (question: PendingQuestion) => {
     setQuestionToReject(question);
-    setRejectReason("");
     setRejectDialogOpen(true);
   };
 
-  if (isLoading) {
-    return (
-      <Card className="mx-4 lg:mx-6">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <IconClock className="size-5" />
-            Pending Questions
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="flex items-center gap-4">
-                <Skeleton className="h-10 w-10 rounded-full" />
-                <div className="flex-1 space-y-2">
-                  <Skeleton className="h-4 w-3/4" />
-                  <Skeleton className="h-3 w-1/2" />
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
+  const closeRejectDialog = () => {
+    setRejectDialogOpen(false);
+    setQuestionToReject(null);
+  };
 
-  if (!questions || questions.length === 0) {
-    return (
-      <Card className="mx-4 lg:mx-6">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <IconClock className="size-5" />
-            Pending Questions
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-muted-foreground flex flex-col items-center justify-center py-8">
-            <IconCheck className="mb-2 size-12 text-green-500" />
-            <p className="text-lg font-medium">All caught up!</p>
-            <p className="text-sm">No pending questions to review.</p>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
+  if (isLoading) return <WaitlistFallback />;
+
+  if (!questions || questions.length === 0) return <WaitlistEmpty />;
 
   return (
     <>
@@ -242,7 +175,6 @@ export function PendingQuestions() {
                               variant="destructive"
                               size="sm"
                               onClick={() => openRejectDialog(question)}
-                              disabled={rejectMutation.isPending}
                             >
                               <IconBan className="size-4" />
                               <span className="sr-only sm:not-sr-only sm:ml-1">
@@ -328,42 +260,11 @@ export function PendingQuestions() {
         </DialogContent>
       </Dialog>
 
-      {/* Reject Dialog with Reason Input */}
-      <AlertDialog open={rejectDialogOpen} onOpenChange={setRejectDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Reject Question</AlertDialogTitle>
-            <AlertDialogDescription>
-              Provide a reason for rejecting &quot;{questionToReject?.title}
-              &quot;. The author will see this reason and can edit their
-              question.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <div className="py-4">
-            <Label htmlFor="reject-reason">Rejection Reason</Label>
-            <Textarea
-              id="reject-reason"
-              placeholder="Explain why this question is being rejected..."
-              value={rejectReason}
-              onChange={(e) => setRejectReason(e.target.value)}
-              className="mt-2"
-              rows={4}
-            />
-          </div>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setRejectReason("")}>
-              Cancel
-            </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleReject}
-              disabled={!rejectReason.trim() || rejectMutation.isPending}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              Reject Question
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <RejectQuestionDialog
+        open={rejectDialogOpen}
+        onOpenChange={closeRejectDialog}
+        question={questionToReject}
+      />
     </>
   );
 }

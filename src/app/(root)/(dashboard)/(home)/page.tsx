@@ -35,7 +35,6 @@ const HomePage = ({ searchParams }: RouteParams) => {
 
       <section className="mt-10">
         <LocalSearch
-          route="/"
           placeholder="Search a question here..."
           className="flex-1"
         />

@@ -1,9 +1,8 @@
 "use client";
 
+import { useQueryStates, parseAsString, parseAsInteger } from "nuqs";
 import { useOptimistic } from "react";
-import { Route } from "next";
 import { cn } from "@/lib/utils";
-import { useRouter, useSearchParams } from "next/navigation";
 import {
   Select,
   SelectContent,
@@ -12,7 +11,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { formUrlQuery } from "@/lib/url";
 import { ListFilter } from "lucide-react";
 import { useFilterTransition } from "@/context/filter-provider";
 
@@ -28,22 +26,29 @@ interface FilterProps {
 }
 
 const Filter = ({ filters, className, containerClassName }: FilterProps) => {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const filterParams = searchParams.get("filter") ?? "";
-  const [filterValue, setFilterValue] = useOptimistic(filterParams);
   const { startTransition } = useFilterTransition();
 
-  const handleUpdateFilter = (value: string) => {
-    const newUrl = formUrlQuery({
-      params: searchParams.toString(),
-      key: "filter",
-      value,
-    });
+  const [{ filter }, setParams] = useQueryStates(
+    {
+      filter: parseAsString.withDefault(""),
+      page: parseAsInteger.withDefault(1),
+    },
+    {
+      shallow: false,
+      scroll: false,
+      throttleMs: 100,
+    }
+  );
 
+  const [filterValue, setFilterValue] = useOptimistic(filter);
+
+  const handleUpdateFilter = (value: string) => {
     startTransition(() => {
       setFilterValue(value);
-      router.push(newUrl as Route, { scroll: false });
+      setParams({
+        filter: value || null,
+        page: 1,
+      });
     });
   };
 

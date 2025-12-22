@@ -3,9 +3,6 @@ import { defaultStatements, adminAc } from "better-auth/plugins/admin/access";
 
 /**
  * Custom permissions for the Dev4Room platform.
- *
- * This defines all available resources and their actions for role-based access control.
- * Use `as const` to ensure TypeScript infers the type correctly.
  */
 export const statement = {
   ...defaultStatements,

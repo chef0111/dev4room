@@ -231,7 +231,7 @@ export const approveQuestion = admin
     method: "POST",
     path: "/admin/questions/{questionId}/approve",
     summary: "Approve Pending Question (Admin Only)",
-    tags: ["Admin"],
+    tags: ["admin", "pendingQuestions"],
   })
   .input(z.object({ questionId: z.string() }))
   .output(z.object({ success: z.boolean() }))
@@ -247,7 +247,7 @@ export const rejectQuestion = admin
     method: "POST",
     path: "/admin/questions/{questionId}/reject",
     summary: "Reject Pending Question (Admin Only)",
-    tags: ["Admin"],
+    tags: ["admin", "pendingQuestions"],
   })
   .input(
     z.object({ questionId: z.string(), reason: z.string().min(1).max(500) })

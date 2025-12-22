@@ -219,7 +219,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
           <div className="my-6 flex justify-end">
             <Button
               type="submit"
-              disabled={isPending}
+              disabled={isPending || !form.formState.isDirty}
               className="primary-gradient hover:primary-gradient-hover text-light-900! cursor-pointer transition-colors"
             >
               {isPending ? (

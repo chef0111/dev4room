@@ -117,12 +117,16 @@ export function useAdminPendingQuestions() {
 export function useApproveQuestion() {
   const queryClient = useQueryClient();
 
+  const pendingQuestionsQueryKey = orpc.admin.pendingQuestions.queryOptions({
+    input: undefined,
+  }).queryKey;
+
   return useMutation({
     mutationFn: (questionId: string) =>
       client.admin.approveQuestion({ questionId }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ["admin", "pendingQuestions"],
+        queryKey: pendingQuestionsQueryKey,
       });
     },
   });
@@ -131,12 +135,16 @@ export function useApproveQuestion() {
 export function useRejectQuestion() {
   const queryClient = useQueryClient();
 
+  const pendingQuestionsQueryKey = orpc.admin.pendingQuestions.queryOptions({
+    input: undefined,
+  }).queryKey;
+
   return useMutation({
     mutationFn: (params: { questionId: string; reason: string }) =>
       client.admin.rejectQuestion(params),
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ["admin", "pendingQuestions"],
+        queryKey: pendingQuestionsQueryKey,
       });
     },
   });

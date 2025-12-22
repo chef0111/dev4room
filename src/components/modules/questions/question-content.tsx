@@ -35,16 +35,17 @@ const QuestionContent = async ({
     .catch(() => ({ data: undefined, error: true }));
 
   if (!result.data) return notFound();
-  if (
-    (result.data.status === "approved" && isPending) ||
-    (result.data.status === "pending" && !isPending)
-  ) {
-    return notFound();
-  }
 
   const question = result.data;
   const { author, createdAt, answers, views, title, content, tags } = question;
   const isAuthor = session?.user?.id === author.id.toString();
+
+  if (
+    (question.status === "approved" && isPending) ||
+    (question.status !== "approved" && (!isPending || !isAuthor))
+  ) {
+    return notFound();
+  }
 
   if (!isPending) {
     after(async () => {
