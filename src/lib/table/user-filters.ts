@@ -128,7 +128,6 @@ export function parseAdvancedFilters<TData>(
         banned = false;
         emailVerified = true;
       } else if (status === "unverified") {
-        banned = false;
         emailVerified = false;
       }
     } else if (filter.id === "createdAt") {
@@ -158,7 +157,6 @@ export function parseBasicFilters(
       banned = false;
       emailVerified = true;
     } else if (status === "unverified") {
-      banned = false;
       emailVerified = false;
     }
   }

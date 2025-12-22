@@ -10,7 +10,7 @@ import {
   getPendingQuestions,
   approveQuestion as approveQuestionDAL,
   rejectQuestion as rejectQuestionDAL,
-  appendFields,
+  getUsers,
 } from "./admin.dal";
 import {
   PlatformStatsSchema,
@@ -48,41 +48,17 @@ export const listUsers = authorized
   })
   .input(ListUsersInputSchema)
   .output(ListUsersOutputSchema)
-  .handler(async ({ input, context }) => {
-    let filterField: string | undefined;
-    let filterValue: string | boolean | undefined;
-
-    if (input.banned !== undefined) {
-      filterField = "banned";
-      filterValue = input.banned;
-    } else if (input.emailVerified !== undefined) {
-      filterField = "emailVerified";
-      filterValue = input.emailVerified;
-    } else if (input.role) {
-      filterField = "role";
-      filterValue = input.role;
-    }
-
-    const response = await auth.api.listUsers({
-      headers: context.headers,
-      query: {
-        searchValue: input.search,
-        searchField: "name" as const,
-        searchOperator: "contains" as const,
-        limit: input.limit,
-        offset: input.offset,
-        sortBy: "createdAt",
-        sortDirection: "desc" as const,
-        ...(filterField && { filterField, filterValue }),
-      },
+  .handler(async ({ input }) => {
+    return await getUsers({
+      search: input.search,
+      role: input.role,
+      banned: input.banned,
+      emailVerified: input.emailVerified,
+      createdAfter: input.createdAfter,
+      createdBefore: input.createdBefore,
+      limit: input.limit,
+      offset: input.offset,
     });
-
-    const appUsers = await appendFields(response.users);
-
-    return {
-      users: appUsers,
-      total: response.total,
-    };
   });
 
 export const banUser = authorized
