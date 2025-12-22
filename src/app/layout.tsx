@@ -54,12 +54,12 @@ const RootLayout: React.FC<Props> = ({ children }: Props) => {
               "@context": "https://schema.org",
               "@type": "WebSite",
               name: "Dev4Room",
-              url: "https://dev4room.com",
+              url: "https://dev4room.pro",
               description:
                 "Post, search, and filter programming questions from the Dev4Room community. Find solutions, share knowledge, and ask your own questions.",
               potentialAction: {
                 "@type": "SearchAction",
-                target: "https://dev4room.com/?query={search_term_string}",
+                target: "https://dev4room.pro/?query={search_term_string}",
                 "query-input": "required name=search_term_string",
               },
             }),
