@@ -7,6 +7,7 @@ import {
   EMPTY_IMAGE,
   ERROR_IMAGE,
 } from "@/common/constants/states";
+import { cleanErrorMessage } from "@/errors/error-utils";
 import { Route } from "next";
 
 interface DataRendererProps<T> {
@@ -93,16 +94,15 @@ const DataRenderer = <T,>({
   empty = DEFAULT_EMPTY,
   render,
 }: DataRendererProps<T>) => {
-  const errorMessage = error?.details
-    ? JSON.stringify(error.details, null, 2)
-    : DEFAULT_ERROR.message;
+  // Format error messages to prevent showing raw technical errors
+  const formattedError = error ? cleanErrorMessage(error) : null;
 
   if (!success) {
     return (
       <SkateSkeleton
         image={ERROR_IMAGE}
-        title={error?.message || DEFAULT_ERROR.title}
-        message={errorMessage}
+        title={formattedError?.title || DEFAULT_ERROR.title}
+        message={formattedError?.message || DEFAULT_ERROR.message}
         button={DEFAULT_ERROR.button}
       />
     );
