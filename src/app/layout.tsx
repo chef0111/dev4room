@@ -47,22 +47,63 @@ const RootLayout: React.FC<Props> = ({ children }: Props) => {
         />
         <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
 
+        <link rel="icon" href="/favicon.ico" />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="/favicon-32x32.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/favicon-16x16.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="/apple-touch-icon.png"
+        />
+        <link rel="manifest" href="/site.webmanifest" />
+        <meta name="msapplication-TileColor" content="#ffffff" />
+        <meta name="theme-color" content="#ffffff" />
+        <link rel="canonical" href="https://dev4room.pro/" />
+
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "WebSite",
-              name: "Dev4Room",
-              url: "https://dev4room.pro",
-              description:
-                "Post, search, and filter programming questions from the Dev4Room community. Find solutions, share knowledge, and ask your own questions.",
-              potentialAction: {
-                "@type": "SearchAction",
-                target: "https://dev4room.pro/?query={search_term_string}",
-                "query-input": "required name=search_term_string",
+            __html: JSON.stringify([
+              {
+                "@context": "https://schema.org",
+                "@type": "Organization",
+                name: "Dev4Room",
+                url: "https://dev4room.pro",
+                logo: "https://dev4room.pro/images/brand.png",
+                sameAs: [],
               },
-            }),
+              {
+                "@context": "https://schema.org",
+                "@type": "WebSite",
+                name: "Dev4Room",
+                url: "https://dev4room.pro",
+                description:
+                  "Post, search, and filter programming questions from the Dev4Room community. Find solutions, share knowledge, and ask your own questions.",
+                publisher: {
+                  "@type": "Organization",
+                  name: "Dev4Room",
+                  logo: {
+                    "@type": "ImageObject",
+                    url: "https://dev4room.pro/images/brand.png",
+                  },
+                },
+                potentialAction: {
+                  "@type": "SearchAction",
+                  target: "https://dev4room.pro/?query={search_term_string}",
+                  "query-input": "required name=search_term_string",
+                },
+              },
+            ]),
           }}
         />
       </head>
