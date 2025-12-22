@@ -162,7 +162,7 @@ export class AdminDAL {
     };
   }
 
-  static async enrichUsersWithAppData(
+  static async appendFields(
     users: Array<{
       id: string;
       name: string;
@@ -177,7 +177,7 @@ export class AdminDAL {
 
     const userIds = users.map((u) => u.id);
 
-    const appData = await db
+    const field = await db
       .select({
         id: user.id,
         username: user.username,
@@ -188,10 +188,10 @@ export class AdminDAL {
       .from(user)
       .where(inArray(user.id, userIds));
 
-    const appDataMap = new Map(appData.map((d) => [d.id, d]));
+    const fieldMap = new Map(field.map((d) => [d.id, d]));
 
     return users.map((u) => {
-      const extra = appDataMap.get(u.id);
+      const extra = fieldMap.get(u.id);
       return {
         id: u.id,
         name: u.name,
@@ -393,9 +393,9 @@ export class AdminDAL {
 }
 
 export const getPlatformStats = () => AdminDAL.getPlatformStats();
-export const enrichUsersWithAppData = (
-  ...args: Parameters<typeof AdminDAL.enrichUsersWithAppData>
-) => AdminDAL.enrichUsersWithAppData(...args);
+export const appendFields = (
+  ...args: Parameters<typeof AdminDAL.appendFields>
+) => AdminDAL.appendFields(...args);
 export const getGrowthAnalytics = (
   ...args: Parameters<typeof AdminDAL.getGrowthAnalytics>
 ) => AdminDAL.getGrowthAnalytics(...args);

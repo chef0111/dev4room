@@ -10,7 +10,7 @@ import {
   getPendingQuestions,
   approveQuestion as approveQuestionDAL,
   rejectQuestion as rejectQuestionDAL,
-  enrichUsersWithAppData,
+  appendFields,
 } from "./admin.dal";
 import {
   PlatformStatsSchema,
@@ -67,10 +67,10 @@ export const listUsers = authorized
       },
     });
 
-    const usersWithAppData = await enrichUsersWithAppData(response.users);
+    const appUsers = await appendFields(response.users);
 
     return {
-      users: usersWithAppData,
+      users: appUsers,
       total: response.total,
     };
   });
@@ -93,6 +93,15 @@ export const banUser = authorized
         banReason: input.reason,
       },
     });
+
+    // Revoke all sessions to force immediate logout
+    await auth.api.revokeUserSessions({
+      headers: context.headers,
+      body: {
+        userId: input.userId,
+      },
+    });
+
     revalidatePath("/dashboard");
     return { success: true };
   });
