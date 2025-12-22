@@ -8,18 +8,7 @@ import {
   tagQuestion,
   question,
 } from "@/database/schema";
-import {
-  count,
-  gte,
-  eq,
-  and,
-  lt,
-  like,
-  or,
-  desc,
-  sql,
-  inArray,
-} from "drizzle-orm";
+import { count, gte, eq, and, lt, desc, sql, inArray, or } from "drizzle-orm";
 
 export interface PlatformStatsResult {
   totalUsers: number;
@@ -51,16 +40,6 @@ export interface UserListItem {
   questionCount: number;
   answerCount: number;
   createdAt: Date;
-}
-
-export interface ListUsersParams {
-  search?: string;
-  role?: string;
-  banned?: boolean;
-  createdAfter?: Date;
-  createdBefore?: Date;
-  limit: number;
-  offset: number;
 }
 
 export class AdminDAL {
@@ -183,103 +162,50 @@ export class AdminDAL {
     };
   }
 
-  static async listAllUsers(
-    params: ListUsersParams
-  ): Promise<{ users: UserListItem[]; total: number }> {
-    const conditions = [];
+  static async appendFields(
+    users: Array<{
+      id: string;
+      name: string;
+      email: string;
+      role?: string | null;
+      banned?: boolean | null;
+      banReason?: string | null;
+      createdAt: Date;
+    }>
+  ): Promise<UserListItem[]> {
+    if (users.length === 0) return [];
 
-    if (params.search) {
-      conditions.push(
-        or(
-          like(user.name, `%${params.search}%`),
-          like(user.email, `%${params.search}%`),
-          like(user.username, `%${params.search}%`)
-        )
-      );
-    }
+    const userIds = users.map((u) => u.id);
 
-    if (params.role) {
-      if (params.role === "user") {
-        conditions.push(or(eq(user.role, "user"), sql`${user.role} IS NULL`));
-      } else {
-        conditions.push(eq(user.role, params.role));
-      }
-    }
-
-    if (params.banned !== undefined) {
-      conditions.push(eq(user.banned, params.banned));
-    }
-
-    if (params.createdAfter) {
-      conditions.push(gte(user.createdAt, params.createdAfter));
-    }
-
-    if (params.createdBefore) {
-      conditions.push(lt(user.createdAt, params.createdBefore));
-    }
-
-    const where = conditions.length > 0 ? and(...conditions) : undefined;
-
-    const [usersData, totalCount] = await Promise.all([
-      db
-        .select({
-          id: user.id,
-          name: user.name,
-          username: user.username,
-          email: user.email,
-          role: user.role,
-          banned: user.banned,
-          banReason: user.banReason,
-          reputation: user.reputation,
-          questionCount: sql<number>`(SELECT COUNT(*)::int FROM "question" WHERE "question"."author_id" = "user"."id" AND "question"."status" != 'pending')`,
-          answerCount: sql<number>`(SELECT COUNT(*)::int FROM "answer" WHERE "answer"."author_id" = "user"."id")`,
-          createdAt: user.createdAt,
-        })
-        .from(user)
-        .where(where)
-        .orderBy(desc(user.createdAt))
-        .limit(params.limit)
-        .offset(params.offset),
-      db.select({ count: count() }).from(user).where(where),
-    ]);
-
-    return {
-      users: usersData,
-      total: totalCount[0]?.count ?? 0,
-    };
-  }
-
-  static async banUserById(userId: string, reason: string): Promise<void> {
-    await db
-      .update(user)
-      .set({
-        banned: true,
-        banReason: reason,
-        role: null,
+    const field = await db
+      .select({
+        id: user.id,
+        username: user.username,
+        reputation: user.reputation,
+        questionCount: sql<number>`(SELECT COUNT(*)::int FROM "question" WHERE "question"."author_id" = "user"."id" AND "question"."status" != 'pending')`,
+        answerCount: sql<number>`(SELECT COUNT(*)::int FROM "answer" WHERE "answer"."author_id" = "user"."id")`,
       })
-      .where(eq(user.id, userId));
-  }
+      .from(user)
+      .where(inArray(user.id, userIds));
 
-  static async unbanUserById(userId: string): Promise<void> {
-    await db
-      .update(user)
-      .set({
-        banned: false,
-        banReason: null,
-        banExpires: null,
-      })
-      .where(eq(user.id, userId));
-  }
+    const fieldMap = new Map(field.map((d) => [d.id, d]));
 
-  static async updateUserRole(
-    userId: string,
-    role: string | null
-  ): Promise<void> {
-    await db.update(user).set({ role }).where(eq(user.id, userId));
-  }
-
-  static async deleteUserById(userId: string): Promise<void> {
-    await db.delete(user).where(eq(user.id, userId));
+    return users.map((u) => {
+      const extra = fieldMap.get(u.id);
+      return {
+        id: u.id,
+        name: u.name,
+        username: extra?.username ?? "",
+        email: u.email,
+        role: u.role ?? null,
+        banned: u.banned ?? null,
+        banReason: u.banReason ?? null,
+        reputation: extra?.reputation ?? 0,
+        questionCount: extra?.questionCount ?? 0,
+        answerCount: extra?.answerCount ?? 0,
+        createdAt: u.createdAt,
+      };
+    });
   }
 
   static async getGrowthAnalytics(days: number = 90): Promise<
@@ -466,13 +392,17 @@ export class AdminDAL {
   }
 }
 
-export const getPlatformStats = AdminDAL.getPlatformStats.bind(AdminDAL);
-export const listAllUsers = AdminDAL.listAllUsers.bind(AdminDAL);
-export const banUserById = AdminDAL.banUserById.bind(AdminDAL);
-export const unbanUserById = AdminDAL.unbanUserById.bind(AdminDAL);
-export const updateUserRole = AdminDAL.updateUserRole.bind(AdminDAL);
-export const deleteUserById = AdminDAL.deleteUserById.bind(AdminDAL);
-export const getGrowthAnalytics = AdminDAL.getGrowthAnalytics.bind(AdminDAL);
-export const getPendingQuestions = AdminDAL.getPendingQuestions.bind(AdminDAL);
-export const approveQuestion = AdminDAL.approveQuestion.bind(AdminDAL);
-export const rejectQuestion = AdminDAL.rejectQuestion.bind(AdminDAL);
+export const getPlatformStats = () => AdminDAL.getPlatformStats();
+export const appendFields = (
+  ...args: Parameters<typeof AdminDAL.appendFields>
+) => AdminDAL.appendFields(...args);
+export const getGrowthAnalytics = (
+  ...args: Parameters<typeof AdminDAL.getGrowthAnalytics>
+) => AdminDAL.getGrowthAnalytics(...args);
+export const getPendingQuestions = () => AdminDAL.getPendingQuestions();
+export const approveQuestion = (
+  ...args: Parameters<typeof AdminDAL.approveQuestion>
+) => AdminDAL.approveQuestion(...args);
+export const rejectQuestion = (
+  ...args: Parameters<typeof AdminDAL.rejectQuestion>
+) => AdminDAL.rejectQuestion(...args);

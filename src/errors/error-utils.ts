@@ -4,6 +4,8 @@ export type ErrorType =
   | "auth-error"
   | "network-error"
   | "permission-error"
+  | "database-error"
+  | "timeout-error"
   | "unknown";
 
 interface ErrorDetails {
@@ -103,6 +105,16 @@ export function getErrorDetails(
       message: "You don't have permission to access this resource.",
       statusCode: 403,
     },
+    "database-error": {
+      title: "Something Went Wrong",
+      message: "We encountered a technical issue. Please try again.",
+      statusCode: 500,
+    },
+    "timeout-error": {
+      title: "Request Timed Out",
+      message: "The request took too long. Please try again.",
+      statusCode: 504,
+    },
     unknown: {
       title: "Unexpected Error",
       message: "An unexpected error occurred. Please try again.",
@@ -201,4 +213,142 @@ export function isAuthError(error: Error | unknown): boolean {
   }
 
   return false;
+}
+
+const TECHNICAL_ERROR_PATTERNS: RegExp[] = [
+  // SQL and database errors
+  /failed query:/i,
+  /select\s+.*\s+from/i,
+  /insert\s+into/i,
+  /update\s+.*\s+set/i,
+  /delete\s+from/i,
+  /params:/i,
+  /column\s+.*\s+does not exist/i,
+  /relation\s+.*\s+does not exist/i,
+  /duplicate key/i,
+  /constraint.*violated/i,
+  /syntax error/i,
+  /violates.*constraint/i,
+  // Connection errors
+  /econnrefused/i,
+  /connection refused/i,
+  /connection reset/i,
+  /connection timeout/i,
+  // Internal errors
+  /internal server error/i,
+  /unexpected token/i,
+  /undefined is not/i,
+  /cannot read propert/i,
+  /is not a function/i,
+];
+
+const USER_FACING_ERROR_CODES = [
+  "NOT_FOUND",
+  "BAD_REQUEST",
+  "FORBIDDEN",
+  "UNAUTHORIZED",
+  "RATE_LIMITED",
+];
+
+/**
+ * Sanitizes error messages to prevent exposing technical details to users.
+ * Preserves intentional user-facing messages.
+ */
+export interface cleanError {
+  title: string;
+  message: string;
+  isUserFacing: boolean;
+}
+
+export function cleanErrorMessage(error: unknown): cleanError {
+  const errorMessage =
+    error instanceof Error
+      ? error.message
+      : typeof error === "object" && error !== null
+        ? ((error as Record<string, unknown>).message as string) || ""
+        : String(error);
+
+  const errorCode = getErrorCode(error);
+
+  // Check if this is an intentional user-facing error
+  if (errorCode && USER_FACING_ERROR_CODES.includes(errorCode)) {
+    const isTechnical = TECHNICAL_ERROR_PATTERNS.some((pattern) =>
+      pattern.test(errorMessage)
+    );
+
+    if (!isTechnical) {
+      const details = getErrorDetails(error);
+      return {
+        title: details.title,
+        message: errorMessage || details.message,
+        isUserFacing: true,
+      };
+    }
+  }
+
+  const isTechnicalError = TECHNICAL_ERROR_PATTERNS.some((pattern) =>
+    pattern.test(errorMessage)
+  );
+
+  if (isTechnicalError) {
+    logError(error, {
+      context: "sanitized-error",
+      originalMessage: errorMessage,
+    });
+
+    if (/timeout/i.test(errorMessage)) {
+      return {
+        title: "Request Timed Out",
+        message: "The request took too long. Please try again.",
+        isUserFacing: false,
+      };
+    }
+
+    if (
+      /connection/i.test(errorMessage) ||
+      /econnrefused/i.test(errorMessage)
+    ) {
+      return {
+        title: "Connection Failed",
+        message: "Unable to connect to the server. Please try again later.",
+        isUserFacing: false,
+      };
+    }
+
+    if (/duplicate key/i.test(errorMessage)) {
+      return {
+        title: "Already Exists",
+        message: "This item already exists. Please try with different values.",
+        isUserFacing: false,
+      };
+    }
+
+    return {
+      title: "Something Went Wrong",
+      message: "We encountered a technical issue. Please try again.",
+      isUserFacing: false,
+    };
+  }
+
+  if (isNetworkError(error)) {
+    return {
+      title: "Connection Failed",
+      message: "Please check your internet connection and try again.",
+      isUserFacing: false,
+    };
+  }
+
+  if (isAuthError(error)) {
+    return {
+      title: "Authentication Required",
+      message: "Please log in to continue.",
+      isUserFacing: true,
+    };
+  }
+
+  return {
+    title: "Oops! Something Went Wrong",
+    message: errorMessage || "An unexpected error occurred. Please try again.",
+    isUserFacing: !isTechnicalError,
+  };
 }

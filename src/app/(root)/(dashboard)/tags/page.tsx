@@ -12,11 +12,7 @@ const TagsPage = ({ searchParams }: RouteParams) => {
     <FilterProvider>
       <h1 className="h1-bold text-dark100_light900 text-3xl">Tags</h1>
       <section className="mt-10 flex justify-between gap-4 max-sm:flex-col sm:items-center">
-        <LocalSearch
-          route="/tags"
-          placeholder={"Search tags..."}
-          className="flex-1"
-        />
+        <LocalSearch placeholder={"Search tags..."} className="flex-1" />
 
         <Filter filters={TagFilters} className="min-h-12 w-full sm:min-w-33" />
       </section>

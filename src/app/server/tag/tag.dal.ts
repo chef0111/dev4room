@@ -234,26 +234,30 @@ export class TagDAL {
       .select({
         id: tag.id,
         name: tag.name,
-        questions: sql<number>`(
-          SELECT COUNT(*)::int FROM "tag_question" tq
-          INNER JOIN "question" q ON tq."question_id" = q."id"
-          WHERE tq."tag_id" = "tag"."id" AND q."status" = 'approved'
-        )`.as("questions"),
+        questions: sql<number>`count(${question.id})::int`.as("questions"),
       })
       .from(tag)
-      .orderBy(
-        sql`(
-        SELECT COUNT(*)::int FROM "tag_question" tq
-        INNER JOIN "question" q ON tq."question_id" = q."id"
-        WHERE tq."tag_id" = "tag"."id" AND q."status" = 'approved'
-      ) DESC`
+      .leftJoin(tagQuestion, eq(tag.id, tagQuestion.tagId))
+      .leftJoin(
+        question,
+        and(
+          eq(tagQuestion.questionId, question.id),
+          eq(question.status, "approved")
+        )
       )
+      .groupBy(tag.id, tag.name)
+      .orderBy(desc(sql`count(${question.id})`))
       .limit(limit);
 
     return rows;
   }
 }
 
-export const getTags = TagDAL.findMany.bind(TagDAL);
-export const getTagWithQuestions = TagDAL.findWithQuestions.bind(TagDAL);
-export const getPopularTags = TagDAL.findPopular.bind(TagDAL);
+export const getTags = (...args: Parameters<typeof TagDAL.findMany>) =>
+  TagDAL.findMany(...args);
+export const getTagWithQuestions = (
+  ...args: Parameters<typeof TagDAL.findWithQuestions>
+) => TagDAL.findWithQuestions(...args);
+export const getPopularTags = (
+  ...args: Parameters<typeof TagDAL.findPopular>
+) => TagDAL.findPopular(...args);

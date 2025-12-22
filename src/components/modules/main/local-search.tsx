@@ -1,15 +1,12 @@
 "use client";
 
-import { Route } from "next";
 import { cn } from "@/lib/utils";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
-import { formUrlQuery, removeKeysFromUrlQuery } from "@/lib/url";
+import { useQueryStates, parseAsString, parseAsInteger } from "nuqs";
 import { Field } from "@/components/ui/field";
 import SearchInput from "./search-input";
 
 interface LocalSearchProps {
-  route: string;
   placeholder: string;
   className?: string;
 }
@@ -18,11 +15,18 @@ interface SearchFormData {
   query: string;
 }
 
-const LocalSearch = ({ route, placeholder, className }: LocalSearchProps) => {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const query = searchParams.get("query") || "";
-  const pathname = usePathname();
+const LocalSearch = ({ placeholder, className }: LocalSearchProps) => {
+  const [{ query }, setParams] = useQueryStates(
+    {
+      query: parseAsString.withDefault(""),
+      page: parseAsInteger.withDefault(1),
+    },
+    {
+      shallow: false,
+      scroll: false,
+      throttleMs: 300,
+    }
+  );
 
   const form = useForm<{ query: string }>({
     defaultValues: { query },
@@ -30,25 +34,10 @@ const LocalSearch = ({ route, placeholder, className }: LocalSearchProps) => {
 
   const handleSubmit = (data: SearchFormData) => {
     const searchQuery = data.query.trim();
-
-    if (searchQuery) {
-      const newUrl = formUrlQuery({
-        params: searchParams.toString(),
-        key: "query",
-        value: searchQuery,
-      });
-
-      router.push(newUrl as Route, { scroll: false });
-    } else {
-      if (pathname === route) {
-        const newUrl = removeKeysFromUrlQuery({
-          params: searchParams.toString(),
-          keysToRemove: ["query"],
-        });
-
-        router.push(newUrl as Route, { scroll: false });
-      }
-    }
+    setParams({
+      query: searchQuery || null,
+      page: 1,
+    });
   };
 
   const handleSearchSubmit = () => {

@@ -172,4 +172,5 @@ export class SearchDAL {
   }
 }
 
-export const search = SearchDAL.search.bind(SearchDAL);
+export const search = (...args: Parameters<typeof SearchDAL.search>) =>
+  SearchDAL.search(...args);

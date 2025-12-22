@@ -213,6 +213,12 @@ export class CollectionDAL {
   }
 }
 
-export const listCollection = CollectionDAL.findMany.bind(CollectionDAL);
-export const toggleSave = CollectionDAL.toggleSave.bind(CollectionDAL);
-export const hasSaved = CollectionDAL.hasSaved.bind(CollectionDAL);
+// Export functions as wrappers to avoid Server Action .bind() issues
+export const listCollection = (
+  ...args: Parameters<typeof CollectionDAL.findMany>
+) => CollectionDAL.findMany(...args);
+export const toggleSave = (
+  ...args: Parameters<typeof CollectionDAL.toggleSave>
+) => CollectionDAL.toggleSave(...args);
+export const hasSaved = (...args: Parameters<typeof CollectionDAL.hasSaved>) =>
+  CollectionDAL.hasSaved(...args);

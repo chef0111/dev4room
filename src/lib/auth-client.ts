@@ -7,6 +7,7 @@ import {
 import { inferAdditionalFields } from "better-auth/client/plugins";
 import { nextCookies } from "better-auth/next-js";
 import { auth } from "./auth";
+import { ac, admin, moderator, user } from "@/app/server/admin/permissions";
 
 export const authClient = createAuthClient({
   baseURL: process.env.BETTER_AUTH_URL,
@@ -21,7 +22,14 @@ export const authClient = createAuthClient({
   },
   plugins: [
     usernameClient(),
-    adminClient(),
+    adminClient({
+      ac,
+      roles: {
+        admin,
+        moderator,
+        user,
+      },
+    }),
     emailOTPClient(),
     inferAdditionalFields<typeof auth>(),
     nextCookies(),

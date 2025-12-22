@@ -154,4 +154,6 @@ export class InteractionDAL {
   }
 }
 
-export const createInteraction = InteractionDAL.create.bind(InteractionDAL);
+export const createInteraction = (
+  ...args: Parameters<typeof InteractionDAL.create>
+) => InteractionDAL.create(...args);

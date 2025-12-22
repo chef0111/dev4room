@@ -14,7 +14,6 @@ const CollectionsPage = ({ searchParams }: RouteParams) => {
 
       <div className="mt-10 flex justify-between gap-4 max-sm:flex-col sm:items-center">
         <LocalSearch
-          route="/collection"
           placeholder="Search a bookmarked question..."
           className="flex-1"
         />

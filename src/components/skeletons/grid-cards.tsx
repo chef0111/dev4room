@@ -17,9 +17,9 @@ const GridCardsSkeleton = ({
         className
       )}
     >
-      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((item) => (
+      {Array.from({ length: 9 }).map((_, index) => (
         <Skeleton
-          key={item}
+          key={index}
           className={cn("h-50 w-full rounded-2xl", itemClassName)}
         />
       ))}

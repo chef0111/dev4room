@@ -80,10 +80,18 @@ export class UploadDAL {
   }
 }
 
-export const getPresignedUploadUrl =
-  UploadDAL.getPresignedUploadUrl.bind(UploadDAL);
-export const deleteObject = UploadDAL.deleteObject.bind(UploadDAL);
-export const extractFileKeyFromUrl =
-  UploadDAL.extractFileKeyFromUrl.bind(UploadDAL);
-export const updateUserImage = UploadDAL.updateUserImage.bind(UploadDAL);
-export const getUserImage = UploadDAL.getUserImage.bind(UploadDAL);
+export const getPresignedUploadUrl = (
+  ...args: Parameters<typeof UploadDAL.getPresignedUploadUrl>
+) => UploadDAL.getPresignedUploadUrl(...args);
+export const deleteObject = (
+  ...args: Parameters<typeof UploadDAL.deleteObject>
+) => UploadDAL.deleteObject(...args);
+export const extractFileKeyFromUrl = (
+  ...args: Parameters<typeof UploadDAL.extractFileKeyFromUrl>
+) => UploadDAL.extractFileKeyFromUrl(...args);
+export const updateUserImage = (
+  ...args: Parameters<typeof UploadDAL.updateUserImage>
+) => UploadDAL.updateUserImage(...args);
+export const getUserImage = (
+  ...args: Parameters<typeof UploadDAL.getUserImage>
+) => UploadDAL.getUserImage(...args);

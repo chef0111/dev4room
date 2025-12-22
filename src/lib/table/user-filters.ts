@@ -18,9 +18,7 @@ interface BasicFilterValues {
   createdAt: string;
 }
 
-/**
- * Parse a timestamp value to Date
- */
+// Parse a timestamp value to Date
 function parseTimestamp(val: unknown): Date | undefined {
   if (!val) return undefined;
   const num = typeof val === "string" ? Number(val) : val;
@@ -30,23 +28,17 @@ function parseTimestamp(val: unknown): Date | undefined {
   return undefined;
 }
 
-/**
- * Get start of day for a date
- */
+// Get start of day for a date
 function startOfDay(date: Date): Date {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
 }
 
-/**
- * Get start of next day for a date (used as exclusive upper bound)
- */
+// Get start of next day for a date
 function startOfNextDay(date: Date): Date {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
 }
 
-/**
- * Parse date filter from advanced filter based on operator
- */
+// Parse date filter from advanced filter based on operator
 function parseDateFilter<TData>(filter: ExtendedColumnFilter<TData>): {
   createdAfter?: Date;
   createdBefore?: Date;
@@ -103,9 +95,7 @@ function parseDateFilter<TData>(filter: ExtendedColumnFilter<TData>): {
   return { createdAfter, createdBefore };
 }
 
-/**
- * Convert advanced filters to API parameters
- */
+// Convert advanced filters to API parameters
 export function parseAdvancedFilters<TData>(
   filters: ExtendedColumnFilter<TData>[]
 ): Omit<UserListApiParams, "limit" | "offset"> {
@@ -142,9 +132,7 @@ export function parseAdvancedFilters<TData>(
   return { search, role, banned, createdAfter, createdBefore };
 }
 
-/**
- * Convert basic filters to API parameters
- */
+// Convert basic filters to API parameters
 export function parseBasicFilters(
   values: BasicFilterValues
 ): Omit<UserListApiParams, "limit" | "offset"> {

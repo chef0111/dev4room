@@ -15,7 +15,6 @@ const Community = ({ searchParams }: RouteParams) => {
 
         <section className="mt-10 flex justify-between gap-4 max-sm:flex-col sm:items-center">
           <LocalSearch
-            route="/community"
             placeholder="Search some great developers..."
             className="flex-1 grow"
           />

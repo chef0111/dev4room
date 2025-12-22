@@ -541,13 +541,26 @@ export class QuestionDAL {
   }
 }
 
-export const getQuestions = QuestionDAL.findMany.bind(QuestionDAL);
-export const getQuestionById = QuestionDAL.findById.bind(QuestionDAL);
-export const createQuestion = QuestionDAL.create.bind(QuestionDAL);
-export const editQuestion = QuestionDAL.update.bind(QuestionDAL);
-export const getTopQuestions = QuestionDAL.findTop.bind(QuestionDAL);
-export const deleteQuestion = QuestionDAL.delete.bind(QuestionDAL);
-export const getUserPendingQuestions =
-  QuestionDAL.getUserPendingQuestions.bind(QuestionDAL);
-export const cancelPendingQuestion =
-  QuestionDAL.cancelPendingQuestion.bind(QuestionDAL);
+export const getQuestions = (
+  ...args: Parameters<typeof QuestionDAL.findMany>
+) => QuestionDAL.findMany(...args);
+export const getQuestionById = (
+  ...args: Parameters<typeof QuestionDAL.findById>
+) => QuestionDAL.findById(...args);
+export const createQuestion = (
+  ...args: Parameters<typeof QuestionDAL.create>
+) => QuestionDAL.create(...args);
+export const editQuestion = (...args: Parameters<typeof QuestionDAL.update>) =>
+  QuestionDAL.update(...args);
+export const getTopQuestions = (
+  ...args: Parameters<typeof QuestionDAL.findTop>
+) => QuestionDAL.findTop(...args);
+export const deleteQuestion = (
+  ...args: Parameters<typeof QuestionDAL.delete>
+) => QuestionDAL.delete(...args);
+export const getUserPendingQuestions = (
+  ...args: Parameters<typeof QuestionDAL.getUserPendingQuestions>
+) => QuestionDAL.getUserPendingQuestions(...args);
+export const cancelPendingQuestion = (
+  ...args: Parameters<typeof QuestionDAL.cancelPendingQuestion>
+) => QuestionDAL.cancelPendingQuestion(...args);

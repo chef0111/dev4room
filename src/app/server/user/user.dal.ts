@@ -74,6 +74,7 @@ export class UserDAL {
     // Build where conditions
     const conditions = [
       eq(user.emailVerified, true),
+      not(eq(user.banned, true)),
       not(eq(user.role, "admin")),
       this.buildSearchCondition(query),
     ].filter(Boolean);
@@ -468,10 +469,21 @@ export class UserDAL {
   }
 }
 
-export const getUsers = UserDAL.findMany.bind(UserDAL);
-export const getUserById = UserDAL.findById.bind(UserDAL);
-export const getUserQuestions = UserDAL.findUserQuestions.bind(UserDAL);
-export const getUserAnswers = UserDAL.findUserAnswers.bind(UserDAL);
-export const getUserPopularTags = UserDAL.findUserPopularTags.bind(UserDAL);
-export const getUserStats = UserDAL.getUserStats.bind(UserDAL);
-export const updateUser = UserDAL.update.bind(UserDAL);
+export const getUsers = (...args: Parameters<typeof UserDAL.findMany>) =>
+  UserDAL.findMany(...args);
+export const getUserById = (...args: Parameters<typeof UserDAL.findById>) =>
+  UserDAL.findById(...args);
+export const getUserQuestions = (
+  ...args: Parameters<typeof UserDAL.findUserQuestions>
+) => UserDAL.findUserQuestions(...args);
+export const getUserAnswers = (
+  ...args: Parameters<typeof UserDAL.findUserAnswers>
+) => UserDAL.findUserAnswers(...args);
+export const getUserPopularTags = (
+  ...args: Parameters<typeof UserDAL.findUserPopularTags>
+) => UserDAL.findUserPopularTags(...args);
+export const getUserStats = (
+  ...args: Parameters<typeof UserDAL.getUserStats>
+) => UserDAL.getUserStats(...args);
+export const updateUser = (...args: Parameters<typeof UserDAL.update>) =>
+  UserDAL.update(...args);
