@@ -1,18 +1,16 @@
 import { z } from "zod";
 import { admin } from "@/app/middleware/admin";
+import { authorized } from "@/app/middleware/auth";
+import { auth } from "@/lib/auth";
 import { standardSecurityMiddleware } from "@/app/middleware/arcjet/standard";
 import { writeSecurityMiddleware } from "@/app/middleware/arcjet/write";
 import {
   getPlatformStats,
-  listAllUsers,
-  banUserById,
-  unbanUserById,
-  updateUserRole,
-  deleteUserById,
   getGrowthAnalytics,
   getPendingQuestions,
   approveQuestion as approveQuestionDAL,
   rejectQuestion as rejectQuestionDAL,
+  enrichUsersWithAppData,
 } from "./admin.dal";
 import {
   PlatformStatsSchema,
@@ -40,7 +38,7 @@ export const getStats = admin
     return await getPlatformStats();
   });
 
-export const listUsers = admin
+export const listUsers = authorized
   .use(standardSecurityMiddleware)
   .route({
     method: "GET",
@@ -50,11 +48,34 @@ export const listUsers = admin
   })
   .input(ListUsersInputSchema)
   .output(ListUsersOutputSchema)
-  .handler(async ({ input }) => {
-    return await listAllUsers(input);
+  .handler(async ({ input, context }) => {
+    const response = await auth.api.listUsers({
+      headers: context.headers,
+      query: {
+        searchValue: input.search,
+        searchField: "name" as const,
+        searchOperator: "contains" as const,
+        limit: input.limit,
+        offset: input.offset,
+        sortBy: "createdAt",
+        sortDirection: "desc" as const,
+        ...(input.role && { filterField: "role", filterValue: input.role }),
+        ...(input.banned !== undefined && {
+          filterField: "banned",
+          filterValue: input.banned,
+        }),
+      },
+    });
+
+    const usersWithAppData = await enrichUsersWithAppData(response.users);
+
+    return {
+      users: usersWithAppData,
+      total: response.total,
+    };
   });
 
-export const banUser = admin
+export const banUser = authorized
   .use(writeSecurityMiddleware)
   .route({
     method: "POST",
@@ -64,13 +85,19 @@ export const banUser = admin
   })
   .input(BanUserInputSchema)
   .output(z.object({ success: z.boolean() }))
-  .handler(async ({ input }) => {
-    await banUserById(input.userId, input.reason);
+  .handler(async ({ input, context }) => {
+    await auth.api.banUser({
+      headers: context.headers,
+      body: {
+        userId: input.userId,
+        banReason: input.reason,
+      },
+    });
     revalidatePath("/dashboard");
     return { success: true };
   });
 
-export const unbanUser = admin
+export const unbanUser = authorized
   .use(writeSecurityMiddleware)
   .route({
     method: "POST",
@@ -80,13 +107,18 @@ export const unbanUser = admin
   })
   .input(UnbanUserInputSchema)
   .output(z.object({ success: z.boolean() }))
-  .handler(async ({ input }) => {
-    await unbanUserById(input.userId);
+  .handler(async ({ input, context }) => {
+    await auth.api.unbanUser({
+      headers: context.headers,
+      body: {
+        userId: input.userId,
+      },
+    });
     revalidatePath("/dashboard");
     return { success: true };
   });
 
-export const setUserRole = admin
+export const setUserRole = authorized
   .use(writeSecurityMiddleware)
   .route({
     method: "POST",
@@ -96,13 +128,28 @@ export const setUserRole = admin
   })
   .input(UpdateUserRoleInputSchema)
   .output(z.object({ success: z.boolean() }))
-  .handler(async ({ input }) => {
-    await updateUserRole(input.userId, input.role);
+  .handler(async ({ input, context }) => {
+    await auth.api.setRole({
+      headers: context.headers,
+      body: {
+        userId: input.userId,
+        role: input.role ?? "user",
+      },
+    });
+
+    // Revoke all sessions to force immediate logout
+    await auth.api.revokeUserSessions({
+      headers: context.headers,
+      body: {
+        userId: input.userId,
+      },
+    });
+
     revalidatePath("/dashboard");
     return { success: true };
   });
 
-export const deleteUser = admin
+export const deleteUser = authorized
   .use(writeSecurityMiddleware)
   .route({
     method: "POST",
@@ -112,8 +159,13 @@ export const deleteUser = admin
   })
   .input(DeleteUserInputSchema)
   .output(z.object({ success: z.boolean() }))
-  .handler(async ({ input }) => {
-    await deleteUserById(input.userId);
+  .handler(async ({ input, context }) => {
+    await auth.api.removeUser({
+      headers: context.headers,
+      body: {
+        userId: input.userId,
+      },
+    });
     revalidatePath("/dashboard");
     return { success: true };
   });

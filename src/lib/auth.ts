@@ -4,7 +4,8 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "@/database/drizzle";
 import { schema } from "@/database/schema";
-import { username, admin, emailOTP } from "better-auth/plugins";
+import { username, admin as adminPlugin, emailOTP } from "better-auth/plugins";
+import { ac, admin, moderator, user } from "@/app/server/admin/permissions";
 import { createAuthMiddleware, APIError } from "better-auth/api";
 import { nextCookies } from "better-auth/next-js";
 import { PasswordSchema } from "./validations";
@@ -193,7 +194,14 @@ export const auth = betterAuth({
     : ["http://localhost:3000"],
   plugins: [
     username(),
-    admin(),
+    adminPlugin({
+      ac,
+      roles: {
+        admin,
+        moderator,
+        user,
+      },
+    }),
     emailOTP({
       async sendVerificationOTP({ email, otp }) {
         const sender =

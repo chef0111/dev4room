@@ -248,9 +248,16 @@ export class AnswerDAL {
   }
 }
 
-export const getAnswers = AnswerDAL.findMany.bind(AnswerDAL);
-export const getAnswerById = AnswerDAL.findById.bind(AnswerDAL);
-export const createAnswer = AnswerDAL.create.bind(AnswerDAL);
-export const editAnswer = AnswerDAL.update.bind(AnswerDAL);
-export const deleteAnswer = AnswerDAL.delete.bind(AnswerDAL);
-export const getAnswerPage = AnswerDAL.findAnswerPage.bind(AnswerDAL);
+export const getAnswers = (...args: Parameters<typeof AnswerDAL.findMany>) =>
+  AnswerDAL.findMany(...args);
+export const getAnswerById = (...args: Parameters<typeof AnswerDAL.findById>) =>
+  AnswerDAL.findById(...args);
+export const createAnswer = (...args: Parameters<typeof AnswerDAL.create>) =>
+  AnswerDAL.create(...args);
+export const editAnswer = (...args: Parameters<typeof AnswerDAL.update>) =>
+  AnswerDAL.update(...args);
+export const deleteAnswer = (...args: Parameters<typeof AnswerDAL.delete>) =>
+  AnswerDAL.delete(...args);
+export const getAnswerPage = (
+  ...args: Parameters<typeof AnswerDAL.findAnswerPage>
+) => AnswerDAL.findAnswerPage(...args);

@@ -203,5 +203,7 @@ export class VoteDAL {
   }
 }
 
-export const createVote = VoteDAL.createVote.bind(VoteDAL);
-export const hasVoted = VoteDAL.hasVoted.bind(VoteDAL);
+export const createVote = (...args: Parameters<typeof VoteDAL.createVote>) =>
+  VoteDAL.createVote(...args);
+export const hasVoted = (...args: Parameters<typeof VoteDAL.hasVoted>) =>
+  VoteDAL.hasVoted(...args);

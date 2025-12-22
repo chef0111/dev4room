@@ -12,6 +12,7 @@ import handleError from "@/lib/handlers/error";
 import AuthForm from "@/components/modules/auth/auth-form";
 import SocialAuthForm from "@/components/modules/auth/social-auth-form";
 import VerifyDialog from "@/components/modules/auth/verify-dialog";
+import BannedDialog from "@/components/modules/auth/banned-dialog";
 import { Button } from "@/components/ui/button";
 
 type LoginValues = z.infer<typeof LoginSchema>;
@@ -22,6 +23,10 @@ const Login = () => {
   const [showVerificationDialog, setShowVerificationDialog] = useState(false);
   const [unverifiedEmail, setUnverifiedEmail] = useState<string>("");
   const [isSendingVerification, setIsSendingVerification] = useState(false);
+
+  // Banned user state
+  const [showBannedDialog, setShowBannedDialog] = useState(false);
+  const [banReason, setBanReason] = useState<string | null>(null);
 
   const handleLogin = async ({
     email,
@@ -37,6 +42,7 @@ const Login = () => {
         },
         {
           onError: (ctx) => {
+            // Handle email not verified
             if (ctx.error.status === 403) {
               setUnverifiedEmail(email);
               setShowVerificationDialog(true);
@@ -47,11 +53,20 @@ const Login = () => {
 
       setIsLoading(false);
 
+      // Check if user is banned
+      if (error?.message?.toLowerCase().includes("banned")) {
+        const reasonMatch = error.message.match(/Reason:\s*(.+)/i);
+        setBanReason(reasonMatch ? reasonMatch[1].trim() : null);
+        setShowBannedDialog(true);
+        return { success: false, error: { message: "Account suspended" } };
+      }
+
       return {
         success: !!data?.user,
         error: { message: error?.message },
       };
     } catch (error) {
+      setIsLoading(false);
       return handleError(error) as ErrorResponse;
     }
   };
@@ -136,6 +151,12 @@ const Login = () => {
         onOpenChange={setShowVerificationDialog}
         disabled={isSendingVerification}
         onClick={handleSendVerificationEmail}
+      />
+
+      <BannedDialog
+        open={showBannedDialog}
+        onOpenChange={setShowBannedDialog}
+        banReason={banReason}
       />
     </>
   );
