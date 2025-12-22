@@ -21,7 +21,8 @@
 2. ⚙️ [Tech Stack](#tech-stack)
 3. 🔋 [Features](#features)
 4. 🤸 [Quick Start](#quick-start)
-5. 🔗 [Assets](#links)
+5. 🗄️ [Database Setup](#database-setup)
+6. 🔗 [Assets](#links)
 
 ## <a name="introduction">🤖 Introduction</a>
 
@@ -147,11 +148,11 @@ cd dev4room
 
 **Installation**
 
-Install the project dependencies using pnpm:
+Install the project dependencies using bun:
 
 ```bash
-npm i -g pnpm # Run this if you don't have pnpm installed
-pnpm install
+curl -fsSL https://bun.sh/install | bash  # Install bun if not installed
+bun install
 ```
 
 **Set Up Environment Variables**
@@ -192,10 +193,49 @@ EMBEDDING_DIMENSIONS=
 
 Replace the placeholder values with your actual credentials. You can obtain these credentials by signing up on the respective websites
 
+## 🗄️ <a name="database-setup">Database Setup</a>
+
+This project uses PostgreSQL hosted on Neon for the database, with Drizzle ORM for schema management.
+
+### Cloud Database Setup (Neon)
+
+1. Sign up for a free account at [Neon](https://neon.tech/).
+2. Create a new project in your Neon dashboard.
+3. Obtain the connection string from your project settings.
+4. Set the `DATABASE_URL` environment variable in your `.env` file to this connection string.
+
+To manage your Neon project via terminal, install neonctl:
+
+```bash
+bun install -g neonctl
+```
+
+Authenticate with Neon:
+
+```bash
+neonctl auth login
+```
+
+To open your Neon project in the browser via terminal:
+
+```bash
+neonctl projects open <project-id>
+```
+
+Replace `<project-id>` with your project's ID (found in the Neon dashboard or extract from your `DATABASE_URL` after the '@' and before the first '.').
+
+5. Push the database schema to the cloud:
+
+```bash
+bun run db:push
+```
+
+This will create the necessary tables and indexes in your Neon database.
+
 **Running the Project**
 
 ```bash
-pnpm dev
+bun run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser to view the project.
