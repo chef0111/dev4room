@@ -133,6 +133,10 @@
   @apply bg-light-800! dark:bg-dark-300!;
 }
 
+@utility bg-light800_dark300/50 {
+  @apply bg-light-800/50! dark:bg-dark-300/50!;
+}
+
 @utility bg-light800_dark200 {
   @apply bg-light-800 dark:bg-dark-200;
 }

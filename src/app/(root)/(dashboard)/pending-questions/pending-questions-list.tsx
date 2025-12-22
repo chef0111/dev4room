@@ -82,7 +82,7 @@ export default function PendingQuestionsList({
       {/* Pending Questions Section */}
       {pendingQuestions.length > 0 && (
         <>
-          <Alert className="bg-light800_dark300 border-light700_dark400 mt-10 border">
+          <Alert className="bg-light800_dark300/50 border-light700_dark400 mt-10 border">
             <IconClock className="text-dark500_light700 size-4" />
             <AlertTitle className="text-dark100_light900 flex items-center gap-2">
               Awaiting Admin Review

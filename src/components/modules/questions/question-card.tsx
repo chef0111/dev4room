@@ -59,13 +59,13 @@ const QuestionCard = ({
             id={author.id}
             name={author.name}
             image={author.image ?? ""}
-            className="size-5"
-            fallbackClassName="text-xs"
+            className="size-6"
+            fallbackClassName="text-[10px]"
           />
 
           <Link href={`/profile/${author.id}`}>
             <p className="small-regular text-dark300_light700">
-              <span className="small-medium">{author.name}</span> • asked{" "}
+              <span className="body-medium">{author.name}</span> • asked{" "}
               {getTimeStamp(createdAt)}
             </p>
           </Link>
