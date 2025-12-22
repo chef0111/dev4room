@@ -16,12 +16,17 @@ const SocialAuthForm = ({ disabled }: { disabled?: boolean }) => {
       await authClient.signIn.social({
         provider,
         callbackURL: "/",
+        errorCallbackURL: "/banned",
         fetchOptions: {
           onSuccess: () => {
             toast.success(`Signed in with ${providerName}, redirecting...`);
           },
-          onError: () => {
-            toast.error("Internal Server Error");
+          onError: (ctx) => {
+            if (ctx.error?.message?.toLowerCase().includes("banned")) {
+              toast.error("Your account has been suspended");
+            } else {
+              toast.error("Authentication failed. Please try again.");
+            }
           },
         },
       });

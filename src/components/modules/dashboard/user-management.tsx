@@ -45,7 +45,7 @@ const FILTERABLE_COLUMNS = [
   "name",
   "email",
   "role",
-  "banned",
+  "status",
   "createdAt",
 ] as const;
 
@@ -54,6 +54,7 @@ interface UserData {
   name: string;
   username: string;
   email: string;
+  emailVerified: boolean;
   role: string | null;
   banned: boolean | null;
   banReason: string | null;
@@ -94,7 +95,7 @@ export function UserManagement() {
     name: parseAsString.withDefault(""),
     email: parseAsString.withDefault(""),
     role: parseAsArrayOf(parseAsString, ",").withDefault([]),
-    banned: parseAsArrayOf(parseAsString, ",").withDefault([]),
+    status: parseAsArrayOf(parseAsString, ",").withDefault([]),
     createdAt: parseAsString.withDefault(""),
   });
 
@@ -158,6 +159,19 @@ export function UserManagement() {
   };
 
   const handleSetRole = (userId: string, role: "admin" | "user" | null) => {
+    const user = data?.users.find((u) => u.id === userId);
+
+    if (role === "admin" && user) {
+      if (user.banned) {
+        toast.error("Cannot promote a banned user to admin");
+        return;
+      }
+      if (!user.emailVerified) {
+        toast.error("Cannot promote an unverified user to admin");
+        return;
+      }
+    }
+
     setUserRoleMutation.mutate(
       { userId, role },
       {

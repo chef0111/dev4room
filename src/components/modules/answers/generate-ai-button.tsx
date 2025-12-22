@@ -82,7 +82,7 @@ const GenerateAIButton = ({
       {isGenerating ? (
         <>
           <Spinner className="border-primary-foreground/30 border-t-primary-foreground! mr-1" />
-          <TextShimmer duration={1}>Generating...</TextShimmer>
+          <TextShimmer duration={1}>Cooking...</TextShimmer>
         </>
       ) : (
         <>

@@ -28,6 +28,7 @@ export interface UserData {
   name: string;
   username: string;
   email: string;
+  emailVerified: boolean;
   role: string | null;
   banned: boolean | null;
   banReason: string | null;
@@ -143,19 +144,20 @@ export function getUserColumns({
       },
     },
     {
-      id: "banned",
+      id: "status",
       accessorKey: "banned",
       header: "Status",
       meta: {
         label: "Status",
         variant: "select" as const,
         options: [
-          { label: "Active", value: "false" },
-          { label: "Banned", value: "true" },
+          { label: "Active", value: "active" },
+          { label: "Banned", value: "banned" },
+          { label: "Unverified", value: "unverified" },
         ],
       },
       enableColumnFilter: true,
-      size: 100,
+      size: 120,
       cell: ({ row }) => {
         const user = row.original;
         if (user.banned) {
@@ -163,6 +165,16 @@ export function getUserColumns({
             <Badge variant="destructive" className="min-h-6">
               <IconBan className="mr-1 size-3" />
               Banned
+            </Badge>
+          );
+        }
+        if (!user.emailVerified) {
+          return (
+            <Badge
+              variant="outline"
+              className="min-h-6 border-yellow-500/30 bg-yellow-500/10 text-yellow-600 dark:text-yellow-400"
+            >
+              Unverified
             </Badge>
           );
         }

@@ -33,6 +33,7 @@ export interface UserListItem {
   name: string;
   username: string;
   email: string;
+  emailVerified: boolean;
   role: string | null;
   banned: boolean | null;
   banReason: string | null;
@@ -162,11 +163,90 @@ export class AdminDAL {
     };
   }
 
+  static async getUsers(params: {
+    search?: string;
+    role?: string;
+    banned?: boolean;
+    emailVerified?: boolean;
+    createdAfter?: Date;
+    createdBefore?: Date;
+    limit: number;
+    offset: number;
+  }): Promise<{ users: UserListItem[]; total: number }> {
+    const conditions = [];
+
+    // Search by name or email
+    if (params.search) {
+      const searchPattern = `%${params.search}%`;
+      conditions.push(
+        or(
+          sql`${user.name} ILIKE ${searchPattern}`,
+          sql`${user.email} ILIKE ${searchPattern}`
+        )
+      );
+    }
+
+    if (params.role) {
+      conditions.push(eq(user.role, params.role));
+    }
+
+    if (params.banned !== undefined) {
+      conditions.push(eq(user.banned, params.banned));
+    }
+
+    if (params.emailVerified !== undefined) {
+      conditions.push(eq(user.emailVerified, params.emailVerified));
+    }
+
+    if (params.createdAfter) {
+      conditions.push(gte(user.createdAt, params.createdAfter));
+    }
+
+    if (params.createdBefore) {
+      conditions.push(lt(user.createdAt, params.createdBefore));
+    }
+
+    const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+
+    const [countResult] = await db
+      .select({ count: count() })
+      .from(user)
+      .where(whereClause);
+
+    // Get paginated users
+    const rawUsers = await db
+      .select({
+        id: user.id,
+        name: user.name,
+        username: user.username,
+        email: user.email,
+        emailVerified: user.emailVerified,
+        role: user.role,
+        banned: user.banned,
+        banReason: user.banReason,
+        reputation: user.reputation,
+        createdAt: user.createdAt,
+      })
+      .from(user)
+      .where(whereClause)
+      .orderBy(desc(user.createdAt))
+      .limit(params.limit)
+      .offset(params.offset);
+
+    const users = await this.appendFields(rawUsers);
+
+    return {
+      users,
+      total: countResult?.count ?? 0,
+    };
+  }
+
   static async appendFields(
     users: Array<{
       id: string;
       name: string;
       email: string;
+      emailVerified: boolean;
       role?: string | null;
       banned?: boolean | null;
       banReason?: string | null;
@@ -197,6 +277,7 @@ export class AdminDAL {
         name: u.name,
         username: extra?.username ?? "",
         email: u.email,
+        emailVerified: u.emailVerified,
         role: u.role ?? null,
         banned: u.banned ?? null,
         banReason: u.banReason ?? null,
@@ -406,3 +487,5 @@ export const approveQuestion = (
 export const rejectQuestion = (
   ...args: Parameters<typeof AdminDAL.rejectQuestion>
 ) => AdminDAL.rejectQuestion(...args);
+export const getUsers = (...args: Parameters<typeof AdminDAL.getUsers>) =>
+  AdminDAL.getUsers(...args);

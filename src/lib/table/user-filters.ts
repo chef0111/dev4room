@@ -4,6 +4,7 @@ export interface UserListApiParams {
   search?: string;
   role?: string;
   banned?: boolean;
+  emailVerified?: boolean;
   createdAfter?: Date;
   createdBefore?: Date;
   limit: number;
@@ -14,7 +15,7 @@ interface BasicFilterValues {
   name: string;
   email: string;
   role: string[];
-  banned: string[];
+  status: string[];
   createdAt: string;
 }
 
@@ -102,6 +103,7 @@ export function parseAdvancedFilters<TData>(
   let search: string | undefined;
   let role: string | undefined;
   let banned: boolean | undefined;
+  let emailVerified: boolean | undefined;
   let createdAfter: Date | undefined;
   let createdBefore: Date | undefined;
 
@@ -116,11 +118,17 @@ export function parseAdvancedFilters<TData>(
       } else if (typeof filter.value === "string" && filter.value) {
         role = filter.value;
       }
-    } else if (filter.id === "banned") {
-      if (Array.isArray(filter.value) && filter.value.length > 0) {
-        banned = filter.value[0] === "true";
-      } else if (typeof filter.value === "string") {
-        banned = filter.value === "true";
+    } else if (filter.id === "status") {
+      const status = Array.isArray(filter.value)
+        ? filter.value[0]
+        : filter.value;
+      if (status === "banned") {
+        banned = true;
+      } else if (status === "active") {
+        banned = false;
+        emailVerified = true;
+      } else if (status === "unverified") {
+        emailVerified = false;
       }
     } else if (filter.id === "createdAt") {
       const dateResult = parseDateFilter(filter);
@@ -129,7 +137,7 @@ export function parseAdvancedFilters<TData>(
     }
   }
 
-  return { search, role, banned, createdAfter, createdBefore };
+  return { search, role, banned, emailVerified, createdAfter, createdBefore };
 }
 
 // Convert basic filters to API parameters
@@ -140,8 +148,17 @@ export function parseBasicFilters(
   const role = values.role.length > 0 ? values.role[0] : undefined;
 
   let banned: boolean | undefined;
-  if (values.banned.length > 0) {
-    banned = values.banned[0] === "true";
+  let emailVerified: boolean | undefined;
+  if (values.status.length > 0) {
+    const status = values.status[0];
+    if (status === "banned") {
+      banned = true;
+    } else if (status === "active") {
+      banned = false;
+      emailVerified = true;
+    } else if (status === "unverified") {
+      emailVerified = false;
+    }
   }
 
   let createdAfter: Date | undefined;
@@ -155,5 +172,5 @@ export function parseBasicFilters(
     }
   }
 
-  return { search, role, banned, createdAfter, createdBefore };
+  return { search, role, banned, emailVerified, createdAfter, createdBefore };
 }
