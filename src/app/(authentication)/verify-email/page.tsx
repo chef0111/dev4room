@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import z from "zod";
 import { useRouter, useSearchParams, redirect } from "next/navigation";
 import { OTPSchema } from "@/lib/validations";
@@ -13,12 +13,25 @@ import { Button } from "@/components/ui/button";
 
 type OTPValues = z.infer<typeof OTPSchema>;
 
+const RESEND_COOLDOWN = 60;
+
 const VerifyEmail = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email") as string;
   const type = searchParams.get("type") as EmailOtpType;
   const [isResending, setIsResending] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [countdown, setCountdown] = useState(RESEND_COOLDOWN);
+
+  useEffect(() => {
+    if (countdown <= 0) return;
+    const timer = setInterval(() => {
+      setCountdown((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [countdown]);
 
   if (!email || !type) {
     redirect("/login");
@@ -36,8 +49,26 @@ const VerifyEmail = () => {
 
       const success = !!data;
       if (success && type === "email-verification") {
+        const storedPassword = sessionStorage.getItem("_verify_auth");
+        if (storedPassword) {
+          sessionStorage.removeItem("_verify_auth");
+          const signInResult = await authClient.signIn.email({
+            email,
+            password: storedPassword,
+          });
+          if (signInResult.data?.user) {
+            toast.success("Success", {
+              description: "Email verified! Logging you in...",
+            });
+            router.push("/");
+            return { success: true, handled: true };
+          }
+        }
+        // Fallback to login page if auto sign-in fails
+        setSuccessMessage("Logged in successfully!");
         router.push("/login");
       } else if (success && type === "forget-password") {
+        setSuccessMessage("Email verified successfully!");
         router.push(
           `/reset-password?email=${encodeURIComponent(email)}&id=${encodeURIComponent(otp)}`
         );
@@ -85,11 +116,12 @@ const VerifyEmail = () => {
       return handleError(error) as ErrorResponse;
     } finally {
       setIsResending(false);
+      setCountdown(RESEND_COOLDOWN); // Reset countdown after sending
     }
   };
 
   return (
-    <div className="flex flex-col gap-4 sm:w-120">
+    <div className="flex flex-col gap-4 sm:min-w-md">
       <div className="flex-center flex-col space-y-1 text-center">
         <h1 className="md:h2-bold h3-bold text-dark100_light900">
           Verify Email
@@ -99,21 +131,22 @@ const VerifyEmail = () => {
         </p>
       </div>
 
-      <OTPForm
-        onSubmit={handleVerifyEmail}
-        successMessage="Email verified successfully! You can now continue."
-      />
+      <OTPForm onSubmit={handleVerifyEmail} successMessage={successMessage} />
 
       <div className="flex-center text-dark500_light400 w-full px-0">
         Didn&apos;t receive the code?
         <Button
           type="button"
           variant="link"
-          disabled={isResending}
+          disabled={isResending || countdown > 0}
           onClick={() => handleResendOTP(type)}
-          className="pg-semibold text-link-100 cursor-pointer px-1 text-center transition-all hover:underline"
+          className="pg-semibold text-link-100 cursor-pointer px-1 text-center transition-all hover:underline disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {isResending ? "Sending..." : "Resend"}
+          {isResending
+            ? "Sending..."
+            : countdown > 0
+              ? `Resend (${countdown}s)`
+              : "Resend"}
         </Button>
       </div>
     </div>

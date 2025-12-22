@@ -20,7 +20,7 @@ const AuthLayout: React.FC<Props> = ({ children }: Props) => {
         className="gap-3 pb-4"
         textClassName="h1-bold text-5xl max-sm:text-4xl font-esbuild text-dark100_light900"
       />
-      <Card className="bg-light900_dark200 light-border shadow-light100_dark100 min-w-full rounded-xl border px-2 shadow-md sm:min-w-fit sm:px-4">
+      <Card className="bg-light900_dark200 light-border shadow-light100_dark100 min-w-[80vw] rounded-xl border shadow-md sm:min-w-fit sm:px-4">
         <CardContent>
           <ErrorBoundary>
             <Suspense

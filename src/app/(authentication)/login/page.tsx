@@ -21,6 +21,7 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showVerificationDialog, setShowVerificationDialog] = useState(false);
   const [unverifiedEmail, setUnverifiedEmail] = useState<string>("");
+  const [unverifiedPassword, setUnverifiedPassword] = useState<string>("");
   const [isSendingVerification, setIsSendingVerification] = useState(false);
 
   const handleLogin = async ({
@@ -43,13 +44,15 @@ const Login = () => {
             // Handle email not verified
             if (ctx.error.status === 403) {
               setUnverifiedEmail(email);
+              setUnverifiedPassword(password);
               setShowVerificationDialog(true);
             }
           },
         }
       );
-
       setIsLoading(false);
+
+      if (error?.status === 403) return { success: false, handled: true };
 
       return {
         success: !!data?.user,
@@ -76,6 +79,7 @@ const Login = () => {
           description: "Verification code sent! Check your email.",
         });
         setShowVerificationDialog(false);
+        sessionStorage.setItem("_verify_auth", unverifiedPassword);
         router.push(
           `/verify-email?type=email-verification&email=${encodeURIComponent(unverifiedEmail)}`
         );

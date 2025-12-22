@@ -38,6 +38,7 @@ const Register = () => {
       setIsLoading(false);
 
       if (data?.user) {
+        sessionStorage.setItem("_verify_auth", password);
         router.push(
           `/verify-email?type=email-verification&email=${encodeURIComponent(
             email

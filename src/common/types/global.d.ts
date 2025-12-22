@@ -1,5 +1,6 @@
 type ActionResponse<T = null> = {
   success: boolean;
+  handled?: boolean;
   data?: T;
   error?: {
     message: string | undefined;

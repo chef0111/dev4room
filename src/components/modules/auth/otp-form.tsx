@@ -41,11 +41,18 @@ const OTPForm = ({
     setError(null);
     const response = await onSubmit(data);
 
+    if (response?.handled) {
+      form.reset();
+      router.refresh();
+      return;
+    }
+
     if (response?.success) {
       toast.success("Success", {
         description: successMessage,
       });
 
+      form.reset();
       router.refresh();
     } else {
       setError(response?.error?.message || "Invalid OTP. Please try again.");
@@ -77,7 +84,7 @@ const OTPForm = ({
 
       <Button
         type="submit"
-        disabled={form.formState.isSubmitting}
+        disabled={form.formState.isSubmitting || !form.formState.isDirty}
         className="primary-gradient pg-semibold text-light-900 hover:primary-gradient-hover min-h-10 w-full"
       >
         {form.formState.isSubmitting && (

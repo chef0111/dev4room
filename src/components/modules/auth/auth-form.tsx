@@ -52,6 +52,10 @@ const AuthForm = <T extends FieldValues>({
     setError(null);
     const response = (await onSubmit(data)) as ActionResponse;
 
+    if (response?.handled) {
+      return;
+    }
+
     if (response?.success) {
       const successMessage = AUTH_FORM_TYPES[formType].successMessage;
 
@@ -60,9 +64,11 @@ const AuthForm = <T extends FieldValues>({
       });
 
       if (formType === "LOGIN") {
+        form.reset();
         router.push("/");
         router.refresh();
       } else if (formType === "RESET_PASSWORD") {
+        form.reset();
         router.push("/login");
         router.refresh();
       }
