@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import type { Metadata } from "next";
 import { FilterProvider } from "@/context";
 import LocalSearch from "@/components/modules/main/local-search";
 import Filter from "@/components/filters/filter";
@@ -6,6 +7,12 @@ import { UserFilters } from "@/common/constants/filters";
 import FilterContent from "@/components/filters/filter-content";
 import { GridCardsSkeleton } from "@/components/skeletons";
 import Users from "./users";
+
+export const metadata: Metadata = {
+  title: "Dev4Room | Community",
+  description:
+    "Browse and search developer profiles on Dev4Room — find contributors, view expertise, and connect with other developers.",
+};
 
 const Community = ({ searchParams }: RouteParams) => {
   return (
