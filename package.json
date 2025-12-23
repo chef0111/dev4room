@@ -73,6 +73,7 @@
     "eslint-plugin-prettier": "^5.5.4",
     "eslint-plugin-promise": "^7.2.1",
     "eslint-plugin-tailwindcss": "^3.18.2",
+    "fuzzball": "^2.2.3",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.562.0",
     "motion": "^12.23.22",

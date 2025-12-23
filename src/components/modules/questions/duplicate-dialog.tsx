@@ -16,7 +16,8 @@ import Link from "next/link";
 interface DuplicateQuestion {
   id: string;
   title: string;
-  matchType: "title" | "content";
+  titleSimilarity?: number;
+  contentSimilarity?: number;
 }
 
 interface DuplicateDialogProps {
@@ -58,9 +59,14 @@ const DuplicateDialog = ({
                     >
                       {dup.title}
                     </Link>
-                    <span className="text-muted-foreground text-xs">
-                      Similar question
-                    </span>
+                    <div className="text-muted-foreground flex flex-wrap gap-2 text-xs">
+                      {dup.titleSimilarity && (
+                        <span>Title: {dup.titleSimilarity}% similar</span>
+                      )}
+                      {dup.contentSimilarity && (
+                        <span>Content: {dup.contentSimilarity}% similar</span>
+                      )}
+                    </div>
                   </li>
                 ))}
               </ul>
