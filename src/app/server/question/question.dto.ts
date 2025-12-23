@@ -97,7 +97,8 @@ export const CheckDuplicateOutputSchema = z.object({
     z.object({
       id: z.string(),
       title: z.string(),
-      matchType: z.enum(["title", "content"]),
+      titleSimilarity: z.number().optional(),
+      contentSimilarity: z.number().optional(),
     })
   ),
 });

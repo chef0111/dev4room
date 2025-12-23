@@ -1,6 +1,7 @@
 import "server-only";
 
 import { cacheTag, cacheLife } from "next/cache";
+import * as fuzz from "fuzzball";
 
 import { db } from "@/database/drizzle";
 import {
@@ -24,7 +25,6 @@ import {
   CreateQuestionInput,
   EditQuestionInput,
 } from "./question.dto";
-import { normalizeText } from "@/lib/utils";
 
 const REPUTATION_THRESHOLD = 1000;
 const MAX_PENDING_QUESTIONS = 3;
@@ -550,11 +550,13 @@ export class QuestionDAL {
     duplicates: Array<{
       id: string;
       title: string;
-      matchType: "title" | "content";
+      titleSimilarity?: number;
+      contentSimilarity?: number;
     }>;
   }> {
-    const normalizedTitle = normalizeText(params.title);
-    const normalizedContent = normalizeText(params.content);
+    // Similarity thresholds (0-100)
+    const TITLE_THRESHOLD = 80;
+    const CONTENT_THRESHOLD = 70;
 
     // Query all approved questions
     const allQuestions = await db
@@ -576,23 +578,42 @@ export class QuestionDAL {
     const duplicates: Array<{
       id: string;
       title: string;
-      matchType: "title" | "content";
+      titleSimilarity?: number;
+      contentSimilarity?: number;
     }> = [];
 
     for (const q of allQuestions) {
-      const qNormalizedTitle = normalizeText(q.title);
-      const qNormalizedContent = normalizeText(q.content);
+      // Use token_sort_ratio for better handling of reordered words
+      const titleSimilarity = fuzz.token_sort_ratio(params.title, q.title);
+      const contentSimilarity = fuzz.token_sort_ratio(
+        params.content,
+        q.content
+      );
 
-      if (qNormalizedTitle === normalizedTitle) {
-        duplicates.push({ id: q.id, title: q.title, matchType: "title" });
-      } else if (qNormalizedContent === normalizedContent) {
-        duplicates.push({ id: q.id, title: q.title, matchType: "content" });
+      const titleMatches = titleSimilarity >= TITLE_THRESHOLD;
+      const contentMatches = contentSimilarity >= CONTENT_THRESHOLD;
+
+      if (titleMatches || contentMatches) {
+        duplicates.push({
+          id: q.id,
+          title: q.title,
+          // Only include similarities that exceed threshold
+          ...(titleMatches && { titleSimilarity }),
+          ...(contentMatches && { contentSimilarity }),
+        });
       }
     }
 
+    // Sort by highest similarity and limit to 5
+    duplicates.sort((a, b) => {
+      const aMax = Math.max(a.titleSimilarity ?? 0, a.contentSimilarity ?? 0);
+      const bMax = Math.max(b.titleSimilarity ?? 0, b.contentSimilarity ?? 0);
+      return bMax - aMax;
+    });
+
     return {
       hasDuplicate: duplicates.length > 0,
-      duplicates: duplicates.slice(0, 5), // Limit to 5 duplicates
+      duplicates: duplicates.slice(0, 5),
     };
   }
 }

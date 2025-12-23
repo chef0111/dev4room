@@ -38,7 +38,12 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
   const [showPendingDialog, setShowPendingDialog] = useState(false);
   const [showDuplicateDialog, setShowDuplicateDialog] = useState(false);
   const [duplicates, setDuplicates] = useState<
-    Array<{ id: string; title: string; matchType: "title" | "content" }>
+    Array<{
+      id: string;
+      title: string;
+      titleSimilarity?: number;
+      contentSimilarity?: number;
+    }>
   >([]);
   const [pendingFormData, setPendingFormData] = useState<z.infer<
     typeof QuestionSchema
