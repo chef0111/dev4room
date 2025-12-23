@@ -270,7 +270,7 @@ export class AdminDAL {
         id: user.id,
         username: user.username,
         reputation: user.reputation,
-        questionCount: sql<number>`(SELECT COUNT(*)::int FROM "question" WHERE "question"."author_id" = "user"."id" AND "question"."status" == 'approved')`,
+        questionCount: sql<number>`(SELECT COUNT(*)::int FROM "question" WHERE "question"."author_id" = "user"."id" AND "question"."status" = 'approved')`,
         answerCount: sql<number>`(SELECT COUNT(*)::int FROM "answer" WHERE "answer"."author_id" = "user"."id")`,
       })
       .from(user)
