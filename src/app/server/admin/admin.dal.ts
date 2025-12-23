@@ -85,7 +85,9 @@ export class AdminDAL {
       db
         .select({ count: count() })
         .from(question)
-        .where(gte(question.createdAt, today)),
+        .where(
+          and(gte(question.createdAt, today), eq(question.status, "approved"))
+        ),
       db
         .select({ count: count() })
         .from(answer)
@@ -110,13 +112,19 @@ export class AdminDAL {
       db
         .select({ count: count() })
         .from(question)
-        .where(gte(question.createdAt, lastWeek)),
+        .where(
+          and(
+            gte(question.createdAt, lastWeek),
+            eq(question.status, "approved")
+          )
+        ),
       db
         .select({ count: count() })
         .from(question)
         .where(
           and(
             gte(question.createdAt, twoWeeksAgo),
+            eq(question.status, "approved"),
             lt(question.createdAt, lastWeek)
           )
         ),
