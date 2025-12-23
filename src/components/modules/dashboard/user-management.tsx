@@ -288,7 +288,7 @@ export function UserManagement() {
                 </TooltipTrigger>
               </ToggleGroupItem>
               <TooltipContent side="bottom" sideOffset={6}>
-                <p>Notion-like filter builder</p>
+                <p>Advance filter builder</p>
               </TooltipContent>
             </Tooltip>
           </ToggleGroup>
