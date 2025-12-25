@@ -151,7 +151,11 @@ cd dev4room
 Install the project dependencies using bun:
 
 ```bash
-curl -fsSL https://bun.sh/install | bash  # Install bun if not installed
+# Install bun if not installed
+curl -fsSL https://bun.sh/install | bash        # Linux & macOS 
+powershell -c "irm bun.sh/install.ps1 | iex"    # Windows
+
+# Install dependencies
 bun install
 ```
 
