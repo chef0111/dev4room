@@ -247,8 +247,11 @@ export class QuestionDAL {
         .returning({ id: question.id, status: question.status });
 
       // Find or create tags and associate with question
+      const tagStatus = status as "pending" | "approved";
       const tagIds = await Promise.all(
-        tagNames.map((tagName) => TagQuestionService.findOrCreate(tx, tagName))
+        tagNames.map((tagName) =>
+          TagQuestionService.findOrCreate(tx, tagName, tagStatus)
+        )
       );
 
       await TagQuestionService.addTagsToQuestion(tx, newQuestion.id, tagIds);
@@ -512,33 +515,48 @@ export class QuestionDAL {
     questionId: string,
     userId: string
   ): Promise<void> {
-    const [existing] = await db
-      .select({
-        id: question.id,
-        authorId: question.authorId,
-        status: question.status,
-      })
-      .from(question)
-      .where(eq(question.id, questionId))
-      .limit(1);
+    return db.transaction(async (tx) => {
+      const [existing] = await tx
+        .select({
+          id: question.id,
+          authorId: question.authorId,
+          status: question.status,
+        })
+        .from(question)
+        .where(eq(question.id, questionId))
+        .limit(1);
 
-    if (!existing) {
-      throw new ORPCError("NOT_FOUND", { message: "Question not found" });
-    }
+      if (!existing) {
+        throw new ORPCError("NOT_FOUND", { message: "Question not found" });
+      }
 
-    if (existing.authorId !== userId) {
-      throw new ORPCError("FORBIDDEN", {
-        message: "You are not authorized to cancel this question",
-      });
-    }
+      if (existing.authorId !== userId) {
+        throw new ORPCError("FORBIDDEN", {
+          message: "You are not authorized to cancel this question",
+        });
+      }
 
-    if (existing.status !== "pending" && existing.status !== "rejected") {
-      throw new ORPCError("BAD_REQUEST", {
-        message: "Only pending or rejected questions can be cancelled",
-      });
-    }
+      if (existing.status !== "pending" && existing.status !== "rejected") {
+        throw new ORPCError("BAD_REQUEST", {
+          message: "Only pending or rejected questions can be cancelled",
+        });
+      }
 
-    await db.delete(question).where(eq(question.id, questionId));
+      // Decrement tag question counts
+      const questionTags = await tx
+        .select({ tagId: tagQuestion.tagId })
+        .from(tagQuestion)
+        .where(eq(tagQuestion.questionId, questionId));
+
+      if (questionTags.length > 0) {
+        await TagQuestionService.decrementQuestionCount(
+          tx,
+          questionTags.map((t) => t.tagId)
+        );
+      }
+
+      await tx.delete(question).where(eq(question.id, questionId));
+    });
   }
 
   static async checkDuplicate(params: {

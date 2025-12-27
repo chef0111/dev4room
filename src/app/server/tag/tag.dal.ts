@@ -139,15 +139,19 @@ export class TagDAL {
     const where = conditions.length > 0 ? and(...conditions) : undefined;
     const sortCriteria = this.getTagSortCriteria(filter as TagFilter);
 
+    // Only include approved tags
+    const approvedFilter = eq(tag.status, "approved");
+    const tagsWhere = where ? and(where, approvedFilter) : approvedFilter;
+
     const [{ count }] = await db
       .select({ count: sql<number>`count(*)::int` })
       .from(tag)
-      .where(where);
+      .where(tagsWhere);
 
     const rows = await db
       .select(this.tagSelectFields)
       .from(tag)
-      .where(where)
+      .where(tagsWhere)
       .orderBy(sortCriteria)
       .limit(limit)
       .offset(offset);

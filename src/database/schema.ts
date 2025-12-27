@@ -111,6 +111,9 @@ export const tag = pgTable(
   {
     id: text("id").primaryKey().$defaultFn(generateId),
     name: text("name").notNull().unique(),
+    status: text("status", { enum: ["pending", "approved"] })
+      .default("pending")
+      .notNull(),
     questions: integer("questions").default(0).notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
