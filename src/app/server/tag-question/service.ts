@@ -8,22 +8,35 @@ import type { Transaction } from "../utils";
 const pendingTagIndexing: Set<string> = new Set();
 
 export class TagQuestionService {
-  static async findOrCreate(tx: Transaction, tagName: string): Promise<string> {
+  static async findOrCreate(
+    tx: Transaction,
+    tagName: string,
+    tagStatus: "pending" | "approved" = "pending"
+  ): Promise<string> {
     const normalizedName = tagName.toLowerCase().trim();
 
     // Try to find existing tag
     const [existingTag] = await tx
-      .select({ id: tag.id })
+      .select({ id: tag.id, status: tag.status })
       .from(tag)
       .where(ilike(tag.name, normalizedName))
       .limit(1);
 
     if (existingTag) {
       // Increment question count for existing tag
-      await tx
-        .update(tag)
-        .set({ questions: sql`${tag.questions} + 1` })
-        .where(eq(tag.id, existingTag.id));
+      // If new question is approved and tag is pending, upgrade tag to approved
+      const updateData: {
+        questions: ReturnType<typeof sql>;
+        status?: "approved";
+      } = {
+        questions: sql`${tag.questions} + 1`,
+      };
+
+      if (tagStatus === "approved" && existingTag.status === "pending") {
+        updateData.status = "approved";
+      }
+
+      await tx.update(tag).set(updateData).where(eq(tag.id, existingTag.id));
 
       return existingTag.id;
     }
@@ -31,7 +44,7 @@ export class TagQuestionService {
     // Create new tag
     const [newTag] = await tx
       .insert(tag)
-      .values({ name: normalizedName, questions: 1 })
+      .values({ name: normalizedName, questions: 1, status: tagStatus })
       .returning({ id: tag.id });
 
     pendingTagIndexing.add(newTag.id);

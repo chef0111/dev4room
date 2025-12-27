@@ -454,10 +454,25 @@ export class AdminDAL {
       throw new Error("Question is not pending");
     }
 
+    // Update question status
     await db
       .update(question)
       .set({ status: "approved" })
       .where(eq(question.id, questionId));
+
+    // Update associated tags to approved status
+    const questionTags = await db
+      .select({ tagId: tagQuestion.tagId })
+      .from(tagQuestion)
+      .where(eq(tagQuestion.questionId, questionId));
+
+    if (questionTags.length > 0) {
+      const tagIds = questionTags.map((t) => t.tagId);
+      await db
+        .update(tag)
+        .set({ status: "approved" })
+        .where(and(inArray(tag.id, tagIds), eq(tag.status, "pending")));
+    }
   }
 
   static async rejectQuestion(
