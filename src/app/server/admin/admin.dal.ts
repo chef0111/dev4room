@@ -374,7 +374,61 @@ export class AdminDAL {
     return Array.from(dateMap.values());
   }
 
-  static async getPendingQuestions() {
+  static async getPendingQuestions(params: {
+    search?: string;
+    status?: "pending" | "rejected";
+    limit: number;
+    offset: number;
+  }): Promise<{
+    questions: Array<{
+      id: string;
+      title: string;
+      content: string;
+      status: "pending" | "approved" | "rejected";
+      rejectReason: string | null;
+      createdAt: Date;
+      author: {
+        id: string;
+        name: string;
+        username: string;
+        image: string | null;
+      };
+      tags: { id: string; name: string }[];
+    }>;
+    total: number;
+  }> {
+    const conditions = [];
+
+    // Filter by status
+    if (params.status) {
+      conditions.push(eq(question.status, params.status));
+    } else {
+      conditions.push(
+        or(eq(question.status, "pending"), eq(question.status, "rejected"))
+      );
+    }
+
+    // Search by title or author name
+    if (params.search) {
+      const searchPattern = `%${params.search}%`;
+      conditions.push(
+        or(
+          sql`${question.title} ILIKE ${searchPattern}`,
+          sql`${user.name} ILIKE ${searchPattern}`
+        )
+      );
+    }
+
+    const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+
+    // Get total count
+    const [countResult] = await db
+      .select({ count: count() })
+      .from(question)
+      .leftJoin(user, eq(question.authorId, user.id))
+      .where(whereClause);
+
+    // Get paginated questions
     const rows = await db
       .select({
         id: question.id,
@@ -390,10 +444,10 @@ export class AdminDAL {
       })
       .from(question)
       .leftJoin(user, eq(question.authorId, user.id))
-      .where(
-        or(eq(question.status, "pending"), eq(question.status, "rejected"))
-      )
-      .orderBy(desc(question.createdAt));
+      .where(whereClause)
+      .orderBy(desc(question.createdAt))
+      .limit(params.limit)
+      .offset(params.offset);
 
     // Get tags for each question
     const questionIds = rows.map((r) => r.id);
@@ -422,21 +476,24 @@ export class AdminDAL {
       });
     });
 
-    return rows.map((row) => ({
-      id: row.id,
-      title: row.title,
-      content: row.content,
-      status: row.status,
-      rejectReason: row.rejectReason,
-      createdAt: row.createdAt,
-      author: {
-        id: row.authorId,
-        name: row.authorName ?? "Unknown",
-        username: row.authorUsername ?? "unknown",
-        image: row.authorImage,
-      },
-      tags: tagsByQuestion.get(row.id) ?? [],
-    }));
+    return {
+      questions: rows.map((row) => ({
+        id: row.id,
+        title: row.title,
+        content: row.content,
+        status: row.status as "pending" | "approved" | "rejected",
+        rejectReason: row.rejectReason,
+        createdAt: row.createdAt,
+        author: {
+          id: row.authorId,
+          name: row.authorName ?? "Unknown",
+          username: row.authorUsername ?? "unknown",
+          image: row.authorImage,
+        },
+        tags: tagsByQuestion.get(row.id) ?? [],
+      })),
+      total: countResult?.count ?? 0,
+    };
   }
 
   static async approveQuestion(questionId: string): Promise<void> {
@@ -507,7 +564,9 @@ export const appendFields = (
 export const getGrowthAnalytics = (
   ...args: Parameters<typeof AdminDAL.getGrowthAnalytics>
 ) => AdminDAL.getGrowthAnalytics(...args);
-export const getPendingQuestions = () => AdminDAL.getPendingQuestions();
+export const getPendingQuestions = (
+  ...args: Parameters<typeof AdminDAL.getPendingQuestions>
+) => AdminDAL.getPendingQuestions(...args);
 export const approveQuestion = (
   ...args: Parameters<typeof AdminDAL.approveQuestion>
 ) => AdminDAL.approveQuestion(...args);

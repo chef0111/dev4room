@@ -88,3 +88,32 @@ export const GrowthDataPointSchema = z.object({
 export const GrowthAnalyticsOutputSchema = z.object({
   data: z.array(GrowthDataPointSchema),
 });
+
+// ============= Pending Questions DTOs =============
+export const ListPendingQuestionsInputSchema = z.object({
+  search: z.string().optional(),
+  status: z.enum(["pending", "rejected"]).optional(),
+  limit: z.number().int().min(1).max(100).default(10),
+  offset: z.number().int().nonnegative().default(0),
+});
+
+export const PendingQuestionItemSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  content: z.string(),
+  status: z.enum(["pending", "approved", "rejected"]),
+  rejectReason: z.string().nullable(),
+  createdAt: z.date(),
+  author: z.object({
+    id: z.string(),
+    name: z.string(),
+    username: z.string(),
+    image: z.string().nullable(),
+  }),
+  tags: z.array(z.object({ id: z.string(), name: z.string() })),
+});
+
+export const ListPendingQuestionsOutputSchema = z.object({
+  questions: z.array(PendingQuestionItemSchema),
+  total: z.number().int().nonnegative(),
+});

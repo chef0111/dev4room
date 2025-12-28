@@ -22,6 +22,8 @@ import {
   DeleteUserInputSchema,
   GrowthAnalyticsInputSchema,
   GrowthAnalyticsOutputSchema,
+  ListPendingQuestionsInputSchema,
+  ListPendingQuestionsOutputSchema,
 } from "./admin.dto";
 import { revalidatePath } from "next/cache";
 
@@ -196,27 +198,15 @@ export const listPendingQuestions = admin
     summary: "List Pending Questions (Admin Only)",
     tags: ["Admin"],
   })
-  .output(
-    z.array(
-      z.object({
-        id: z.string(),
-        title: z.string(),
-        content: z.string(),
-        status: z.enum(["pending", "approved", "rejected"]),
-        rejectReason: z.string().nullable(),
-        createdAt: z.date(),
-        author: z.object({
-          id: z.string(),
-          name: z.string(),
-          username: z.string(),
-          image: z.string().nullable(),
-        }),
-        tags: z.array(z.object({ id: z.string(), name: z.string() })),
-      })
-    )
-  )
-  .handler(async () => {
-    return getPendingQuestions();
+  .input(ListPendingQuestionsInputSchema)
+  .output(ListPendingQuestionsOutputSchema)
+  .handler(async ({ input }) => {
+    return getPendingQuestions({
+      search: input.search,
+      status: input.status,
+      limit: input.limit,
+      offset: input.offset,
+    });
   });
 
 export const approveQuestion = admin

@@ -57,7 +57,7 @@ export function DataTableViewOptions<TData>({
           View
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-44 p-0" {...props}>
+      <PopoverContent className="w-44 border-none p-0" {...props}>
         <Command>
           <CommandInput placeholder="Search columns..." />
           <CommandList>

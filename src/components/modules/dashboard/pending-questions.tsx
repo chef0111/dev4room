@@ -1,22 +1,22 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import {
-  IconCheck,
-  IconX,
-  IconEye,
-  IconClock,
-  IconBan,
-} from "@tabler/icons-react";
+import { IconCheck, IconClock, IconBan } from "@tabler/icons-react";
 import { toast } from "sonner";
 import {
-  useAdminPendingQuestions,
-  useApproveQuestion,
-} from "@/queries/admin.queries";
+  useQueryState,
+  parseAsInteger,
+  parseAsString,
+  parseAsArrayOf,
+  useQueryStates,
+} from "nuqs";
+
+import { DataTable } from "@/components/data-table/data-table";
+import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { Item, ItemContent, ItemActions } from "@/components/ui/item";
 import {
   Dialog,
   DialogContent,
@@ -24,52 +24,54 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import QuestionCard from "@/components/modules/questions/question-card";
+import {
+  useAdminPendingQuestions,
+  useApproveQuestion,
+} from "@/queries/admin.queries";
+import { useDataTable } from "@/hooks/use-data-table";
+import {
+  getPendingQuestionColumns,
+  type PendingQuestionData,
+} from "./pending-questions-columns";
 import { RejectQuestionDialog } from "./reject-question-dialog";
-import WaitlistFallback from "./waitlist-fallback";
 import WaitlistEmpty from "./waitlist-empty";
-
-interface PendingQuestion {
-  id: string;
-  title: string;
-  content: string;
-  status: "pending" | "approved" | "rejected";
-  rejectReason: string | null;
-  createdAt: Date;
-  author: {
-    id: string;
-    name: string;
-    username: string;
-    image: string | null;
-  };
-  tags: { id: string; name: string }[];
-}
+import { DataTableSkeleton } from "@/components/data-table/data-table-skeleton";
 
 export function PendingQuestions() {
-  const { data: questions, isLoading } = useAdminPendingQuestions();
+  // URL state for pagination and filtering
+  const [page] = useQueryState("page", parseAsInteger.withDefault(1));
+  const [perPage] = useQueryState("perPage", parseAsInteger.withDefault(10));
+
+  // Read filter values from URL
+  const [filterValues] = useQueryStates({
+    title: parseAsString.withDefault(""),
+    status: parseAsArrayOf(parseAsString, ",").withDefault([]),
+  });
+
+  // Convert filter values to API params
+  const apiParams = useMemo(() => {
+    return {
+      search: filterValues.title || undefined,
+      status:
+        filterValues.status.length === 1
+          ? (filterValues.status[0] as "pending" | "rejected")
+          : undefined,
+      limit: perPage,
+      offset: (page - 1) * perPage,
+    };
+  }, [filterValues, page, perPage]);
+
+  const { data, isLoading, error } = useAdminPendingQuestions(apiParams);
   const approveMutation = useApproveQuestion();
 
-  const [activeTab, setActiveTab] = useState<"all" | "pending" | "rejected">(
-    "all"
-  );
+  // Dialog state
   const [previewQuestion, setPreviewQuestion] =
-    useState<PendingQuestion | null>(null);
+    useState<PendingQuestionData | null>(null);
   const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
   const [questionToReject, setQuestionToReject] =
-    useState<PendingQuestion | null>(null);
+    useState<PendingQuestionData | null>(null);
 
-  const filteredQuestions = useMemo(() => {
-    if (!questions) return [];
-    if (activeTab === "all") return questions;
-    return questions.filter((q) => q.status === activeTab);
-  }, [questions, activeTab]);
-
-  const pendingCount =
-    questions?.filter((q) => q.status === "pending").length ?? 0;
-  const rejectedCount =
-    questions?.filter((q) => q.status === "rejected").length ?? 0;
-
-  const handleApprove = async (question: PendingQuestion) => {
+  const handleApprove = async (question: PendingQuestionData) => {
     try {
       await approveMutation.mutateAsync(question.id);
       toast.success(`Question "${question.title}" approved`);
@@ -78,7 +80,7 @@ export function PendingQuestions() {
     }
   };
 
-  const openRejectDialog = (question: PendingQuestion) => {
+  const openRejectDialog = (question: PendingQuestionData) => {
     setQuestionToReject(question);
     setRejectDialogOpen(true);
   };
@@ -88,9 +90,82 @@ export function PendingQuestions() {
     setQuestionToReject(null);
   };
 
-  if (isLoading) return <WaitlistFallback />;
+  const columns = useMemo(
+    () =>
+      getPendingQuestionColumns({
+        onApprove: handleApprove,
+        onReject: openRejectDialog,
+        onPreview: setPreviewQuestion,
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
-  if (!questions || questions.length === 0) return <WaitlistEmpty />;
+  const { table } = useDataTable({
+    data: data?.questions ?? [],
+    columns,
+    pageCount: Math.ceil((data?.total ?? 0) / perPage),
+    initialState: {
+      pagination: { pageSize: perPage, pageIndex: page - 1 },
+      sorting: [{ id: "createdAt", desc: true }],
+    },
+  });
+
+  if (error) {
+    return (
+      <Card className="mx-4 lg:mx-6">
+        <CardContent className="py-8 text-center">
+          <p className="text-muted-foreground">
+            Failed to load pending questions. Make sure you have admin access.
+          </p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (isLoading && !data) {
+    return (
+      <DataTableSkeleton
+        columnCount={5}
+        rowCount={5}
+        filterCount={2}
+        withPagination
+        withViewOptions
+      />
+    );
+  }
+
+  if (!data || data.total === 0) {
+    return <WaitlistEmpty />;
+  }
+
+  const selectedRows = table.getFilteredSelectedRowModel().rows;
+  const selectedPendingQuestions = selectedRows.filter(
+    (row) => row.original.status === "pending"
+  );
+
+  const handleBulkApprove = async () => {
+    const pendingIds = selectedPendingQuestions.map((row) => row.original.id);
+    if (pendingIds.length === 0) {
+      toast.error("No pending questions selected");
+      return;
+    }
+
+    let successCount = 0;
+    for (const id of pendingIds) {
+      try {
+        await approveMutation.mutateAsync(id);
+        successCount++;
+      } catch {
+        // Continue with next
+      }
+    }
+
+    if (successCount > 0) {
+      toast.success(`Approved ${successCount} question(s)`);
+      table.resetRowSelection();
+    }
+  };
 
   return (
     <>
@@ -100,96 +175,47 @@ export function PendingQuestions() {
             <IconClock className="size-5" />
             Pending Questions
             <Badge variant="secondary" className="ml-2">
-              {questions.length}
+              {data.total}
             </Badge>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <Tabs
-            value={activeTab}
-            onValueChange={(v) =>
-              setActiveTab(v as "all" | "pending" | "rejected")
+          <DataTable
+            table={table}
+            actionBar={
+              selectedPendingQuestions.length > 0 && (
+                <Item
+                  variant="outline"
+                  size="sm"
+                  className="bg-background fixed inset-x-0 bottom-6 z-50 mx-auto w-fit gap-6 shadow-lg"
+                >
+                  <ItemContent className="text-muted-foreground gap-2 text-sm">
+                    {selectedPendingQuestions.length} pending question(s)
+                    selected
+                  </ItemContent>
+                  <ItemActions>
+                    <Button
+                      size="sm"
+                      onClick={handleBulkApprove}
+                      disabled={approveMutation.isPending}
+                    >
+                      <IconCheck className="size-4" />
+                      Approve All
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => table.resetRowSelection()}
+                    >
+                      Clear
+                    </Button>
+                  </ItemActions>
+                </Item>
+              )
             }
           >
-            <TabsList className="mb-4">
-              <TabsTrigger value="all">All ({questions.length})</TabsTrigger>
-              <TabsTrigger value="pending">
-                Pending ({pendingCount})
-              </TabsTrigger>
-              <TabsTrigger value="rejected">
-                Rejected ({rejectedCount})
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value={activeTab} className="mt-0">
-              <div className="flex flex-col gap-4">
-                {filteredQuestions.map((question) => (
-                  <QuestionCard
-                    key={question.id}
-                    question={{
-                      id: question.id,
-                      title: question.title,
-                      content: question.content,
-                      tags: question.tags,
-                      author: {
-                        id: question.author.id,
-                        name: question.author.name,
-                        image: question.author.image,
-                      },
-                      createdAt: question.createdAt,
-                      upvotes: 0,
-                      downvotes: 0,
-                      answers: 0,
-                      views: 0,
-                    }}
-                    href={"#"}
-                    customActions={
-                      <div className="flex items-center gap-2">
-                        {question.status === "rejected" && (
-                          <Badge variant="destructive">
-                            <IconBan className="size-4" />
-                            Rejected
-                          </Badge>
-                        )}
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setPreviewQuestion(question)}
-                        >
-                          <IconEye className="size-4" />
-                        </Button>
-                        {question.status === "pending" && (
-                          <>
-                            <Button
-                              variant="default"
-                              size="sm"
-                              onClick={() => handleApprove(question)}
-                              disabled={approveMutation.isPending}
-                            >
-                              <IconCheck className="size-4" />
-                              <span className="sr-only sm:not-sr-only sm:ml-1">
-                                Approve
-                              </span>
-                            </Button>
-                            <Button
-                              variant="destructive"
-                              size="sm"
-                              onClick={() => openRejectDialog(question)}
-                            >
-                              <IconBan className="size-4" />
-                              <span className="sr-only sm:not-sr-only sm:ml-1">
-                                Reject
-                              </span>
-                            </Button>
-                          </>
-                        )}
-                      </div>
-                    }
-                  />
-                ))}
-              </div>
-            </TabsContent>
-          </Tabs>
+            <DataTableToolbar table={table} />
+          </DataTable>
         </CardContent>
       </Card>
 
@@ -252,7 +278,7 @@ export function PendingQuestions() {
                   setPreviewQuestion(null);
                 }}
               >
-                <IconX className="size-4" />
+                <IconBan className="size-4" />
                 Reject
               </Button>
             </div>
