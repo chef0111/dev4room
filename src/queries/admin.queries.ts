@@ -105,28 +105,43 @@ export function useAdminGrowth(days: number = 90) {
   });
 }
 
-export function useAdminPendingQuestions() {
+interface ListPendingQuestionsParams {
+  search?: string;
+  status?: "pending" | "rejected";
+  limit?: number;
+  offset?: number;
+}
+
+export function useAdminPendingQuestions(
+  params: ListPendingQuestionsParams = {}
+) {
+  const { search, status, limit = 10, offset = 0 } = params;
+
   return useQuery({
     ...orpc.admin.pendingQuestions.queryOptions({
-      input: undefined,
+      input: {
+        search,
+        status,
+        limit,
+        offset,
+      },
     }),
     staleTime: 1000 * 30,
+    placeholderData: (previousData) => previousData,
   });
 }
 
 export function useApproveQuestion() {
   const queryClient = useQueryClient();
 
-  const pendingQuestionsQueryKey = orpc.admin.pendingQuestions.queryOptions({
-    input: undefined,
-  }).queryKey;
-
   return useMutation({
     mutationFn: (questionId: string) =>
       client.admin.approveQuestion({ questionId }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: pendingQuestionsQueryKey,
+        predicate: (query) =>
+          query.queryKey[0] === "admin" &&
+          query.queryKey[1] === "pendingQuestions",
       });
     },
   });
@@ -135,16 +150,14 @@ export function useApproveQuestion() {
 export function useRejectQuestion() {
   const queryClient = useQueryClient();
 
-  const pendingQuestionsQueryKey = orpc.admin.pendingQuestions.queryOptions({
-    input: undefined,
-  }).queryKey;
-
   return useMutation({
     mutationFn: (params: { questionId: string; reason: string }) =>
       client.admin.rejectQuestion(params),
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: pendingQuestionsQueryKey,
+        predicate: (query) =>
+          query.queryKey[0] === "admin" &&
+          query.queryKey[1] === "pendingQuestions",
       });
     },
   });

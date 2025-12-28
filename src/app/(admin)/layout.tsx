@@ -11,7 +11,7 @@ interface Props {
 
 const DashboardLayout: React.FC<Props> = ({ children }: Props) => {
   return (
-    <main className="bg-light850_dark100 relative">
+    <main className="bg-light800_dark300 relative">
       <Suspense fallback={null}>
         <ScrollToTop />
       </Suspense>
