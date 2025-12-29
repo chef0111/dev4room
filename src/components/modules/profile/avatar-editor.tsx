@@ -91,7 +91,6 @@ const AvatarEditor = ({ user }: AvatarEditorProps) => {
           <div className="relative">
             <UserAvatar
               href={null}
-              id={user.id ?? ""}
               name={user.name ?? ""}
               image={user.image ?? null}
               className="size-40 rounded-full object-cover md:size-48"

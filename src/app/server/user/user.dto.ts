@@ -27,12 +27,17 @@ export const UserSchema = z.object({
 export const AuthorSchema = z.object({
   id: z.string(),
   name: z.string(),
+  username: z.string(),
   image: z.string().nullable(),
 });
 
 // Input Schemas
 export const GetUserSchema = z.object({
   userId: z.string().min(1, { message: "User ID is required." }),
+});
+
+export const GetUserByUsernameSchema = z.object({
+  username: z.string().min(1, { message: "Username is required." }),
 });
 
 export const UserPostSchema = QueryParamsSchema.omit({

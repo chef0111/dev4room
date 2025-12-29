@@ -45,6 +45,7 @@ interface Tag {
 interface Author {
   id: string;
   name: string;
+  username: string;
   image: string | null;
 }
 

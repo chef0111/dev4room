@@ -201,7 +201,7 @@ const CommandMenu = () => {
     <>
       <Button
         variant="outline"
-        className="bg-light800_darksecondgradient text-light400_light500 relative h-10 w-full max-w-80 justify-start gap-2 rounded-lg border-none px-3 text-sm max-md:hidden lg:max-w-140"
+        className="bg-light800_darksecondgradient text-light400_light500 relative h-10 w-full max-w-80 justify-start gap-2 rounded-lg border-none px-3 text-sm max-md:hidden lg:max-w-120 xl:max-w-140"
         onClick={() => setOpen(true)}
       >
         <Search className="size-4" />
@@ -392,11 +392,11 @@ const CommandMenu = () => {
                     <CommandItem
                       key={user.id}
                       value={`user-${user.id}`}
-                      onSelect={() => handleSelect(`/profile/${user.id}`)}
+                      onSelect={() => handleSelect(`/profile/${user.username}`)}
                       className="smooth-hover py-2!"
                     >
                       <UserAvatar
-                        id={user.id}
+                        username={user.username}
                         name={user.name}
                         image={user.image ?? undefined}
                         className="size-5"

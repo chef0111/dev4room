@@ -48,7 +48,7 @@ export function NavUser() {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <UserAvatar
-                id={user.id}
+                username={user?.username ?? undefined}
                 name={user.name}
                 image={user.image}
                 className="size-12 rounded-lg max-sm:size-8 lg:size-8"
@@ -70,7 +70,7 @@ export function NavUser() {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <UserAvatar
-                  id={user.id}
+                  username={user.username ?? undefined}
                   name={user.name}
                   image={user.image}
                   className="size-12 rounded-lg max-sm:size-8 lg:size-8"

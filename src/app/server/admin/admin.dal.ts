@@ -73,9 +73,12 @@ export class AdminDAL {
     ] = await Promise.all([
       // Total counts
       db.select({ count: count() }).from(user),
-      db.select({ count: count() }).from(question),
+      db
+        .select({ count: count() })
+        .from(question)
+        .where(eq(question.status, "approved")),
       db.select({ count: count() }).from(answer),
-      db.select({ count: count() }).from(tag),
+      db.select({ count: count() }).from(tag).where(eq(tag.status, "approved")),
 
       // Today's activity
       db

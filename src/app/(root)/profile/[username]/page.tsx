@@ -18,25 +18,22 @@ import UserTopTags from "./top-tags";
 import { UserTabsSkeleton, UserTopTagsSkeleton } from "@/components/skeletons";
 
 export async function generateStaticParams() {
-  const users = await db.select({ id: user.id }).from(user);
-  return users.map((u) => ({ id: u.id }));
+  const users = await db.select({ username: user.username }).from(user);
+  return users.map((u) => ({ username: u.username }));
 }
 
 const ProfilePage = async ({ params, searchParams }: RouteParams) => {
-  const { id } = await params;
+  const { username } = await params;
   const { page, pageSize, filter } = await searchParams;
 
-  if (!id) notFound();
+  if (!username) notFound();
 
   const queryClient = getQueryClient();
-
-  const session = await getServerSession();
-  const isAuthor = session?.user?.id === id;
 
   const userResult = await queryClient
     .fetchQuery(
       orpc.user.get.queryOptions({
-        input: { userId: id },
+        input: { username },
       })
     )
     .then((data) => ({ data, error: undefined }))
@@ -47,12 +44,15 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
 
   if (!userResult.data) return notFound();
 
-  const { user, totalQuestions, totalAnswers } = userResult.data;
+  const { user: userData, totalQuestions, totalAnswers } = userResult.data;
+
+  const session = await getServerSession();
+  const isAuthor = session?.user?.id === userData.id;
 
   const statsResult = await queryClient
     .fetchQuery(
       orpc.user.stats.queryOptions({
-        input: { userId: id },
+        input: { userId: userData.id },
       })
     )
     .then((data) => ({ data, error: undefined }))
@@ -64,14 +64,14 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
     <>
       <section className="flex w-full flex-col-reverse items-start justify-between sm:flex-row">
         <ProfileHeader
-          id={user.id}
-          name={user.name}
-          username={user.username}
-          image={user.image}
-          portfolio={user.portfolio}
-          location={user.location}
-          createdAt={user.createdAt}
-          bio={user.bio}
+          id={userData.id}
+          name={userData.name}
+          username={userData.username}
+          image={userData.image}
+          portfolio={userData.portfolio}
+          location={userData.location}
+          createdAt={userData.createdAt}
+          bio={userData.bio}
         />
 
         <div className="flex justify-end max-sm:mb-5 max-sm:w-full">
@@ -90,14 +90,14 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
         totalQuestions={totalQuestions}
         totalAnswers={totalAnswers}
         badges={userStats?.badges || { GOLD: 0, SILVER: 0, BRONZE: 0 }}
-        reputationPoints={user.reputation || 0}
+        reputationPoints={userData.reputation || 0}
       />
 
       <section className="mt-10 flex gap-10">
         <Suspense fallback={<UserTabsSkeleton />}>
           <UserTabs
-            userId={id}
-            user={user}
+            userId={userData.id}
+            user={userData}
             page={Number(page) || 1}
             pageSize={Number(pageSize) || 10}
             filter={filter}
@@ -106,7 +106,7 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
         </Suspense>
 
         <Suspense fallback={<UserTopTagsSkeleton />}>
-          <UserTopTags userId={id} />
+          <UserTopTags userId={userData.id} />
         </Suspense>
       </section>
     </>

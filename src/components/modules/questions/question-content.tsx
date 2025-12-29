@@ -59,14 +59,14 @@ const QuestionContent = async ({
         <div className="flex w-full justify-between">
           <div className="flex-start gap-1.5">
             <UserAvatar
-              id={author.id}
+              username={author.username}
               name={author.name}
               image={author.image ?? ""}
               className="size-7"
               fallbackClassName="text-xs"
             />
 
-            <Link href={`/profile/${author.id}`}>
+            <Link href={`/profile/${author.username}`}>
               <p className="pg-semibold text-dark300_light700 text-lg">
                 {author.name}
               </p>

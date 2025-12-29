@@ -51,7 +51,7 @@ export function UserNav({ isAdmin = false, className }: UserNavProps) {
         >
           <div className="flex-start grow gap-2">
             <UserAvatar
-              id={user?.id}
+              username={user?.username ?? undefined}
               name={user?.name}
               image={user?.image ?? null}
               className="size-12 rounded-lg max-sm:size-8 lg:size-8"
@@ -75,7 +75,7 @@ export function UserNav({ isAdmin = false, className }: UserNavProps) {
         <DropdownMenuLabel className="p-0 font-normal">
           <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
             <UserAvatar
-              id={user?.id}
+              username={user?.username ?? undefined}
               name={user?.name}
               image={user?.image ?? ""}
               className="size-8 rounded-lg"
