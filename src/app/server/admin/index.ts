@@ -74,6 +74,11 @@ export const banUser = authorized
   .input(BanUserInputSchema)
   .output(z.object({ success: z.boolean() }))
   .handler(async ({ input, context }) => {
+    // Prevent self-ban
+    if (input.userId === context.user.id) {
+      throw new Error("You cannot ban yourself");
+    }
+
     await auth.api.setRole({
       headers: context.headers,
       body: {
@@ -134,6 +139,11 @@ export const setUserRole = authorized
   .input(UpdateUserRoleInputSchema)
   .output(z.object({ success: z.boolean() }))
   .handler(async ({ input, context }) => {
+    // Prevent self-role change
+    if (input.userId === context.user.id) {
+      throw new Error("You cannot change your own role");
+    }
+
     await auth.api.setRole({
       headers: context.headers,
       body: {
@@ -165,6 +175,11 @@ export const deleteUser = authorized
   .input(DeleteUserInputSchema)
   .output(z.object({ success: z.boolean() }))
   .handler(async ({ input, context }) => {
+    // Prevent self-deletion
+    if (input.userId === context.user.id) {
+      throw new Error("You cannot delete yourself");
+    }
+
     await auth.api.removeUser({
       headers: context.headers,
       body: {
