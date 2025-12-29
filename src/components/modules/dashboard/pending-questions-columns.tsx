@@ -72,7 +72,7 @@ export function getPendingQuestionColumns({
       ),
       enableSorting: false,
       enableHiding: false,
-      size: 40,
+      size: 30,
     },
     {
       id: "title",
@@ -127,7 +127,9 @@ export function getPendingQuestionColumns({
           <div className="flex items-center gap-2">
             <Avatar className="size-7">
               {author.image && <AvatarImage src={author.image} />}
-              <AvatarFallback className="text-xs">{initials}</AvatarFallback>
+              <AvatarFallback className="size-7! text-xs">
+                {initials}
+              </AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
               <span className="text-sm font-medium">{author.name}</span>
@@ -200,7 +202,7 @@ export function getPendingQuestionColumns({
     },
     {
       id: "actions",
-      size: 80,
+      size: 20,
       cell: ({ row }) => {
         const question = row.original;
         return (

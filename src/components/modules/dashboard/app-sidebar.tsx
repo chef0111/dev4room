@@ -29,14 +29,9 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Brand } from "@/components/ui/dev";
-import { UserNav } from "@/components/modules/profile/user-nav";
+import { NavUser } from "./nav-user";
 
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   navMain: [
     {
       title: "Dashboard",
@@ -146,7 +141,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild
-              className="flex-start data-[slot=sidebar-menu-button]:p-1.5! [&>svg]:size-6"
+              className="flex-start bg-sidebar! data-[slot=sidebar-menu-button]:p-1.5! [&>svg]:-ml-1 [&>svg]:size-6"
             >
               <Brand href={null} />
             </SidebarMenuButton>
@@ -156,13 +151,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <NavMain items={data.navMain} />
         <NavDocuments items={data.documents} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavSecondary
+          items={data.navSecondary}
+          className="absolute bottom-16 transition-all duration-200 group-data-[collapsible=icon]:bottom-12"
+        />
       </SidebarContent>
       <SidebarFooter>
-        <UserNav
-          isAdmin
-          className="hover:bg-light800_dark400 active:bg-light800_dark400"
-        />
+        <NavUser />
       </SidebarFooter>
     </Sidebar>
   );
