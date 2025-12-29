@@ -125,7 +125,7 @@ export function getUserColumns({
           return (
             <Badge
               variant="default"
-              className="min-h-6 bg-blue-500/10 text-blue-600 dark:text-blue-400"
+              className="border-primary/30 min-h-7 border bg-blue-500/10 text-blue-600 dark:text-blue-400"
             >
               <IconShield className="mr-1 size-3" />
               Admin
@@ -135,9 +135,9 @@ export function getUserColumns({
         return (
           <Badge
             variant="outline"
-            className="text-muted-foreground border-muted min-h-6"
+            className="text-muted-foreground border-border bg-muted/50 min-h-7"
           >
-            <IconUser className="mr-1 size-3" />
+            <IconUser className="size-3" />
             User
           </Badge>
         );
@@ -162,8 +162,8 @@ export function getUserColumns({
         const user = row.original;
         if (user.banned) {
           return (
-            <Badge variant="destructive" className="min-h-6">
-              <IconBan className="mr-1 size-3" />
+            <Badge variant="destructive" className="min-h-7">
+              <IconBan className="size-3" />
               Banned
             </Badge>
           );
@@ -172,7 +172,7 @@ export function getUserColumns({
           return (
             <Badge
               variant="outline"
-              className="min-h-6 border-yellow-500/30 bg-yellow-500/10 text-yellow-600 dark:text-yellow-400"
+              className="min-h-7 border-yellow-500/30 bg-yellow-500/10 text-yellow-600 dark:text-yellow-400"
             >
               Unverified
             </Badge>
@@ -181,7 +181,7 @@ export function getUserColumns({
         return (
           <Badge
             variant="outline"
-            className="min-h-6 border-green-500/30 bg-green-500/10 text-green-600 dark:text-green-400"
+            className="min-h-7 border-green-500/30 bg-green-500/10 text-green-600 dark:text-green-400"
           >
             Active
           </Badge>

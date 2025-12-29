@@ -811,7 +811,7 @@ code {
   --secondary-foreground: oklch(0.984 0.003 247.858);
   --muted: oklch(0.2546 0.02 271.73);
   --muted-foreground: oklch(0.704 0.04 256.788);
-  --accent: var(--color-dark-200);
+  --accent: var(--color-dark-300);
   --accent-foreground: oklch(0.984 0.003 247.858);
   --destructive: oklch(66.78% 0.21944 22.987);
   --border: oklch(1 0 0 / 10%);
