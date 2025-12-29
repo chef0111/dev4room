@@ -153,7 +153,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavDocuments items={data.documents} />
         <NavSecondary
           items={data.navSecondary}
-          className="absolute bottom-16 transition-all duration-200 group-data-[collapsible=icon]:bottom-12"
+          className="absolute bottom-16 pr-6 transition-all duration-200 group-data-[collapsible=icon]:bottom-12"
         />
       </SidebarContent>
       <SidebarFooter>

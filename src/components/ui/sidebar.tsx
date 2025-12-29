@@ -517,7 +517,11 @@ function SidebarMenuButton({
       data-sidebar="menu-button"
       data-size={size}
       data-active={isActive}
-      className={cn(sidebarMenuButtonVariants({ variant, size }), className)}
+      className={cn(
+        sidebarMenuButtonVariants({ variant, size }),
+        "data-[active=true]:bg-light-800 dark:data-[active=true]:bg-sidebar-accent hover:bg-sidebar-accent dark:hover:bg-dark-300 smooth-hover",
+        className
+      )}
       {...props}
     />
   );
