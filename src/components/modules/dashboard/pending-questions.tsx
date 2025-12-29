@@ -125,13 +125,15 @@ export function PendingQuestions() {
 
   if (isLoading && !data) {
     return (
-      <DataTableSkeleton
-        columnCount={5}
-        rowCount={5}
-        filterCount={2}
-        withPagination
-        withViewOptions
-      />
+      <div className="px-6">
+        <DataTableSkeleton
+          columnCount={5}
+          rowCount={5}
+          filterCount={2}
+          withPagination
+          withViewOptions
+        />
+      </div>
     );
   }
 

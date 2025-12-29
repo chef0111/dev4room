@@ -108,7 +108,7 @@ const RootLayout: React.FC<Props> = ({ children }: Props) => {
         />
       </head>
       <body
-        className={`${inter.variable} ${esbuild.variable} bg-light850_dark100 antialiased`}
+        className={`${inter.variable} ${esbuild.variable} bg-light900_dark200 antialiased`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Providers>

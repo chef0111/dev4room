@@ -39,6 +39,7 @@ import {
 } from "@/queries/admin.queries";
 import { getFiltersStateParser } from "@/lib/table/parsers";
 import Loading from "@/app/(admin)/dashboard/users/loading";
+import { authClient } from "@/lib/auth-client";
 
 // Column IDs that can be filtered
 const FILTERABLE_COLUMNS = [
@@ -65,6 +66,9 @@ interface UserData {
 }
 
 export function UserManagement() {
+  const { data: session } = authClient.useSession();
+  const currentUserId = session?.user?.id;
+
   // Toggle between basic and advanced filter mode
   const [advancedMode, setAdvancedMode] = useQueryState(
     "advanced",
@@ -208,13 +212,14 @@ export function UserManagement() {
   const columns = useMemo(
     () =>
       getUserColumns({
+        currentUserId,
         onBan: handleBan,
         onUnban: handleUnban,
         onSetRole: handleSetRole,
         onDelete: handleDelete,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [data?.users]
+    [data?.users, currentUserId]
   );
 
   const { table, shallow, debounceMs, throttleMs } = useDataTable({

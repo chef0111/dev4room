@@ -2,12 +2,14 @@
 
 import type { ColumnDef } from "@tanstack/react-table";
 import {
+  IconAddressBook,
   IconBan,
   IconDotsVertical,
   IconShield,
   IconShieldOff,
   IconTrash,
   IconUser,
+  IconUserEdit,
 } from "@tabler/icons-react";
 
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
@@ -22,6 +24,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { formatNumber } from "@/lib/utils";
+import Link from "next/link";
 
 export interface UserData {
   id: string;
@@ -39,6 +42,7 @@ export interface UserData {
 }
 
 interface GetUserColumnsProps {
+  currentUserId?: string;
   onBan: (userId: string) => void;
   onUnban: (userId: string) => void;
   onSetRole: (userId: string, role: "admin" | "user" | null) => void;
@@ -46,6 +50,7 @@ interface GetUserColumnsProps {
 }
 
 export function getUserColumns({
+  currentUserId,
   onBan,
   onUnban,
   onSetRole,
@@ -125,7 +130,7 @@ export function getUserColumns({
           return (
             <Badge
               variant="default"
-              className="min-h-6 bg-blue-500/10 text-blue-600 dark:text-blue-400"
+              className="border-primary/30 min-h-7 border bg-blue-500/10 text-blue-600 dark:text-blue-400"
             >
               <IconShield className="mr-1 size-3" />
               Admin
@@ -135,9 +140,9 @@ export function getUserColumns({
         return (
           <Badge
             variant="outline"
-            className="text-muted-foreground border-muted min-h-6"
+            className="text-muted-foreground border-border bg-muted min-h-7"
           >
-            <IconUser className="mr-1 size-3" />
+            <IconUser className="size-3" />
             User
           </Badge>
         );
@@ -162,8 +167,8 @@ export function getUserColumns({
         const user = row.original;
         if (user.banned) {
           return (
-            <Badge variant="destructive" className="min-h-6">
-              <IconBan className="mr-1 size-3" />
+            <Badge variant="destructive" className="min-h-7">
+              <IconBan className="size-3" />
               Banned
             </Badge>
           );
@@ -172,7 +177,7 @@ export function getUserColumns({
           return (
             <Badge
               variant="outline"
-              className="min-h-6 border-yellow-500/30 bg-yellow-500/10 text-yellow-600 dark:text-yellow-400"
+              className="min-h-7 border-yellow-500/30 bg-yellow-500/10 text-yellow-600 dark:text-yellow-400"
             >
               Unverified
             </Badge>
@@ -181,7 +186,7 @@ export function getUserColumns({
         return (
           <Badge
             variant="outline"
-            className="min-h-6 border-green-500/30 bg-green-500/10 text-green-600 dark:text-green-400"
+            className="min-h-7 border-green-500/30 bg-green-500/10 text-green-600 dark:text-green-400"
           >
             Active
           </Badge>
@@ -270,9 +275,11 @@ export function getUserColumns({
     },
     {
       id: "actions",
-      size: 60,
+      size: 40,
       cell: ({ row }) => {
         const user = row.original;
+        const isSelf = currentUserId === user.id;
+
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -285,41 +292,74 @@ export function getUserColumns({
                 <span className="sr-only">Open menu</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              {user.role === "admin" ? (
-                <DropdownMenuItem onClick={() => onSetRole(user.id, "user")}>
-                  <IconShieldOff className="mr-2 size-4" />
-                  Remove Admin
-                </DropdownMenuItem>
-              ) : (
-                <DropdownMenuItem onClick={() => onSetRole(user.id, "admin")}>
-                  <IconShield className="mr-2 size-4" />
-                  Make Admin
-                </DropdownMenuItem>
-              )}
-              <DropdownMenuSeparator />
-              {user.banned ? (
-                <DropdownMenuItem onClick={() => onUnban(user.id)}>
-                  <IconShieldOff className="mr-2 size-4" />
-                  Unban User
-                </DropdownMenuItem>
-              ) : (
-                <DropdownMenuItem
-                  className="text-destructive"
-                  onClick={() => onBan(user.id)}
+            <DropdownMenuContent align="end" className="min-w-40">
+              <DropdownMenuItem>
+                <IconAddressBook className="mr-1 size-4" />
+                <Link
+                  href={`/profile/${user.id}`}
+                  target="_blank"
+                  className="w-full"
                 >
-                  <IconBan className="mr-2 size-4" />
-                  Ban User
-                </DropdownMenuItem>
-              )}
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                className="text-destructive"
-                onClick={() => onDelete(user.id)}
-              >
-                <IconTrash className="mr-2 size-4" />
-                Delete User
+                  View Profile
+                </Link>
               </DropdownMenuItem>
+              {!isSelf ? (
+                <>
+                  <DropdownMenuSeparator />
+                  {user.role === "admin" ? (
+                    <DropdownMenuItem
+                      onClick={() => onSetRole(user.id, "user")}
+                    >
+                      <IconShieldOff className="mr-1 size-4" />
+                      Remove Admin
+                    </DropdownMenuItem>
+                  ) : (
+                    <DropdownMenuItem
+                      onClick={() => onSetRole(user.id, "admin")}
+                    >
+                      <IconShield className="mr-1 size-4" />
+                      Make Admin
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuSeparator />
+                  {user.banned ? (
+                    <DropdownMenuItem onClick={() => onUnban(user.id)}>
+                      <IconShieldOff className="mr-1 size-4" />
+                      Unban User
+                    </DropdownMenuItem>
+                  ) : (
+                    <DropdownMenuItem
+                      className="text-destructive"
+                      onClick={() => onBan(user.id)}
+                    >
+                      <IconBan className="mr-1 size-4" />
+                      Ban User
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    className="text-destructive"
+                    onClick={() => onDelete(user.id)}
+                  >
+                    <IconTrash className="mr-1 size-4" />
+                    Delete User
+                  </DropdownMenuItem>
+                </>
+              ) : (
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                    <IconUserEdit className="mr-1 size-4" />
+                    <Link
+                      href={`/profile/edit`}
+                      target="_blank"
+                      className="w-full"
+                    >
+                      Edit Profile
+                    </Link>
+                  </DropdownMenuItem>
+                </>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         );
