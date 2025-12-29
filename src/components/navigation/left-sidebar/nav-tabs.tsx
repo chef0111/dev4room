@@ -29,8 +29,8 @@ const NavTabs = ({ isMobile = false }: NavTabsProps) => {
         }
 
         const appRoute =
-          item.route === "/profile" && user?.id
-            ? `/profile/${user.id}`
+          item.route === "/profile" && user?.username
+            ? `/profile/${user.username}`
             : item.route;
 
         const isActive =

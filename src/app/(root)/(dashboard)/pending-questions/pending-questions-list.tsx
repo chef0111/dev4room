@@ -41,6 +41,7 @@ interface PendingQuestion {
   views: number;
   authorId: string;
   authorName: string;
+  authorUsername: string;
   authorImage: string | null;
   tags: { id: string; name: string }[];
 }
@@ -110,6 +111,7 @@ export default function PendingQuestionsList({
                   author: {
                     id: question.authorId,
                     name: question.authorName,
+                    username: question.authorUsername,
                     image: question.authorImage,
                   },
                 }}
@@ -169,6 +171,7 @@ export default function PendingQuestionsList({
                   author: {
                     id: question.authorId,
                     name: question.authorName,
+                    username: question.authorUsername,
                     image: question.authorImage,
                   },
                 }}

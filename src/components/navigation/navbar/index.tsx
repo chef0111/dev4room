@@ -25,7 +25,7 @@ const Navbar = ({ className }: NavbarProps) => {
         className
       )}
     >
-      <Brand />
+      <Brand size={32} textClassName="h1-bold!" />
 
       <div className="mx-4 flex flex-1 justify-center">
         <Suspense fallback={<CommandMenuFallback />}>
@@ -38,7 +38,7 @@ const Navbar = ({ className }: NavbarProps) => {
 
         {user?.id && (
           <UserAvatar
-            id={user.id}
+            username={user.username ?? undefined}
             name={user.name}
             image={user.image ?? null}
             className="h-9 w-9 rounded-full"

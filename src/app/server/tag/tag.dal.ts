@@ -32,6 +32,7 @@ interface QuestionRow {
   createdAt: Date;
   authorId: string;
   authorName: string | null;
+  authorUsername: string | null;
   authorImage: string | null;
 }
 
@@ -59,6 +60,7 @@ export class TagDAL {
     createdAt: question.createdAt,
     authorId: question.authorId,
     authorName: user.name,
+    authorUsername: user.username,
     authorImage: user.image,
   } as const;
 
@@ -122,6 +124,7 @@ export class TagDAL {
       author: {
         id: row.authorId,
         name: row.authorName ?? "Unknown",
+        username: row.authorUsername ?? "unknown",
         image: row.authorImage,
       },
       tags,

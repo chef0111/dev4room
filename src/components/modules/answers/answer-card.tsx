@@ -16,6 +16,7 @@ import AnswerCardContent from "./answer-card-content";
 interface Author {
   id: string;
   name: string;
+  username: string;
   image: string | null;
 }
 
@@ -65,14 +66,14 @@ const AnswerCard = ({
       <div className="mb-4 flex flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center sm:gap-2">
         <div className="flex flex-1 items-start gap-1 sm:items-center">
           <UserAvatar
-            id={author.id}
+            username={author.username}
             name={author.name}
             image={author.image ?? undefined}
             className="size-5 rounded-full object-cover max-sm:mt-2"
           />
 
           <Link
-            href={`/profile/${author.id}`}
+            href={`/profile/${author.username}`}
             className="flex w-full flex-col max-sm:ml-1 sm:flex-wrap sm:items-start md:flex-row"
           >
             <p className="body-semibold text-dark300_light700">

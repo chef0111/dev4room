@@ -296,7 +296,7 @@ export function getUserColumns({
               <DropdownMenuItem>
                 <IconAddressBook className="mr-1 size-4" />
                 <Link
-                  href={`/profile/${user.id}`}
+                  href={`/profile/${user.username}`}
                   target="_blank"
                   className="w-full"
                 >

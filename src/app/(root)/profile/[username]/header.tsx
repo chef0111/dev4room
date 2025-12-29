@@ -15,7 +15,6 @@ interface ProfileHeaderProps {
 }
 
 const ProfileHeader = ({
-  id,
   name,
   username,
   image,
@@ -27,7 +26,7 @@ const ProfileHeader = ({
   return (
     <div className="flex flex-col items-start gap-4 max-sm:flex-row md:flex-row">
       <UserAvatar
-        id={id}
+        username={username}
         name={name}
         image={image ?? undefined}
         className="size-35 rounded-full object-cover max-sm:size-28"

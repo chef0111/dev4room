@@ -47,6 +47,7 @@ interface QuestionRow {
   createdAt: Date;
   authorId: string;
   authorName: string | null;
+  authorUsername: string | null;
   authorImage: string | null;
   status: "pending" | "approved" | "rejected";
 }
@@ -63,6 +64,7 @@ export class QuestionDAL {
     createdAt: question.createdAt,
     authorId: question.authorId,
     authorName: user.name,
+    authorUsername: user.username,
     authorImage: user.image,
     status: question.status,
   } as const;
@@ -107,6 +109,7 @@ export class QuestionDAL {
       author: {
         id: row.authorId,
         name: row.authorName ?? "Unknown",
+        username: row.authorUsername ?? "unknown",
         image: row.authorImage,
       },
       status: row.status,
@@ -175,6 +178,7 @@ export class QuestionDAL {
       createdAt: question.createdAt,
       authorId: question.authorId,
       authorName: user.name,
+      authorUsername: user.username,
       authorImage: user.image,
       status: question.status,
     };
@@ -205,6 +209,7 @@ export class QuestionDAL {
       author: {
         id: row.authorId,
         name: row.authorName ?? "Unknown",
+        username: row.authorUsername ?? "unknown",
         image: row.authorImage,
       },
       status: row.status,
@@ -477,6 +482,7 @@ export class QuestionDAL {
         views: question.views,
         authorId: user.id,
         authorName: user.name,
+        authorUsername: user.username,
         authorImage: user.image,
       })
       .from(question)
@@ -506,6 +512,7 @@ export class QuestionDAL {
       views: row.views,
       authorId: row.authorId,
       authorName: row.authorName ?? "Unknown",
+      authorUsername: row.authorUsername ?? "unknown",
       authorImage: row.authorImage,
       tags: tagsByQuestion[row.id] ?? [],
     }));

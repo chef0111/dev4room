@@ -7,6 +7,7 @@ import { writeSecurityMiddleware } from "@/app/middleware/arcjet/write";
 import {
   getUsers,
   getUserById,
+  getUserByUsername as getUserByUsernameDAL,
   getUserQuestions as getUserQuestionsDAL,
   getUserAnswers as getUserAnswersDAL,
   getUserPopularTags as getUserPopularTagsDAL,
@@ -16,6 +17,7 @@ import {
 import {
   UserListSchema,
   GetUserSchema,
+  GetUserByUsernameSchema,
   GetUserOutputSchema,
   GetUserTagsSchema,
   GetUserStatsSchema,
@@ -58,6 +60,20 @@ export const getUser = base
   .output(GetUserOutputSchema)
   .handler(async ({ input }) => {
     return getUserById(input.userId);
+  });
+
+export const getUserByUsername = base
+  .route({
+    method: "GET",
+    path: "/user/username/{username}",
+    summary: "Get User by Username",
+    description: "Get detailed user information by username",
+    tags: ["Users"],
+  })
+  .input(GetUserByUsernameSchema)
+  .output(GetUserOutputSchema)
+  .handler(async ({ input }) => {
+    return getUserByUsernameDAL(input.username);
   });
 
 export const getUserQuestions = base

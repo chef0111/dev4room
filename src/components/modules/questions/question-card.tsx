@@ -56,14 +56,14 @@ const QuestionCard = ({
       <div className="flex-between mt-6 w-full flex-wrap gap-3">
         <div className="flex-center gap-1">
           <UserAvatar
-            id={author.id}
+            username={author.username}
             name={author.name}
             image={author.image ?? ""}
             className="size-6"
             fallbackClassName="text-[10px]"
           />
 
-          <Link href={`/profile/${author.id}`}>
+          <Link href={`/profile/${author.username}`}>
             <p className="small-regular text-dark300_light700">
               <span className="body-medium">{author.name}</span> • asked{" "}
               {getTimeStamp(createdAt)}

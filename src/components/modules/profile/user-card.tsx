@@ -9,18 +9,18 @@ interface UserCardProps {
   image: string | null;
 }
 
-const UserCard = ({ id, name, username, image }: UserCardProps) => {
+const UserCard = ({ name, username, image }: UserCardProps) => {
   return (
     <DevCard>
       <UserAvatar
-        id={id}
+        username={username}
         name={name}
         image={image ?? ""}
         className="size-25 rounded-full object-cover"
         fallbackClassName="text-center text-4xl tracking-widest"
       />
 
-      <Link href={`/profile/${id}`}>
+      <Link href={`/profile/${username}`}>
         <div className="mt-4 text-center">
           <h3 className="h3-bold text-dark200_light900 line-clamp-1">{name}</h3>
           <p className="body-regular text-dark500_light500 mt-2">@{username}</p>

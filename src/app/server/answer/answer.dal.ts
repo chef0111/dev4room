@@ -25,6 +25,7 @@ interface AnswerRow {
   updatedAt: Date;
   authorId: string;
   authorName: string | null;
+  authorUsername: string | null;
   authorImage: string | null;
 }
 
@@ -39,6 +40,7 @@ export class AnswerDAL {
     updatedAt: answer.updatedAt,
     authorId: answer.authorId,
     authorName: user.name,
+    authorUsername: user.username,
     authorImage: user.image,
   } as const;
 
@@ -67,6 +69,7 @@ export class AnswerDAL {
       author: {
         id: row.authorId,
         name: row.authorName ?? "Unknown",
+        username: row.authorUsername ?? "unknown",
         image: row.authorImage,
       },
     };

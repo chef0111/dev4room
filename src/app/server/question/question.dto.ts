@@ -4,6 +4,7 @@ import z from "zod";
 export const AuthorSchema = z.object({
   id: z.string(),
   name: z.string(),
+  username: z.string(),
   image: z.string().nullable(),
 });
 
@@ -79,6 +80,7 @@ export const PendingQuestionsSchema = z.array(
     views: z.number(),
     authorId: z.string(),
     authorName: z.string(),
+    authorUsername: z.string(),
     authorImage: z.string().nullable(),
     tags: z.array(z.object({ id: z.string(), name: z.string() })),
   })

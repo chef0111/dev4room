@@ -29,6 +29,7 @@ interface CollectionRow {
   questionCreatedAt: Date;
   authorId: string;
   authorName: string | null;
+  authorUsername: string | null;
   authorImage: string | null;
 }
 
@@ -46,6 +47,7 @@ export class CollectionDAL {
     questionCreatedAt: question.createdAt,
     authorId: user.id,
     authorName: user.name,
+    authorUsername: user.username,
     authorImage: user.image,
   } as const;
 
@@ -92,6 +94,7 @@ export class CollectionDAL {
         author: {
           id: row.authorId,
           name: row.authorName ?? "Unknown",
+          username: row.authorUsername ?? "unknown",
           image: row.authorImage,
         },
         tags,

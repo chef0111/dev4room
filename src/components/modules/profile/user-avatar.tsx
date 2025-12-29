@@ -4,7 +4,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 
 interface UserAvatarProps {
-  id: string | undefined;
+  username?: string;
   name: string | undefined;
   image?: string | null;
   className?: string;
@@ -13,12 +13,12 @@ interface UserAvatarProps {
 }
 
 const UserAvatar = ({
-  id,
+  username,
   name,
   image,
   className,
   fallbackClassName,
-  href = `/profile/${id}` as Route,
+  href = username ? (`/profile/${username}` as Route) : null,
 }: UserAvatarProps) => {
   const initials = name
     ?.split(" ")

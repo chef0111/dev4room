@@ -1,6 +1,7 @@
 import {
   listUsers,
   getUser,
+  getUserByUsername,
   getUserQuestions,
   getUserAnswers,
   getUserTags,
@@ -48,6 +49,7 @@ export const router = {
   user: {
     list: listUsers,
     get: getUser,
+    getByUsername: getUserByUsername,
     questions: getUserQuestions,
     answers: getUserAnswers,
     tags: getUserTags,
