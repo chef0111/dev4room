@@ -529,9 +529,8 @@ export const getUsers = (...args: Parameters<typeof UserDAL.findMany>) =>
   UserDAL.findMany(...args);
 export const getUserById = (...args: Parameters<typeof UserDAL.findById>) =>
   UserDAL.findById(...args);
-export const getUserByUsername = (
-  ...args: Parameters<typeof UserDAL.findByUsername>
-) => UserDAL.findByUsername(...args);
+export const getUser = (...args: Parameters<typeof UserDAL.findByUsername>) =>
+  UserDAL.findByUsername(...args);
 export const getUserQuestions = (
   ...args: Parameters<typeof UserDAL.findUserQuestions>
 ) => UserDAL.findUserQuestions(...args);

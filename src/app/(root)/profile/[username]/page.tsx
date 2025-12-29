@@ -32,7 +32,7 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
 
   const userResult = await queryClient
     .fetchQuery(
-      orpc.user.getByUsername.queryOptions({
+      orpc.user.get.queryOptions({
         input: { username },
       })
     )
