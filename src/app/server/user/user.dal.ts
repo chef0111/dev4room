@@ -100,62 +100,6 @@ export class UserDAL {
     return { users, totalUsers: count ?? 0 };
   }
 
-  static async findById(userId: string): Promise<GetUserOutput> {
-    "use cache";
-    cacheLife({ stale: 120, revalidate: 60, expire: 3600 });
-    cacheTag(`user:${userId}`);
-
-    const selectFields = {
-      id: user.id,
-      name: user.name,
-      username: user.username,
-      email: user.email,
-      image: user.image,
-      bio: user.bio,
-      location: user.location,
-      portfolio: user.portfolio,
-      reputation: user.reputation,
-      role: user.role,
-      createdAt: user.createdAt,
-    };
-
-    const [row] = await db
-      .select(selectFields)
-      .from(user)
-      .where(eq(user.id, userId))
-      .limit(1);
-
-    if (!row) {
-      throw new ORPCError("NOT_FOUND", { message: "User not found" });
-    }
-
-    // Get counts in parallel
-    const [[questionCount], [answerCount]] = await Promise.all([
-      db
-        .select({ count: sql<number>`count(*)::int` })
-        .from(question)
-        .where(
-          and(eq(question.authorId, userId), eq(question.status, "approved"))
-        ),
-      db
-        .select({ count: sql<number>`count(*)::int` })
-        .from(answer)
-        .where(eq(answer.authorId, userId)),
-    ]);
-
-    const validatedUser = validateOne(row, UserSchema, "User");
-
-    return validateOne(
-      {
-        user: validatedUser,
-        totalQuestions: questionCount.count ?? 0,
-        totalAnswers: answerCount.count ?? 0,
-      },
-      GetUserOutputSchema,
-      "GetUserOutput"
-    );
-  }
-
   static async findByUsername(username: string): Promise<GetUserOutput> {
     "use cache";
     cacheLife({ stale: 120, revalidate: 60, expire: 3600 });
@@ -527,8 +471,6 @@ export class UserDAL {
 
 export const getUsers = (...args: Parameters<typeof UserDAL.findMany>) =>
   UserDAL.findMany(...args);
-export const getUserById = (...args: Parameters<typeof UserDAL.findById>) =>
-  UserDAL.findById(...args);
 export const getUser = (...args: Parameters<typeof UserDAL.findByUsername>) =>
   UserDAL.findByUsername(...args);
 export const getUserQuestions = (
