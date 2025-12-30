@@ -33,10 +33,6 @@ export const AuthorSchema = z.object({
 
 // Input Schemas
 export const GetUserSchema = z.object({
-  userId: z.string().min(1, { message: "User ID is required." }),
-});
-
-export const GetUserByUsernameSchema = z.object({
   username: z.string().min(1, { message: "Username is required." }),
 });
 
