@@ -3,7 +3,14 @@ import "server-only";
 import { cacheTag, cacheLife } from "next/cache";
 
 import { db } from "@/database/drizzle";
-import { user, question, answer, tagQuestion, tag } from "@/database/schema";
+import {
+  user,
+  question,
+  answer,
+  tagQuestion,
+  tag,
+  contribution,
+} from "@/database/schema";
 import { and, or, ilike, desc, asc, sql, eq, inArray, not } from "drizzle-orm";
 import { ORPCError } from "@orpc/server";
 import { getPagination, validateArray, validateOne } from "../utils";
@@ -25,6 +32,9 @@ import {
   UserPopularTagSchema,
   UserStatsDTO,
   UpdateProfileInput,
+  GetUserContributionsInput,
+  UserContributionsOutput,
+  UserContributionsOutputSchema,
 } from "./user.dto";
 
 type UserFilter = "newest" | "oldest" | "popular";
@@ -467,6 +477,66 @@ export class UserDAL {
 
     return validated.data;
   }
+
+  static async getUserContributions(
+    input: GetUserContributionsInput
+  ): Promise<UserContributionsOutput> {
+    "use cache";
+    cacheLife({ stale: 300, revalidate: 120, expire: 3600 });
+    cacheTag(`user:${input.userId}:contributions:${input.year}`);
+
+    const { userId, year } = input;
+
+    const [userExists] = await db
+      .select({ id: user.id })
+      .from(user)
+      .where(eq(user.id, userId))
+      .limit(1);
+
+    if (!userExists) {
+      throw new ORPCError("NOT_FOUND", { message: "User not found" });
+    }
+    const yearStart = `${year}-01-01`;
+    const yearEnd = `${year}-12-31`;
+
+    const contributionRows = await db
+      .select({
+        createdAt: contribution.createdAt,
+      })
+      .from(contribution)
+      .leftJoin(
+        question,
+        and(
+          eq(contribution.referenceId, question.id),
+          eq(contribution.type, "question")
+        )
+      )
+      .leftJoin(
+        tag,
+        and(eq(contribution.referenceId, tag.id), eq(contribution.type, "tag"))
+      )
+      .where(
+        and(
+          eq(contribution.userId, userId),
+          sql`${contribution.createdAt} >= ${yearStart}::date - interval '1 day'`,
+          sql`${contribution.createdAt} <= ${yearEnd}::date + interval '1 day'`,
+          // Filter: answers always count, questions/tags only when approved
+          sql`(
+            ${contribution.type} = 'answer'
+            OR (${contribution.type} = 'question' AND ${question.status} = 'approved')
+            OR (${contribution.type} = 'tag' AND ${tag.status} = 'approved')
+          )`
+        )
+      );
+
+    const timestamps = contributionRows.map((row) => row.createdAt);
+    const totalCount = timestamps.length;
+
+    return UserContributionsOutputSchema.parse({
+      timestamps,
+      totalCount,
+    });
+  }
 }
 
 export const getUsers = (...args: Parameters<typeof UserDAL.findMany>) =>
@@ -487,3 +557,6 @@ export const getUserStats = (
 ) => UserDAL.getUserStats(...args);
 export const updateUser = (...args: Parameters<typeof UserDAL.update>) =>
   UserDAL.update(...args);
+export const getUserContributions = (
+  ...args: Parameters<typeof UserDAL.getUserContributions>
+) => UserDAL.getUserContributions(...args);

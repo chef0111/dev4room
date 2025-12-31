@@ -235,6 +235,23 @@ export const interaction = pgTable("interaction", {
     .notNull(),
 });
 
+export const contribution = pgTable(
+  "contribution",
+  {
+    id: text("id").primaryKey().$defaultFn(generateId),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    type: text("type", { enum: ["question", "answer", "tag"] }).notNull(),
+    referenceId: text("reference_id"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [
+    index("contribution_user_id_idx").on(table.userId),
+    index("contribution_created_at_idx").on(table.createdAt),
+  ]
+);
+
 export const schema = {
   user,
   session,
@@ -247,4 +264,5 @@ export const schema = {
   collection,
   vote,
   interaction,
+  contribution,
 };

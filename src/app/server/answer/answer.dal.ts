@@ -5,6 +5,7 @@ import { answer, question, user, vote } from "@/database/schema";
 import { and, desc, asc, sql, eq } from "drizzle-orm";
 import { ORPCError } from "@orpc/server";
 import { getPagination, validateArray, validateOne } from "../utils";
+import { ContributionService } from "../contribution/service";
 import {
   AnswerDTO,
   AnswerSchema,
@@ -149,6 +150,9 @@ export class AnswerDAL {
         .update(question)
         .set({ answers: sql`${question.answers} + 1` })
         .where(eq(question.id, questionId));
+
+      // Log contribution for answer creation
+      await ContributionService.log(tx, authorId, "answer", newAnswer.id);
 
       return { id: newAnswer.id };
     });

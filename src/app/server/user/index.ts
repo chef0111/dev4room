@@ -12,6 +12,7 @@ import {
   getUserPopularTags as getUserPopularTagsDAL,
   getUserStats as getUserStatsDAL,
   updateUser as updateUserDAL,
+  getUserContributions as getUserContributionsDAL,
 } from "@/app/server/user/user.dal";
 import {
   UserListSchema,
@@ -26,6 +27,8 @@ import {
   UserPostSchema,
   UpdateProfileInputSchema,
   UpdateProfileSchema,
+  GetUserContributionsSchema,
+  UserContributionsOutputSchema,
 } from "@/app/server/user/user.dto";
 import { QueryParamsSchema } from "@/lib/validations";
 import { indexUser } from "@/services/indexing.service";
@@ -142,4 +145,19 @@ export const updateUser = authorized
     });
 
     return { user: updatedUser };
+  });
+
+export const getUserContributions = base
+  .route({
+    method: "GET",
+    path: "/user/{userId}/contributions",
+    summary: "Get User Contributions",
+    description:
+      "Get user contribution graph data (questions, answers, new tags) for a specific year",
+    tags: ["Users"],
+  })
+  .input(GetUserContributionsSchema)
+  .output(UserContributionsOutputSchema)
+  .handler(async ({ input }) => {
+    return getUserContributionsDAL(input);
   });

@@ -6,5 +6,4 @@ export { default as QuestionContentSkeleton } from "./question-content";
 export { default as QuestionHeaderSkeleton } from "./question-header";
 export { default as TopQuestionsSkeleton } from "./top-questions";
 export { default as TopTagsSkeleton } from "./top-tags";
-export { default as UserTabsSkeleton } from "./user-tabs";
-export { default as UserTopTagsSkeleton } from "./user-top-tags";
+export { default as ContributionGraphSkeleton } from "./contribution-graph";
