@@ -15,16 +15,11 @@ import ProfileHeader from "./header";
 import UserStats from "./user-stats";
 import UserTabs from "./user-tabs";
 import UserTopTags from "./top-tags";
-import { UserTabsSkeleton, UserTopTagsSkeleton } from "@/components/skeletons";
-import Example from "@/components/modules/profile/contributions/example";
+import ContributionGraphDisplay from "@/components/modules/profile/contributions/graph";
 import YearSelect from "@/components/modules/profile/contributions/year-select";
 import { FilterProvider } from "@/context";
-
-const ContributionFilters = [
-  { label: "2025", value: "2025" },
-  { label: "2024", value: "2024" },
-  { label: "2023", value: "2023" },
-];
+import { Spinner } from "@/components/ui";
+import { currentYear, getYearOptions } from "@/lib/utils";
 
 export async function generateStaticParams() {
   const users = await db.select({ username: user.username }).from(user);
@@ -33,7 +28,7 @@ export async function generateStaticParams() {
 
 const ProfilePage = async ({ params, searchParams }: RouteParams) => {
   const { username } = await params;
-  const { page, pageSize, filter } = await searchParams;
+  const { page, pageSize, filter, year } = await searchParams;
 
   if (!username) notFound();
 
@@ -69,6 +64,10 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
 
   const userStats = statsResult.data;
 
+  // Generate year options from user's join year to current year
+  const contributionFilters = getYearOptions(userData.createdAt);
+  const selectedYear = year ? parseInt(year, 10) : currentYear;
+
   return (
     <>
       <section className="flex w-full flex-col-reverse items-start justify-between sm:flex-row">
@@ -102,19 +101,33 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
         reputationPoints={userData.reputation || 0}
       />
 
-      <section className="mt-10 flex gap-10">
-        <div className="flex flex-col gap-10">
-          <div className="space-y-6">
-            <FilterProvider>
-              <div className="flex-between">
-                <h2 className="h3-semibold">Contributions</h2>
-                <YearSelect data={ContributionFilters} className="min-w-24" />
-              </div>
-              <Example />
-            </FilterProvider>
+      <Suspense
+        fallback={
+          <div className="flex-center w-full flex-col gap-4 py-16">
+            <Spinner className="size-10 border-5" />
+            <p className="text-muted-foreground pg-regular">
+              Loading user data...
+            </p>
           </div>
+        }
+      >
+        <section className="mt-10 flex gap-10">
+          <div className="flex w-full flex-col gap-10">
+            <div className="grow space-y-6">
+              <FilterProvider>
+                <div className="flex-between">
+                  <h2 className="h3-semibold">Contributions</h2>
+                  <YearSelect data={contributionFilters} className="min-w-26" />
+                </div>
+                <article className="flex-center">
+                  <ContributionGraphDisplay
+                    userId={userData.id}
+                    year={selectedYear}
+                  />
+                </article>
+              </FilterProvider>
+            </div>
 
-          <Suspense fallback={<UserTabsSkeleton />}>
             <UserTabs
               userId={userData.id}
               user={userData}
@@ -123,13 +136,11 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
               filter={filter}
               isAuthor={isAuthor}
             />
-          </Suspense>
-        </div>
+          </div>
 
-        <Suspense fallback={<UserTopTagsSkeleton />}>
           <UserTopTags userId={userData.id} />
-        </Suspense>
-      </section>
+        </section>
+      </Suspense>
     </>
   );
 };

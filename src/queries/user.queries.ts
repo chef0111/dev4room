@@ -1,6 +1,6 @@
 "use client";
 
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { orpc } from "@/lib/orpc";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -18,6 +18,14 @@ export function useUpdateProfile(options?: { onSuccess?: () => void }) {
       onError: (error) => {
         toast.error(error.message || "Failed to update profile");
       },
+    })
+  );
+}
+
+export function useContribution(userId: string, year: number) {
+  return useQuery(
+    orpc.user.contributions.queryOptions({
+      input: { userId, year },
     })
   );
 }

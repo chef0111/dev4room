@@ -73,7 +73,7 @@ const YearSelect = ({ data, className, containerClassName }: YearProps) => {
           </div>
         </SelectTrigger>
 
-        <SelectContent className="bg-light800_dark200 min-w-24">
+        <SelectContent className="bg-light800_dark200 min-w-26">
           <SelectGroup>
             {data.map((item) => (
               <SelectItem

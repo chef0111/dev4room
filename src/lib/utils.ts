@@ -106,3 +106,13 @@ export function assignBadges(params: {
 
   return badgeCounts;
 }
+
+export const currentYear = new Date().getFullYear();
+
+export function getYearOptions(createdAt: Date) {
+  const joinYear = new Date(createdAt).getFullYear();
+  return Array.from({ length: currentYear - joinYear + 1 }, (_, i) => {
+    const y = currentYear - i;
+    return { label: String(y), value: String(y) };
+  });
+}

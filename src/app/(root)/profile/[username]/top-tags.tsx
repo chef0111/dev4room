@@ -30,7 +30,7 @@ const UserTopTags = async ({ userId, limit = 5 }: UserTopTagsProps) => {
   const tags = tagsResult.data?.tags ?? [];
 
   return (
-    <div className="flex w-full max-w-60 flex-1 flex-col max-lg:hidden">
+    <div className="flex w-full max-w-56.5 flex-col max-xl:hidden">
       <h2 className="h2-bold text-dark200_light900">Top Tech</h2>
       <div className="mt-6 flex flex-col gap-4">
         <DataRenderer
