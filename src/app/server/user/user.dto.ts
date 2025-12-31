@@ -51,6 +51,22 @@ export const GetUserStatsSchema = z.object({
   userId: z.string().min(1, { message: "User ID is required." }),
 });
 
+export const GetUserContributionsSchema = z.object({
+  userId: z.string().min(1, { message: "User ID is required." }),
+  year: z.number().int().min(2000).max(2100),
+});
+
+export const ContributionActivitySchema = z.object({
+  date: z.string(),
+  count: z.number().int().min(0),
+  level: z.number().int().min(0).max(4),
+});
+
+export const UserContributionsOutputSchema = z.object({
+  contributions: z.array(ContributionActivitySchema),
+  totalCount: z.number().int().min(0),
+});
+
 export const UserQuestionSchema = z.object({
   id: z.string(),
   title: z.string(),
@@ -177,3 +193,10 @@ export type Badges = z.infer<typeof BadgesSchema>;
 export type UserStatsDTO = z.infer<typeof UserStatsSchema>;
 export type UpdateProfileInput = z.infer<typeof UpdateProfileInputSchema>;
 export type UpdateProfileDTO = z.infer<typeof UpdateProfileSchema>;
+export type GetUserContributionsInput = z.infer<
+  typeof GetUserContributionsSchema
+>;
+export type ContributionActivity = z.infer<typeof ContributionActivitySchema>;
+export type UserContributionsOutput = z.infer<
+  typeof UserContributionsOutputSchema
+>;

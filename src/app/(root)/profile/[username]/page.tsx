@@ -16,6 +16,15 @@ import UserStats from "./user-stats";
 import UserTabs from "./user-tabs";
 import UserTopTags from "./top-tags";
 import { UserTabsSkeleton, UserTopTagsSkeleton } from "@/components/skeletons";
+import Example from "@/components/modules/profile/contributions/example";
+import YearSelect from "@/components/modules/profile/contributions/year-select";
+import { FilterProvider } from "@/context";
+
+const ContributionFilters = [
+  { label: "2025", value: "2025" },
+  { label: "2024", value: "2024" },
+  { label: "2023", value: "2023" },
+];
 
 export async function generateStaticParams() {
   const users = await db.select({ username: user.username }).from(user);
@@ -94,16 +103,28 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
       />
 
       <section className="mt-10 flex gap-10">
-        <Suspense fallback={<UserTabsSkeleton />}>
-          <UserTabs
-            userId={userData.id}
-            user={userData}
-            page={Number(page) || 1}
-            pageSize={Number(pageSize) || 10}
-            filter={filter}
-            isAuthor={isAuthor}
-          />
-        </Suspense>
+        <div className="flex flex-col gap-10">
+          <div className="space-y-6">
+            <FilterProvider>
+              <div className="flex-between">
+                <h2 className="h3-semibold">Contributions</h2>
+                <YearSelect data={ContributionFilters} className="min-w-24" />
+              </div>
+              <Example />
+            </FilterProvider>
+          </div>
+
+          <Suspense fallback={<UserTabsSkeleton />}>
+            <UserTabs
+              userId={userData.id}
+              user={userData}
+              page={Number(page) || 1}
+              pageSize={Number(pageSize) || 10}
+              filter={filter}
+              isAuthor={isAuthor}
+            />
+          </Suspense>
+        </div>
 
         <Suspense fallback={<UserTopTagsSkeleton />}>
           <UserTopTags userId={userData.id} />

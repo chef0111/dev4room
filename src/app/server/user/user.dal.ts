@@ -25,6 +25,10 @@ import {
   UserPopularTagSchema,
   UserStatsDTO,
   UpdateProfileInput,
+  GetUserContributionsInput,
+  ContributionActivity,
+  UserContributionsOutput,
+  UserContributionsOutputSchema,
 } from "./user.dto";
 
 type UserFilter = "newest" | "oldest" | "popular";
@@ -467,6 +471,132 @@ export class UserDAL {
 
     return validated.data;
   }
+
+  static async getUserContributions(
+    input: GetUserContributionsInput
+  ): Promise<UserContributionsOutput> {
+    "use cache";
+    cacheLife({ stale: 300, revalidate: 120, expire: 3600 });
+    cacheTag(`user:${input.userId}:contributions:${input.year}`);
+
+    const { userId, year } = input;
+
+    const [userExists] = await db
+      .select({ id: user.id })
+      .from(user)
+      .where(eq(user.id, userId))
+      .limit(1);
+
+    if (!userExists) {
+      throw new ORPCError("NOT_FOUND", { message: "User not found" });
+    }
+
+    const yearStart = `${year}-01-01`;
+    const yearEnd = `${year}-12-31`;
+
+    const questionsPerDay = await db
+      .select({
+        date: sql<string>`to_char(${question.createdAt}, 'YYYY-MM-DD')`,
+        count: sql<number>`count(*)::int`,
+      })
+      .from(question)
+      .where(
+        and(
+          eq(question.authorId, userId),
+          sql`${question.createdAt} >= ${yearStart}::date`,
+          sql`${question.createdAt} <= ${yearEnd}::date`
+        )
+      )
+      .groupBy(sql`to_char(${question.createdAt}, 'YYYY-MM-DD')`);
+
+    const answersPerDay = await db
+      .select({
+        date: sql<string>`to_char(${answer.createdAt}, 'YYYY-MM-DD')`,
+        count: sql<number>`count(*)::int`,
+      })
+      .from(answer)
+      .where(
+        and(
+          eq(answer.authorId, userId),
+          sql`${answer.createdAt} >= ${yearStart}::date`,
+          sql`${answer.createdAt} <= ${yearEnd}::date`
+        )
+      )
+      .groupBy(sql`to_char(${answer.createdAt}, 'YYYY-MM-DD')`);
+
+    // Get new tags created by user (first usage of a tag)
+    const newTagsPerDay = await db
+      .select({
+        date: sql<string>`to_char(tq."created_at", 'YYYY-MM-DD')`,
+        count: sql<number>`count(*)::int`,
+      })
+      .from(
+        sql`(
+        SELECT tq.tag_id, tq.created_at
+        FROM tag_question tq
+        INNER JOIN question q ON tq.question_id = q.id
+        WHERE q.author_id = ${userId}
+          AND tq.created_at >= ${yearStart}::date
+          AND tq.created_at <= ${yearEnd}::date
+          AND tq.created_at = (
+            SELECT MIN(tq2.created_at)
+            FROM tag_question tq2
+            WHERE tq2.tag_id = tq.tag_id
+          )
+      ) AS tq`
+      )
+      .groupBy(sql`to_char(tq."created_at", 'YYYY-MM-DD')`);
+
+    // Merge all contributions by date
+    const contributionMap = new Map<string, number>();
+
+    for (const q of questionsPerDay) {
+      contributionMap.set(q.date, (contributionMap.get(q.date) ?? 0) + q.count);
+    }
+    for (const a of answersPerDay) {
+      contributionMap.set(a.date, (contributionMap.get(a.date) ?? 0) + a.count);
+    }
+    for (const t of newTagsPerDay) {
+      contributionMap.set(t.date, (contributionMap.get(t.date) ?? 0) + t.count);
+    }
+
+    const counts = Array.from(contributionMap.values());
+    const maxCount = Math.max(...counts, 1);
+
+    const calculateLevel = (count: number): number => {
+      if (count === 0) return 0;
+      const ratio = count / maxCount;
+      if (ratio <= 0.25) return 1;
+      if (ratio <= 0.5) return 2;
+      if (ratio <= 0.75) return 3;
+      return 4;
+    };
+
+    const contributions: ContributionActivity[] = [];
+    const startDate = new Date(year, 0, 1);
+    const endDate = new Date(year, 11, 31);
+
+    for (
+      let d = new Date(startDate);
+      d <= endDate;
+      d.setDate(d.getDate() + 1)
+    ) {
+      const dateStr = d.toISOString().split("T")[0];
+      const count = contributionMap.get(dateStr) ?? 0;
+      contributions.push({
+        date: dateStr,
+        count,
+        level: calculateLevel(count),
+      });
+    }
+
+    const totalCount = counts.reduce((sum, c) => sum + c, 0);
+
+    return UserContributionsOutputSchema.parse({
+      contributions,
+      totalCount,
+    });
+  }
 }
 
 export const getUsers = (...args: Parameters<typeof UserDAL.findMany>) =>
@@ -487,3 +617,6 @@ export const getUserStats = (
 ) => UserDAL.getUserStats(...args);
 export const updateUser = (...args: Parameters<typeof UserDAL.update>) =>
   UserDAL.update(...args);
+export const getUserContributions = (
+  ...args: Parameters<typeof UserDAL.getUserContributions>
+) => UserDAL.getUserContributions(...args);
