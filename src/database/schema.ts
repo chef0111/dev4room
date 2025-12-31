@@ -243,7 +243,7 @@ export const contribution = pgTable(
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
     type: text("type", { enum: ["question", "answer", "tag"] }).notNull(),
-    referenceId: text("reference_id"), // Optional: ID of the question/answer/tag (may be deleted)
+    referenceId: text("reference_id"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
   (table) => [

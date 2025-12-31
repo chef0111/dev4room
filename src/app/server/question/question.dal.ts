@@ -16,6 +16,7 @@ import { and, or, ilike, desc, asc, sql, eq, inArray } from "drizzle-orm";
 import { ORPCError } from "@orpc/server";
 import { getPagination, validateArray, validateOne } from "../utils";
 import { TagQuestionService } from "../tag-question/service";
+import { ContributionService } from "../contribution/service";
 import {
   QuestionDTO,
   QuestionListDTO,
@@ -260,6 +261,15 @@ export class QuestionDAL {
       );
 
       await TagQuestionService.addTagsToQuestion(tx, newQuestion.id, tagIds);
+
+      // Log contribution for question creation
+      await ContributionService.log(tx, authorId, "question", newQuestion.id);
+
+      // Log contributions for new tags created by a user
+      const newTagIds = TagQuestionService.getPendingTagIds();
+      for (const tagId of newTagIds) {
+        await ContributionService.log(tx, authorId, "tag", tagId);
+      }
 
       return { id: newQuestion.id, status: newQuestion.status };
     });

@@ -3,7 +3,14 @@ import "server-only";
 import { cacheTag, cacheLife } from "next/cache";
 
 import { db } from "@/database/drizzle";
-import { user, question, answer, tagQuestion, tag } from "@/database/schema";
+import {
+  user,
+  question,
+  answer,
+  tagQuestion,
+  tag,
+  contribution,
+} from "@/database/schema";
 import { and, or, ilike, desc, asc, sql, eq, inArray, not } from "drizzle-orm";
 import { ORPCError } from "@orpc/server";
 import { getPagination, validateArray, validateOne } from "../utils";
@@ -494,70 +501,26 @@ export class UserDAL {
     const yearStart = `${year}-01-01`;
     const yearEnd = `${year}-12-31`;
 
-    const questionsPerDay = await db
+    const contributionsPerDay = await db
       .select({
-        date: sql<string>`to_char(${question.createdAt}, 'YYYY-MM-DD')`,
+        date: sql<string>`to_char(${contribution.createdAt}, 'YYYY-MM-DD')`,
         count: sql<number>`count(*)::int`,
       })
-      .from(question)
+      .from(contribution)
       .where(
         and(
-          eq(question.authorId, userId),
-          sql`${question.createdAt} >= ${yearStart}::date`,
-          sql`${question.createdAt} <= ${yearEnd}::date`
+          eq(contribution.userId, userId),
+          sql`${contribution.createdAt} >= ${yearStart}::date`,
+          sql`${contribution.createdAt} <= ${yearEnd}::date`
         )
       )
-      .groupBy(sql`to_char(${question.createdAt}, 'YYYY-MM-DD')`);
+      .groupBy(sql`to_char(${contribution.createdAt}, 'YYYY-MM-DD')`);
 
-    const answersPerDay = await db
-      .select({
-        date: sql<string>`to_char(${answer.createdAt}, 'YYYY-MM-DD')`,
-        count: sql<number>`count(*)::int`,
-      })
-      .from(answer)
-      .where(
-        and(
-          eq(answer.authorId, userId),
-          sql`${answer.createdAt} >= ${yearStart}::date`,
-          sql`${answer.createdAt} <= ${yearEnd}::date`
-        )
-      )
-      .groupBy(sql`to_char(${answer.createdAt}, 'YYYY-MM-DD')`);
-
-    // Get new tags created by user (first usage of a tag)
-    const newTagsPerDay = await db
-      .select({
-        date: sql<string>`to_char(tq."created_at", 'YYYY-MM-DD')`,
-        count: sql<number>`count(*)::int`,
-      })
-      .from(
-        sql`(
-        SELECT tq.tag_id, tq.created_at
-        FROM tag_question tq
-        INNER JOIN question q ON tq.question_id = q.id
-        WHERE q.author_id = ${userId}
-          AND tq.created_at >= ${yearStart}::date
-          AND tq.created_at <= ${yearEnd}::date
-          AND tq.created_at = (
-            SELECT MIN(tq2.created_at)
-            FROM tag_question tq2
-            WHERE tq2.tag_id = tq.tag_id
-          )
-      ) AS tq`
-      )
-      .groupBy(sql`to_char(tq."created_at", 'YYYY-MM-DD')`);
-
-    // Merge all contributions by date
+    // Build contribution map from query results
     const contributionMap = new Map<string, number>();
 
-    for (const q of questionsPerDay) {
-      contributionMap.set(q.date, (contributionMap.get(q.date) ?? 0) + q.count);
-    }
-    for (const a of answersPerDay) {
-      contributionMap.set(a.date, (contributionMap.get(a.date) ?? 0) + a.count);
-    }
-    for (const t of newTagsPerDay) {
-      contributionMap.set(t.date, (contributionMap.get(t.date) ?? 0) + t.count);
+    for (const c of contributionsPerDay) {
+      contributionMap.set(c.date, c.count);
     }
 
     const counts = Array.from(contributionMap.values());
