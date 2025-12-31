@@ -240,7 +240,7 @@ export type ContributionGraphProps = HTMLAttributes<HTMLDivElement> & {
 export const ContributionGraph = ({
   data,
   blockMargin = 4,
-  blockRadius = 2,
+  blockRadius = 3,
   blockSize = 12,
   fontSize = 14,
   labels: labelsProp = undefined,
@@ -387,7 +387,6 @@ export const ContributionGraphCalendar = ({
         viewBox={`0 0 ${width} ${height}`}
         width={width}
       >
-        <title>Contribution Graph</title>
         {!hideMonthLabels && (
           <g className="fill-current">
             {monthLabels.map(({ label, weekIndex }) => (
@@ -490,7 +489,6 @@ export const ContributionGraphLegend = ({
           <Fragment key={level}>{children({ level })}</Fragment>
         ) : (
           <svg height={blockSize} key={level} width={blockSize}>
-            <title>{`${level} contributions`}</title>
             <rect
               className={cn(
                 "stroke-border stroke-[1px]",

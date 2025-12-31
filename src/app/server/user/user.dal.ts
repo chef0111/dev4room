@@ -33,7 +33,6 @@ import {
   UserStatsDTO,
   UpdateProfileInput,
   GetUserContributionsInput,
-  ContributionActivity,
   UserContributionsOutput,
   UserContributionsOutputSchema,
 } from "./user.dto";
@@ -497,66 +496,44 @@ export class UserDAL {
     if (!userExists) {
       throw new ORPCError("NOT_FOUND", { message: "User not found" });
     }
-
     const yearStart = `${year}-01-01`;
     const yearEnd = `${year}-12-31`;
 
-    const contributionsPerDay = await db
+    const contributionRows = await db
       .select({
-        date: sql<string>`to_char(${contribution.createdAt}, 'YYYY-MM-DD')`,
-        count: sql<number>`count(*)::int`,
+        createdAt: contribution.createdAt,
       })
       .from(contribution)
+      .leftJoin(
+        question,
+        and(
+          eq(contribution.referenceId, question.id),
+          eq(contribution.type, "question")
+        )
+      )
+      .leftJoin(
+        tag,
+        and(eq(contribution.referenceId, tag.id), eq(contribution.type, "tag"))
+      )
       .where(
         and(
           eq(contribution.userId, userId),
-          sql`${contribution.createdAt} >= ${yearStart}::date`,
-          sql`${contribution.createdAt} <= ${yearEnd}::date`
+          sql`${contribution.createdAt} >= ${yearStart}::date - interval '1 day'`,
+          sql`${contribution.createdAt} <= ${yearEnd}::date + interval '1 day'`,
+          // Filter: answers always count, questions/tags only when approved
+          sql`(
+            ${contribution.type} = 'answer'
+            OR (${contribution.type} = 'question' AND ${question.status} = 'approved')
+            OR (${contribution.type} = 'tag' AND ${tag.status} = 'approved')
+          )`
         )
-      )
-      .groupBy(sql`to_char(${contribution.createdAt}, 'YYYY-MM-DD')`);
+      );
 
-    // Build contribution map from query results
-    const contributionMap = new Map<string, number>();
-
-    for (const c of contributionsPerDay) {
-      contributionMap.set(c.date, c.count);
-    }
-
-    const counts = Array.from(contributionMap.values());
-    const maxCount = Math.max(...counts, 1);
-
-    const calculateLevel = (count: number): number => {
-      if (count === 0) return 0;
-      const ratio = count / maxCount;
-      if (ratio <= 0.25) return 1;
-      if (ratio <= 0.5) return 2;
-      if (ratio <= 0.75) return 3;
-      return 4;
-    };
-
-    const contributions: ContributionActivity[] = [];
-    const startDate = new Date(year, 0, 1);
-    const endDate = new Date(year, 11, 31);
-
-    for (
-      let d = new Date(startDate);
-      d <= endDate;
-      d.setDate(d.getDate() + 1)
-    ) {
-      const dateStr = d.toISOString().split("T")[0];
-      const count = contributionMap.get(dateStr) ?? 0;
-      contributions.push({
-        date: dateStr,
-        count,
-        level: calculateLevel(count),
-      });
-    }
-
-    const totalCount = counts.reduce((sum, c) => sum + c, 0);
+    const timestamps = contributionRows.map((row) => row.createdAt);
+    const totalCount = timestamps.length;
 
     return UserContributionsOutputSchema.parse({
-      contributions,
+      timestamps,
       totalCount,
     });
   }

@@ -1,6 +1,7 @@
 import "server-only";
 
 import { contribution } from "@/database/schema";
+import { and, eq } from "drizzle-orm";
 import type { Transaction } from "../utils/types";
 
 export type ContributionType = "question" | "answer" | "tag";
@@ -18,5 +19,21 @@ export class ContributionService {
       type,
       referenceId,
     });
+  }
+
+  // Delete a contribution
+  static async delete(
+    tx: Transaction,
+    referenceId: string,
+    type: ContributionType
+  ): Promise<void> {
+    await tx
+      .delete(contribution)
+      .where(
+        and(
+          eq(contribution.referenceId, referenceId),
+          eq(contribution.type, type)
+        )
+      );
   }
 }

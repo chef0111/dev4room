@@ -559,18 +559,27 @@ export class QuestionDAL {
         });
       }
 
-      // Decrement tag question counts
+      // Get tags associated with this question
       const questionTags = await tx
         .select({ tagId: tagQuestion.tagId })
         .from(tagQuestion)
         .where(eq(tagQuestion.questionId, questionId));
 
+      // Decrement tag question counts
       if (questionTags.length > 0) {
         await TagQuestionService.decrementQuestionCount(
           tx,
           questionTags.map((t) => t.tagId)
         );
+
+        // Delete tag contributions for this question's tags
+        for (const t of questionTags) {
+          await ContributionService.delete(tx, t.tagId, "tag");
+        }
       }
+
+      // Delete question contribution
+      await ContributionService.delete(tx, questionId, "question");
 
       await tx.delete(question).where(eq(question.id, questionId));
     });

@@ -63,7 +63,7 @@ export const ContributionActivitySchema = z.object({
 });
 
 export const UserContributionsOutputSchema = z.object({
-  contributions: z.array(ContributionActivitySchema),
+  timestamps: z.array(z.date()),
   totalCount: z.number().int().min(0),
 });
 
