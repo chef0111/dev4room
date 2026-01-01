@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+import { format } from "date-fns";
 import { useContribution } from "@/queries/user";
 import {
   ContributionGraph,
@@ -9,9 +11,6 @@ import {
   ContributionGraphTotalCount,
   ContributionGraphLegend,
 } from "@/components/ui/contribution-graph";
-import { useMemo } from "react";
-import { format } from "date-fns";
-import { cn } from "@/lib/utils";
 import {
   Tooltip,
   TooltipContent,
@@ -37,6 +36,7 @@ const ContributionGraphDisplay = ({
     const countsMap = new Map<string, number>();
     for (const ts of data.timestamps) {
       const date = new Date(ts);
+      if (date.getFullYear() !== year) continue;
       const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
       countsMap.set(dateStr, (countsMap.get(dateStr) ?? 0) + 1);
     }
@@ -69,7 +69,9 @@ const ContributionGraphDisplay = ({
       }
     }
 
-    return { contributions, totalCount: data.totalCount };
+    const totalCount = contributions.reduce((sum, c) => sum + c.count, 0);
+
+    return { contributions, totalCount };
   }, [data, year]);
 
   if (isLoading && !data) {
@@ -101,13 +103,6 @@ const ContributionGraphDisplay = ({
                 activity={activity}
                 dayIndex={dayIndex}
                 weekIndex={weekIndex}
-                className={cn(
-                  'data-[level="0"]:fill-[#ebedf0] dark:data-[level="0"]:fill-[#161b22]',
-                  'data-[level="1"]:fill-[#9be9a8] dark:data-[level="1"]:fill-[#0e4429]',
-                  'data-[level="2"]:fill-[#40c463] dark:data-[level="2"]:fill-[#006d32]',
-                  'data-[level="3"]:fill-[#30a14e] dark:data-[level="3"]:fill-[#26a641]',
-                  'data-[level="4"]:fill-[#216e39] dark:data-[level="4"]:fill-[#39d353]'
-                )}
               />
             </TooltipTrigger>
             <TooltipContent>

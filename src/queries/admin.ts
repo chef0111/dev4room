@@ -35,7 +35,7 @@ export function useAdminUsers(params: ListUsersParams = {}) {
       },
     }),
     staleTime: 1000 * 60 * 2,
-    placeholderData: (previousData) => previousData,
+    placeholderData: (prevData) => prevData,
   });
 }
 
