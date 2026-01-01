@@ -29,7 +29,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { Brand } from "@/components/ui/dev";
 import UserAvatar from "@/components/modules/profile/user-avatar";
 import { useDebouncedValue } from "@/hooks/use-debounce";
-import { useTopQuestions, usePopularTags } from "@/queries/recommend.queries";
+import { useTopQuestions, usePopularTags } from "@/queries/recommend";
 
 interface SearchResult {
   questions: Array<{

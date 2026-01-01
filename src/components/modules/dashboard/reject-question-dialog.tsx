@@ -17,7 +17,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { FormTextarea } from "@/components/form";
 import { Spinner } from "@/components/ui/spinner";
-import { useRejectQuestion } from "@/queries/admin.queries";
+import { useRejectQuestion } from "@/queries/admin";
 
 const RejectReasonSchema = z.object({
   reason: z

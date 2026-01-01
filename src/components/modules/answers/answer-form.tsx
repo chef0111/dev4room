@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import GenerateAIButton from "./generate-ai-button";
 import AIValidationAlert from "./ai-validation-alert";
-import { useCreateAnswer, useEditAnswer } from "@/queries/answer.queries";
+import { useCreateAnswer, useEditAnswer } from "@/queries/answer";
 import { FormMarkdown } from "@/components/form";
 
 interface Answer {

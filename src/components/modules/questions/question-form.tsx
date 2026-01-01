@@ -24,7 +24,7 @@ import {
   useCreateQuestion,
   useEditQuestion,
   useCheckDuplicateQuestion,
-} from "@/queries/question.queries";
+} from "@/queries/question";
 import { FormInput, FormMarkdown } from "@/components/form";
 
 interface QuestionFormProps {

@@ -36,7 +36,7 @@ import {
   useUnbanUser,
   useSetUserRole,
   useDeleteUser,
-} from "@/queries/admin.queries";
+} from "@/queries/admin";
 import { getFiltersStateParser } from "@/lib/table/parsers";
 import Loading from "@/app/(admin)/dashboard/users/loading";
 import { authClient } from "@/lib/auth-client";

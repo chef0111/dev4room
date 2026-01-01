@@ -7,7 +7,7 @@ import {
   EMPTY_IMAGE,
   ERROR_IMAGE,
 } from "@/common/constants/states";
-import { cleanErrorMessage } from "@/errors/error-utils";
+import { sanitizeErrorMessage } from "@/errors/error-utils";
 import { Route } from "next";
 
 interface DataRendererProps<T> {
@@ -95,7 +95,7 @@ const DataRenderer = <T,>({
   render,
 }: DataRendererProps<T>) => {
   // Format error messages to prevent showing raw technical errors
-  const formattedError = error ? cleanErrorMessage(error) : null;
+  const formattedError = error ? sanitizeErrorMessage(error) : null;
 
   if (!success) {
     return (

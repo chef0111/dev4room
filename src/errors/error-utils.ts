@@ -240,6 +240,7 @@ const TECHNICAL_ERROR_PATTERNS: RegExp[] = [
   /undefined is not/i,
   /cannot read propert/i,
   /is not a function/i,
+  /can only be called inside/i,
 ];
 
 const USER_FACING_ERROR_CODES = [
@@ -254,13 +255,13 @@ const USER_FACING_ERROR_CODES = [
  * Sanitizes error messages to prevent exposing technical details to users.
  * Preserves intentional user-facing messages.
  */
-export interface cleanError {
+export interface sanitizeError {
   title: string;
   message: string;
   isUserFacing: boolean;
 }
 
-export function cleanErrorMessage(error: unknown): cleanError {
+export function sanitizeErrorMessage(error: unknown): sanitizeError {
   const errorMessage =
     error instanceof Error
       ? error.message
