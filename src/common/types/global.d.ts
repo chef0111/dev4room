@@ -95,3 +95,13 @@ interface QueryParams {
   query?: string;
   filter?: string;
 }
+
+interface ListUsersParams {
+  search?: string;
+  role?: string;
+  banned?: boolean;
+  createdAfter?: Date;
+  createdBefore?: Date;
+  limit?: number;
+  offset?: number;
+}

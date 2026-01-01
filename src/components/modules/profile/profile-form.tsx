@@ -9,7 +9,7 @@ import { InputGroupText } from "@/components/ui/input-group";
 import { Spinner } from "@/components/ui/spinner";
 import { FormInputGroup, FormTextareaGroup } from "@/components/form";
 import { ProfileSchema } from "@/lib/validations";
-import { useUpdateProfile } from "@/queries/user.queries";
+import { useUpdateProfile } from "@/queries/user";
 import { useRouter } from "next/navigation";
 import { profileFields } from "@/common/constants";
 

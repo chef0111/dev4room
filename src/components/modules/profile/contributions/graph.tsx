@@ -1,6 +1,6 @@
 "use client";
 
-import { useContribution } from "@/queries/user.queries";
+import { useContribution } from "@/queries/user";
 import {
   ContributionGraph,
   ContributionGraphCalendar,

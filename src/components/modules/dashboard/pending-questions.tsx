@@ -24,10 +24,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  useAdminPendingQuestions,
-  useApproveQuestion,
-} from "@/queries/admin.queries";
+import { useAdminPendingQuestions, useApproveQuestion } from "@/queries/admin";
 import { useDataTable } from "@/hooks/use-data-table";
 import {
   getPendingQuestionColumns,

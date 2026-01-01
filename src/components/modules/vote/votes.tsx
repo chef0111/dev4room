@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, MotionConfig } from "motion/react";
-import { useVote, type TargetType } from "@/queries/vote.queries";
+import { useVote, type TargetType } from "@/queries/vote";
 import NumberFlow, { useCanAnimate } from "@number-flow/react";
 import { Upvote } from "@/components/ui/dev";
 import { Downvote } from "@/components/ui/dev";

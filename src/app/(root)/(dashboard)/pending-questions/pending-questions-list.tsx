@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { IconClock, IconTrash, IconEye, IconBan } from "@tabler/icons-react";
-import { useCancelPendingQuestion } from "@/queries/question.queries";
+import { useCancelPendingQuestion } from "@/queries/question";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";

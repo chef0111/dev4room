@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { Edit2 } from "lucide-react";
-import { useUploadAvatar, useRemoveAvatar } from "@/queries/upload.queries";
+import { useUploadAvatar, useRemoveAvatar } from "@/queries/upload";
 import { toast } from "sonner";
 
 interface AvatarEditorProps {

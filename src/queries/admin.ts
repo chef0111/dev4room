@@ -11,16 +11,6 @@ export function useAdminStats() {
   });
 }
 
-interface ListUsersParams {
-  search?: string;
-  role?: string;
-  banned?: boolean;
-  createdAfter?: Date;
-  createdBefore?: Date;
-  limit?: number;
-  offset?: number;
-}
-
 export function useAdminUsers(params: ListUsersParams = {}) {
   const {
     search,

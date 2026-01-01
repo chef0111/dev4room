@@ -5,7 +5,7 @@ import {
   IconTrendingUp,
   IconMinus,
 } from "@tabler/icons-react";
-import { useAdminStats } from "@/queries/admin.queries";
+import { useAdminStats } from "@/queries/admin";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,

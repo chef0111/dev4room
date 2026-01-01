@@ -4,7 +4,7 @@ import * as React from "react";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useAdminGrowth } from "@/queries/admin.queries";
+import { useAdminGrowth } from "@/queries/admin";
 import {
   Card,
   CardAction,

@@ -16,8 +16,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { Edit, Trash } from "lucide-react";
-import { useDeleteQuestion } from "@/queries/question.queries";
-import { useDeleteAnswer } from "@/queries/answer.queries";
+import { useDeleteQuestion } from "@/queries/question";
+import { useDeleteAnswer } from "@/queries/answer";
 
 interface EditDeleteProps {
   type: "question" | "answer";
