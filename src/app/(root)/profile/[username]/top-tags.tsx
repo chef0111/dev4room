@@ -17,7 +17,7 @@ const UserTopTags = async ({ userId, limit = 5 }: UserTopTagsProps) => {
 
   const tagsResult = await queryClient
     .fetchQuery(
-      orpc.user.tags.queryOptions({
+      orpc.users.tags.queryOptions({
         input: { userId, limit },
       })
     )

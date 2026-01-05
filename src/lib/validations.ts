@@ -2,6 +2,20 @@ import z from "zod";
 
 const NAME_REGEX = /^[^\d!@#$%^&*()_+=[\]{};':"\\|,.<>?/`~]+$/;
 
+export const UsernameSchema = z
+  .string()
+  .min(3, { message: "Username must be at least 3 characters long." })
+  .max(30, { message: "Username cannot exceed 30 characters." })
+  .regex(/^[a-zA-Z0-9_]+$/, {
+    message: "Username can only contain letters, numbers, and underscores.",
+  })
+  .regex(/[a-zA-Z]/, {
+    message: "Username must contain at least one letter.",
+  })
+  .refine((val) => !["me", "admin", "user"].includes(val.toLowerCase()), {
+    message: "Usernames like 'admin', 'user' or 'me' are restricted.",
+  });
+
 export const PasswordSchema = z
   .string()
   .min(8, { message: "Password must be at least 8 characters long." })
@@ -38,13 +52,7 @@ export const RegisterSchema = z
         message: "Name can only contain letters and spaces.",
       }),
 
-    username: z
-      .string()
-      .min(3, { message: "Username must be at least 3 characters long." })
-      .max(30, { message: "Username cannot exceed 30 characters." })
-      .regex(/^[a-zA-Z0-9_]+$/, {
-        message: "Username can only contain letters, numbers, and underscores.",
-      }),
+    username: UsernameSchema,
 
     email: z
       .email({ message: "Please provide a valid email address." })

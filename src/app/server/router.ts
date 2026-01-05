@@ -46,9 +46,9 @@ import {
 } from "./admin";
 
 export const router = {
-  user: {
+  users: {
     list: listUsers,
-    get: getUser,
+    me: getUser,
     questions: getUserQuestions,
     answers: getUserAnswers,
     tags: getUserTags,
@@ -56,7 +56,7 @@ export const router = {
     update: updateUser,
     contributions: getUserContributions,
   },
-  question: {
+  questions: {
     list: listQuestions,
     get: getQuestion,
     create: createQuestion,
@@ -67,23 +67,23 @@ export const router = {
     cancelPending: cancelPendingQuestion,
     checkDuplicate: checkDuplicateQuestion,
   },
-  answer: {
+  answers: {
     list: listAnswers,
     get: getAnswer,
     create: createAnswer,
     update: editAnswer,
     delete: deleteAnswer,
   },
-  tag: {
+  tags: {
     list: listTags,
     getQuestions: getTagQuestions,
     getPopular: getPopular,
   },
-  vote: {
+  votes: {
     create: createVote,
     status: hasVoted,
   },
-  collection: {
+  collections: {
     list: listCollection,
     toggle: toggleSave,
     status: hasSaved,

@@ -14,7 +14,7 @@ const EMPTY_PENDING = {
 const PendingQuestionsContent = async () => {
   const queryClient = getQueryClient();
 
-  const queryOptions = orpc.question.pending.queryOptions({
+  const queryOptions = orpc.questions.pending.queryOptions({
     input: undefined,
   });
 

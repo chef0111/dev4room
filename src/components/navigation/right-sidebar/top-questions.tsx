@@ -10,7 +10,7 @@ const DEFAULT_LIMIT = 5;
 
 const TopQuestions = async () => {
   const queryClient = getQueryClient();
-  const queryOptions = orpc.question.getTop.queryOptions({
+  const queryOptions = orpc.questions.getTop.queryOptions({
     input: { limit: DEFAULT_LIMIT },
   });
 

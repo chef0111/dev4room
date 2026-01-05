@@ -14,7 +14,7 @@ const Collection = async ({
 
   const queryClient = getQueryClient();
 
-  const queryOptions = orpc.collection.list.queryOptions({
+  const queryOptions = orpc.collections.list.queryOptions({
     input: {
       page: Number(page) || 1,
       pageSize: Number(pageSize) || 10,

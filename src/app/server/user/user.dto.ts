@@ -1,7 +1,7 @@
 import "server-only";
 import z from "zod";
 import { TagSchema } from "../question/question.dto";
-import { QueryParamsSchema } from "@/lib/validations";
+import { QueryParamsSchema, UsernameSchema } from "@/lib/validations";
 
 // Base User Schema
 export const UserSchema = z.object({
@@ -105,14 +105,7 @@ export const BadgesSchema = z.object({
 
 export const UpdateProfileInputSchema = z.object({
   name: z.string().min(1, { message: "Name is required." }).optional(),
-  username: z
-    .string()
-    .min(3, { message: "Username must be at least 3 characters long." })
-    .max(30, { message: "Username cannot exceed 30 characters." })
-    .regex(/^[a-zA-Z0-9_]+$/, {
-      message: "Username can only contain letters, numbers, and underscores.",
-    })
-    .optional(),
+  username: UsernameSchema,
   image: z.url({ message: "Image must be a valid URL." }).nullable().optional(),
   bio: z
     .union([

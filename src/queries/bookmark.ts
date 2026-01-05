@@ -15,12 +15,12 @@ export function useBookmark({ questionId }: UseBookmarkOptions) {
   const { data: session } = authClient.useSession();
   const isAuthenticated = !!session?.user;
 
-  const statusQueryKey = orpc.collection.status.queryOptions({
+  const statusQueryKey = orpc.collections.status.queryOptions({
     input: { questionId },
   }).queryKey;
 
   const { data: bookmarkStatus } = useQuery({
-    ...orpc.collection.status.queryOptions({
+    ...orpc.collections.status.queryOptions({
       input: { questionId },
     }),
     enabled: isAuthenticated,
@@ -29,7 +29,7 @@ export function useBookmark({ questionId }: UseBookmarkOptions) {
   });
 
   const bookmarkMutation = useMutation({
-    mutationFn: () => client.collection.toggle({ questionId }),
+    mutationFn: () => client.collections.toggle({ questionId }),
 
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: statusQueryKey });

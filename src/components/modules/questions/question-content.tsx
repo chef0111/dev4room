@@ -30,7 +30,7 @@ const QuestionContent = async ({
   const queryClient = getQueryClient();
 
   const result = await queryClient
-    .fetchQuery(orpc.question.get.queryOptions({ input: { questionId } }))
+    .fetchQuery(orpc.questions.get.queryOptions({ input: { questionId } }))
     .then((data) => ({ data, error: undefined }))
     .catch(() => ({ data: undefined, error: true }));
 

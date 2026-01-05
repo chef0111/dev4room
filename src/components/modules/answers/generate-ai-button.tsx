@@ -38,7 +38,7 @@ const GenerateAIButton = ({
     }
 
     try {
-      const question = await client.question.get({ questionId });
+      const question = await client.questions.get({ questionId });
 
       if (!question) {
         toast.error("Question not found");

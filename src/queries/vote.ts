@@ -52,12 +52,12 @@ export function useVote({
   const { data: session } = authClient.useSession();
   const isAuthenticated = !!session?.user;
 
-  const statusQueryKey = orpc.vote.status.queryOptions({
+  const statusQueryKey = orpc.votes.status.queryOptions({
     input: { targetId, targetType },
   }).queryKey;
 
   const { data: voteData } = useQuery({
-    ...orpc.vote.status.queryOptions({
+    ...orpc.votes.status.queryOptions({
       input: { targetId, targetType },
     }),
     enabled: isAuthenticated,
@@ -67,7 +67,7 @@ export function useVote({
 
   const voteMutation = useMutation({
     mutationFn: (voteType: VoteType) =>
-      client.vote.create({ targetId, targetType, voteType }),
+      client.votes.create({ targetId, targetType, voteType }),
 
     onMutate: async (voteType) => {
       await queryClient.cancelQueries({ queryKey: statusQueryKey });

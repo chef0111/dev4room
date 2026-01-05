@@ -16,7 +16,7 @@ export function useCreateQuestion(options?: UseCreateQuestionOptions) {
   const router = useRouter();
 
   return useMutation(
-    orpc.question.create.mutationOptions({
+    orpc.questions.create.mutationOptions({
       onSuccess: (data) => {
         if (data.status === "pending") {
           options?.onPending?.();
@@ -45,7 +45,7 @@ export function useEditQuestion(options?: UseEditQuestionOptions) {
   const router = useRouter();
 
   return useMutation(
-    orpc.question.edit.mutationOptions({
+    orpc.questions.edit.mutationOptions({
       onSuccess: (data) => {
         toast.success("Question updated successfully!");
         options?.onFormReset?.();
@@ -72,7 +72,7 @@ export function useDeleteQuestion(options?: UseDeleteQuestionOptions) {
   const router = useRouter();
 
   return useMutation(
-    orpc.question.delete.mutationOptions({
+    orpc.questions.delete.mutationOptions({
       onSuccess: () => {
         toast.success("Question deleted successfully");
         if (options?.redirectTo) {
@@ -91,7 +91,7 @@ export function useCancelPendingQuestion() {
   const router = useRouter();
 
   return useMutation(
-    orpc.question.cancelPending.mutationOptions({
+    orpc.questions.cancelPending.mutationOptions({
       onSuccess: () => {
         toast.success("Question cancelled successfully");
         router.refresh();
@@ -104,5 +104,5 @@ export function useCancelPendingQuestion() {
 }
 
 export function useCheckDuplicateQuestion() {
-  return useMutation(orpc.question.checkDuplicate.mutationOptions());
+  return useMutation(orpc.questions.checkDuplicate.mutationOptions());
 }

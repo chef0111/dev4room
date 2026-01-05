@@ -49,7 +49,7 @@ const AnswerList = async ({
   const session = await getServerSession();
   const queryClient = getQueryClient();
 
-  const queryOptions = orpc.answer.list.queryOptions({
+  const queryOptions = orpc.answers.list.queryOptions({
     input: {
       questionId,
       page,

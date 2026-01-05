@@ -36,7 +36,7 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
 
   const userResult = await queryClient
     .fetchQuery(
-      orpc.user.get.queryOptions({
+      orpc.users.me.queryOptions({
         input: { username },
       })
     )
@@ -55,7 +55,7 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
 
   const statsResult = await queryClient
     .fetchQuery(
-      orpc.user.stats.queryOptions({
+      orpc.users.stats.queryOptions({
         input: { userId: userData.id },
       })
     )

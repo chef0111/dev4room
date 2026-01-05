@@ -38,7 +38,7 @@ const UserTabs = async ({
   const [questionsResult, answersResult] = await Promise.all([
     queryClient
       .fetchQuery(
-        orpc.user.questions.queryOptions({
+        orpc.users.questions.queryOptions({
           input: {
             userId,
             page,
@@ -54,7 +54,7 @@ const UserTabs = async ({
       })),
     queryClient
       .fetchQuery(
-        orpc.user.answers.queryOptions({
+        orpc.users.answers.queryOptions({
           input: {
             userId,
             page,
