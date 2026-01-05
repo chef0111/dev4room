@@ -10,7 +10,7 @@ export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   // Protected routes - require authentication
-  const protectedRoutes = ["/profile", "/ask-question", "/dashboard"];
+  const protectedRoutes = ["/settings", "/ask-question", "/dashboard"];
   const isProtectedRoute = protectedRoutes.some((route) =>
     pathname.startsWith(route)
   );

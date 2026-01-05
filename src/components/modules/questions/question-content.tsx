@@ -66,7 +66,7 @@ const QuestionContent = async ({
               fallbackClassName="text-xs"
             />
 
-            <Link href={`/profile/${author.username}`}>
+            <Link href={`/${author.username}`}>
               <p className="pg-semibold text-dark300_light700 text-lg">
                 {author.name}
               </p>

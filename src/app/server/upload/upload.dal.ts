@@ -29,7 +29,7 @@ export class UploadDAL {
       expiresIn: this.presignedUrlExpiry,
     });
 
-    const publicUrl = `https://${BUCKET_NAME}.t3.storage.dev/${fileKey}`;
+    const publicUrl = `https:/${BUCKET_NAME}.t3.storage.dev/${fileKey}`;
 
     return {
       uploadUrl,

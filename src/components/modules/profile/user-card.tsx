@@ -20,7 +20,7 @@ const UserCard = ({ name, username, image }: UserCardProps) => {
         fallbackClassName="text-center text-4xl tracking-widest"
       />
 
-      <Link href={`/profile/${username}`}>
+      <Link href={`/${username}`}>
         <div className="mt-4 text-center">
           <h3 className="h3-bold text-dark200_light900 line-clamp-1">{name}</h3>
           <p className="body-regular text-dark500_light500 mt-2">@{username}</p>

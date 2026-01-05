@@ -88,7 +88,7 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
               asChild
               className="pg-medium btn-secondary hover:bg-light700_dark300! text-dark300_light900 min-h-12 min-w-40 px-4 py-3 max-sm:w-full"
             >
-              <Link href="/profile/edit">Edit Profile</Link>
+              <Link href="/settings/profile">Edit Profile</Link>
             </Button>
           )}
         </div>

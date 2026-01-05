@@ -63,8 +63,10 @@ export const router = {
     edit: editQuestion,
     getTop: getTopQuestions,
     delete: deleteQuestion,
-    pending: getUserPendingQuestions,
-    cancelPending: cancelPendingQuestion,
+    pending: {
+      get: getUserPendingQuestions,
+      cancel: cancelPendingQuestion,
+    },
     checkDuplicate: checkDuplicateQuestion,
   },
   answers: {

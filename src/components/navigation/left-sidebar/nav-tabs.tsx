@@ -30,13 +30,13 @@ const NavTabs = ({ isMobile = false }: NavTabsProps) => {
 
         const appRoute =
           item.route === "/profile" && user?.username
-            ? `/profile/${user.username}`
+            ? `/${user.username}`
             : item.route;
 
         const isActive =
           (pathname.includes(appRoute) && appRoute.length > 1) ||
           pathname === appRoute ||
-          (item.route === "/profile" && pathname === "/profile/edit");
+          (item.route === "/profile" && pathname === "/settings/profile");
 
         const LinkComponent = (
           <Link

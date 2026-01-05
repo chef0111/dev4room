@@ -91,7 +91,7 @@ export function useCancelPendingQuestion() {
   const router = useRouter();
 
   return useMutation(
-    orpc.questions.cancelPending.mutationOptions({
+    orpc.questions.pending.cancel.mutationOptions({
       onSuccess: () => {
         toast.success("Question cancelled successfully");
         router.refresh();
