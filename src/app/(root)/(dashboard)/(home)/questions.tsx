@@ -14,7 +14,7 @@ const HomeQuestions = async ({
 
   const queryClient = getQueryClient();
 
-  const queryOptions = orpc.question.list.queryOptions({
+  const queryOptions = orpc.questions.list.queryOptions({
     input: {
       page: Number(page) || 1,
       pageSize: Number(pageSize) || 10,

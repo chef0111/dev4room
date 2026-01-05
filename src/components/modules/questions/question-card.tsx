@@ -63,7 +63,7 @@ const QuestionCard = ({
             fallbackClassName="text-[10px]"
           />
 
-          <Link href={`/profile/${author.username}`}>
+          <Link href={`/${author.username}`}>
             <p className="small-regular text-dark300_light700">
               <span className="body-medium">{author.name}</span> • asked{" "}
               {getTimeStamp(createdAt)}

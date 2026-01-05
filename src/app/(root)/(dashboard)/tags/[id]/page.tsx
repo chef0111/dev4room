@@ -25,7 +25,7 @@ const TagQuestions = async ({ params, searchParams }: RouteParams) => {
 
   const queryClient = getQueryClient();
 
-  const queryOptions = orpc.tag.getQuestions.queryOptions({
+  const queryOptions = orpc.tags.getQuestions.queryOptions({
     input: {
       tagId: id,
       page: Number(page) || 1,

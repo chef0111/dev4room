@@ -30,7 +30,7 @@ const QuestionContent = async ({
   const queryClient = getQueryClient();
 
   const result = await queryClient
-    .fetchQuery(orpc.question.get.queryOptions({ input: { questionId } }))
+    .fetchQuery(orpc.questions.get.queryOptions({ input: { questionId } }))
     .then((data) => ({ data, error: undefined }))
     .catch(() => ({ data: undefined, error: true }));
 
@@ -66,7 +66,7 @@ const QuestionContent = async ({
               fallbackClassName="text-xs"
             />
 
-            <Link href={`/profile/${author.username}`}>
+            <Link href={`/${author.username}`}>
               <p className="pg-semibold text-dark300_light700 text-lg">
                 {author.name}
               </p>

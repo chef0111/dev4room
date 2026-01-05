@@ -8,7 +8,7 @@ import { username, admin as adminPlugin, emailOTP } from "better-auth/plugins";
 import { ac, admin, moderator, user } from "@/app/server/admin/permissions";
 import { createAuthMiddleware, APIError } from "better-auth/api";
 import { nextCookies } from "better-auth/next-js";
-import { PasswordSchema } from "./validations";
+import { PasswordSchema, UsernameSchema } from "./validations";
 import { resend } from "./resend";
 import SendOTPEmail from "@/components/modules/email/send-otp-email";
 import {
@@ -95,11 +95,24 @@ export const auth = betterAuth({
         ctx.path === "/change-password"
       ) {
         const password = ctx.body.password || ctx.body.newPassword;
+
         const { error } = PasswordSchema.safeParse(password);
 
         if (error) {
           throw new APIError("BAD_REQUEST", {
             message: "Password not strong enough.",
+          });
+        }
+      }
+
+      if (ctx.path === "/sign-up/email") {
+        const username = ctx.body.username;
+
+        const { error } = UsernameSchema.safeParse(username);
+
+        if (error) {
+          throw new APIError("BAD_REQUEST", {
+            message: "Invalid username.",
           });
         }
       }

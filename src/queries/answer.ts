@@ -15,7 +15,7 @@ export function useCreateAnswer(options?: UseCreateAnswerOptions) {
   const router = useRouter();
 
   return useMutation(
-    orpc.answer.create.mutationOptions({
+    orpc.answers.create.mutationOptions({
       onSuccess: () => {
         toast.success("Answer posted successfully!");
         options?.onFormReset?.();
@@ -38,7 +38,7 @@ export function useEditAnswer(options?: UseEditAnswerOptions) {
   const router = useRouter();
 
   return useMutation(
-    orpc.answer.update.mutationOptions({
+    orpc.answers.update.mutationOptions({
       onSuccess: () => {
         toast.success("Answer updated successfully!");
         router.refresh();
@@ -55,7 +55,7 @@ export function useDeleteAnswer() {
   const router = useRouter();
 
   return useMutation(
-    orpc.answer.delete.mutationOptions({
+    orpc.answers.delete.mutationOptions({
       onSuccess: () => {
         toast.success("Answer deleted successfully");
         router.refresh();

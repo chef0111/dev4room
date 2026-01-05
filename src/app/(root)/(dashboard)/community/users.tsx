@@ -12,7 +12,7 @@ const Users = async ({ searchParams }: Pick<RouteParams, "searchParams">) => {
 
   const queryClient = getQueryClient();
 
-  const queryOptions = orpc.user.list.queryOptions({
+  const queryOptions = orpc.users.list.queryOptions({
     input: {
       page: Number(page) || 1,
       pageSize: Number(pageSize) || 12,

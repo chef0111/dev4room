@@ -12,7 +12,7 @@ const Tags = async ({ searchParams }: Pick<RouteParams, "searchParams">) => {
 
   const queryClient = getQueryClient();
 
-  const queryOptions = orpc.tag.list.queryOptions({
+  const queryOptions = orpc.tags.list.queryOptions({
     input: {
       page: Number(page) || 1,
       pageSize: Number(pageSize) || 12,

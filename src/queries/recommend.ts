@@ -7,7 +7,7 @@ const DEFAULT_LIMIT = 5;
 
 export function useTopQuestions(enabled: boolean = true) {
   return useQuery({
-    ...orpc.question.getTop.queryOptions({
+    ...orpc.questions.getTop.queryOptions({
       input: { limit: DEFAULT_LIMIT },
     }),
     enabled,
@@ -18,7 +18,7 @@ export function useTopQuestions(enabled: boolean = true) {
 
 export function usePopularTags(enabled: boolean = true) {
   return useQuery({
-    ...orpc.tag.getPopular.queryOptions({
+    ...orpc.tags.getPopular.queryOptions({
       input: { limit: DEFAULT_LIMIT },
     }),
     enabled,

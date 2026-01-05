@@ -9,7 +9,7 @@ export function useUpdateProfile(options?: { onSuccess?: () => void }) {
   const router = useRouter();
 
   return useMutation(
-    orpc.user.update.mutationOptions({
+    orpc.users.update.mutationOptions({
       onSuccess: () => {
         toast.success("Your profile has been updated successfully.");
         router.refresh();
@@ -24,7 +24,7 @@ export function useUpdateProfile(options?: { onSuccess?: () => void }) {
 
 export function useContribution(userId: string, year: number) {
   return useQuery(
-    orpc.user.contributions.queryOptions({
+    orpc.users.contributions.queryOptions({
       input: { userId, year },
       placeholderData: (prevData) => prevData,
     })

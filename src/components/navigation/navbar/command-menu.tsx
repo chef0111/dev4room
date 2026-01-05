@@ -392,7 +392,7 @@ const CommandMenu = () => {
                     <CommandItem
                       key={user.id}
                       value={`user-${user.id}`}
-                      onSelect={() => handleSelect(`/profile/${user.username}`)}
+                      onSelect={() => handleSelect(`/${user.username}`)}
                       className="smooth-hover py-2!"
                     >
                       <UserAvatar

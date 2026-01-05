@@ -8,7 +8,7 @@ const DEFAULT_LIMIT = 5;
 
 const PopularTags = async () => {
   const queryClient = getQueryClient();
-  const queryOptions = orpc.tag.getPopular.queryOptions({
+  const queryOptions = orpc.tags.getPopular.queryOptions({
     input: { limit: DEFAULT_LIMIT },
   });
 

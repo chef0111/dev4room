@@ -20,7 +20,7 @@ const EditQuestion = async ({ params }: RouteParams) => {
   if (!session) return redirect("/login");
 
   const queryClient = getQueryClient();
-  const queryOptions = orpc.question.get.queryOptions({
+  const queryOptions = orpc.questions.get.queryOptions({
     input: { questionId: id },
   });
 

@@ -73,7 +73,7 @@ const AnswerCard = ({
           />
 
           <Link
-            href={`/profile/${author.username}`}
+            href={`/${author.username}`}
             className="flex w-full flex-col max-sm:ml-1 sm:flex-wrap sm:items-start md:flex-row"
           >
             <p className="body-semibold text-dark300_light700">

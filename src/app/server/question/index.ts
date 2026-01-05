@@ -117,7 +117,7 @@ export const createQuestion = authorized
       }
     });
 
-    revalidatePath(`/profile/${context.user.id}`);
+    revalidatePath(`/${context.user.id}`);
 
     return { id: question.id, status: question.status };
   });
@@ -218,7 +218,7 @@ export const deleteQuestion = authorized
       }
     });
 
-    revalidatePath(`/profile/${context.user.id}`);
+    revalidatePath(`/${context.user.id}`);
 
     return { success: true };
   });

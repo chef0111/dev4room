@@ -14,7 +14,7 @@ const StatsCard = ({ badge, value, title }: StatsCardProps) => {
         className="flex-start flex-row gap-4 px-0"
         aria-label="User's Badge"
       >
-        <Image src={badge} alt={title} width={40} height={50} />
+        <Image src={badge} alt={title} width={40} height={54} />
         <div className="flex flex-col gap-1">
           <p className="pg-semibold text-dark200_light900">{value}</p>
           <p

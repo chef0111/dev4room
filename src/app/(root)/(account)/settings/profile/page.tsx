@@ -19,7 +19,7 @@ const EditProfile = async () => {
 
   const queryClient = getQueryClient();
   const userResult = await queryClient.fetchQuery(
-    orpc.user.get.queryOptions({
+    orpc.users.me.queryOptions({
       input: { username: session.user.username! },
     })
   );

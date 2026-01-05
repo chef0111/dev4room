@@ -18,7 +18,7 @@ const UserAvatar = ({
   image,
   className,
   fallbackClassName,
-  href = username ? (`/profile/${username}` as Route) : null,
+  href = username ? (`/${username}` as Route) : null,
 }: UserAvatarProps) => {
   const initials = name
     ?.split(" ")
