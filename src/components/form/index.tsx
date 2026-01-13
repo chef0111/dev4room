@@ -63,7 +63,7 @@ type FormBaseProps<
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
   TTransformedValues = TFieldValues,
 > = FormControlProps<TFieldValues, TName, TTransformedValues> & {
-  horizontal?: boolean;
+  orientation?: "horizontal" | "vertical" | "responsive" | null;
   controlFirst?: boolean;
   className?: string;
   children: (
