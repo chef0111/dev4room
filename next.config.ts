@@ -43,6 +43,23 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            // max-age=0: check with server every time (browser)
+            // s-maxage=3600: cache for 1 hour at the Vercel Edge Network (CDN)
+            // stale-while-revalidate: serve old content while background updating
+            value:
+              "public, max-age=0, s-maxage=3600, stale-while-revalidate=59",
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;
