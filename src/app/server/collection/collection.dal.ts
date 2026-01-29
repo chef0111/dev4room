@@ -31,6 +31,7 @@ interface CollectionRow {
   authorName: string | null;
   authorUsername: string | null;
   authorImage: string | null;
+  questionStatus: "pending" | "approved" | "rejected";
 }
 
 export class CollectionDAL {
@@ -49,6 +50,7 @@ export class CollectionDAL {
     authorName: user.name,
     authorUsername: user.username,
     authorImage: user.image,
+    questionStatus: question.status,
   } as const;
 
   private static getSortCriteria(filter?: CollectionFilter) {
@@ -91,6 +93,7 @@ export class CollectionDAL {
         downvotes: row.questionDownvotes,
         answers: row.questionAnswers,
         createdAt: row.questionCreatedAt,
+        status: row.questionStatus,
         author: {
           id: row.authorId,
           name: row.authorName ?? "Unknown",

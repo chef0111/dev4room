@@ -63,7 +63,7 @@ export const QuestionListOutputSchema = z.object({
   totalQuestions: z.number().int().min(0),
 });
 
-export const TopQuestionsOutputSchema = z.object({
+export const TopQuestionsSchema = z.object({
   questions: z.array(QuestionSchema.pick({ id: true, title: true })),
 });
 
@@ -114,7 +114,7 @@ export type DeleteQuestionInput = z.infer<typeof DeleteQuestionSchema>;
 export type CreateQuestionInput = z.infer<typeof CreateQuestionSchema>;
 export type EditQuestionInput = z.infer<typeof EditQuestionSchema>;
 export type QuestionListOutput = z.infer<typeof QuestionListOutputSchema>;
-export type TopQuestionsOutput = z.infer<typeof TopQuestionsOutputSchema>;
+export type TopQuestionsDTO = z.infer<typeof TopQuestionsSchema>;
 export type PendingQuestionDTO = z.infer<typeof PendingQuestionsSchema>;
 export type CheckDuplicateInput = z.infer<typeof CheckDuplicateInputSchema>;
 export type CheckDuplicateOutput = z.infer<typeof CheckDuplicateOutputSchema>;
