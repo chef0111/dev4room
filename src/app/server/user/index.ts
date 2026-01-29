@@ -1,5 +1,5 @@
 import { after } from "next/server";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { base } from "@/app/middleware";
 import { authorized } from "@/app/middleware/auth";
 import { standardSecurityMiddleware } from "@/app/middleware/arcjet/standard";
@@ -143,6 +143,8 @@ export const updateUser = authorized
         console.error("Failed to re-index user after profile update:", error);
       }
     });
+
+    revalidatePath(`/${user.username}`);
 
     return { user: updatedUser };
   });

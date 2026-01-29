@@ -74,7 +74,7 @@ export const confirmUpload = authorized
 
     revalidateTag(`user:${user.id}`, "max");
     revalidatePath(`/settings/profile`);
-    revalidatePath(`/${user.id}`);
+    revalidatePath(`/${user.username}`);
 
     return {
       success: true,
@@ -118,7 +118,7 @@ export const removeImage = authorized
 
     revalidateTag(`user:${user.id}`, "max");
     revalidatePath(`/settings/profile`);
-    revalidatePath(`/${user.id}`);
+    revalidatePath(`/${user.username}`);
 
     return {
       success: true,

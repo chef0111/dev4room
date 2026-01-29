@@ -12,6 +12,10 @@ const nextConfig: NextConfig = {
     typedEnv: true,
     authInterrupts: true,
     optimizeCss: true,
+    staleTimes: {
+      dynamic: 300,
+      static: 3600,
+    },
   },
   serverExternalPackages: ["pino", "pino-pretty"],
   images: {

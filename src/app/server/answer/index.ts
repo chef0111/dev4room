@@ -91,7 +91,7 @@ export const createAnswer = authorized
       }
     });
 
-    revalidatePath(`/${context.user.id}`);
+    revalidatePath(`/${context.user.username}`);
 
     return result;
   });
@@ -157,7 +157,7 @@ export const deleteAnswer = authorized
       }
     });
 
-    revalidatePath(`/${context.user.id}`);
+    revalidatePath(`/${context.user.username}`);
 
     return { success: true };
   });

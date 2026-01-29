@@ -117,7 +117,9 @@ export const createQuestion = authorized
       }
     });
 
-    revalidatePath(`/${context.user.id}`);
+    revalidatePath(`/${context.user.username}`);
+    revalidatePath("/");
+    revalidatePath("/tags");
 
     return { id: question.id, status: question.status };
   });
@@ -161,6 +163,10 @@ export const editQuestion = authorized
         console.error("Failed to re-index question/tags after edit:", error);
       }
     });
+
+    revalidatePath(`/${context.user.username}`);
+    revalidatePath("/");
+    revalidatePath(`/questions/${result.id}`);
 
     return result;
   });
@@ -218,7 +224,9 @@ export const deleteQuestion = authorized
       }
     });
 
-    revalidatePath(`/${context.user.id}`);
+    revalidatePath(`/${context.user.username}`);
+    revalidatePath("/");
+    revalidatePath("/tags");
 
     return { success: true };
   });
@@ -254,6 +262,7 @@ export const cancelPendingQuestion = authorized
       revalidateTag(`user:${context.user.id}`, "max");
     });
 
+    revalidatePath("/pending-questions");
     return { success: true };
   });
 
