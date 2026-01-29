@@ -60,6 +60,7 @@ interface Question {
   downvotes: number;
   answers: number;
   views: number;
+  status: "pending" | "approved" | "rejected";
 }
 
 interface Answer {

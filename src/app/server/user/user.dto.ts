@@ -77,6 +77,7 @@ export const UserQuestionSchema = z.object({
   answers: z.number().int().min(0),
   tags: z.array(TagSchema),
   createdAt: z.date(),
+  status: z.enum(["pending", "approved", "rejected"]),
 });
 
 export const UserAnswerSchema = z.object({
