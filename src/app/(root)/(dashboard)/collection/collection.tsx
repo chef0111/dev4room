@@ -1,35 +1,60 @@
-import { orpc } from "@/lib/orpc";
-import { getQueryClient } from "@/lib/query/hydration";
+import { listCollection } from "@/app/server/collection/collection.dal";
+import { getServerSession } from "@/lib/session";
 import { getErrorMessage } from "@/lib/handlers/error";
+import type { CollectionItem } from "@/app/server/collection/collection.dto";
 
 import DataRenderer from "@/components/shared/data-renderer";
 import { EMPTY_QUESTION } from "@/common/constants/states";
 import QuestionCard from "@/components/modules/questions/question-card";
 import { NextPagination } from "@/components/ui/dev";
 
+async function fetchCollections(
+  userId: string,
+  page: number,
+  pageSize: number,
+  query?: string,
+  filter?: string
+) {
+  "use cache";
+
+  return await listCollection({ page, pageSize, query, filter }, userId)
+    .then((data) => ({ data, error: undefined }))
+    .catch((e) => ({
+      data: undefined as
+        | { collections: CollectionItem[]; totalCollections: number }
+        | undefined,
+      error: { message: getErrorMessage(e, "Failed to get questions") },
+    }));
+}
+
 const Collection = async ({
   searchParams,
 }: Pick<RouteParams, "searchParams">) => {
   const { page, pageSize, query, filter } = await searchParams;
+  const session = await getServerSession();
 
-  const queryClient = getQueryClient();
+  const parsedPage = Number(page) || 1;
+  const parsedPageSize = Number(pageSize) || 10;
 
-  const queryOptions = orpc.collections.list.queryOptions({
-    input: {
-      page: Number(page) || 1,
-      pageSize: Number(pageSize) || 10,
-      query,
-      filter,
-    },
-  });
+  if (!session?.user?.id) {
+    return (
+      <DataRenderer
+        data={[]}
+        success={false}
+        error={{ message: "Please login to view your collection" }}
+        empty={EMPTY_QUESTION}
+        render={() => null}
+      />
+    );
+  }
 
-  const result = await queryClient
-    .fetchQuery(queryOptions)
-    .then((data) => ({ data, error: undefined }))
-    .catch((e) => ({
-      data: undefined,
-      error: { message: getErrorMessage(e, "Failed to get questions") },
-    }));
+  const result = await fetchCollections(
+    session.user.id,
+    parsedPage,
+    parsedPageSize,
+    query,
+    filter
+  );
 
   const data = result.data;
   const totalCollections = data?.totalCollections || 0;
@@ -51,8 +76,8 @@ const Collection = async ({
       />
 
       <NextPagination
-        page={page}
-        pageSize={pageSize}
+        page={parsedPage}
+        pageSize={parsedPageSize}
         totalCount={totalCollections}
         className="pb-10"
       />

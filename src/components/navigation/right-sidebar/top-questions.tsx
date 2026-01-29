@@ -1,26 +1,25 @@
+"use cache";
+
 import Image from "next/image";
 import Link from "next/link";
-import { orpc } from "@/lib/orpc";
-import { getQueryClient } from "@/lib/query/hydration";
+import { getTopQuestions } from "@/app/server/question/question.dal";
 import { getErrorMessage } from "@/lib/handlers/error";
 import DataRenderer from "@/components/shared/data-renderer";
 import { ChevronRight } from "lucide-react";
 
 const DEFAULT_LIMIT = 5;
 
-const TopQuestions = async () => {
-  const queryClient = getQueryClient();
-  const queryOptions = orpc.questions.getTop.queryOptions({
-    input: { limit: DEFAULT_LIMIT },
-  });
-
-  const result = await queryClient
-    .fetchQuery(queryOptions)
-    .then((data) => ({ data: data.questions, error: undefined }))
+async function fetchTopQuestions(limit: number) {
+  return getTopQuestions(limit)
+    .then((data) => ({ data, error: undefined }))
     .catch((e) => ({
       data: undefined,
       error: { message: getErrorMessage(e, "Failed to get top questions") },
     }));
+}
+
+const TopQuestions = async () => {
+  const result = await fetchTopQuestions(DEFAULT_LIMIT);
 
   const topQuestions = result.data;
 

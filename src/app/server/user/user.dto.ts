@@ -160,7 +160,7 @@ export const UserAnswersOutputSchema = z.object({
   totalAnswers: z.number().int().min(0),
 });
 
-export const UserPopularTagsOutputSchema = z.object({
+export const UserPopularTagsSchema = z.object({
   tags: z.array(UserPopularTagSchema),
 });
 

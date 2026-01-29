@@ -2,9 +2,8 @@ import { Suspense } from "react";
 import { after } from "next/server";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { orpc } from "@/lib/orpc";
+import { getQuestionById } from "@/app/server/question/question.dal";
 import { getServerSession } from "@/lib/session";
-import { getQueryClient } from "@/lib/query/hydration";
 import { formatNumber, getTimeStamp } from "@/lib/utils";
 import { ViewService } from "@/services/view.service";
 import UserAvatar from "@/components/modules/profile/user-avatar";
@@ -16,10 +15,22 @@ import { Separator } from "@/components/ui/separator";
 import MarkdownPreview from "@/components/markdown/markdown-preview";
 import { Metric } from "@/components/shared";
 import QuestionUtilsFallback from "@/components/modules/questions/question-utils-fallback";
+import { QuestionDTO } from "@/app/server/question/question.dto";
 
 interface QuestionContentProps {
   questionId: string;
   isPending?: boolean;
+}
+
+async function getQuestion(questionId: string) {
+  "use cache";
+  return await getQuestionById(questionId)
+    .then((data) => ({ data, error: undefined }))
+    .catch(() => ({
+      // data: undefined,
+      data: undefined as QuestionDTO | undefined,
+      error: true,
+    }));
 }
 
 const QuestionContent = async ({
@@ -27,22 +38,19 @@ const QuestionContent = async ({
   isPending = false,
 }: QuestionContentProps) => {
   const session = await getServerSession();
-  const queryClient = getQueryClient();
 
-  const result = await queryClient
-    .fetchQuery(orpc.questions.get.queryOptions({ input: { questionId } }))
-    .then((data) => ({ data, error: undefined }))
-    .catch(() => ({ data: undefined, error: true }));
+  const result = await getQuestion(questionId);
 
   if (!result.data) return notFound();
 
   const question = result.data;
-  const { author, createdAt, answers, views, title, content, tags } = question;
+  const { author, createdAt, answers, views, title, content, tags, status } =
+    question;
   const isAuthor = session?.user?.id === author.id.toString();
 
   if (
-    (question.status === "approved" && isPending) ||
-    (question.status !== "approved" && (!isPending || !isAuthor))
+    (status === "approved" && isPending) ||
+    (status !== "approved" && (!isPending || !isAuthor))
   ) {
     return notFound();
   }
