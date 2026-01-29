@@ -97,7 +97,7 @@ const ContributionGraphDisplay = ({
     <ContributionGraph data={contributions} totalCount={totalCount}>
       <ContributionGraphCalendar>
         {({ activity, dayIndex, weekIndex }) => (
-          <Tooltip>
+          <Tooltip delayDuration={300}>
             <TooltipTrigger asChild>
               <ContributionGraphBlock
                 activity={activity}
