@@ -1,5 +1,3 @@
-"use cache";
-
 import { getQuestions } from "@/app/server/question/question.dal";
 import { getErrorMessage } from "@/lib/handlers/error";
 
@@ -14,6 +12,8 @@ async function fetchQuestions(
   query?: string,
   filter?: string
 ) {
+  "use cache";
+
   return await getQuestions({ page, pageSize, query, filter })
     .then((data) => ({ data, error: undefined }))
     .catch((e) => ({

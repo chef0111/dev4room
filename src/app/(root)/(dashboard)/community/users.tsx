@@ -1,5 +1,3 @@
-"use cache";
-
 import { getUsers } from "@/app/server/user/user.dal";
 import { getErrorMessage } from "@/lib/handlers/error";
 import type { UserDTO } from "@/app/server/user/user.dto";
@@ -15,6 +13,8 @@ async function fetchUsers(
   query?: string,
   filter?: string
 ) {
+  "use cache";
+
   return await getUsers({ page, pageSize, query, filter })
     .then((data) => ({ data, error: undefined }))
     .catch((e) => ({

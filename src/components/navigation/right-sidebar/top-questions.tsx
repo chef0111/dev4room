@@ -10,7 +10,7 @@ import { ChevronRight } from "lucide-react";
 const DEFAULT_LIMIT = 5;
 
 async function fetchTopQuestions(limit: number) {
-  return getTopQuestions(limit)
+  return await getTopQuestions(limit)
     .then((data) => ({ data, error: undefined }))
     .catch((e) => ({
       data: undefined,

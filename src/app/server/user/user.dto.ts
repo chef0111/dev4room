@@ -85,10 +85,7 @@ export const UserAnswerSchema = z.object({
   content: z.string(),
   upvotes: z.number().int().min(0),
   downvotes: z.number().int().min(0),
-  question: z.object({
-    id: z.string(),
-    title: z.string(),
-  }),
+  questionId: z.string(),
   createdAt: z.date(),
 });
 
@@ -177,7 +174,7 @@ export type UserDTO = z.infer<typeof UserSchema>;
 export type UserListDTO = z.infer<typeof UserListSchema>;
 export type UserPostInput = z.infer<typeof UserPostSchema>;
 export type GetUserInput = z.infer<typeof GetUserSchema>;
-export type GetUserOutput = z.infer<typeof GetUserOutputSchema>;
+export type GetUserDTO = z.infer<typeof GetUserOutputSchema>;
 export type GetUserTagsInput = z.infer<typeof GetUserTagsSchema>;
 export type GetUserStatsInput = z.infer<typeof GetUserStatsSchema>;
 export type UserQuestionDTO = z.infer<typeof UserQuestionSchema>;

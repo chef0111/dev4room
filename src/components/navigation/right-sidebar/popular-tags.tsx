@@ -8,7 +8,7 @@ import { getPopularTags } from "@/app/server/tag/tag.dal";
 const DEFAULT_LIMIT = 5;
 
 async function fetchPopularTags(limit: number) {
-  return getPopularTags(limit)
+  return await getPopularTags(limit)
     .then((data) => ({ data, error: undefined }))
     .catch((e) => ({
       data: undefined,

@@ -24,10 +24,10 @@ interface QuestionContentProps {
 
 async function getQuestion(questionId: string) {
   "use cache";
+
   return await getQuestionById(questionId)
     .then((data) => ({ data, error: undefined }))
     .catch(() => ({
-      // data: undefined,
       data: undefined as QuestionDTO | undefined,
       error: true,
     }));

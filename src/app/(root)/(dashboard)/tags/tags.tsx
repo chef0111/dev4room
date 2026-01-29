@@ -1,5 +1,3 @@
-"use cache";
-
 import { getTags } from "@/app/server/tag/tag.dal";
 import { TagsDTO } from "@/app/server/tag/tag.dto";
 import { getErrorMessage } from "@/lib/handlers/error";
@@ -14,6 +12,8 @@ async function fetchTags(
   query?: string,
   filter?: string
 ) {
+  "use cache";
+
   return getTags({ page, pageSize, query, filter })
     .then((data) => ({ data, error: undefined }))
     .catch((e) => ({
