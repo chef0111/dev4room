@@ -60,13 +60,14 @@ interface Question {
   downvotes: number;
   answers: number;
   views: number;
+  status: "pending" | "approved" | "rejected";
 }
 
 interface Answer {
   id: string;
   author: Author;
   content: string;
-  createdAte: Date;
+  createdAt: Date;
   upvotes: number;
   downvotes: number;
   questionId: string;

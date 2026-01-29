@@ -33,6 +33,7 @@ export const CollectionItemSchema = z.object({
     author: AuthorSchema,
     tags: z.array(TagSchema),
     createdAt: z.date(),
+    status: z.enum(["pending", "approved", "rejected"]),
   }),
   savedAt: z.date(),
 });

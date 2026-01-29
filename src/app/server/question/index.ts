@@ -22,7 +22,7 @@ import {
   QuestionListOutputSchema,
   QuestionSchema,
   TagSchema,
-  TopQuestionsOutputSchema,
+  TopQuestionsSchema,
   CheckDuplicateInputSchema,
   CheckDuplicateOutputSchema,
 } from "@/app/server/question/question.dto";
@@ -174,7 +174,7 @@ export const getTopQuestions = base
     tags: ["Questions"],
   })
   .input(z.object({ limit: z.number().int().default(5) }))
-  .output(TopQuestionsOutputSchema)
+  .output(TopQuestionsSchema)
   .handler(async ({ input }) => {
     const questions = await getTopQuestionsDAL(input.limit);
     return { questions };

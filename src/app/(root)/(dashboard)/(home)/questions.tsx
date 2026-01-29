@@ -1,5 +1,4 @@
-import { orpc } from "@/lib/orpc";
-import { getQueryClient } from "@/lib/query/hydration";
+import { getQuestions } from "@/app/server/question/question.dal";
 import { getErrorMessage } from "@/lib/handlers/error";
 
 import DataRenderer from "@/components/shared/data-renderer";
@@ -7,29 +6,35 @@ import { EMPTY_QUESTION } from "@/common/constants/states";
 import QuestionCard from "@/components/modules/questions/question-card";
 import { NextPagination } from "@/components/ui/dev";
 
-const HomeQuestions = async ({
+async function fetchQuestions(
+  page: number,
+  pageSize: number,
+  query?: string,
+  filter?: string
+) {
+  "use cache";
+
+  return await getQuestions({ page, pageSize, query, filter })
+    .then((data) => ({ data, error: undefined }))
+    .catch((e) => ({
+      data: undefined as
+        | { questions: Question[]; totalQuestions: number }
+        | undefined,
+      error: { message: getErrorMessage(e, "Failed to get questions") },
+    }));
+}
+
+export const HomeQuestions = async ({
   searchParams,
 }: Pick<RouteParams, "searchParams">) => {
   const { page, pageSize, query, filter } = await searchParams;
 
-  const queryClient = getQueryClient();
-
-  const queryOptions = orpc.questions.list.queryOptions({
-    input: {
-      page: Number(page) || 1,
-      pageSize: Number(pageSize) || 10,
-      query,
-      filter,
-    },
-  });
-
-  const result = await queryClient
-    .fetchQuery(queryOptions)
-    .then((data) => ({ data, error: undefined }))
-    .catch((e) => ({
-      data: undefined,
-      error: { message: getErrorMessage(e, "Failed to get questions") },
-    }));
+  const result = await fetchQuestions(
+    Number(page) || 1,
+    Number(pageSize) || 10,
+    query,
+    filter
+  );
 
   const data = result.data;
   const totalQuestions = data?.totalQuestions || 0;
@@ -59,5 +64,3 @@ const HomeQuestions = async ({
     </>
   );
 };
-
-export default HomeQuestions;

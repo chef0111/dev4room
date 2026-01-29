@@ -10,7 +10,7 @@ import Filter from "@/components/filters/filter";
 import { HomePageFilters } from "@/common/constants/filters";
 import FilterContent from "@/components/filters/filter-content";
 import { PostCardsSkeleton } from "@/components/skeletons";
-import HomeQuestions from "./questions";
+import { HomeQuestions } from "./questions";
 
 export const metadata: Metadata = {
   title: "Dev4Room | Home",
