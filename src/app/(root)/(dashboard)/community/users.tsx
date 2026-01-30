@@ -1,35 +1,33 @@
-import { getUsers } from "@/app/server/user/user.dal";
+import { orpc } from "@/lib/orpc";
+import { getQueryClient } from "@/lib/query/hydration";
 import { getErrorMessage } from "@/lib/handlers/error";
-import type { UserDTO } from "@/app/server/user/user.dto";
 
 import DataRenderer from "@/components/shared/data-renderer";
 import { EMPTY_USERS } from "@/common/constants/states";
 import UserCard from "@/components/modules/profile/user-card";
 import { NextPagination } from "@/components/ui/dev";
 
-async function fetchUsers(
-  page: number,
-  pageSize: number,
-  query?: string,
-  filter?: string
-) {
-  "use cache";
-
-  return await getUsers({ page, pageSize, query, filter })
-    .then((data) => ({ data, error: undefined }))
-    .catch((e) => ({
-      data: undefined as { users: UserDTO[]; totalUsers: number } | undefined,
-      error: { message: getErrorMessage(e, "Failed to fetch users data") },
-    }));
-}
-
 const Users = async ({ searchParams }: Pick<RouteParams, "searchParams">) => {
   const { page, pageSize, query, filter } = await searchParams;
 
-  const parsedPage = Number(page) || 1;
-  const parsedPageSize = Number(pageSize) || 12;
+  const queryClient = getQueryClient();
 
-  const result = await fetchUsers(parsedPage, parsedPageSize, query, filter);
+  const queryOptions = orpc.users.list.queryOptions({
+    input: {
+      page: Number(page) || 1,
+      pageSize: Number(pageSize) || 12,
+      query,
+      filter,
+    },
+  });
+
+  const result = await queryClient
+    .fetchQuery(queryOptions)
+    .then((data) => ({ data, error: undefined }))
+    .catch((e) => ({
+      data: undefined,
+      error: { message: getErrorMessage(e, "Failed to fetch users data") },
+    }));
 
   const data = result.data;
   const totalUsers = data?.totalUsers || 0;
@@ -50,8 +48,8 @@ const Users = async ({ searchParams }: Pick<RouteParams, "searchParams">) => {
       />
 
       <NextPagination
-        page={parsedPage}
-        pageSize={parsedPageSize}
+        page={page}
+        pageSize={pageSize || 12}
         totalCount={totalUsers}
         className="pb-10"
       />

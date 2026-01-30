@@ -27,8 +27,6 @@ export function useContribution(userId: string, year: number) {
     orpc.users.contributions.queryOptions({
       input: { userId, year },
       placeholderData: (prevData) => prevData,
-      staleTime: 1000 * 60 * 5,
-      gcTime: 1000 * 60 * 30,
     })
   );
 }

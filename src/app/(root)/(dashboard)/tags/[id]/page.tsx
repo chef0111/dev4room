@@ -11,42 +11,37 @@ import DataRenderer from "@/components/shared/data-renderer";
 import { NextPagination } from "@/components/ui/dev";
 import { FilterProvider } from "@/context";
 import { getErrorMessage } from "@/lib/handlers/error";
-import { getTagWithQuestions } from "@/app/server/tag/tag.dal";
-import { TagQuestionsDTO } from "@/app/server/tag/tag.dto";
+import { orpc } from "@/lib/orpc";
+import { getQueryClient } from "@/lib/query/hydration";
 
 export async function generateStaticParams() {
   const tags = await db.select({ id: tag.id }).from(tag);
   return tags.map((t) => ({ id: t.id }));
 }
 
-async function fetchTagQuestions(
-  tagId: string,
-  page: number,
-  pageSize: number,
-  query?: string,
-  filter?: string
-) {
-  "use cache";
-
-  return await getTagWithQuestions({ tagId, page, pageSize, query, filter })
-    .then((data) => ({ data, error: undefined }))
-    .catch((e) => ({
-      data: undefined as TagQuestionsDTO | undefined,
-      error: { message: getErrorMessage(e, "Failed to get tag's questions") },
-    }));
-}
-
 const TagQuestions = async ({ params, searchParams }: RouteParams) => {
   const { id } = await params;
   const { page, pageSize, query, filter } = await searchParams;
 
-  const result = await fetchTagQuestions(
-    id,
-    Number(page) || 1,
-    Number(pageSize) || 10,
-    query,
-    filter
-  );
+  const queryClient = getQueryClient();
+
+  const queryOptions = orpc.tags.getQuestions.queryOptions({
+    input: {
+      tagId: id,
+      page: Number(page) || 1,
+      pageSize: Number(pageSize) || 10,
+      query,
+      filter,
+    },
+  });
+
+  const result = await queryClient
+    .fetchQuery(queryOptions)
+    .then((data) => ({ data, error: undefined }))
+    .catch((e) => ({
+      data: undefined,
+      error: { message: getErrorMessage(e, "Failed to get tag's questions") },
+    }));
 
   const tag = result.data?.tag;
   const questions = result.data?.questions;

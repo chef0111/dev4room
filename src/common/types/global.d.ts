@@ -66,7 +66,7 @@ interface Answer {
   id: string;
   author: Author;
   content: string;
-  createdAt: Date;
+  createdAte: Date;
   upvotes: number;
   downvotes: number;
   questionId: string;

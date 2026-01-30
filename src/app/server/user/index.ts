@@ -22,7 +22,7 @@ import {
   GetUserStatsSchema,
   UserQuestionsOutputSchema,
   UserAnswersOutputSchema,
-  UserPopularTagsSchema,
+  UserPopularTagsOutputSchema,
   UserStatsSchema,
   UserPostSchema,
   UpdateProfileInputSchema,
@@ -99,7 +99,7 @@ export const getUserTags = base
     tags: ["Users", "Tags"],
   })
   .input(GetUserTagsSchema)
-  .output(UserPopularTagsSchema)
+  .output(UserPopularTagsOutputSchema)
   .handler(async ({ input }) => {
     return getUserPopularTagsDAL(input);
   });

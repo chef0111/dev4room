@@ -1,23 +1,24 @@
-"use cache";
-
 import TagCard from "@/components/modules/tags/tag-card";
 import DataRenderer from "@/components/shared/data-renderer";
 import { getErrorMessage } from "@/lib/handlers/error";
-import { getPopularTags } from "@/app/server/tag/tag.dal";
+import { orpc } from "@/lib/orpc";
+import { getQueryClient } from "@/lib/query/hydration";
 
 const DEFAULT_LIMIT = 5;
 
-async function fetchPopularTags(limit: number) {
-  return await getPopularTags(limit)
-    .then((data) => ({ data, error: undefined }))
+const PopularTags = async () => {
+  const queryClient = getQueryClient();
+  const queryOptions = orpc.tags.getPopular.queryOptions({
+    input: { limit: DEFAULT_LIMIT },
+  });
+
+  const result = await queryClient
+    .fetchQuery(queryOptions)
+    .then((data) => ({ data: data.tags, error: undefined }))
     .catch((e) => ({
       data: undefined,
       error: { message: getErrorMessage(e, "Failed to get popular tags") },
     }));
-}
-
-const PopularTags = async () => {
-  const result = await fetchPopularTags(DEFAULT_LIMIT);
 
   const popularTags = result.data;
 
