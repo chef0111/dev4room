@@ -1,6 +1,6 @@
 import { orpc } from "@/lib/orpc";
+import { safeFetch } from "@/lib/query/helper";
 import { getQueryClient } from "@/lib/query/hydration";
-import { getErrorMessage } from "@/lib/handlers/error";
 
 import DataRenderer from "@/components/shared/data-renderer";
 import { EMPTY_USERS } from "@/common/constants/states";
@@ -21,13 +21,9 @@ const Users = async ({ searchParams }: Pick<RouteParams, "searchParams">) => {
     },
   });
 
-  const result = await queryClient
-    .fetchQuery(queryOptions)
-    .then((data) => ({ data, error: undefined }))
-    .catch((e) => ({
-      data: undefined,
-      error: { message: getErrorMessage(e, "Failed to fetch users data") },
-    }));
+  const result = await safeFetch(queryClient.fetchQuery(queryOptions), {
+    error: "Failed to get users",
+  });
 
   const data = result.data;
   const totalUsers = data?.totalUsers || 0;

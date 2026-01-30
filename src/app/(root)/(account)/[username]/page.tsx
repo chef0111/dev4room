@@ -1,25 +1,24 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 
 import { db } from "@/database/drizzle";
 import { user } from "@/database/schema";
 import { getServerSession } from "@/lib/session";
 import { orpc } from "@/lib/orpc";
 import { getQueryClient } from "@/lib/query/hydration";
-import { getErrorMessage } from "@/lib/handlers/error";
-
-import Link from "next/link";
+import { safeFetch } from "@/lib/query/helper";
 
 import { Button } from "@/components/ui/button";
 import ProfileHeader from "./header";
 import UserStats from "./user-stats";
 import UserTabs from "./user-tabs";
 import UserTopTags from "./top-tags";
+import { Spinner } from "@/components/ui";
 import ContributionGraphDisplay from "@/components/modules/profile/contributions/graph";
 import YearSelect from "@/components/modules/profile/contributions/year-select";
-import { FilterProvider } from "@/context";
-import { Spinner } from "@/components/ui";
 import { currentYear, getYearOptions } from "@/lib/utils";
+import { FilterProvider } from "@/context";
 
 export async function generateStaticParams() {
   const users = await db.select({ username: user.username }).from(user);
@@ -34,17 +33,16 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
 
   const queryClient = getQueryClient();
 
-  const userResult = await queryClient
-    .fetchQuery(
+  const userResult = await safeFetch(
+    queryClient.fetchQuery(
       orpc.users.me.queryOptions({
         input: { username },
       })
-    )
-    .then((data) => ({ data, error: undefined }))
-    .catch((e) => ({
-      data: undefined,
-      error: { message: getErrorMessage(e, "Failed to fetch user") },
-    }));
+    ),
+    {
+      error: "Failed to fetch user profile",
+    }
+  );
 
   if (!userResult.data) return notFound();
 
@@ -53,14 +51,14 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
   const session = await getServerSession();
   const isAuthor = session?.user?.id === userData.id;
 
-  const statsResult = await queryClient
-    .fetchQuery(
+  const statsResult = await safeFetch(
+    queryClient.fetchQuery(
       orpc.users.stats.queryOptions({
         input: { userId: userData.id },
       })
-    )
-    .then((data) => ({ data, error: undefined }))
-    .catch(() => ({ data: undefined, error: undefined }));
+    ),
+    { error: "Failed to fetch user stats" }
+  );
 
   const userStats = statsResult.data;
 

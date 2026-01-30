@@ -1,3 +1,7 @@
+import { orpc } from "@/lib/orpc";
+import { safeFetch } from "@/lib/query/helper";
+import { getQueryClient } from "@/lib/query/hydration";
+
 import { db } from "@/database/drizzle";
 import { tag } from "@/database/schema";
 import { TagQuestionsFilters } from "@/common/constants/filters";
@@ -10,9 +14,6 @@ import QuestionCard from "@/components/modules/questions/question-card";
 import DataRenderer from "@/components/shared/data-renderer";
 import { NextPagination } from "@/components/ui/dev";
 import { FilterProvider } from "@/context";
-import { getErrorMessage } from "@/lib/handlers/error";
-import { orpc } from "@/lib/orpc";
-import { getQueryClient } from "@/lib/query/hydration";
 
 export async function generateStaticParams() {
   const tags = await db.select({ id: tag.id }).from(tag);
@@ -35,13 +36,9 @@ const TagQuestions = async ({ params, searchParams }: RouteParams) => {
     },
   });
 
-  const result = await queryClient
-    .fetchQuery(queryOptions)
-    .then((data) => ({ data, error: undefined }))
-    .catch((e) => ({
-      data: undefined,
-      error: { message: getErrorMessage(e, "Failed to get tag's questions") },
-    }));
+  const result = await safeFetch(queryClient.fetchQuery(queryOptions), {
+    error: "Failed to get tag's questions",
+  });
 
   const tag = result.data?.tag;
   const questions = result.data?.questions;

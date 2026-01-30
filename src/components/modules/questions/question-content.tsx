@@ -2,11 +2,14 @@ import { Suspense } from "react";
 import { after } from "next/server";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+
 import { orpc } from "@/lib/orpc";
 import { getServerSession } from "@/lib/session";
 import { getQueryClient } from "@/lib/query/hydration";
+import { safeFetch } from "@/lib/query/helper";
 import { formatNumber, getTimeStamp } from "@/lib/utils";
 import { ViewService } from "@/services/view.service";
+
 import UserAvatar from "@/components/modules/profile/user-avatar";
 import Votes from "@/components/modules/vote/votes";
 import SaveQuestion from "@/components/modules/questions/save-question";
@@ -29,10 +32,12 @@ const QuestionContent = async ({
   const session = await getServerSession();
   const queryClient = getQueryClient();
 
-  const result = await queryClient
-    .fetchQuery(orpc.questions.get.queryOptions({ input: { questionId } }))
-    .then((data) => ({ data, error: undefined }))
-    .catch(() => ({ data: undefined, error: true }));
+  const result = await safeFetch(
+    queryClient.fetchQuery(
+      orpc.questions.get.queryOptions({ input: { questionId } })
+    ),
+    { error: "Failed to fetch question content" }
+  );
 
   if (!result.data) return notFound();
 

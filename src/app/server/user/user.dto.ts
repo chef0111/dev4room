@@ -84,10 +84,7 @@ export const UserAnswerSchema = z.object({
   content: z.string(),
   upvotes: z.number().int().min(0),
   downvotes: z.number().int().min(0),
-  question: z.object({
-    id: z.string(),
-    title: z.string(),
-  }),
+  questionId: z.string(),
   createdAt: z.date(),
 });
 
