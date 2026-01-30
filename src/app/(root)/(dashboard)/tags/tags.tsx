@@ -1,36 +1,29 @@
-import { getTags } from "@/app/server/tag/tag.dal";
-import { TagsDTO } from "@/app/server/tag/tag.dto";
-import { getErrorMessage } from "@/lib/handlers/error";
+import { orpc } from "@/lib/orpc";
+import { safeFetch } from "@/lib/query/helper";
+import { getQueryClient } from "@/lib/query/hydration";
+
 import DataRenderer from "@/components/shared/data-renderer";
 import { EMPTY_TAGS } from "@/common/constants/states";
 import TagCard from "@/components/modules/tags/tag-card";
 import { NextPagination } from "@/components/ui/dev";
 
-async function fetchTags(
-  page: number,
-  pageSize: number,
-  query?: string,
-  filter?: string
-) {
-  "use cache";
-
-  return getTags({ page, pageSize, query, filter })
-    .then((data) => ({ data, error: undefined }))
-    .catch((e) => ({
-      data: undefined as { tags: TagsDTO[]; totalTags: number } | undefined,
-      error: { message: getErrorMessage(e, "Failed to get tags") },
-    }));
-}
-
 const Tags = async ({ searchParams }: Pick<RouteParams, "searchParams">) => {
   const { page, pageSize, query, filter } = await searchParams;
 
-  const result = await fetchTags(
-    Number(page) || 1,
-    Number(pageSize) || 12,
-    query,
-    filter
-  );
+  const queryClient = getQueryClient();
+
+  const queryOptions = orpc.tags.list.queryOptions({
+    input: {
+      page: Number(page) || 1,
+      pageSize: Number(pageSize) || 12,
+      query,
+      filter,
+    },
+  });
+
+  const result = await safeFetch(queryClient.fetchQuery(queryOptions), {
+    error: "Failed to get tags",
+  });
 
   const data = result.data;
   const totalTags = data?.totalTags || 0;

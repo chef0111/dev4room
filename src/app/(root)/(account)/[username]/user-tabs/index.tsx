@@ -1,12 +1,11 @@
-import { fetchUserQuestions, UserQuestions } from "./user-questions";
-import { fetchUserAnswers, UserAnswers } from "./user-answers";
+import { getUserPosts, UserAnswers, UserQuestions } from "./user-posts";
 import { profileTabs } from "@/common/constants";
-import { FilterProvider } from "@/context";
 import { AnimatedTab, NextPagination } from "@/components/ui/dev";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Filter from "@/components/filters/filter";
 import FilterContent from "@/components/filters/filter-content";
 import { UserFilters } from "@/common/constants/filters";
+import { FilterProvider } from "@/context";
 
 interface UserTabsProps {
   userId: string;
@@ -25,10 +24,12 @@ const UserTabs = async ({
   filter = "popular",
   isAuthor = false,
 }: UserTabsProps) => {
-  const [questionsResult, answersResult] = await Promise.all([
-    fetchUserQuestions(userId, page, pageSize, filter),
-    fetchUserAnswers(userId, page, pageSize, filter),
-  ]);
+  const { questionsResult, answersResult } = await getUserPosts(
+    userId,
+    page,
+    pageSize,
+    filter
+  );
 
   const totalQuestions = questionsResult.data?.totalQuestions ?? 0;
   const totalAnswers = answersResult.data?.totalAnswers ?? 0;

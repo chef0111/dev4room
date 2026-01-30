@@ -77,7 +77,6 @@ export const UserQuestionSchema = z.object({
   answers: z.number().int().min(0),
   tags: z.array(TagSchema),
   createdAt: z.date(),
-  status: z.enum(["pending", "approved", "rejected"]),
 });
 
 export const UserAnswerSchema = z.object({
@@ -157,7 +156,7 @@ export const UserAnswersOutputSchema = z.object({
   totalAnswers: z.number().int().min(0),
 });
 
-export const UserPopularTagsSchema = z.object({
+export const UserPopularTagsOutputSchema = z.object({
   tags: z.array(UserPopularTagSchema),
 });
 
@@ -174,7 +173,7 @@ export type UserDTO = z.infer<typeof UserSchema>;
 export type UserListDTO = z.infer<typeof UserListSchema>;
 export type UserPostInput = z.infer<typeof UserPostSchema>;
 export type GetUserInput = z.infer<typeof GetUserSchema>;
-export type GetUserDTO = z.infer<typeof GetUserOutputSchema>;
+export type GetUserOutput = z.infer<typeof GetUserOutputSchema>;
 export type GetUserTagsInput = z.infer<typeof GetUserTagsSchema>;
 export type GetUserStatsInput = z.infer<typeof GetUserStatsSchema>;
 export type UserQuestionDTO = z.infer<typeof UserQuestionSchema>;
