@@ -1,7 +1,7 @@
 "use client";
 
 import { Route } from "next";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { orpc } from "@/lib/orpc";
 import { toast } from "sonner";
@@ -43,6 +43,7 @@ interface UseEditQuestionOptions {
 
 export function useEditQuestion(options?: UseEditQuestionOptions) {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   return useMutation(
     orpc.questions.edit.mutationOptions({
@@ -50,10 +51,23 @@ export function useEditQuestion(options?: UseEditQuestionOptions) {
         toast.success("Question updated successfully!");
         options?.onFormReset?.();
         options?.onEditorReset?.();
+
+        queryClient.invalidateQueries({
+          predicate: (query) => {
+            const key = query.queryKey;
+            return (
+              Array.isArray(key[0]) &&
+              key[0].includes("questions") &&
+              key[0].includes("get")
+            );
+          },
+        });
+
         if (data.status === "pending") {
           router.push("/pending-questions");
         } else {
           router.push(`/questions/${data.id}`);
+          router.refresh();
         }
       },
       onError: (error) => {

@@ -9,7 +9,14 @@ Code.theme = {
 };
 
 const MarkdownPreview = ({ content = "" }: { content: string }) => {
-  const formattedContent = content.replace(/\\/g, "").replace(/&#x20;/g, "");
+  const formattedContent = content
+    .replace(/\\/g, "")
+    .replace(/&#32;/g, " ")
+    .replace(/&#x20;/g, " ")
+    .replace(/\*\*(.+?) \*\*/g, "**$1**")
+    .replace(/(?<!\*)\*([^*]+?) \*(?!\*)/g, "*$1*")
+    .replace(/(?<!_)_([^_]+?) _(?!_)/g, "_$1_")
+    .replace(/~~(.+?) ~~/g, "~~$1~~");
 
   return (
     <section className="markdown break-workds grid">
