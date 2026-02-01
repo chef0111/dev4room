@@ -121,7 +121,6 @@ const FormEditor = forwardRef<FormEditorMethods, FormEditorProps>(
     // Compute initial state synchronously (only on first render)
     const initialState = useMemo(
       () => markdownToEditorState(value),
-      // eslint-disable-next-line react-hooks/exhaustive-deps
       [] // Only compute on mount, not on value changes
     );
 

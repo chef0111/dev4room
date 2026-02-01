@@ -21,6 +21,7 @@ export function HorizontalRuleToolbarPlugin({
       size={"icon-sm"}
       variant={"outline"}
       className={className}
+      tabIndex={-1}
     >
       <ScissorsIcon className="size-4" />
     </Button>

@@ -19,6 +19,7 @@ export function ImageToolbarPlugin({ className }: { className?: string }) {
       variant={"outline"}
       size={"icon-sm"}
       className={className}
+      tabIndex={-1}
     >
       <ImageIcon className="size-4" />
     </Button>
