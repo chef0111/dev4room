@@ -8,7 +8,7 @@ import {
 
 import { DataRenderer } from "@/components/shared";
 import { EMPTY_ANSWERS, EMPTY_QUESTION } from "@/common/constants/states";
-import QuestionCard from "@/components/modules/questions/question-card";
+import { QuestionCard } from "@/components/modules/questions";
 import AnswerCard from "@/components/modules/answers/answer-card";
 import MarkdownPreview from "@/components/markdown/markdown-preview";
 

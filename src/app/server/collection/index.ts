@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { authorized } from "@/app/middleware/auth";
 import { standardSecurityMiddleware } from "@/app/middleware/arcjet/standard";
 import { writeSecurityMiddleware } from "@/app/middleware/arcjet/write";
@@ -40,6 +41,7 @@ export const toggleSave = authorized
   .input(ToggleSaveSchema)
   .output(ToggleSaveOutputSchema)
   .handler(async ({ input, context }) => {
+    revalidatePath(`/collection`);
     return toggleSaveDAL(input, context.user.id);
   });
 

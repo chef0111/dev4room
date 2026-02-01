@@ -5,7 +5,7 @@ import { ListCollectionDTO } from "@/app/server/collection/collection.dto";
 
 import DataRenderer from "@/components/shared/data-renderer";
 import { EMPTY_QUESTION } from "@/common/constants/states";
-import QuestionCard from "@/components/modules/questions/question-card";
+import { QuestionCard } from "@/components/modules/questions";
 import { NextPagination } from "@/components/ui/dev";
 
 const Collection = async ({

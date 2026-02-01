@@ -13,7 +13,7 @@ import { ViewService } from "@/services/view.service";
 
 import UserAvatar from "@/components/modules/profile/user-avatar";
 import Votes from "@/components/modules/vote/votes";
-import SaveQuestion from "@/components/modules/questions/save-question";
+import { SaveQuestion } from "@/components/modules/questions";
 import TagCard from "@/components/modules/tags/tag-card";
 import EditDelete from "@/components/shared/edit-delete";
 import { Separator } from "@/components/ui/separator";

@@ -5,7 +5,7 @@ import { question } from "@/database/schema";
 import { orpc } from "@/lib/orpc";
 import { getServerSession } from "@/lib/session";
 import { getQueryClient, HydrateClient } from "@/lib/query/hydration";
-import QuestionForm from "@/components/modules/questions/question-form";
+import { QuestionForm } from "@/components/modules/questions";
 
 export async function generateStaticParams() {
   const questions = await db.select({ id: question.id }).from(question);

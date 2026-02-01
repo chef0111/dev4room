@@ -5,7 +5,7 @@ import { QuestionListOutput } from "@/app/server/question/question.dto";
 
 import DataRenderer from "@/components/shared/data-renderer";
 import { EMPTY_QUESTION } from "@/common/constants/states";
-import QuestionCard from "@/components/modules/questions/question-card";
+import { QuestionCard } from "@/components/modules/questions";
 import { NextPagination } from "@/components/ui/dev";
 
 const HomeQuestions = async ({

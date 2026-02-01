@@ -11,7 +11,7 @@ import { EMPTY_QUESTION } from "@/common/constants/states";
 import Filter from "@/components/filters/filter";
 import FilterContent from "@/components/filters/filter-content";
 import LocalSearch from "@/components/modules/main/local-search";
-import QuestionCard from "@/components/modules/questions/question-card";
+import { QuestionCard } from "@/components/modules/questions";
 import DataRenderer from "@/components/shared/data-renderer";
 import { NextPagination } from "@/components/ui/dev";
 import { FilterProvider } from "@/context";
