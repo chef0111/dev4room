@@ -1,6 +1,5 @@
 export { default as QuestionCard } from "./question-card";
 export { default as QuestionForm } from "./question-form";
-export { default as QuestionContent } from "./question-content";
 export { default as SaveQuestion } from "./save-question";
 export { default as PendingDialog } from "./pending-dialog";
 export { default as DuplicateDialog } from "./duplicate-dialog";

@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { db } from "@/database/drizzle";
 import { question } from "@/database/schema";
 
-import { QuestionContent } from "@/components/modules/questions";
+import QuestionContent from "@/components/modules/questions/question-content";
 import { AnswerForm } from "@/components/modules/answers";
 import { AnswerList } from "@/components/modules/answers";
 import { PostCardsSkeleton } from "@/components/skeletons";
