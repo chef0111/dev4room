@@ -41,8 +41,9 @@ export const toggleSave = authorized
   .input(ToggleSaveSchema)
   .output(ToggleSaveOutputSchema)
   .handler(async ({ input, context }) => {
+    const result = await toggleSaveDAL(input, context.user.id);
     revalidatePath(`/collection`);
-    return toggleSaveDAL(input, context.user.id);
+    return result;
   });
 
 export const hasSaved = authorized
