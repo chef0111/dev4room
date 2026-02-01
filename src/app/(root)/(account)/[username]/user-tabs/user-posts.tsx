@@ -1,6 +1,10 @@
 import { orpc } from "@/lib/orpc";
 import { safeFetch } from "@/lib/query/helper";
 import { getQueryClient } from "@/lib/query/hydration";
+import {
+  GetUserAnswersDTO,
+  GetUserQuestionsDTO,
+} from "@/app/server/user/user.dto";
 
 import { DataRenderer } from "@/components/shared";
 import { EMPTY_ANSWERS, EMPTY_QUESTION } from "@/common/constants/states";
@@ -17,21 +21,21 @@ export async function getUserPosts(
   const queryClient = getQueryClient();
 
   const [questionsResult, answersResult] = await Promise.all([
-    safeFetch(
+    safeFetch<GetUserQuestionsDTO>(
       queryClient.fetchQuery(
         orpc.users.questions.queryOptions({
           input: { userId, page, pageSize, filter },
         })
       ),
-      { error: "Failed to fetch questions" }
+      "Failed to fetch questions"
     ),
-    safeFetch(
+    safeFetch<GetUserAnswersDTO>(
       queryClient.fetchQuery(
         orpc.users.answers.queryOptions({
           input: { userId, page, pageSize, filter },
         })
       ),
-      { error: "Failed to fetch answers" }
+      "Failed to fetch answers"
     ),
   ]);
 
@@ -40,24 +44,23 @@ export async function getUserPosts(
 
 interface UserQuestionsProps {
   user: Author;
-  data?: {
-    questions: Omit<Question, "author">[];
-    totalQuestions: number;
-  };
+  questions: Omit<Question, "author">[];
+  success: boolean;
   error?: { message: string };
   isAuthor?: boolean;
 }
 
 export const UserQuestions = ({
   user,
-  data,
+  questions,
+  success,
   error,
   isAuthor,
 }: UserQuestionsProps) => {
   return (
     <DataRenderer
-      data={data?.questions ?? []}
-      success={!!data}
+      data={questions}
+      success={success}
       error={error}
       empty={EMPTY_QUESTION}
       render={(questions) => (
@@ -80,24 +83,23 @@ export const UserQuestions = ({
 
 interface UserAnswersProps {
   user: Author;
-  data?: {
-    answers: Omit<Answer, "author">[];
-    totalAnswers: number;
-  };
+  answers: Omit<Answer, "author">[];
+  success: boolean;
   error?: { message: string };
   isAuthor?: boolean;
 }
 
 export const UserAnswers = ({
   user,
-  data,
+  answers,
+  success,
   error,
   isAuthor,
 }: UserAnswersProps) => {
   return (
     <DataRenderer
-      data={data?.answers ?? []}
-      success={!!data}
+      data={answers}
+      success={success}
       error={error}
       empty={EMPTY_ANSWERS}
       render={(answers) => (

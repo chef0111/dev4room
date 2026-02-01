@@ -1,6 +1,7 @@
 import { orpc } from "@/lib/orpc";
-import { safeFetch } from "@/lib/query/helper";
 import { getQueryClient } from "@/lib/query/hydration";
+import { resolveData, safeFetch } from "@/lib/query/helper";
+import { ListCollectionDTO } from "@/app/server/collection/collection.dto";
 
 import DataRenderer from "@/components/shared/data-renderer";
 import { EMPTY_QUESTION } from "@/common/constants/states";
@@ -23,19 +24,29 @@ const Collection = async ({
     },
   });
 
-  const result = await safeFetch(queryClient.fetchQuery(queryOptions), {
-    error: "Failed to get saved questions",
-  });
+  const result = await safeFetch<ListCollectionDTO>(
+    queryClient.fetchQuery(queryOptions),
+    "Failed to get saved questions"
+  );
 
-  const data = result.data;
-  const totalCollections = data?.totalCollections || 0;
+  const {
+    data: collections,
+    success,
+    error,
+  } = resolveData(result, (data) => data.collections, []);
+
+  const { data: totalCollections } = resolveData(
+    result,
+    (data) => data.totalCollections,
+    0
+  );
 
   return (
     <>
       <DataRenderer
-        success={!!data}
-        error={result.error}
-        data={data?.collections}
+        data={collections}
+        success={success}
+        error={error}
         empty={EMPTY_QUESTION}
         render={(collections) => (
           <div className="my-10 flex w-full flex-col gap-6">

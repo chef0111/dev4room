@@ -1,6 +1,7 @@
 import { orpc } from "@/lib/orpc";
-import { safeFetch } from "@/lib/query/helper";
 import { getQueryClient } from "@/lib/query/hydration";
+import { resolveData, safeFetch } from "@/lib/query/helper";
+import { TagListDTO } from "@/app/server/tag/tag.dto";
 
 import DataRenderer from "@/components/shared/data-renderer";
 import { EMPTY_TAGS } from "@/common/constants/states";
@@ -21,19 +22,25 @@ const Tags = async ({ searchParams }: Pick<RouteParams, "searchParams">) => {
     },
   });
 
-  const result = await safeFetch(queryClient.fetchQuery(queryOptions), {
-    error: "Failed to get tags",
-  });
+  const result = await safeFetch<TagListDTO>(
+    queryClient.fetchQuery(queryOptions),
+    "Failed to get tags"
+  );
 
-  const data = result.data;
-  const totalTags = data?.totalTags || 0;
+  const {
+    data: tags,
+    success,
+    error,
+  } = resolveData(result, (data) => data.tags, []);
+
+  const { data: totalTags } = resolveData(result, (data) => data.totalTags, 0);
 
   return (
     <>
       <DataRenderer
-        data={data?.tags}
-        success={!!data}
-        error={result.error}
+        data={tags}
+        success={success}
+        error={error}
         empty={EMPTY_TAGS}
         render={(tags) => (
           <div className="my-10 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 2xl:grid-cols-4">
