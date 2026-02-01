@@ -3,8 +3,8 @@ import { db } from "@/database/drizzle";
 import { question } from "@/database/schema";
 
 import { QuestionContent } from "@/components/modules/questions";
-import AnswerForm from "@/components/modules/answers/answer-form";
-import AnswerList from "@/components/modules/answers/answer-list";
+import { AnswerForm } from "@/components/modules/answers";
+import { AnswerList } from "@/components/modules/answers";
 import { PostCardsSkeleton } from "@/components/skeletons";
 
 export async function generateStaticParams() {

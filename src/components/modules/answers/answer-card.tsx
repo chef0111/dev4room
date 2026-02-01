@@ -10,8 +10,8 @@ import UserAvatar from "@/components/modules/profile/user-avatar";
 import EditorFallback from "@/components/markdown/editor-fallback";
 import EditDelete from "@/components/shared/edit-delete";
 import Votes from "@/components/modules/vote/votes";
-import AnswerForm from "./answer-form";
-import AnswerCardContent from "./answer-card-content";
+import { AnswerCardContent } from "./";
+import { AnswerForm } from "./";
 
 interface Author {
   id: string;
