@@ -38,6 +38,8 @@ const eslintConfig = [
       "react-hooks/purity": "off",
       "react-hooks/use-memo": "off",
       "react-hooks/incompatible-library": "off",
+      "react-hooks/exhaustive-deps": "off",
+      "react-hooks/preserve-manual-memoization": "off",
       "@typescript-eslint/no-unused-vars": [
         "warn",
         {

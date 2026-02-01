@@ -108,7 +108,10 @@ export function FormBase<
           >
             {controlFirst ? (
               <>
-                <FieldContent>{control}</FieldContent>
+                <FieldContent>
+                  {control}
+                  {descPosition === "after-field" && descElement}
+                </FieldContent>
                 <FieldContent>
                   {labelElement}
                   {descPosition === "after-label" && descElement}

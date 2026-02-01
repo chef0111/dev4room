@@ -105,7 +105,18 @@ const FormEditor = forwardRef<FormEditorMethods, FormEditorProps>(
     const internalRef = useRef<FormEditorMethods>(null);
 
     // Forward the internal ref to the external ref
-    useImperativeHandle(ref, () => internalRef.current!, []);
+    useImperativeHandle(
+      ref,
+      () => ({
+        setMarkdown: (markdown: string) => {
+          internalRef.current?.setMarkdown(markdown);
+        },
+        getMarkdown: () => internalRef.current?.getMarkdown() ?? "",
+        focus: () => internalRef.current?.focus(),
+        getEditor: () => internalRef.current?.getEditor() ?? null,
+      }),
+      []
+    );
 
     // Compute initial state synchronously (only on first render)
     const initialState = useMemo(

@@ -31,6 +31,7 @@ export function DraggableBlockPlugin({
       menuComponent={
         <Button
           ref={menuRef}
+          type="button"
           variant="ghost"
           size="icon"
           className="draggable-block-menu hover:bg-light800_dark300 absolute top-0 left-0 size-6 cursor-grab rounded-sm will-change-transform active:cursor-grabbing"

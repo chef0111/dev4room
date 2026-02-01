@@ -60,8 +60,7 @@ export function markdownToEditorState(
     return undefined;
   }
 
-  const trimmedMarkdown = markdown.trim();
-  if (trimmedMarkdown === "") {
+  if (markdown.trim() === "") {
     return undefined;
   }
 
@@ -70,7 +69,7 @@ export function markdownToEditorState(
 
     editor.update(
       () => {
-        $convertFromMarkdownString(trimmedMarkdown, MARKDOWN_TRANSFORMERS);
+        $convertFromMarkdownString(markdown, MARKDOWN_TRANSFORMERS);
       },
       { discrete: true }
     );

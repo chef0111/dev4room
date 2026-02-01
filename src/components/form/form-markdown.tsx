@@ -35,7 +35,7 @@ function Editor({
       (value: string) => {
         field.onChange(value);
       },
-      [field]
+      [field.onChange]
     ),
     300
   );
@@ -47,7 +47,7 @@ function Editor({
           key={editorKey}
           ref={editorRef}
           id={field.id}
-          value={field.value}
+          value={field.value ?? ""}
           onChange={fieldChange}
           isInvalid={field["aria-invalid"]}
           className="bg-card light-border-2 rounded-lg border"

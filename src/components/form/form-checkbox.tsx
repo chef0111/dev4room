@@ -13,7 +13,11 @@ export const FormCheckbox: FormControlFn<{
       orientation={orientation}
     >
       {({ onChange, value, ...field }) => (
-        <Checkbox {...field} checked={value} onCheckedChange={onChange} />
+        <Checkbox
+          {...field}
+          checked={value ?? false}
+          onCheckedChange={onChange}
+        />
       )}
     </FormBase>
   );
