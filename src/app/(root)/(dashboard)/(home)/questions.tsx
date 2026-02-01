@@ -1,10 +1,11 @@
 import { orpc } from "@/lib/orpc";
-import { safeFetch } from "@/lib/query/helper";
 import { getQueryClient } from "@/lib/query/hydration";
+import { resolveData, safeFetch } from "@/lib/query/helper";
+import { QuestionListOutput } from "@/app/server/question/question.dto";
 
 import DataRenderer from "@/components/shared/data-renderer";
 import { EMPTY_QUESTION } from "@/common/constants/states";
-import QuestionCard from "@/components/modules/questions/question-card";
+import { QuestionCard } from "@/components/modules/questions";
 import { NextPagination } from "@/components/ui/dev";
 
 const HomeQuestions = async ({
@@ -23,19 +24,29 @@ const HomeQuestions = async ({
     },
   });
 
-  const result = await safeFetch(queryClient.fetchQuery(queryOptions), {
-    error: "Failed to get questions",
-  });
+  const result = await safeFetch<QuestionListOutput>(
+    queryClient.fetchQuery(queryOptions),
+    "Failed to get questions"
+  );
 
-  const data = result.data;
-  const totalQuestions = data?.totalQuestions || 0;
+  const {
+    data: questions,
+    success,
+    error,
+  } = resolveData(result, (data) => data.questions, []);
+
+  const { data: totalQuestions } = resolveData(
+    result,
+    (data) => data.totalQuestions,
+    0
+  );
 
   return (
     <>
       <DataRenderer
-        data={data?.questions ?? []}
-        success={!!data}
-        error={result.error}
+        data={questions}
+        success={success}
+        error={error}
         empty={EMPTY_QUESTION}
         render={(questions) => (
           <div className="my-10 flex w-full flex-col gap-6">

@@ -1,6 +1,7 @@
 import { orpc } from "@/lib/orpc";
-import { safeFetch } from "@/lib/query/helper";
 import { getQueryClient } from "@/lib/query/hydration";
+import { resolveData, safeFetch } from "@/lib/query/helper";
+import { UserListDTO } from "@/app/server/user/user.dto";
 
 import DataRenderer from "@/components/shared/data-renderer";
 import { EMPTY_USERS } from "@/common/constants/states";
@@ -21,18 +22,29 @@ const Users = async ({ searchParams }: Pick<RouteParams, "searchParams">) => {
     },
   });
 
-  const result = await safeFetch(queryClient.fetchQuery(queryOptions), {
-    error: "Failed to get users",
-  });
+  const result = await safeFetch<UserListDTO>(
+    queryClient.fetchQuery(queryOptions),
+    "Failed to get users"
+  );
 
-  const data = result.data;
-  const totalUsers = data?.totalUsers || 0;
+  const {
+    data: users,
+    success,
+    error,
+  } = resolveData(result, (data) => data.users, []);
+
+  const { data: totalUsers } = resolveData(
+    result,
+    (data) => data.totalUsers,
+    0
+  );
+
   return (
     <>
       <DataRenderer
-        data={data?.users ?? []}
-        success={!!data}
-        error={result.error}
+        data={users}
+        success={success}
+        error={error}
         empty={EMPTY_USERS}
         render={(users) => (
           <div className="mt-10 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 2xl:grid-cols-4">

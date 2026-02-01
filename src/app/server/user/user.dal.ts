@@ -19,7 +19,7 @@ import { assignBadges } from "@/lib/utils";
 import {
   UserDTO,
   UserSchema,
-  GetUserOutput,
+  GetUserDTO,
   GetUserOutputSchema,
   UserPostInput,
   GetUserTagsInput,
@@ -110,7 +110,7 @@ export class UserDAL {
     return { users, totalUsers: count ?? 0 };
   }
 
-  static async findByUsername(username: string): Promise<GetUserOutput> {
+  static async findByUsername(username: string): Promise<GetUserDTO> {
     "use cache";
     cacheLife({ stale: 120, revalidate: 60, expire: 3600 });
     cacheTag(`user:username:${username}`);
@@ -162,7 +162,7 @@ export class UserDAL {
         totalAnswers: answerCount.count ?? 0,
       },
       GetUserOutputSchema,
-      "GetUserOutput"
+      "GetUserDTO"
     );
   }
 
