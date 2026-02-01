@@ -129,9 +129,13 @@ export function useApproveQuestion() {
       client.admin.approveQuestion({ questionId }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        predicate: (query) =>
-          query.queryKey[0] === "admin" &&
-          query.queryKey[1] === "pendingQuestions",
+        predicate: (query) => {
+          const key = query.queryKey;
+          if (Array.isArray(key) && Array.isArray(key[0])) {
+            return key[0].includes("pendingQuestions");
+          }
+          return false;
+        },
       });
     },
   });
@@ -145,9 +149,13 @@ export function useRejectQuestion() {
       client.admin.rejectQuestion(params),
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        predicate: (query) =>
-          query.queryKey[0] === "admin" &&
-          query.queryKey[1] === "pendingQuestions",
+        predicate: (query) => {
+          const key = query.queryKey;
+          if (Array.isArray(key) && Array.isArray(key[0])) {
+            return key[0].includes("pendingQuestions");
+          }
+          return false;
+        },
       });
     },
   });
