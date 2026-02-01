@@ -80,9 +80,10 @@ export function LinkToolbarPlugin({
     <Toggle
       variant={"outline"}
       size="sm"
-      className="!size-8"
+      className="size-8!"
       aria-label="Toggle link"
       onClick={insertLink}
+      tabIndex={-1}
     >
       <LinkIcon className="h-4 w-4" />
     </Toggle>

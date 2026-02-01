@@ -63,8 +63,9 @@ export function HistoryToolbarPlugin() {
         type="button"
         aria-label="Undo"
         size="icon"
-        className="!h-8 !w-8"
+        className="size-8!"
         variant={"outline"}
+        tabIndex={-1}
       >
         <UndoIcon className="size-4" />
       </Button>
@@ -78,7 +79,8 @@ export function HistoryToolbarPlugin() {
         aria-label="Redo"
         variant={"outline"}
         size="icon"
-        className="!h-8 !w-8"
+        className="size-8!"
+        tabIndex={-1}
       >
         <RedoIcon className="size-4" />
       </Button>

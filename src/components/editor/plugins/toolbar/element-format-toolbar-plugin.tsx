@@ -113,6 +113,7 @@ export function ElementFormatToolbarPlugin({
         value={elementFormat}
         defaultValue={elementFormat}
         onValueChange={handleValueChange}
+        tabIndex={-1}
       >
         {/* Alignment toggles */}
         {Object.entries(ELEMENT_FORMAT_OPTIONS).map(([value, option]) => (
@@ -122,24 +123,27 @@ export function ElementFormatToolbarPlugin({
             variant={"outline"}
             size="sm"
             aria-label={option.name}
+            tabIndex={-1}
           >
             {option.icon}
           </ToggleGroupItem>
         ))}
       </ToggleGroup>
-      {separator && <Separator orientation="vertical" className="!h-7" />}
+      {separator && <Separator orientation="vertical" className="h-7!" />}
       {/* Indentation toggles */}
       <ToggleGroup
         type="single"
         value={elementFormat}
         defaultValue={elementFormat}
         onValueChange={handleValueChange}
+        tabIndex={-1}
       >
         <ToggleGroupItem
           value="outdent"
           aria-label="Outdent"
           variant={"outline"}
           size="sm"
+          tabIndex={-1}
         >
           <IndentDecreaseIcon className="size-4" />
         </ToggleGroupItem>
@@ -149,6 +153,7 @@ export function ElementFormatToolbarPlugin({
           variant={"outline"}
           aria-label="Indent"
           size="sm"
+          tabIndex={-1}
         >
           <IndentIncreaseIcon className="size-4" />
         </ToggleGroupItem>

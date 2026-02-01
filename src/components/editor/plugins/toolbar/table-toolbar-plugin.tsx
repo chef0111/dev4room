@@ -19,6 +19,7 @@ export function TableToolbarPlugin({ className }: { className?: string }) {
       size={"icon-sm"}
       variant={"outline"}
       className={className}
+      tabIndex={-1}
     >
       <TableIcon className="size-4" />
     </Button>

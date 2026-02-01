@@ -60,6 +60,7 @@ export function FontFormatToolbarPlugin() {
       onValueChange={setActiveFormats}
       variant="outline"
       size="sm"
+      tabIndex={-1}
     >
       {FORMATS.map(({ format, icon: Icon, label }) => (
         <ToggleGroupItem
@@ -72,6 +73,7 @@ export function FontFormatToolbarPlugin() {
               format as TextFormatType
             );
           }}
+          tabIndex={-1}
         >
           <Icon className="size-4" />
         </ToggleGroupItem>
