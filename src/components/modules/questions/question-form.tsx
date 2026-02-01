@@ -15,8 +15,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
-import PendingDialog from "./pending-dialog";
-import DuplicateDialog from "./duplicate-dialog";
+import { PendingDialog } from "./";
+import { DuplicateDialog } from "./";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import TagCard from "@/components/modules/tags/tag-card";
 import { getTechDisplayName } from "@/lib/utils";

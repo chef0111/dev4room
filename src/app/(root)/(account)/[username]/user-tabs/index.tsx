@@ -6,6 +6,7 @@ import Filter from "@/components/filters/filter";
 import FilterContent from "@/components/filters/filter-content";
 import { UserFilters } from "@/common/constants/filters";
 import { FilterProvider } from "@/context";
+import { resolveData } from "@/lib/query/helper";
 
 interface UserTabsProps {
   userId: string;
@@ -31,8 +32,29 @@ const UserTabs = async ({
     filter
   );
 
-  const totalQuestions = questionsResult.data?.totalQuestions ?? 0;
-  const totalAnswers = answersResult.data?.totalAnswers ?? 0;
+  const {
+    data: questions,
+    success: questionsSuccess,
+    error: questionsError,
+  } = resolveData(questionsResult, (data) => data.questions, []);
+
+  const { data: totalQuestions } = resolveData(
+    questionsResult,
+    (data) => data.totalQuestions,
+    0
+  );
+
+  const {
+    data: answers,
+    success: answersSuccess,
+    error: answersError,
+  } = resolveData(answersResult, (data) => data.answers, []);
+
+  const { data: totalAnswers } = resolveData(
+    answersResult,
+    (data) => data.totalAnswers,
+    0
+  );
 
   return (
     <FilterProvider>
@@ -76,8 +98,9 @@ const UserTabs = async ({
             <div className="mb-10 flex w-full flex-col gap-6">
               <UserQuestions
                 user={user}
-                data={questionsResult.data}
-                error={questionsResult.error}
+                questions={questions}
+                success={questionsSuccess}
+                error={questionsError}
                 isAuthor={isAuthor}
               />
 
@@ -100,8 +123,9 @@ const UserTabs = async ({
             <div className="mb-10 flex w-full flex-col">
               <UserAnswers
                 user={user}
-                data={answersResult.data}
-                error={answersResult.error}
+                answers={answers}
+                success={answersSuccess}
+                error={answersError}
                 isAuthor={isAuthor}
               />
               <NextPagination

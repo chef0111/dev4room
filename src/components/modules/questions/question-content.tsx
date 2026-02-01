@@ -6,19 +6,20 @@ import Link from "next/link";
 import { orpc } from "@/lib/orpc";
 import { getServerSession } from "@/lib/session";
 import { getQueryClient } from "@/lib/query/hydration";
-import { safeFetch } from "@/lib/query/helper";
+import { resolveData, safeFetch } from "@/lib/query/helper";
+import { QuestionDTO } from "@/app/server/question/question.dto";
 import { formatNumber, getTimeStamp } from "@/lib/utils";
 import { ViewService } from "@/services/view.service";
 
 import UserAvatar from "@/components/modules/profile/user-avatar";
 import Votes from "@/components/modules/vote/votes";
-import SaveQuestion from "@/components/modules/questions/save-question";
+import { SaveQuestion } from "@/components/modules/questions";
 import TagCard from "@/components/modules/tags/tag-card";
 import EditDelete from "@/components/shared/edit-delete";
 import { Separator } from "@/components/ui/separator";
 import MarkdownPreview from "@/components/markdown/markdown-preview";
 import { Metric } from "@/components/shared";
-import QuestionUtilsFallback from "@/components/modules/questions/question-utils-fallback";
+import { QuestionUtilsFallback } from "@/components/modules/questions";
 
 interface QuestionContentProps {
   questionId: string;
@@ -32,16 +33,17 @@ const QuestionContent = async ({
   const session = await getServerSession();
   const queryClient = getQueryClient();
 
-  const result = await safeFetch(
+  const result = await safeFetch<QuestionDTO>(
     queryClient.fetchQuery(
       orpc.questions.get.queryOptions({ input: { questionId } })
     ),
-    { error: "Failed to fetch question content" }
+    "Failed to fetch question content"
   );
 
-  if (!result.data) return notFound();
+  const { data: question } = resolveData(result, (data) => data, null);
 
-  const question = result.data;
+  if (!question) return notFound();
+
   const { author, createdAt, answers, views, title, content, tags } = question;
   const isAuthor = session?.user?.id === author.id.toString();
 

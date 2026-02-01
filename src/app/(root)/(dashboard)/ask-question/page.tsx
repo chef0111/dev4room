@@ -1,4 +1,4 @@
-import QuestionForm from "@/components/modules/questions/question-form";
+import { QuestionForm } from "@/components/modules/questions";
 
 const AskQuestion = () => {
   return (

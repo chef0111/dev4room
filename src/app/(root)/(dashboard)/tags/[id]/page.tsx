@@ -1,6 +1,7 @@
 import { orpc } from "@/lib/orpc";
-import { safeFetch } from "@/lib/query/helper";
 import { getQueryClient } from "@/lib/query/hydration";
+import { resolveData, safeFetch } from "@/lib/query/helper";
+import { TagQuestionsDTO } from "@/app/server/tag/tag.dto";
 
 import { db } from "@/database/drizzle";
 import { tag } from "@/database/schema";
@@ -10,7 +11,7 @@ import { EMPTY_QUESTION } from "@/common/constants/states";
 import Filter from "@/components/filters/filter";
 import FilterContent from "@/components/filters/filter-content";
 import LocalSearch from "@/components/modules/main/local-search";
-import QuestionCard from "@/components/modules/questions/question-card";
+import { QuestionCard } from "@/components/modules/questions";
 import DataRenderer from "@/components/shared/data-renderer";
 import { NextPagination } from "@/components/ui/dev";
 import { FilterProvider } from "@/context";
@@ -36,13 +37,24 @@ const TagQuestions = async ({ params, searchParams }: RouteParams) => {
     },
   });
 
-  const result = await safeFetch(queryClient.fetchQuery(queryOptions), {
-    error: "Failed to get tag's questions",
-  });
+  const result = await safeFetch<TagQuestionsDTO>(
+    queryClient.fetchQuery(queryOptions),
+    "Failed to get tag's questions"
+  );
 
-  const tag = result.data?.tag;
-  const questions = result.data?.questions;
-  const totalQuestions = result.data?.totalQuestions || 0;
+  const { data: tag } = resolveData(result, (data) => data.tag, null);
+
+  const {
+    data: questions,
+    success,
+    error,
+  } = resolveData(result, (data) => data.questions, []);
+
+  const { data: totalQuestions } = resolveData(
+    result,
+    (data) => data.totalQuestions,
+    0
+  );
 
   return (
     <FilterProvider>
@@ -62,8 +74,8 @@ const TagQuestions = async ({ params, searchParams }: RouteParams) => {
       <FilterContent loadingMessage="Loading...">
         <DataRenderer
           data={questions}
-          success={!!result.data}
-          error={result.error}
+          success={success}
+          error={error}
           empty={EMPTY_QUESTION}
           render={(questions) => (
             <div className="my-10 flex w-full flex-col gap-6">

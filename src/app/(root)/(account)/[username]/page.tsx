@@ -7,7 +7,8 @@ import { user } from "@/database/schema";
 import { getServerSession } from "@/lib/session";
 import { orpc } from "@/lib/orpc";
 import { getQueryClient } from "@/lib/query/hydration";
-import { safeFetch } from "@/lib/query/helper";
+import { resolveData, safeFetch } from "@/lib/query/helper";
+import { GetUserDTO, UserStatsDTO } from "@/app/server/user/user.dto";
 
 import { Button } from "@/components/ui/button";
 import ProfileHeader from "./header";
@@ -33,51 +34,59 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
 
   const queryClient = getQueryClient();
 
-  const userResult = await safeFetch(
+  const userResult = await safeFetch<GetUserDTO>(
     queryClient.fetchQuery(
       orpc.users.me.queryOptions({
         input: { username },
       })
     ),
-    {
-      error: "Failed to fetch user profile",
-    }
+    "Failed to fetch user profile"
   );
 
-  if (!userResult.data) return notFound();
+  const { data: user } = resolveData(userResult, (d) => d.user, null);
+  const { data: totalQuestions } = resolveData(
+    userResult,
+    (d) => d.totalQuestions,
+    0
+  );
+  const { data: totalAnswers } = resolveData(
+    userResult,
+    (d) => d.totalAnswers,
+    0
+  );
 
-  const { user: userData, totalQuestions, totalAnswers } = userResult.data;
+  if (!user) return notFound();
 
   const session = await getServerSession();
-  const isAuthor = session?.user?.id === userData.id;
+  const isAuthor = session?.user?.id === user.id;
 
-  const statsResult = await safeFetch(
+  const statsResult = await safeFetch<UserStatsDTO>(
     queryClient.fetchQuery(
       orpc.users.stats.queryOptions({
-        input: { userId: userData.id },
+        input: { userId: user.id },
       })
     ),
-    { error: "Failed to fetch user stats" }
+    "Failed to fetch user stats"
   );
 
-  const userStats = statsResult.data;
+  const { data: stats } = resolveData(statsResult, (data) => data, null);
 
   // Generate year options from user's join year to current year
-  const contributionFilters = getYearOptions(userData.createdAt);
+  const contributionFilters = getYearOptions(user.createdAt);
   const selectedYear = year ? parseInt(year, 10) : currentYear;
 
   return (
     <>
       <section className="flex w-full flex-col-reverse items-start justify-between sm:flex-row">
         <ProfileHeader
-          id={userData.id}
-          name={userData.name}
-          username={userData.username}
-          image={userData.image}
-          portfolio={userData.portfolio}
-          location={userData.location}
-          createdAt={userData.createdAt}
-          bio={userData.bio}
+          id={user.id}
+          name={user.name}
+          username={user.username}
+          image={user.image}
+          portfolio={user.portfolio}
+          location={user.location}
+          createdAt={user.createdAt}
+          bio={user.bio}
         />
 
         <div className="flex justify-end max-sm:mb-5 max-sm:w-full">
@@ -95,8 +104,8 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
       <UserStats
         totalQuestions={totalQuestions}
         totalAnswers={totalAnswers}
-        badges={userStats?.badges || { GOLD: 0, SILVER: 0, BRONZE: 0 }}
-        reputationPoints={userData.reputation || 0}
+        badges={stats?.badges || { GOLD: 0, SILVER: 0, BRONZE: 0 }}
+        reputationPoints={user.reputation || 0}
       />
 
       <Suspense
@@ -119,7 +128,7 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
                 </div>
                 <article className="flex-center">
                   <ContributionGraphDisplay
-                    userId={userData.id}
+                    userId={user.id}
                     year={selectedYear}
                   />
                 </article>
@@ -127,8 +136,8 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
             </div>
 
             <UserTabs
-              userId={userData.id}
-              user={userData}
+              userId={user.id}
+              user={user}
               page={Number(page) || 1}
               pageSize={Number(pageSize) || 10}
               filter={filter}
@@ -136,7 +145,7 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
             />
           </div>
 
-          <UserTopTags userId={userData.id} />
+          <UserTopTags userId={user.id} />
         </section>
       </Suspense>
     </>

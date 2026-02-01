@@ -1,20 +1,44 @@
 import { getErrorMessage } from "../handlers/error";
 
-type Result<T> =
-  | { data: T; error: undefined }
-  | { data: undefined; error: { message: string } };
+export type Result<T, E> = { ok: true; value: T } | { ok: false; error: E };
+
+export type FetchError = {
+  message: string;
+  cause?: unknown;
+};
 
 export async function safeFetch<T>(
   promise: Promise<T>,
-  { error }: { error: string }
-): Promise<Result<T>> {
+  fallbackMessage: string
+): Promise<Result<T, FetchError>> {
   try {
     const data = await promise;
-    return { data, error: undefined };
+    return { ok: true, value: data };
   } catch (e) {
     return {
-      data: undefined,
-      error: { message: getErrorMessage(e, error) },
+      ok: false,
+      error: {
+        message: getErrorMessage(e, fallbackMessage),
+        cause: e,
+      },
     };
   }
+}
+
+export function resolveData<T, U, E>(
+  result: Result<T, E>,
+  select: (data: T) => U,
+  empty: U
+) {
+  return result.ok
+    ? {
+        data: select(result.value),
+        success: true,
+        error: undefined,
+      }
+    : {
+        data: empty,
+        success: false,
+        error: result.error,
+      };
 }

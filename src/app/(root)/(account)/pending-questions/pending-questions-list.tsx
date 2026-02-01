@@ -6,7 +6,7 @@ import { useCancelPendingQuestion } from "@/queries/question";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import QuestionCard from "@/components/modules/questions/question-card";
+import { QuestionCard } from "@/components/modules/questions";
 import Link from "next/link";
 import {
   AlertDialog,

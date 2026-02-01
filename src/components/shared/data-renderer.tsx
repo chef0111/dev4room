@@ -16,7 +16,7 @@ interface DataRendererProps<T> {
     message?: string;
     details?: Record<string, string[]>;
   };
-  data?: T[] | null | undefined;
+  data: T[] | null | undefined;
   empty?: {
     title: string;
     message: string;
