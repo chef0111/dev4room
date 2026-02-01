@@ -17,7 +17,7 @@ import {
   InputGroupTextarea,
 } from "@/components/ui/input-group";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Link, MapPin, ShieldUser, UserIcon } from "lucide-react";
+import { IdCardLanyard, Link, MapPin, UserIcon } from "lucide-react";
 
 const Loading = async () => {
   return (
@@ -33,25 +33,27 @@ const Loading = async () => {
             <Field className="form-field-card" orientation="responsive">
               <FieldContent>
                 <FieldLabel htmlFor="name">Your Name</FieldLabel>
-                <FieldDescription>
+                <FieldDescription className="body-regular text-light-500">
                   Please enter your full name.
                 </FieldDescription>
               </FieldContent>
               <FieldContent>
                 <InputGroup className="base-input min-h-10!">
                   <InputGroupAddon>
-                    <ShieldUser />
+                    <IdCardLanyard />
                   </InputGroupAddon>
                   <InputGroupInput disabled />
                 </InputGroup>
-                <FieldDescription>Max 50 characters</FieldDescription>
+                <FieldDescription className="body-regular text-light-500">
+                  Max 50 characters
+                </FieldDescription>
               </FieldContent>
             </Field>
 
             <Field className="form-field-card" orientation="responsive">
               <FieldContent>
                 <FieldLabel htmlFor="name">Your Username</FieldLabel>
-                <FieldDescription>
+                <FieldDescription className="body-regular text-light-500">
                   Please enter a display name you are comfortable with.
                 </FieldDescription>
               </FieldContent>
@@ -62,14 +64,16 @@ const Loading = async () => {
                   </InputGroupAddon>
                   <InputGroupInput disabled />
                 </InputGroup>
-                <FieldDescription>Max 30 characters</FieldDescription>
+                <FieldDescription className="body-regular text-light-500">
+                  Max 30 characters
+                </FieldDescription>
               </FieldContent>
             </Field>
 
             <Field className="form-field-card" orientation="responsive">
               <FieldContent>
                 <FieldLabel htmlFor="name">Your Portfolio</FieldLabel>
-                <FieldDescription>
+                <FieldDescription className="body-regular text-light-500">
                   Please enter the link to your portfolio.
                 </FieldDescription>
               </FieldContent>
@@ -80,14 +84,18 @@ const Loading = async () => {
                   </InputGroupAddon>
                   <InputGroupInput disabled />
                 </InputGroup>
-                <FieldDescription>Enter a valid URL</FieldDescription>
+                <FieldDescription className="body-regular text-light-500">
+                  Enter a valid URL
+                </FieldDescription>
               </FieldContent>
             </Field>
 
             <Field className="form-field-card" orientation="responsive">
               <FieldContent>
                 <FieldLabel htmlFor="name">Your Location</FieldLabel>
-                <FieldDescription>Please enter your location.</FieldDescription>
+                <FieldDescription className="body-regular text-light-500">
+                  Please enter your location.
+                </FieldDescription>
               </FieldContent>
               <FieldContent>
                 <InputGroup className="base-input min-h-10!">
@@ -96,7 +104,7 @@ const Loading = async () => {
                   </InputGroupAddon>
                   <InputGroupInput disabled />
                 </InputGroup>
-                <FieldDescription>
+                <FieldDescription className="body-regular text-light-500">
                   Provide a proper location, max 100 characters
                 </FieldDescription>
               </FieldContent>
@@ -105,20 +113,20 @@ const Loading = async () => {
             <Field className="form-field-card" orientation="responsive">
               <FieldContent>
                 <FieldLabel htmlFor="name">Your Personal Bio</FieldLabel>
-                <FieldDescription>
+                <FieldDescription className="body-regular text-light-500">
                   Please write a brief description about yourself.
                 </FieldDescription>
               </FieldContent>
               <FieldContent>
                 <InputGroup className="base-input">
                   <InputGroupTextarea rows={6} disabled />
-                  <InputGroupAddon>
+                  <InputGroupAddon align="block-end">
                     <InputGroupText className="small-medium!">
                       0/200 characters
                     </InputGroupText>
                   </InputGroupAddon>
                 </InputGroup>
-                <FieldDescription>
+                <FieldDescription className="body-regular text-light-500">
                   Min 10 characters, max 200 characters
                 </FieldDescription>
               </FieldContent>

@@ -65,11 +65,12 @@ const ProfileForm = ({ user }: ProfileFormProps) => {
               control={form.control}
               label={field.label}
               description={field.description}
+              descPosition="after-label"
               leftAddon={<Icon />}
               fieldClassName="form-field-card"
               orientation="responsive"
             >
-              <FieldDescription className="body-regular text-light-500">
+              <FieldDescription className="body-regular">
                 {field.hint}
               </FieldDescription>
             </FormInputGroup>
@@ -81,6 +82,7 @@ const ProfileForm = ({ user }: ProfileFormProps) => {
           control={form.control}
           label="Your Personal Bio"
           description="Please write a brief description about yourself."
+          descPosition="after-label"
           rows={6}
           rightAddon={
             <InputGroupText className="small-medium!">
@@ -90,7 +92,7 @@ const ProfileForm = ({ user }: ProfileFormProps) => {
           fieldClassName="form-field-card"
           orientation="responsive"
         >
-          <FieldDescription className="body-regular text-light-500">
+          <FieldDescription className="body-regular">
             Min 10 characters, max 200 characters
           </FieldDescription>
         </FormTextareaGroup>

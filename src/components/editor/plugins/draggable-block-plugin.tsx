@@ -3,6 +3,7 @@
 import { JSX, useRef } from "react";
 import { DraggableBlockPlugin_EXPERIMENTAL } from "@lexical/react/LexicalDraggableBlockPlugin";
 import { GripVerticalIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const DRAGGABLE_BLOCK_MENU_CLASSNAME = "draggable-block-menu";
 
@@ -15,7 +16,7 @@ export function DraggableBlockPlugin({
 }: {
   anchorElem: HTMLElement | null;
 }): JSX.Element | null {
-  const menuRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLButtonElement>(null);
   const targetLineRef = useRef<HTMLDivElement>(null);
 
   if (!anchorElem) {
@@ -25,15 +26,18 @@ export function DraggableBlockPlugin({
   return (
     <DraggableBlockPlugin_EXPERIMENTAL
       anchorElem={anchorElem}
-      menuRef={menuRef as React.RefObject<HTMLDivElement>}
+      menuRef={menuRef as React.RefObject<HTMLButtonElement>}
       targetLineRef={targetLineRef as React.RefObject<HTMLDivElement>}
       menuComponent={
-        <div
+        <Button
           ref={menuRef}
-          className="draggable-block-menu absolute top-0 left-0 cursor-grab rounded-sm px-px py-0.5 opacity-0 will-change-transform hover:bg-gray-100 active:cursor-grabbing"
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="draggable-block-menu hover:bg-light800_dark300 absolute top-0 left-0 size-6 cursor-grab rounded-sm will-change-transform active:cursor-grabbing"
         >
           <GripVerticalIcon className="size-4 opacity-30" />
-        </div>
+        </Button>
       }
       targetLineComponent={
         <div
