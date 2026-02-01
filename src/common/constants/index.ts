@@ -1,4 +1,4 @@
-import { LinkIcon, MapPin, ShieldUser, UserIcon } from "lucide-react";
+import { IdCardLanyard, LinkIcon, MapPin, UserIcon } from "lucide-react";
 
 export const sidebarTabs = [
   {
@@ -116,7 +116,7 @@ export const profileFields = [
     name: "name" as const,
     label: "Your Name",
     description: "Please enter your full name.",
-    icon: ShieldUser,
+    icon: IdCardLanyard,
     hint: "Max 50 characters",
   },
   {

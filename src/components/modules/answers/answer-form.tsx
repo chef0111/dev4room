@@ -4,7 +4,6 @@ import z from "zod";
 import { useRef, useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { MDXEditorMethods } from "@mdxeditor/editor";
 
 import { AnswerSchema } from "@/lib/validations";
 import { Button } from "@/components/ui/button";
@@ -12,7 +11,7 @@ import { Spinner } from "@/components/ui/spinner";
 import GenerateAIButton from "./generate-ai-button";
 import AIValidationAlert from "./ai-validation-alert";
 import { useCreateAnswer, useEditAnswer } from "@/queries/answer";
-import { FormMarkdown } from "@/components/form";
+import { FormMarkdown, FormEditorMethods } from "@/components/form";
 
 interface Answer {
   id: string;
@@ -36,7 +35,7 @@ const AnswerForm = ({
   onSuccess,
   compact = false,
 }: AnswerFormProps) => {
-  const editorRef = useRef<MDXEditorMethods>(null);
+  const editorRef = useRef<FormEditorMethods>(null);
   const [editorKey, setEditorKey] = useState(0);
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");

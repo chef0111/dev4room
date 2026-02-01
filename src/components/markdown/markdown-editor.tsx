@@ -29,7 +29,7 @@ const MarkdownEditor = memo(
         },
         [onChange]
       ),
-      500
+      300
     );
 
     return (

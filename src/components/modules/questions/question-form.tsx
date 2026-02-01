@@ -17,7 +17,6 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { PendingDialog } from "./";
 import { DuplicateDialog } from "./";
-import { MDXEditorMethods } from "@mdxeditor/editor";
 import TagCard from "@/components/modules/tags/tag-card";
 import { getTechDisplayName } from "@/lib/utils";
 import {
@@ -25,7 +24,7 @@ import {
   useEditQuestion,
   useCheckDuplicateQuestion,
 } from "@/queries/question";
-import { FormInput, FormMarkdown } from "@/components/form";
+import { FormInput, FormMarkdown, FormEditorMethods } from "@/components/form";
 
 interface QuestionFormProps {
   question?: Question;
@@ -33,7 +32,7 @@ interface QuestionFormProps {
 }
 
 const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
-  const editorRef = useRef<MDXEditorMethods>(null);
+  const editorRef = useRef<FormEditorMethods>(null);
   const [editorKey, setEditorKey] = useState(0);
   const [showPendingDialog, setShowPendingDialog] = useState(false);
   const [showDuplicateDialog, setShowDuplicateDialog] = useState(false);
@@ -200,6 +199,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
             className="base-input! no-focus! placeholder:text-dark300_light800"
             placeholder="e.g. Is there an R function for finding the index of an element in a vector?"
             description="Be specific and imagine you're asking a question to another person."
+            descPosition="after-field"
           />
 
           <FormMarkdown
@@ -214,6 +214,7 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
               </>
             }
             description="Introduce the problem and expand on what you put in the title. Minimum 20 characters."
+            descPosition="after-field"
           />
 
           <Controller
@@ -228,10 +229,6 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
                   Tags
                   <span className="text-destructive">*</span>
                 </FieldLabel>
-                <FieldDescription className="body-regular text-light-500">
-                  Add up to 5 tags to describe what your question is about.
-                </FieldDescription>
-
                 <Input
                   id="question-tags"
                   name={field.name}
@@ -240,6 +237,9 @@ const QuestionForm = ({ question, isEdit }: QuestionFormProps) => {
                   placeholder="Add tags..."
                   onKeyDown={(e) => handleKeyDown(e, field)}
                 />
+                <FieldDescription className="body-regular text-light-500">
+                  Add up to 5 tags to describe what your question is about.
+                </FieldDescription>
 
                 {field.value.length > 0 && (
                   <div className="flex-start mt-2 flex-wrap gap-2">
