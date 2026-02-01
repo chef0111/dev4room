@@ -167,6 +167,7 @@ export const editQuestion = authorized
     revalidatePath(`/${context.user.username}`);
     revalidatePath("/");
     revalidatePath(`/questions/${result.id}`);
+    revalidatePath(`/questions/${result.id}/edit`);
 
     return result;
   });

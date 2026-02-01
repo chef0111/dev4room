@@ -113,11 +113,23 @@ export function editorStateToMarkdown(
       { discrete: true }
     );
 
+    markdown = cleanupMarkdownFormatting(markdown);
+
     return markdown;
   } catch (error) {
     console.error("Failed to convert editor state to markdown:", error);
     return "";
   }
+}
+
+function cleanupMarkdownFormatting(markdown: string): string {
+  return markdown
+    .replace(/&#32;/g, " ")
+    .replace(/&#x20;/g, " ")
+    .replace(/\*\*(.+?) \*\*/g, "**$1**")
+    .replace(/(?<!\*)\*([^*]+?) \*(?!\*)/g, "*$1*")
+    .replace(/(?<!_)_([^_]+?) _(?!_)/g, "_$1_")
+    .replace(/~~(.+?) ~~/g, "~~$1~~");
 }
 
 /**
