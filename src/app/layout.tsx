@@ -52,14 +52,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "/",
+    url: baseUrl,
     siteName: "Dev4Room",
     title: "Dev4Room - Programming Q&A Community",
     description:
       "Programming Q&A community, built for developers. Post, search, and filter programming questions. Find solutions, share knowledge, and grow together.",
     images: [
       {
-        url: "/images/og-image.png",
+        url: `${baseUrl}/images/og-image.png`,
         width: 1200,
         height: 630,
         alt: "Dev4Room - Programming Q&A Community",
@@ -72,7 +72,7 @@ export const metadata: Metadata = {
     description:
       "Programming Q&A community, built for developers. Post, search, and filter programming questions. Find solutions, share knowledge, and grow together.",
     creator: "@dev4room",
-    images: ["/images/og-image.png"],
+    images: [`${baseUrl}/images/og-image.png`],
   },
   robots: {
     index: true,
@@ -87,6 +87,9 @@ export const metadata: Metadata = {
   },
   verification: {
     google: process.env.GOOGLE_SITE_VERIFICATION,
+  },
+  other: {
+    "fb:app_id": process.env.FACEBOOK_APP_ID || "",
   },
 };
 

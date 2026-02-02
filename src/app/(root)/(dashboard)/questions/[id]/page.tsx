@@ -53,11 +53,13 @@ export async function generateMetadata({
       url: `${baseUrl}/questions/${id}`,
       type: "article",
       authors: questionData.authorName ? [questionData.authorName] : undefined,
+      images: ["/images/og-image.png"],
     },
     twitter: {
       card: "summary_large_image",
       title: `${questionData.title} | Dev4Room`,
       description,
+      images: ["/images/og-image.png"],
     },
     alternates: {
       canonical: `${baseUrl}/questions/${id}`,

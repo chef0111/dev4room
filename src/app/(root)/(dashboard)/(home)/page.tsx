@@ -17,6 +17,7 @@ export const metadata: Metadata = {
   description:
     "Post, search, and filter programming questions from the Dev4Room community. Find solutions, share knowledge, and ask your own questions.",
   openGraph: {
+    type: "website",
     title: "Home | Dev4Room",
     description:
       "Post, search, and filter programming questions from the Dev4Room community. Find solutions, share knowledge, and ask your own questions.",

@@ -65,15 +65,15 @@ export async function generateMetadata({
       description,
       url: `${baseUrl}/${userData.username}`,
       type: "profile",
-      ...(userData.image && {
-        images: [{ url: userData.image, alt: `${userData.name}'s avatar` }],
-      }),
+      images: userData.image
+        ? [{ url: userData.image, alt: `${userData.name}'s avatar` }]
+        : ["/images/og-image.png"],
     },
     twitter: {
       card: "summary",
       title: `${userData.name} (@${userData.username}) | Dev4Room`,
       description,
-      ...(userData.image && { images: [userData.image] }),
+      images: userData.image ? [userData.image] : ["/images/og-image.png"],
     },
     alternates: {
       canonical: `${baseUrl}/${userData.username}`,

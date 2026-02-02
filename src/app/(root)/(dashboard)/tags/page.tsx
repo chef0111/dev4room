@@ -13,6 +13,7 @@ export const metadata: Metadata = {
   description:
     "Explore tags on Dev4Room to find questions and experts by technology, language, and topic. Discover trending tags and related content.",
   openGraph: {
+    type: "website",
     title: "Tags | Dev4Room",
     description:
       "Explore tags on Dev4Room to find questions and experts by technology, language, and topic. Discover trending tags and related content.",
