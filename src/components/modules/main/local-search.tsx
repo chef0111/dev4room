@@ -5,6 +5,7 @@ import { Controller, useForm } from "react-hook-form";
 import { useQueryStates, parseAsString, parseAsInteger } from "nuqs";
 import { Field } from "@/components/ui/field";
 import SearchInput from "./search-input";
+import { useFilterTransition } from "@/context/filter-provider";
 
 interface LocalSearchProps {
   placeholder: string;
@@ -16,6 +17,7 @@ interface SearchFormData {
 }
 
 const LocalSearch = ({ placeholder, className }: LocalSearchProps) => {
+  const { startTransition } = useFilterTransition();
   const [{ query }, setParams] = useQueryStates(
     {
       query: parseAsString.withDefault(""),
@@ -34,9 +36,11 @@ const LocalSearch = ({ placeholder, className }: LocalSearchProps) => {
 
   const handleSubmit = (data: SearchFormData) => {
     const searchQuery = data.query.trim();
-    setParams({
-      query: searchQuery || null,
-      page: 1,
+    startTransition(() => {
+      setParams({
+        query: searchQuery || null,
+        page: 1,
+      });
     });
   };
 
