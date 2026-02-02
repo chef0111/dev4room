@@ -80,7 +80,7 @@ const AnswerList = async ({
           <Filter filters={AnswerFilters} className="min-h-10 sm:min-w-33" />
         </div>
 
-        <FilterContent loadingMessage="Loading...">
+        <FilterContent>
           <DataRenderer
             success={!!data}
             error={result.error}

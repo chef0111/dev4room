@@ -36,12 +36,7 @@ const Community = ({ searchParams }: RouteParams) => {
             <GridCardsSkeleton className="mt-10" itemClassName="h-51" />
           }
         >
-          <FilterContent
-            fallback={
-              <GridCardsSkeleton className="mt-10" itemClassName="h-51" />
-            }
-            loadingMessage="Loading..."
-          >
+          <FilterContent>
             <Users searchParams={searchParams} />
           </FilterContent>
         </Suspense>

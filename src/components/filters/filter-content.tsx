@@ -2,28 +2,27 @@
 
 import { ReactNode } from "react";
 import { useFilterTransition } from "@/context/filter-provider";
-import ContentFallback from "./content-fallback";
+import { cn } from "@/lib/utils";
 
 interface FilterContentProps {
   children: ReactNode;
-  fallback?: ReactNode;
-  loadingMessage?: string;
   className?: string;
 }
 
-const FilterContent = ({
-  children,
-  fallback,
-  loadingMessage = "Loading content...",
-  className,
-}: FilterContentProps) => {
+const FilterContent = ({ children, className }: FilterContentProps) => {
   const { isPending } = useFilterTransition();
 
-  if (isPending) {
-    return <>{fallback || <ContentFallback message={loadingMessage} />}</>;
-  }
-
-  return <div className={className}>{children}</div>;
+  return (
+    <div
+      className={cn(
+        "transition-opacity",
+        isPending && "pointer-events-none opacity-50",
+        className
+      )}
+    >
+      {children}
+    </div>
+  );
 };
 
 export default FilterContent;

@@ -94,7 +94,7 @@ const UserTabs = async ({
           value={profileTabs[0].value}
           className="mt-4 flex w-full flex-col gap-6"
         >
-          <FilterContent loadingMessage="Loading...">
+          <FilterContent>
             <div className="mb-10 flex w-full flex-col gap-6">
               <UserQuestions
                 user={user}
@@ -119,7 +119,7 @@ const UserTabs = async ({
           value="answers"
           className="mt-4 flex w-full flex-col gap-6"
         >
-          <FilterContent loadingMessage="Loading...">
+          <FilterContent>
             <div className="mb-10 flex w-full flex-col">
               <UserAnswers
                 user={user}

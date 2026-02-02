@@ -71,7 +71,7 @@ const TagQuestions = async ({ params, searchParams }: RouteParams) => {
         />
       </section>
 
-      <FilterContent loadingMessage="Loading...">
+      <FilterContent>
         <DataRenderer
           data={questions}
           success={success}
