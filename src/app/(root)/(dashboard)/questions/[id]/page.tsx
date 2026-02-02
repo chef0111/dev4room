@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { Metadata } from "next";
+import { connection } from "next/server";
 import { db } from "@/database/drizzle";
 import { question, user } from "@/database/schema";
 import { eq } from "drizzle-orm";
@@ -18,6 +19,7 @@ export async function generateMetadata({
   params,
 }: RouteParams): Promise<Metadata> {
   const { id } = await params;
+  await connection();
 
   const [questionData] = await db
     .select({
