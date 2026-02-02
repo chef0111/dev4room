@@ -107,7 +107,7 @@ export function UserNav({ isAdmin = false, className }: UserNavProps) {
 function AdminItem() {
   return (
     <DropdownMenuItem className="hover:bg-light800_dark300" asChild>
-      <Link href="/dashboard">
+      <Link href="/dashboard" target="_blank">
         <LayoutDashboard className="size-4" /> <span>Dashboard</span>
       </Link>
     </DropdownMenuItem>

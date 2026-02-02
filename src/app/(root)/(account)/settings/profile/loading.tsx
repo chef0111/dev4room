@@ -44,7 +44,7 @@ const Loading = async () => {
                   </InputGroupAddon>
                   <InputGroupInput disabled />
                 </InputGroup>
-                <FieldDescription className="body-regular text-light-500">
+                <FieldDescription className="body-regular">
                   Max 50 characters
                 </FieldDescription>
               </FieldContent>
@@ -64,7 +64,7 @@ const Loading = async () => {
                   </InputGroupAddon>
                   <InputGroupInput disabled />
                 </InputGroup>
-                <FieldDescription className="body-regular text-light-500">
+                <FieldDescription className="body-regular">
                   Max 30 characters
                 </FieldDescription>
               </FieldContent>
@@ -84,7 +84,7 @@ const Loading = async () => {
                   </InputGroupAddon>
                   <InputGroupInput disabled />
                 </InputGroup>
-                <FieldDescription className="body-regular text-light-500">
+                <FieldDescription className="body-regular">
                   Enter a valid URL
                 </FieldDescription>
               </FieldContent>
@@ -104,7 +104,7 @@ const Loading = async () => {
                   </InputGroupAddon>
                   <InputGroupInput disabled />
                 </InputGroup>
-                <FieldDescription className="body-regular text-light-500">
+                <FieldDescription className="body-regular">
                   Provide a proper location, max 100 characters
                 </FieldDescription>
               </FieldContent>
@@ -126,7 +126,7 @@ const Loading = async () => {
                     </InputGroupText>
                   </InputGroupAddon>
                 </InputGroup>
-                <FieldDescription className="body-regular text-light-500">
+                <FieldDescription className="body-regular">
                   Min 10 characters, max 200 characters
                 </FieldDescription>
               </FieldContent>
