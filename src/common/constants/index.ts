@@ -1,5 +1,8 @@
 import { IdCardLanyard, LinkIcon, MapPin, UserIcon } from "lucide-react";
 
+export const baseUrl =
+  process.env.NEXT_PUBLIC_APP_URL || "https://dev4room.pro";
+
 export const sidebarTabs = [
   {
     imgUrl: "/icons/home.svg",

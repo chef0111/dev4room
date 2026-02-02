@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
+import { baseUrl } from "@/common/constants";
 import { FilterProvider } from "@/context";
 import LocalSearch from "@/components/modules/main/local-search";
 import Filter from "@/components/filters/filter";
@@ -9,9 +10,23 @@ import { GridCardsSkeleton } from "@/components/skeletons";
 import Tags from "./tags";
 
 export const metadata: Metadata = {
-  title: "Dev4Room | Tags",
+  title: "Tags",
   description:
     "Explore tags on Dev4Room to find questions and experts by technology, language, and topic. Discover trending tags and related content.",
+  openGraph: {
+    title: "Tags | Dev4Room",
+    description:
+      "Explore tags on Dev4Room to find questions and experts by technology, language, and topic. Discover trending tags and related content.",
+    url: `${baseUrl}/tags`,
+  },
+  twitter: {
+    title: "Tags | Dev4Room",
+    description:
+      "Explore tags on Dev4Room to find questions and experts by technology, language, and topic. Discover trending tags and related content.",
+  },
+  alternates: {
+    canonical: `${baseUrl}/tags`,
+  },
 };
 
 const TagsPage = ({ searchParams }: RouteParams) => {

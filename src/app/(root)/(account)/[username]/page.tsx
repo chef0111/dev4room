@@ -1,6 +1,8 @@
 import { Suspense } from "react";
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { eq } from "drizzle-orm";
 
 import { db } from "@/database/drizzle";
 import { user } from "@/database/schema";
@@ -20,10 +22,61 @@ import ContributionGraphDisplay from "@/components/modules/profile/contributions
 import YearSelect from "@/components/modules/profile/contributions/year-select";
 import { currentYear, getYearOptions } from "@/lib/utils";
 import { FilterProvider } from "@/context";
+import { baseUrl } from "@/common/constants";
 
 export async function generateStaticParams() {
   const users = await db.select({ username: user.username }).from(user);
   return users.map((u) => ({ username: u.username }));
+}
+
+export async function generateMetadata({
+  params,
+}: RouteParams): Promise<Metadata> {
+  const { username } = await params;
+
+  const [userData] = await db
+    .select({
+      name: user.name,
+      username: user.username,
+      bio: user.bio,
+      image: user.image,
+    })
+    .from(user)
+    .where(eq(user.username, username))
+    .limit(1);
+
+  if (!userData) {
+    return {
+      title: "User Not Found",
+    };
+  }
+
+  const description =
+    userData.bio ||
+    `View ${userData.name}'s profile on Dev4Room. See their questions, answers, and contributions to the community.`;
+
+  return {
+    title: `${userData.name} (@${userData.username})`,
+    description,
+    openGraph: {
+      title: `${userData.name} (@${userData.username}) | Dev4Room`,
+      description,
+      url: `${baseUrl}/${userData.username}`,
+      type: "profile",
+      ...(userData.image && {
+        images: [{ url: userData.image, alt: `${userData.name}'s avatar` }],
+      }),
+    },
+    twitter: {
+      card: "summary",
+      title: `${userData.name} (@${userData.username}) | Dev4Room`,
+      description,
+      ...(userData.image && { images: [userData.image] }),
+    },
+    alternates: {
+      canonical: `${baseUrl}/${userData.username}`,
+    },
+  };
 }
 
 const ProfilePage = async ({ params, searchParams }: RouteParams) => {
