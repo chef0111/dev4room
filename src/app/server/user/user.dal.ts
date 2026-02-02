@@ -285,7 +285,7 @@ export class UserDAL {
         upvotes: answer.upvotes,
         downvotes: answer.downvotes,
         createdAt: answer.createdAt,
-        questionId: question.id,
+        questionId: answer.questionId,
         questionTitle: question.title,
       })
       .from(answer)
@@ -302,10 +302,7 @@ export class UserDAL {
         upvotes: row.upvotes,
         downvotes: row.downvotes,
         createdAt: row.createdAt,
-        question: {
-          id: row.questionId,
-          title: row.questionTitle,
-        },
+        questionId: row.questionId,
       })),
       UserAnswerSchema,
       "UserAnswer"
