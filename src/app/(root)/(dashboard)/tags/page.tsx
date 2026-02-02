@@ -27,12 +27,7 @@ const TagsPage = ({ searchParams }: RouteParams) => {
       <Suspense
         fallback={<GridCardsSkeleton className="mt-10" itemClassName="h-41" />}
       >
-        <FilterContent
-          fallback={
-            <GridCardsSkeleton className="mt-10" itemClassName="h-41" />
-          }
-          loadingMessage="Loading..."
-        >
+        <FilterContent>
           <Tags searchParams={searchParams} />
         </FilterContent>
       </Suspense>

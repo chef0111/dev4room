@@ -25,10 +25,7 @@ const CollectionsPage = ({ searchParams }: RouteParams) => {
       </div>
 
       <Suspense fallback={<PostCardsSkeleton className="mt-10" />}>
-        <FilterContent
-          fallback={<PostCardsSkeleton className="mt-10" />}
-          loadingMessage="Loading..."
-        >
+        <FilterContent>
           <Collection searchParams={searchParams} />
         </FilterContent>
       </Suspense>

@@ -49,10 +49,7 @@ const HomePage = ({ searchParams }: RouteParams) => {
       </section>
 
       <Suspense fallback={<PostCardsSkeleton className="mt-10" />}>
-        <FilterContent
-          fallback={<PostCardsSkeleton className="mt-10" />}
-          loadingMessage="Loading..."
-        >
+        <FilterContent>
           <HomeQuestions searchParams={searchParams} />
         </FilterContent>
       </Suspense>
