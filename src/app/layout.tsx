@@ -57,6 +57,14 @@ export const metadata: Metadata = {
     title: "Dev4Room - Programming Q&A Community",
     description:
       "Programming Q&A community, built for developers. Post, search, and filter programming questions. Find solutions, share knowledge, and grow together.",
+    images: [
+      {
+        url: `${baseUrl}/images/og-image.png`,
+        width: 1200,
+        height: 630,
+        alt: "Dev4Room - Programming Q&A Community",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -64,6 +72,7 @@ export const metadata: Metadata = {
     description:
       "Programming Q&A community, built for developers. Post, search, and filter programming questions. Find solutions, share knowledge, and grow together.",
     creator: "@dev4room",
+    images: [`${baseUrl}/images/og-image.png`],
   },
   robots: {
     index: true,
@@ -117,7 +126,6 @@ const RootLayout: React.FC<Props> = ({ children }: Props) => {
         <link rel="manifest" href="/site.webmanifest" />
         <meta name="msapplication-TileColor" content="#ffffff" />
         <meta name="theme-color" content="#ffffff" />
-        <link rel="canonical" href={baseUrl} />
 
         <script
           type="application/ld+json"

@@ -9,6 +9,7 @@ import QuestionContent from "@/components/modules/questions/question-content";
 import { AnswerForm } from "@/components/modules/answers";
 import { AnswerList } from "@/components/modules/answers";
 import { PostCardsSkeleton } from "@/components/skeletons";
+import { baseUrl } from "@/common/constants";
 
 export async function generateStaticParams() {
   const questions = await db.select({ id: question.id }).from(question);
@@ -49,7 +50,7 @@ export async function generateMetadata({
     openGraph: {
       title: `${questionData.title} | Dev4Room`,
       description,
-      url: `https://dev4room.pro/questions/${id}`,
+      url: `${baseUrl}/questions/${id}`,
       type: "article",
       authors: questionData.authorName ? [questionData.authorName] : undefined,
     },
@@ -59,7 +60,7 @@ export async function generateMetadata({
       description,
     },
     alternates: {
-      canonical: `https://dev4room.pro/questions/${id}`,
+      canonical: `${baseUrl}/questions/${id}`,
     },
   };
 }
