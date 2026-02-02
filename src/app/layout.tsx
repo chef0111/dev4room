@@ -52,14 +52,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: baseUrl,
+    url: "/",
     siteName: "Dev4Room",
     title: "Dev4Room - Programming Q&A Community",
     description:
       "Programming Q&A community, built for developers. Post, search, and filter programming questions. Find solutions, share knowledge, and grow together.",
     images: [
       {
-        url: `${baseUrl}/images/og-image.png`,
+        url: "/images/og-image.png",
         width: 1200,
         height: 630,
         alt: "Dev4Room - Programming Q&A Community",
@@ -72,7 +72,7 @@ export const metadata: Metadata = {
     description:
       "Programming Q&A community, built for developers. Post, search, and filter programming questions. Find solutions, share knowledge, and grow together.",
     creator: "@dev4room",
-    images: [`${baseUrl}/images/og-image.png`],
+    images: ["/images/og-image.png"],
   },
   robots: {
     index: true,
