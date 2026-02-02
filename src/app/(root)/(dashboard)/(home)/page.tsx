@@ -11,7 +11,6 @@ import { HomePageFilters } from "@/common/constants/filters";
 import FilterContent from "@/components/filters/filter-content";
 import { PostCardsSkeleton } from "@/components/skeletons";
 import HomeQuestions from "./questions";
-import { baseUrl } from "@/common/constants";
 
 export const metadata: Metadata = {
   title: "Home",
@@ -21,15 +20,18 @@ export const metadata: Metadata = {
     title: "Home | Dev4Room",
     description:
       "Post, search, and filter programming questions from the Dev4Room community. Find solutions, share knowledge, and ask your own questions.",
-    url: baseUrl,
+    url: "/",
+    images: ["/images/og-image.png"],
   },
   twitter: {
+    card: "summary_large_image",
     title: "Home | Dev4Room",
     description:
       "Post, search, and filter programming questions from the Dev4Room community. Find solutions, share knowledge, and ask your own questions.",
+    images: ["/images/og-image.png"],
   },
   alternates: {
-    canonical: baseUrl,
+    canonical: "/",
   },
 };
 
