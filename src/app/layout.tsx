@@ -88,8 +88,8 @@ export const metadata: Metadata = {
   verification: {
     google: process.env.GOOGLE_SITE_VERIFICATION,
   },
-  other: {
-    "fb:app_id": process.env.FACEBOOK_APP_ID || "",
+  facebook: {
+    appId: process.env.FACEBOOK_APP_ID || "",
   },
 };
 
