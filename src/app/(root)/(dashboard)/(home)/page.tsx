@@ -11,11 +11,26 @@ import { HomePageFilters } from "@/common/constants/filters";
 import FilterContent from "@/components/filters/filter-content";
 import { PostCardsSkeleton } from "@/components/skeletons";
 import HomeQuestions from "./questions";
+import { baseUrl } from "@/common/constants";
 
 export const metadata: Metadata = {
-  title: "Dev4Room | Home",
+  title: "Home",
   description:
     "Post, search, and filter programming questions from the Dev4Room community. Find solutions, share knowledge, and ask your own questions.",
+  openGraph: {
+    title: "Home | Dev4Room",
+    description:
+      "Post, search, and filter programming questions from the Dev4Room community. Find solutions, share knowledge, and ask your own questions.",
+    url: baseUrl,
+  },
+  twitter: {
+    title: "Home | Dev4Room",
+    description:
+      "Post, search, and filter programming questions from the Dev4Room community. Find solutions, share knowledge, and ask your own questions.",
+  },
+  alternates: {
+    canonical: baseUrl,
+  },
 };
 
 const HomePage = ({ searchParams }: RouteParams) => {

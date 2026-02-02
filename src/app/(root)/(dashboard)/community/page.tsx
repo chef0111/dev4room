@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
+import { baseUrl } from "@/common/constants";
 import { FilterProvider } from "@/context";
 import LocalSearch from "@/components/modules/main/local-search";
 import Filter from "@/components/filters/filter";
@@ -9,9 +10,23 @@ import { GridCardsSkeleton } from "@/components/skeletons";
 import Users from "./users";
 
 export const metadata: Metadata = {
-  title: "Dev4Room | Community",
+  title: "Community",
   description:
     "Browse and search developer profiles on Dev4Room — find contributors, view expertise, and connect with other developers.",
+  openGraph: {
+    title: "Community | Dev4Room",
+    description:
+      "Browse and search developer profiles on Dev4Room — find contributors, view expertise, and connect with other developers.",
+    url: `${baseUrl}/community`,
+  },
+  twitter: {
+    title: "Community | Dev4Room",
+    description:
+      "Browse and search developer profiles on Dev4Room — find contributors, view expertise, and connect with other developers.",
+  },
+  alternates: {
+    canonical: `${baseUrl}/community`,
+  },
 };
 
 const Community = ({ searchParams }: RouteParams) => {
