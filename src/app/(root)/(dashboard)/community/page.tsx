@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { FilterProvider } from "@/context";
+import { baseUrl } from "@/common/constants";
 import LocalSearch from "@/components/modules/main/local-search";
 import Filter from "@/components/filters/filter";
 import { UserFilters } from "@/common/constants/filters";
@@ -17,15 +18,29 @@ export const metadata: Metadata = {
     title: "Community | Dev4Room",
     description:
       "Browse and search developer profiles on Dev4Room — find contributors, view expertise, and connect with other developers.",
-    url: "/community",
-    images: ["/images/og-image.png"],
+    url: `${baseUrl}/community`,
+    images: [
+      {
+        url: `${baseUrl}/images/og-image.png`,
+        width: 1200,
+        height: 630,
+        alt: "Dev4Room - Programming Q&A Community",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Community | Dev4Room",
     description:
       "Browse and search developer profiles on Dev4Room — find contributors, view expertise, and connect with other developers.",
-    images: ["/images/og-image.png"],
+    images: [
+      {
+        url: `${baseUrl}/images/og-image.png`,
+        width: 1200,
+        height: 630,
+        alt: "Dev4Room - Programming Q&A Community",
+      },
+    ],
   },
   alternates: {
     canonical: "/community",

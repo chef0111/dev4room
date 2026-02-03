@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 import { FilterProvider } from "@/context";
+import { baseUrl } from "@/common/constants";
 import { Button } from "@/components/ui/button";
 import LocalSearch from "@/components/modules/main/local-search";
 import HomeFilter from "@/components/filters/home-filter";
@@ -21,15 +22,29 @@ export const metadata: Metadata = {
     title: "Home | Dev4Room",
     description:
       "Post, search, and filter programming questions from the Dev4Room community. Find solutions, share knowledge, and ask your own questions.",
-    url: "/",
-    images: ["/images/og-image.png"],
+    url: baseUrl,
+    images: [
+      {
+        url: `${baseUrl}/images/og-image.png`,
+        width: 1200,
+        height: 630,
+        alt: "Dev4Room - Programming Q&A Community",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Home | Dev4Room",
     description:
       "Post, search, and filter programming questions from the Dev4Room community. Find solutions, share knowledge, and ask your own questions.",
-    images: ["/images/og-image.png"],
+    images: [
+      {
+        url: `${baseUrl}/images/og-image.png`,
+        width: 1200,
+        height: 630,
+        alt: "Dev4Room - Programming Q&A Community",
+      },
+    ],
   },
   alternates: {
     canonical: "/",

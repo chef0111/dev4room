@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { FilterProvider } from "@/context";
+import { baseUrl } from "@/common/constants";
 import LocalSearch from "@/components/modules/main/local-search";
 import Filter from "@/components/filters/filter";
 import { TagFilters } from "@/common/constants/filters";
@@ -17,15 +18,29 @@ export const metadata: Metadata = {
     title: "Tags | Dev4Room",
     description:
       "Explore tags on Dev4Room to find questions and experts by technology, language, and topic. Discover trending tags and related content.",
-    url: "/tags",
-    images: ["/images/og-image.png"],
+    url: `${baseUrl}/tags`,
+    images: [
+      {
+        url: `${baseUrl}/images/og-image.png`,
+        width: 1200,
+        height: 630,
+        alt: "Dev4Room - Programming Q&A Community",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Tags | Dev4Room",
     description:
       "Explore tags on Dev4Room to find questions and experts by technology, language, and topic. Discover trending tags and related content.",
-    images: ["/images/og-image.png"],
+    images: [
+      {
+        url: `${baseUrl}/images/og-image.png`,
+        width: 1200,
+        height: 630,
+        alt: "Dev4Room - Programming Q&A Community",
+      },
+    ],
   },
   alternates: {
     canonical: "/tags",
