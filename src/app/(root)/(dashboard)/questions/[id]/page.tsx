@@ -53,13 +53,27 @@ export async function generateMetadata({
       url: `${baseUrl}/questions/${id}`,
       type: "article",
       authors: questionData.authorName ? [questionData.authorName] : undefined,
-      images: ["/images/og-image.png"],
+      images: [
+        {
+          url: `${baseUrl}/images/og-image.png`,
+          width: 1200,
+          height: 630,
+          alt: "Dev4Room - Programming Q&A Community",
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title: `${questionData.title} | Dev4Room`,
       description,
-      images: ["/images/og-image.png"],
+      images: [
+        {
+          url: `${baseUrl}/images/og-image.png`,
+          width: 1200,
+          height: 630,
+          alt: "Dev4Room - Programming Q&A Community",
+        },
+      ],
     },
     alternates: {
       canonical: `${baseUrl}/questions/${id}`,
