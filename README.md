@@ -131,7 +131,7 @@ The project uses PostgreSQL with Neon for the database layer, Better-Auth for fl
 
 Follow these steps to set up the project locally on your machine.
 
-**Prerequisites**
+### ❕Prerequisites
 
 Make sure you have the following installed on your machine:
 
@@ -191,11 +191,20 @@ ARCJET_KEY=
 # OpenAPI
 OPENAI_API_KEY=
 
+# Embedding model configuration
 EMBEDDING_MODEL=
 EMBEDDING_DIMENSIONS=
+
+# S3 Bucket
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+AWS_ENDPOINT_URL_S3=
+AWS_ENDPOINT_URL_IAM=
+AWS_REGION=
+NEXT_PUBLIC_S3_BUCKET=
 ```
 
-Replace the placeholder values with your actual credentials. You can obtain these credentials by signing up on the respective websites
+Replace the placeholder values with your actual credentials. You can obtain these credentials by signing up on the respective websites.
 
 ## 🗄️ <a name="database-setup">Database Setup</a>
 
