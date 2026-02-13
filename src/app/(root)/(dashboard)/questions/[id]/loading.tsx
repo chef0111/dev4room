@@ -1,4 +1,4 @@
-import EditorFallback from "@/components/markdown/editor-fallback";
+import EditorFallback from "@/components/editor/markdown/editor-fallback";
 import {
   PostCardsSkeleton,
   QuestionHeaderSkeleton,

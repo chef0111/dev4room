@@ -14,7 +14,7 @@ import { FilterProvider } from "@/context";
 import { NextPagination } from "@/components/ui/dev";
 import AnswerCard from "./answer-card";
 import ScrollToAnswer from "./scroll-to-answer";
-import MarkdownPreview from "@/components/markdown/markdown-preview";
+import MarkdownPreview from "@/components/editor/markdown/markdown-preview";
 
 interface AnswerListProps {
   questionId: string;

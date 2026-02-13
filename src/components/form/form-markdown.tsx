@@ -1,7 +1,7 @@
 import { ReactNode, Suspense, RefObject, useCallback } from "react";
 import dynamic from "next/dynamic";
 
-import EditorFallback from "@/components/markdown/editor-fallback";
+import EditorFallback from "@/components/editor/markdown/editor-fallback";
 import type { FormEditorMethods } from "@/components/editor/markdown/form-editor";
 import { FormBase, FormControlFn } from "./form-base";
 import { useDebounce } from "@/hooks/use-debounce";

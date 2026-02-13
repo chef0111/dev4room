@@ -7,7 +7,7 @@ import { ReactNode } from "react";
 import { cn, getTimeStamp } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 import UserAvatar from "@/components/modules/profile/user-avatar";
-import EditorFallback from "@/components/markdown/editor-fallback";
+import EditorFallback from "@/components/editor/markdown/editor-fallback";
 import EditDelete from "@/components/shared/edit-delete";
 import Votes from "@/components/modules/vote/votes";
 import AnswerForm from "./answer-form";
