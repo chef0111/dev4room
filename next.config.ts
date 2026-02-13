@@ -50,6 +50,16 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        // Exclude auth API routes from caching to prevent stale auth state
+        source: "/api/auth/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "no-store, no-cache, must-revalidate",
+          },
+        ],
+      },
+      {
         source: "/:path*",
         headers: [
           {

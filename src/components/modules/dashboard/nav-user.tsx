@@ -27,7 +27,6 @@ import {
 import UserAvatar from "../profile/user-avatar";
 import { authClient } from "@/lib/auth-client";
 import { Skeleton } from "@/components/ui";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 export function NavUser() {
@@ -114,8 +113,6 @@ export function NavUser() {
 }
 
 function LogoutItem() {
-  const router = useRouter();
-
   async function handleLogout() {
     const { error } = await authClient.signOut();
 
@@ -123,8 +120,7 @@ function LogoutItem() {
       toast.error(error.message || "Something went wrong");
     } else {
       toast.success("Logged out successfully");
-      router.push("/");
-      router.refresh();
+      window.location.href = "/";
     }
   }
 

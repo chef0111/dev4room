@@ -1,6 +1,6 @@
 import { Code } from "bright";
 import { MDXRemote } from "next-mdx-remote/rsc";
-import { dev4roomLight } from "./theme";
+import { dev4roomLight } from "../themes/preview-theme";
 
 Code.theme = {
   light: dev4roomLight,

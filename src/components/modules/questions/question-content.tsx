@@ -17,7 +17,7 @@ import { SaveQuestion } from "@/components/modules/questions";
 import TagCard from "@/components/modules/tags/tag-card";
 import EditDelete from "@/components/shared/edit-delete";
 import { Separator } from "@/components/ui/separator";
-import MarkdownPreview from "@/components/markdown/markdown-preview";
+import MarkdownPreview from "@/components/editor/markdown/markdown-preview";
 import { Metric } from "@/components/shared";
 import { QuestionUtilsFallback } from "@/components/modules/questions";
 
