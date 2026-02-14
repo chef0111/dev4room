@@ -23,6 +23,7 @@ import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 interface UserNavProps {
   isAdmin?: boolean;
@@ -124,6 +125,8 @@ function PendingQuestionsItem() {
 }
 
 function LogoutItem() {
+  const router = useRouter();
+
   async function handleLogout() {
     const { error } = await authClient.signOut();
 
@@ -131,8 +134,8 @@ function LogoutItem() {
       toast.error(error.message || "Something went wrong");
     } else {
       toast.success("Logged out successfully");
-      // Hard redirect to fully clear Router Cache + stale auth state
-      window.location.href = "/";
+      router.refresh();
+      router.push("/");
     }
   }
 
