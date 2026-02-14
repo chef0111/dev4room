@@ -50,16 +50,6 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        // Exclude auth API routes from caching to prevent stale auth state
-        source: "/api/auth/:path*",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "no-store, no-cache, must-revalidate",
-          },
-        ],
-      },
-      {
         source: "/:path*",
         headers: [
           {
@@ -69,6 +59,15 @@ const nextConfig: NextConfig = {
             // stale-while-revalidate: serve old content while background updating
             value:
               "public, max-age=0, s-maxage=3600, stale-while-revalidate=59",
+          },
+        ],
+      },
+      {
+        source: "/api/auth/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "private, no-store, no-cache, must-revalidate",
           },
         ],
       },
