@@ -151,10 +151,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <NavMain items={data.navMain} />
         <NavDocuments items={data.documents} />
-        <NavSecondary
-          items={data.navSecondary}
-          className="absolute bottom-16 pr-6 transition-all duration-200 group-data-[collapsible=icon]:bottom-12"
-        />
+        <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
         <NavUser />
