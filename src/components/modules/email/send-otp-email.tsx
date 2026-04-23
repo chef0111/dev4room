@@ -26,10 +26,10 @@ const SendOTPEmail = (props: SendOTPEmailProps) => {
         <Head />
         <Preview>Your verification code - {otp}</Preview>
         <Body className="bg-gray-100 py-[40px] font-sans">
-          <Container className="mx-auto max-w-[580px] rounded-[8px] bg-white shadow-sm">
+          <Container className="mx-auto max-w-[580px] rounded-2 bg-white shadow-sm">
             {/* Logo Header */}
             <Section
-              className="rounded-t-[8px] border-b-2 border-gray-200 py-[20px] text-center shadow-sm"
+              className="rounded-t-2 border-b-2 border-gray-200 py-[20px] text-center shadow-sm"
               style={{ backgroundColor: "#0f1117" }}
             >
               <table style={{ width: "100%", textAlign: "center" }}>
@@ -145,7 +145,7 @@ const SendOTPEmail = (props: SendOTPEmailProps) => {
             </Section>
 
             {/* Footer */}
-            <Section className="rounded-b-[8px] border-t border-gray-200 bg-gray-50 px-[48px] py-[32px]">
+            <Section className="rounded-b-2 border-t border-gray-200 bg-gray-50 px-[48px] py-[32px]">
               <Text className="m-0 mb-[8px] text-center text-[12px] leading-[16px] text-gray-500">
                 This email was sent to {userEmail}
               </Text>
