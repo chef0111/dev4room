@@ -13,7 +13,7 @@ export const editorTheme: EditorThemeClasses = {
     h5: "scroll-m-20 text-lg font-semibold tracking-tight",
     h6: "scroll-m-20 text-base font-semibold tracking-tight",
   },
-  paragraph: "leading-7 [&:not(:first-child)]:mt-6",
+  paragraph: "leading-7 not-first:mt-6",
   quote: "mt-6 border-l-2 pl-6 italic",
   link: "text-blue-600 hover:underline hover:cursor-pointer",
   list: {
@@ -28,19 +28,19 @@ export const editorTheme: EditorThemeClasses = {
     },
     ol: "m-0 p-0 list-decimal [&>li]:mt-2",
     olDepth: [
-      "list-outside !list-decimal",
-      "list-outside !list-[upper-roman]",
-      "list-outside !list-[lower-roman]",
-      "list-outside !list-[upper-alpha]",
-      "list-outside !list-[lower-alpha]",
+      "list-outside list-decimal!",
+      "list-outside list-[upper-roman]!",
+      "list-outside list-[lower-roman]!",
+      "list-outside list-[upper-alpha]!",
+      "list-outside list-[lower-alpha]!",
     ],
     ul: "m-0 p-0 list-outside [&>li]:mt-2",
     ulDepth: [
-      "list-outside !list-disc",
-      "list-outside !list-disc",
-      "list-outside !list-disc",
-      "list-outside !list-disc",
-      "list-outside !list-disc",
+      "list-outside list-disc!",
+      "list-outside list-disc!",
+      "list-outside list-disc!",
+      "list-outside list-disc!",
+      "list-outside list-disc!",
     ],
   },
   hashtag: "text-blue-600 bg-blue-100 rounded-md px-1",
@@ -91,26 +91,26 @@ export const editorTheme: EditorThemeClasses = {
     url: "EditorTheme__tokenOperator",
     variable: "EditorTheme__tokenVariable",
   },
-  characterLimit: "!bg-destructive/50",
+  characterLimit: "bg-destructive/50!",
   table: "EditorTheme__table w-fit overflow-scroll border-collapse",
   tableCell:
-    'EditorTheme__tableCell w-24 relative border px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right"',
+    'EditorTheme__tableCell w-24 relative border px-4 py-2 text-left [[align=center]]:text-center [[align=right]]:text-right"',
   tableCellActionButton:
     "EditorTheme__tableCellActionButton bg-background block border-0 rounded-2xl w-5 h-5 text-foreground cursor-pointer",
   tableCellActionButtonContainer:
     "EditorTheme__tableCellActionButtonContainer block right-1 top-1.5 absolute z-10 w-5 h-5",
   tableCellEditing: "EditorTheme__tableCellEditing rounded-sm shadow-sm",
   tableCellHeader:
-    "EditorTheme__tableCellHeader bg-muted border px-4 py-2 text-left font-bold [&[align=center]]:text-center [&[align=right]]:text-right",
+    "EditorTheme__tableCellHeader bg-muted border px-4 py-2 text-left font-bold [[align=center]]:text-center [[align=right]]:text-right",
   tableCellPrimarySelected:
-    "EditorTheme__tableCellPrimarySelected border border-primary border-solid block h-[calc(100%-2px)] w-[calc(100%-2px)] absolute -left-[1px] -top-[1px] z-10 ",
+    "EditorTheme__tableCellPrimarySelected border border-primary border-solid block h-[calc(100%-2px)] w-[calc(100%-2px)] absolute -left-px -top-px z-10 ",
   tableCellResizer:
     "EditorTheme__tableCellResizer absolute -right-1 h-full w-2 cursor-ew-resize z-10 top-0",
   tableCellSelected: "EditorTheme__tableCellSelected bg-muted",
   tableCellSortedIndicator:
     "EditorTheme__tableCellSortedIndicator block opacity-50 bsolute bottom-0 left-0 w-full h-1 bg-muted",
   tableResizeRuler:
-    "EditorTheme__tableCellResizeRuler block absolute w-[1px] h-full bg-primary top-0",
+    "EditorTheme__tableCellResizeRuler block absolute w-px h-full bg-primary top-0",
   tableRowStriping:
     "EditorTheme__tableRowStriping m-0 border-t p-0 even:bg-muted",
   tableSelected: "EditorTheme__tableSelected ring-2 ring-primary ring-offset-2",
