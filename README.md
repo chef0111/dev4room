@@ -1,4 +1,15 @@
+<h1 align="center">
+  Dev4Room • 
+  <img src="https://img.shields.io/badge/License-MIT-blue" alt="license" />
+</h1>
+
 <div align="center">
+  <div align="center">
+    Build a community-driven platform for developers to ask questions, post answers, and get help from other developers.
+  </div>
+
+  <br />
+
   <div>
     <img src="https://img.shields.io/badge/-TypeScript-black?style=for-the-badge&logoColor=white&logo=typescript&color=3178C6" alt="typescript" />
     <img src="https://img.shields.io/badge/-Next_JS-black?style=for-the-badge&logoColor=white&logo=nextdotjs&color=000000" alt="nextdotjs" />
@@ -7,13 +18,9 @@
     <img src="https://img.shields.io/badge/-ShadCN_UI-black?style=for-the-badge&logoColor=white&logo=shadcnui&color=000000" alt="shadcnui" />
     <img src="https://img.shields.io/badge/-OpenAI-black?style=for-the-badge&logoColor=white&logo=openai&color=412991" alt="openai" />
   </div>
-
-  <h1 align="center">Dev4Room</h1>
-
-   <div align="center">
-     Build a community-driven platform for developers to ask questions, post answers, and get help from other developers.
-    </div>
 </div>
+
+<br />
 
 ## 📋 <a name="table">Table of Contents</a>
 
@@ -22,7 +29,8 @@
 3. 🔋 [Features](#features)
 4. 🤸 [Quick Start](#quick-start)
 5. 🗄️ [Database Setup](#database-setup)
-6. 🔗 [Assets](#links)
+6. 🔗 [Assets](#assets)
+7. 📃 [License](#license)
 
 ## <a name="introduction">🤖 Introduction</a>
 
@@ -253,6 +261,10 @@ bun run dev
 
 Open [http://localhost:3000](http://localhost:3000) in your browser to view the project.
 
-## <a name="links">🔗 Assets</a>
+## <a name="assets">🔗 Assets</a>
 
 Assets used in the project can be found [here](https://drive.google.com/file/d/18Lx36LFiQrAhuhmcQYDzG3FgQMCjwXdX/view?usp=sharing)
+
+## <a name="license">📃 License</a>
+
+Licensed under the [MIT License](./LICENSE).
