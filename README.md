@@ -263,7 +263,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to view the 
 
 ## <a name="assets">🔗 Assets</a>
 
-Assets used in the project can be found [here](https://drive.google.com/file/d/18Lx36LFiQrAhuhmcQYDzG3FgQMCjwXdX/view?usp=sharing)
+Assets used in the project can be found [here](https://drive.google.com/file/d/18Lx36LFiQrAhuhmcQYDzG3FgQMCjwXdX/view?usp=sharing).
 
 ## <a name="license">📃 License</a>
 
